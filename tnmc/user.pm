@@ -13,7 +13,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(set_user del_user get_user get_user_extended list_users);
+@EXPORT = qw(set_user del_user get_user get_user_extended list_users get_user_list);
 @EXPORT_OK = qw();
 
 #
@@ -93,5 +93,23 @@ sub list_users{
 
     return $#$user_list_ref;
 }
+
+sub get_user_list {
+    my %results;
+
+    my $sql = "SELECT userID,username from Personal";
+    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute;
+    while (my @row = $sth->fetchrow_array()){
+        my $userid = shift(@row);
+        my $username = shift(@row);
+
+        $results{$username} = $userid if $username;
+    }
+    $sth->finish;
+
+    return \%results;
+}
+    
 
 1;

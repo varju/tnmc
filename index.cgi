@@ -13,7 +13,7 @@ use tnmc::cookie;
 use tnmc::db;
 use tnmc::template;
 
-use tnmc::templates::bulletins;
+use tnmc::news::template;
 use tnmc::templates::movies;
 use tnmc::templates::user;
 
@@ -28,7 +28,7 @@ srand;
 
 print &greeting($USERID{'fullname'});
 
-show_bulletins();
+news_print_quick();
 show_movies();
 
 &footer();

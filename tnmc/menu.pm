@@ -60,6 +60,15 @@ sub new_nav_menu{
         &show_menu_item( 0, "", "", "");
     }
 
+    if ($USERID{groupTrusted} >= 1) {
+        if (&show_menu_item( 0, "/news/", "News", "")) {
+            if ($USERID{groupAdmin}) {
+                &show_menu_item( 1, "/news/add_news.cgi", "Add News", "");
+            }
+        }
+        &show_menu_item( 0, "", "", "");
+    }
+
     if ($USERID{groupTrusted} >= 1){
             &show_menu_item( 0, "/broadcast/", "Broadcast", "");
             &show_menu_item( 0, "", "", "");
@@ -82,8 +91,7 @@ sub new_nav_menu{
 
     if ($USERID{groupAdmin}){
         &show_menu_item( 0, "", "", "<hr noshade size='1'>");
-        &show_menu_item( 0, "/bulletins/", "Bulletins", "");
-        &show_menu_item( 0, "", "", "");
+
         if (&show_menu_item( 0, "/admin/", "Admin", "") || $USERID == 1){
             &show_menu_item( 1, "/admin/", "All users", "");
             &show_menu_item( 1, "/admin/groups.cgi", "Groups", "");

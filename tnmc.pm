@@ -26,8 +26,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 @EXPORT_OK = qw();
 
 @EXPORT = qw(
-             &show_bulletins
-
              %user
 
              cookie_get 

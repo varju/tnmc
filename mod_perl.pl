@@ -24,9 +24,10 @@ use tnmc::movies::show;
 use tnmc::movies::vote;
 use tnmc::broadcast;
 use tnmc::log;
-use tnmc::templates::bulletins;
 use tnmc::templates::movies;
 use tnmc::templates::user;
 use tnmc::pics;
+use tnmc::news::template;
+use tnmc::news::util;
 
 1;
