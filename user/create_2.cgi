@@ -21,6 +21,15 @@ use tnmc::cgi;
 my $dbh = &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
+if (&tnmc::cgi::param('username') =~ /\s/)
+{
+    &tnmc::template::header();
+    print "Bad username\n";
+    &tnmc::template::footer();
+    &tnmc::db::db_disconnect();
+    die;
+}
+
 my $user = &tnmc::user::new_user();
 
 foreach my $key (keys %$user){
