@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+   ### minor modifications by Grant 00-11-24 to add in quick buttons for sorting table
+
 use strict;
 use CGI;
 
@@ -119,17 +121,17 @@ sub show_movies
     
     ##################################################################
     ### Start of list
-    
+    ### modifications by Grant 00-11-24 to add in quick buttons for sorting
     print qq{
         <table cellpadding="0" cellspacing="0" border="0">
             <tr  bgcolor="ffffff">
                 <td><b>Edit</b></td>
             <td align="center"><b>&nbsp;N&nbsp;&nbsp;?&nbsp;&nbsp;Y&nbsp;</b></td>
-            <td align="right">&nbsp;&nbsp;<b>#</b></td>
-            <td align="right">&nbsp;&nbsp;<b>+</b></td>
-            <td align="right">&nbsp;&nbsp;<b>-</b></td>
+            <td align="right">&nbsp;&nbsp;<a href="index.cgi?sortOrder=rank&effectiveUserID=$effectiveUserID"><b>#</b></a></td>
+            <td align="right">&nbsp;&nbsp;<a href="index.cgi?sortOrder=votesFor&effectiveUserID=$effectiveUserID"><b>+</b></a></td>
+            <td align="right">&nbsp;&nbsp;<a href="index.cgi?sortOrder=votesAgainst&effectiveUserID=$effectiveUserID"><b>-</b></a></td>
             <td>&nbsp;&nbsp;</td>
-            <td><b>Title</b></td>
+            <td><a href="index.cgi?sortOrder=title&effectiveUserID=$effectiveUserID"><b>Title</b></a></td>
             <td>&nbsp;&nbsp;</td>
             <td><b>$displaySortOrder</b></td>
             <td>&nbsp;&nbsp;</td>
