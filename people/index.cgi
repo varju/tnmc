@@ -11,16 +11,20 @@ use lib '/tnmc';
 use tnmc::template;
 use tnmc::user;
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &header();
-    
-    &show_heading ("TNMC People");
-    
-    &show_users();
+&header();
 
-    &footer();
+&show_heading ("TNMC People");
+
+&show_users();
+
+&footer();
+
+#
+# subs 
+#
 
 ##########################################################
 sub show_users(){

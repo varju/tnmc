@@ -7,11 +7,9 @@
 
 use lib '/tnmc';
 
-use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
-use tnmc::cgi;
 use tnmc::user;
+
 use tnmc::pics::pic;
 use tnmc::pics::link;
 use tnmc::pics::album;
@@ -22,7 +20,6 @@ use tnmc::pics::new;
 #############
 ### Main logic
 
-&db_connect();
 &header();
 
 my $nav = &get_nav();
@@ -30,7 +27,6 @@ my $nav = &get_nav();
 &show_album_view($nav);
 
 &footer();
-&db_disconnect();
 
 #
 # subs

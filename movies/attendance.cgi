@@ -9,19 +9,25 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::movies::attend;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&header();
+&show_attendance_page();
+&footer();
+
+#
+# subs
+#
+
+sub show_attendance_page{
     
     &show_heading('Movie Attendance');
     &list_my_attendance($USERID);
+
 
     print qq{
         <p>
@@ -39,6 +45,4 @@ Those votes of yours will just be flipped.<br>
 <br>
     };
 
-    &footer();
-    &db_disconnect();
 }

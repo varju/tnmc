@@ -8,21 +8,20 @@
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
 
 
 #############
 ### Main logic
 
-&db_connect();
 &header();
 
 my %pic;
-my $cgih = new CGI;
+my $cgih = &tnmc::cgi::cgih();
 my $picID = $cgih->param('picID');
 
 &get_pic($picID, \%pic);
@@ -38,9 +37,10 @@ if ( $USERID && ($pic{ownerID} eq $USERID) ){
 }
 
 &footer();
-&db_disconnect();
 
-
+#
+# subs
+#
 
 ######################################################################
 sub show_pic_edit_form{

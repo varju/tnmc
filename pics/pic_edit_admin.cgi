@@ -10,44 +10,41 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
+use tnmc::pics::album;
+use tnmc::pics::link;
+use tnmc::pics::show;
 
-{
-	#############
-	### Main logic
+#############
+### Main logic
 
-	&db_connect();
-	&header();
+&header();
 
-	%pic;	
-	$cgih = new CGI;
-	$picID = $cgih->param('picID');
-	
-       	&get_pic($picID, \%pic);
-	  	
-	print qq {
-            
-		<form action="pic_edit_admin_submit.cgi" method="post">
-		<table>
-	};
-	
-        foreach $key (keys %pic){
-       	       print qq{	
-			<tr><td><b>$key</td>
-                            <td><input type="text" name="$key" value="$pic{$key}"></td>
-			</tr>
-		};
-       	}
-	
-	print qq{
-		</table>
-		<input type="submit" value="Submit">
-		</form>
-	}; 
+$cgih = &tnmc::cgi::cgih();
 
-	
-	&footer();
+$picID = $cgih->param('picID');
+%pic;	
+&get_pic($picID, \%pic);
 
-	&db_disconnect();
+print qq {
+    <form action="pic_edit_admin_submit.cgi" method="post">
+    <table>
+};
+
+foreach $key (keys %pic){
+    print qq{	
+        <tr><td><b>$key</td>
+        <td><input type="text" name="$key" value="$pic{$key}"></td>
+        </tr>
+    };
 }
+	
+print qq{
+    </table>
+    <input type="submit" value="Submit">
+    </form>
+}; 
+
+&footer();

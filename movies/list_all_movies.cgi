@@ -8,24 +8,24 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::db;
 use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::show;
 
-{
-    #############
-    ### Main logic
-    
-    &header();
-    &db_connect();
 
-    &show_heading('List all Movies');
-    &show_admin_movie_list();
+#############
+### Main logic
 
-    &db_disconnect();
-    &footer();
-}
+&header();
+
+&show_heading('List all Movies');
+&show_admin_movie_list();
+
+&footer();
+
+#
+# subs
+#
 
 
 #########################################

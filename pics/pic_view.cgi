@@ -11,74 +11,73 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
+use tnmc::pics::album;
+use tnmc::pics::link;
+use tnmc::pics::show;
 
-{
-	#############
-	### Main logic
+#############
+### Main logic
+
+&tnmc::security::auth::authenticate();
         
-	&db_connect();
-	
-        &tnmc::security::auth::authenticate();
-        
-        #
-        # get the pic-view-info
-        #
-        
-	%pic;
-	$cgih = new CGI;
-	$picID = $cgih->param('picID');
-	$albumID = $cgih->param('albumID');
-	$dateID = $cgih->param('dateID');
-	$mode = $cgih->param('mode');
-	
-       	&get_pic($picID, \%pic);
-        &get_user($pic{ownerID}, \%owner);
+#
+# get the pic-view-info
+#
+
+%pic;
+$cgi = tnmc::cgi::get_cgih();
+$picID = $cgih->param('picID');
+$albumID = $cgih->param('albumID');
+$dateID = $cgih->param('dateID');
+$mode = $cgih->param('mode');
+
+&get_pic($picID, \%pic);
+&get_user($pic{ownerID}, \%owner);
 
 
-        ## get our list of pictures for navigation
-        @PICS;
-        if ($albumID){
-           &get_album($albumID, \%album);
-            &list_links_for_album(\@PICS, $albumID);
-        }
-        elsif ($dateID){
-            &list_links_for_date(\@PICS, $dateID);
-        }
-        else{
-            @PICS = ($picID);
-        }
+## get our list of pictures for navigation
+@PICS;
+if ($albumID){
+    &get_album($albumID, \%album);
+    &list_links_for_album(\@PICS, $albumID);
+}
+elsif ($dateID){
+    &list_links_for_date(\@PICS, $dateID);
+}
+else{
+    @PICS = ($picID);
+}
 
-        ## find our current index
-        $curr_index = 0;
-        foreach $otherPicID (@PICS){
-            last if ($picID == $otherPicID);
-            $curr_index ++;
-        }
-            
+## find our current index
+$curr_index = 0;
+foreach $otherPicID (@PICS){
+    last if ($picID == $otherPicID);
+    $curr_index ++;
+}
 
-        ##############################
-        ## Print it all out
 
-        &show_header_black();
+##############################
+## Print it all out
 
-        ## global and local nav
-        &show_nav();
+&show_header_black();
 
-        ## thumbnails
-        my $span = $cgih->param('span') || 0;
-        my $span = ($span > scalar(@PICS))? scalar(@PICS): $span;
-        my $start = $curr_index - int(($span - 1) / 2);
-        my $start = (($start + $span - 1) >= scalar(@PICS))? scalar(@PICS) - $span: $start;
-        $start = 0 if $start < 0;
-        &show_thumb_nav(\@PICS, $start, $start + $span - 1);
-        
-        &show_pic_view_body($picID, $cgih->param('scale'));
-        
-	&db_disconnect();
-        
-        &show_footer_black();
+## global and local nav
+&show_nav();
+
+## thumbnails
+my $span = $cgih->param('span') || 0;
+my $span = ($span > scalar(@PICS))? scalar(@PICS): $span;
+my $start = $curr_index - int(($span - 1) / 2);
+my $start = (($start + $span - 1) >= scalar(@PICS))? scalar(@PICS) - $span: $start;
+$start = 0 if $start < 0;
+&show_thumb_nav(\@PICS, $start, $start + $span - 1);
+
+&show_pic_view_body($picID, $cgih->param('scale'));
+
+&show_footer_black();
 }
 
 sub show_header_black{

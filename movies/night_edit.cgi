@@ -10,31 +10,29 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::general_config;
 use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::night;
 use tnmc::movies::show;
+use tnmc::cgi;
 
-{
-    #############
-    ### Main logic
-    
-    &db_connect();
-    &header();
-    
-    use CGI;
-    my $cgih = new CGI;
-    
-    my $nightID = $cgih->param('nightID');
-    
-    &show_night_edit_form($nightID);
-    
-    &footer();
-    db_disconnect();
+#############
+### Main logic
 
-}
+&header();
+
+my $cgih = &tnmc::cgi::get_cgih();
+
+my $nightID = $cgih->param('nightID');
+
+&show_night_edit_form($nightID);
+
+&footer();
+
+#
+# subs
+#
 
 sub show_night_edit_form{
     my ($nightID) = @_;

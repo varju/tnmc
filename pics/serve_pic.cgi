@@ -8,33 +8,34 @@
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
+use tnmc::pics::album;
+use tnmc::pics::link;
+use tnmc::pics::show;
 
 $force = 0;
 
-{
-    #############
-    ### Main logic
-    
-    $basePicDir = "data/";
-    &db_connect();
-    
-    &tnmc::security::auth::authenticate();
-    
+#############
+### Main logic
 
-    $cgih = new CGI;
-    
-    my $picID = $cgih->param(picID);
-    my $mode = $cgih->param(mode);
+$basePicDir = "data/";
 
-    &serve_picture($mode, $picID);
+&tnmc::security::auth::authenticate();
 
-    &db_disconnect();
-}
 
+$cgih = &tnmc::cgi::get_cgih();
+
+my $picID = $cgih->param(picID);
+my $mode = $cgih->param(mode);
+
+&serve_picture($mode, $picID);
+
+#
+# subs
+#
 
 sub serve_picture{
 

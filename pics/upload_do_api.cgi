@@ -9,18 +9,22 @@ use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::db;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
+use tnmc::pics::album;
+use tnmc::pics::link;
+use tnmc::pics::show;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    $cgih = new CGI;
-    &db_connect();
-    &tnmc::security::auth::authenticate();
-    print "Content-type: text/plain\n\n";
+&tnmc::security::auth::authenticate();
+
+sub do_upload_api{    
     
+    print "Content-type: text/plain\n\n";
+    my $cgih = &tnmc::cgi::get_cgih();
 
     ## grab the special api params
     $filename = $cgih->param("API_FILENAME");
@@ -104,9 +108,6 @@ require 'pics/PICS.pl';
     &import_extended_info($picID);
     
     print "extended info loaded\n";
-    
-    &db_disconnect();
-    
     
 }
 

@@ -12,13 +12,14 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::security::auth;
 use tnmc::user;
+use tnmc::cgi;
 
 
 
     #############
     ### Main logic
     
-    $cgih = new CGI;
+    $cgih = &tnmc::cgi::get_cgih();
     &db_connect();
     # &header();
 

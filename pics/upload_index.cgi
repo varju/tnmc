@@ -8,30 +8,29 @@
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
 
-{
-	#############
-	### Main logic
+#############
+### Main logic
+
+&header();
+
+sub show_upload_page{
+    %pic;	
+    $cgih = &tnmc::cgi::get_cgih();
+    $picID = $cgih->param('picID');
+    
+    &get_pic($picID, \%pic);
+    
+    print qq {
         
-	&db_connect();
-	&header();
-        
-	%pic;	
-	$cgih = new CGI;
-	$picID = $cgih->param('picID');
-	
-       	&get_pic($picID, \%pic);
-	  	
-	print qq {
+        <form action="api_upload_submit.cgi" method="post" enctype="multipart/form-data">
+
+        <table>
             
-            <form action="api_upload_submit.cgi" method="post" enctype="multipart/form-data">
-
-	    <table>
-
             <tr><th colspan="2">upload image</th></tr>
                     
             <tr><td><b>File</b></td>
@@ -86,5 +85,4 @@ require 'pics/PICS.pl';
         
 	&footer();
         
-	&db_disconnect();
 }

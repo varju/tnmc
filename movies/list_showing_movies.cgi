@@ -15,19 +15,19 @@ use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::vote;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
     
-    &header();
-    &db_connect();
+&header();
+&db_connect();
 
-    &show_showing_movie_list();
+&show_showing_movie_list();
 
-    &db_disconnect();
-    &footer();
-}
+&footer();
 
+#
+# subs 
+#
 
 #########################################
 sub show_showing_movie_list{

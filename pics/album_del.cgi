@@ -10,18 +10,19 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
+use tnmc::cgi;
 
-require 'pics/PICS.pl';
+use tnmc::pics::album;
+use tnmc::pics::link
 
 {
 	#############
 	### Main logic
 
-	&db_connect();
 	&header();
 
 	%album;	
-	$cgih = new CGI;
+	$cgih = &tnmc::cgi::get_cgih();
 	$albumID = $cgih->param('albumID');
 	$CONFIRM = $cgih->param('CONFIRM');
 	
@@ -38,7 +39,7 @@ require 'pics/PICS.pl';
             ### Bad userID
             print qq{
                 <b>Hey!</b><br>
-                You're not allowed to do this!! <!-- ' -->
+                You\'re not allowed to do this!!
             };
         }
         else{
@@ -82,5 +83,4 @@ require 'pics/PICS.pl';
 	
 	&footer();
 
-	&db_disconnect();
 }

@@ -9,33 +9,32 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::template;
-use tnmc::db;
 use tnmc::movies::movie;
 use tnmc::movies::vote;
 use tnmc::user;
+use tnmc::cgi;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &header();
+&header();
 
-    &show_heading("compare movies");
+&show_heading("compare movies");
 
-    my $cgih = new CGI;
-    my $movieID = $cgih->param('movieID');
-    my @movies;
+my $cgih = &tnmc::cgi::get_cgih();
+my $movieID = $cgih->param('movieID');
+my @movies;
 
-    foreach my $key ($cgih->param()){
-        if ($key =~ /movie/i){
-            push (@movies, $cgih->param($key));
-        }
+foreach my $key ($cgih->param()){
+    if ($key =~ /movie/i){
+        push (@movies, $cgih->param($key));
     }
-
-    &show_movie_vote_comparison(@movies);
-    
-    &footer();
 }
+
+&show_movie_vote_comparison(@movies);
+
+&footer();
+
 
 
 ##################################################################

@@ -1,12 +1,9 @@
 #!/usr/bin/perl
 
-use CGI;
-
 use lib '/tnmc';
 use strict;
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::cgi;
 use tnmc::news::template;
@@ -15,7 +12,6 @@ use tnmc::news::util;
 #############
 ### Main logic
 
-db_connect();
 header();
 
 if ($USERID) {
@@ -30,4 +26,3 @@ if ($USERID) {
 }
     
 footer();
-db_disconnect();

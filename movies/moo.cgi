@@ -17,30 +17,27 @@ use tnmc::movies::movie;
 use tnmc::movies::night;
 use tnmc::movies::show;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&header();
 
-    ## List of Future Nights
-    &show_heading ("future nights");
-    my @NIGHTS = &list_future_nights();
-    foreach my $nightID (@NIGHTS){
-        my %night;
-        &get_night ($nightID, \%night);
-        print qq{
-            <a href="night_edit.cgi?nightID=$nightID">$night{date}</a>
-                ($nightID)<br>
-        };
-    }
-    
-    &show_current_nights();
-
-    &footer();
-    db_disconnect();
+## List of Future Nights
+&show_heading ("future nights");
+my @NIGHTS = &list_future_nights();
+foreach my $nightID (@NIGHTS){
+    my %night;
+    &get_night ($nightID, \%night);
+    print qq{
+        <a href="night_edit.cgi?nightID=$nightID">$night{date}</a>
+            ($nightID)<br>
+    };
 }
+    
+&show_current_nights();
+
+&footer();
+
 
 
 

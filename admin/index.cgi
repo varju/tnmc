@@ -12,7 +12,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
-use CGI;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -35,7 +35,7 @@ use CGI;
 sub show_basic_users_list{
     my (@users, %user, $userID, $key);
 
-    my $cgih = new CGI;
+    my $cgih = &tnmc::cgi::get_cgih();
     my $order = $cgih->param('order') || 'username';
 
     &list_users(\@users, '', "ORDER BY $order");

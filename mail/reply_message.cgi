@@ -1,12 +1,9 @@
 #!/usr/bin/perl
 
-use CGI;
-
 use lib '/tnmc';
 use strict;
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::cgi;
 
@@ -18,7 +15,6 @@ use tnmc::mail::prefs::data;
 #############
 ### Main logic
 
-db_connect();
 header();
 my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
@@ -52,4 +48,3 @@ if ($USERID) {
 }
     
 footer();
-db_disconnect();

@@ -8,7 +8,6 @@
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::pics::album;
 use tnmc::cgi;
@@ -19,7 +18,6 @@ use strict;
 #############
 ### Main logic
 
-&db_connect();
 &header();
 
 my $cgih = &tnmc::cgi::get_cgih;
@@ -27,8 +25,6 @@ my $albumID = $cgih->param('albumID');
 &show_album_edit_admin_form($albumID);
 
 &footer();
-
-&db_disconnect();
 
 #
 # subs

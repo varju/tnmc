@@ -15,13 +15,19 @@ use tnmc::template;
 use tnmc::cgi;
 
 
-{
-    #############
-    ### Main logic
-    
-    &db_connect();
-    
-    &tnmc::security::auth::authenticate();
+#############
+### Main logic
+
+
+&tnmc::security::auth::authenticate();
+&do_update_votes();
+
+#
+# subs
+#
+
+
+sub do_update_votes{
 
     my $tnmc_cgi = &tnmc::cgi::get_cgih();
     my $userID = $tnmc_cgi->param('userID');
@@ -84,5 +90,4 @@ use tnmc::cgi;
     
     print "Location: $ENV{HTTP_REFERER}\n\n";
     
-    &db_disconnect();
 }

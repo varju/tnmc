@@ -7,7 +7,6 @@
 
 use lib '/tnmc';
 
-use tnmc::db;
 use tnmc::template;
 use tnmc::pics::new;
 use tnmc::pics::search;
@@ -15,13 +14,11 @@ use tnmc::pics::search;
 #############
 ### Main logic
 
-&db_connect();
 &header();
 
 &show_search_index();
 
 &footer();
-&db_disconnect();
 
 #
 # subs

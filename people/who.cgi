@@ -9,17 +9,14 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::user;
 use tnmc::util::date;
-use CGI;
 
 #############
 ### Main logic
 
 &header();
-&db_connect();
 
 &show_heading('Who\'s online now');
 &show_recent_users_list(60, 1);
@@ -29,13 +26,11 @@ print "<p>";
 &show_heading('last 24 hrs');
 &show_recent_users_list(1440, undef());
 
-
 &footer();
-&db_disconnect();
 
-##########################################################
-#### sub procedures.
-##########################################################
+#
+# subs
+#
 
 #########################################
 sub show_recent_users_list{

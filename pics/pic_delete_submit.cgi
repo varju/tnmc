@@ -1,30 +1,25 @@
 #!/usr/bin/perl
 
 ##################################################################
-# Jeff Steinbok - steinbok@interchange.ubc.ca
+# Scott Thompson
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
-use tnmc::template;
+use tnmc::cgih
 
-require 'pics/PICS.pl';
+use tnnc::pics::pic;
 
-{
-	#############
-	### Main logic
+#############
+### Main logic
 
-	$cgih = new CGI;
-	$picID = $cgih->param('picID');	
-	
-	if ($picID)
-	{ 	&db_connect();
-		&del_pic($picID);
-		&db_disconnect();
-	}
+$cgih = &tnmc::cgi::get_cgih;
+$picID = $cgih->param('picID');	
 
-	print "Location: index.cgi\n\n";
+if ($picID){
+    &del_pic($picID);
 }
+
+print "Location: index.cgi\n\n";

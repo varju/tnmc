@@ -8,8 +8,6 @@
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
-use tnmc::template;
 use tnmc::template::html_black;
 use tnmc::user;
 
@@ -22,7 +20,6 @@ use strict;
 #############
 ### Main logic
 
-&db_connect();
 &tnmc::security::auth::authenticate();
 
 
@@ -36,7 +33,6 @@ my $piclist = &search_get_piclist_from_nav($nav);
 &show_slide($nav, $piclist);
 
 &tnmc::template::html_black::footer();
-&db_disconnect();
 
 
 #

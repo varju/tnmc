@@ -13,25 +13,19 @@ use tnmc::db;
 use tnmc::movies::night;
 use tnmc::cgi;
 
-{
-    #############
-    ### Main logic
-    
-    &db_connect();
+#############
+### Main logic
 
-    &tnmc::security::auth::authenticate();
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-    
-    my @cols = &db_get_cols_list('MovieNights');
+&tnmc::security::auth::authenticate();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-    my %night;
-    foreach my $key (@cols){
-        $night{$key} = $tnmc_cgi->param($key);
-    }
-    
-    &set_night(%night);
-    
-    &db_disconnect();
-    
-    print "Location: index.cgi\n\n";
+my @cols = &db_get_cols_list('MovieNights');
+
+my %night;
+foreach my $key (@cols){
+    $night{$key} = $tnmc_cgi->param($key);
 }
+
+&set_night(%night);
+
+print "Location: index.cgi\n\n";

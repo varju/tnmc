@@ -10,19 +10,26 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::general_config;
 use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::night;
 use tnmc::movies::show;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&header();
+
+&show_admin_page();
+
+&footer();
+
+#
+# subs
+#
+
+sub show_admin_page{
 
     if ($USERID){
         
@@ -41,7 +48,7 @@ use tnmc::movies::show;
         &show_heading ("administration");
         
         my $valid_theatres = &get_general_config("movie_valid_theatres");
-        my $other_theatres = &get_general_config("movie_other_theatres");
+        my $other_theatres = &get_general_config("movie_other_theatres);
 
         print qq{
             <form action="admin_submit.cgi" method="post">
@@ -65,7 +72,4 @@ use tnmc::movies::show;
         }; 
 
     }
-
-    &footer();
-    db_disconnect();
 }

@@ -8,23 +8,21 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::db;
 use tnmc::template;
 use tnmc::movies::show;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&header();
 
-    &show_add_movie_form();
+&show_add_movie_form();
 
-    &footer();
-    &db_disconnect();
-}
+&footer();
 
+#
+# subs
+#
 
 ##########################################################
 sub show_add_movie_form

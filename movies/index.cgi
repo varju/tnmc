@@ -20,6 +20,7 @@ use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::vote;
 use tnmc::movies::attendance;
+
 #############
 ### Main logic
 

@@ -8,21 +8,21 @@
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 
 
 #############
 ### Main logic
 
-&db_connect();
 &header();
 
 &show_album_add_form();
 
 &footer();
-&db_disconnect();
 
+#
+# subs
+#
 
 sub show_album_add_form{
     

@@ -1,17 +1,15 @@
 #!/usr/bin/perl
 
 use strict;
-use CGI;
 
 use lib '/tnmc';
-use tnmc::db;
+use tnmc::cgi;
+
 use tnmc::mail::parse;
 use tnmc::mail::data;
 
 
-db_connect();
-
-my $cgih = new CGI;
+my $cgih = &tnmc::cgi::get_cgih();
 
 my $raw = $cgih->param('raw');
 my $auth = $cgih->param('auth');
@@ -43,5 +41,3 @@ else {
     print "ReplyTo is ", $$message_ref{'ReplyTo'}, "\n";
     print "Body is ", $$message_ref{'Body'}, "\n";
 }
-
-db_disconnect();

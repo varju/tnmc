@@ -15,16 +15,18 @@ use tnmc::user;
 use tnmc::movies::movie;
 use tnmc::movies::show;
 
-{
-    #############
-    ### Main logic
-    
-    &header();
-    
-    &show_seen_movie_list();
-    
-    &footer();
-}
+#############
+### Main logic
+
+&header();
+
+&show_seen_movie_list();
+
+&footer();
+
+#
+# subs 
+#
 
 
 #########################################

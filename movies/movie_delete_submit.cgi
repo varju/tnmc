@@ -9,7 +9,6 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::db;
 use tnmc::movies::movie;
 use tnmc::cgi;
 
@@ -20,9 +19,7 @@ my $cgih = &tnmc::cgi::get_cgih();
 my $movieID = $cgih->param('movieID');    
 
 if ($movieID) {
-    &db_connect();
     &del_movie($movieID);
-    &db_disconnect();
 }
 
 print "Location: index.cgi\n\n";

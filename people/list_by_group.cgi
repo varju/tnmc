@@ -9,14 +9,12 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::user;
 
 #############
 ### Main logic
 
-&db_connect();
 &header();
 my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
@@ -31,8 +29,10 @@ my @users;
 &show_user_listing(@users);
 
 &footer();
-db_disconnect();
 
+#
+# subs
+#
 
 ##########################################################
 sub show_user_listing{

@@ -9,7 +9,6 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::template;
 use tnmc::user;
 
@@ -36,8 +35,6 @@ sub show_user
     
     my (@cols, $user, $key, %user);
     
-    &db_connect();
-
     @cols = qw (
                 username
                 fullname
@@ -58,7 +55,6 @@ sub show_user
                 );
     
     &get_user_extended($userID, \%user);
-    &db_disconnect();
     
     print qq 
     {

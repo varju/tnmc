@@ -7,14 +7,13 @@
 
 use lib '/tnmc';
 
-use tnmc::db;
 use tnmc::template;
+
 use tnmc::pics::new;
 
 #############
 ### Main logic
 
-&db_connect();
 &header();
 
 my $nav = &get_nav;
@@ -28,7 +27,6 @@ my $piclist = &album_get_piclist_from_nav($nav);
 &show_thumbs($piclist, $nav);
 
 &footer();
-&db_disconnect();
 
 #
 # subs
