@@ -18,8 +18,6 @@ use tnmc::db;
 #############
 ### Main logic
 
-&db_connect();
-
 my $tnmc_cgi = new CGI;
 
 # retrieve the old cookie
@@ -39,10 +37,8 @@ my $cookie = $tnmc_cgi->cookie(
 
 my $location = $tnmc_url . '/index.cgi';
 print $tnmc_cgi->redirect(
-                      -uri=>$location,
-                      -cookie=>$cookie);
-
-&db_disconnect();
+                          -uri=>$location,
+                          -cookie=>$cookie);
 
 ##########################################################
 #### The end.
