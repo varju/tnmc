@@ -12,7 +12,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(set_night get_night get_next_night get_next_nightID);
+@EXPORT = qw(set_night get_night get_next_night);
 @EXPORT_OK = qw();
 
 #
@@ -65,18 +65,6 @@ sub get_next_night{
     $sth->execute;
     ($return) = $sth->fetchrow_array();
     
-    return $return;
-}
-
-sub get_next_nightID{
-    my ($junk) = @_;
-    my ($sql, $sth, $return);
-
-    $sql = "SELECT nightID FROM MovieNights WHERE date >= DAVE_FORMAT(NOW(), %Y%m%d') ORDER BY nightID LIMIT 1";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-    $sth->execute;
-    ($return) = $sth->fetchrow_array();
-
     return $return;
 }
 
