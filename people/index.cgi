@@ -44,7 +44,9 @@ username');
     };
     
     foreach $userID (@users)
-    {    &get_user_extended($userID, \%user);
+    {    
+        &get_user_extended($userID, \%user);
+        $user{"phone$user{phonePrimary}"} = '' unless $user{"phone$user{phonePrimary}"};
         
         print qq
         {    <tr>

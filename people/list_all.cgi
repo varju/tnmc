@@ -42,11 +42,12 @@ sub show_users()
 		</tr>
 	};
 	
-	foreach $userID (@users)
-	{	&get_user_extended($userID, \%user);
-		
-		print qq
-		{	<tr>
+	foreach $userID (@users) {
+            &get_user_extended($userID, \%user);
+            $user{"phone$user{phonePrimary}"} = '' unless $user{"phone$user{phonePrimary}"};		
+
+            print qq
+            {	<tr>
 			<td nowrap>$user{'username'}</td>
 			<td></td>
 			<td nowrap><a href="
@@ -62,11 +63,10 @@ sub show_users()
 			<td></td>
 			<td><a href="mailto:$user{'email'}">$user{'email'}</a></td>
 			</tr>
-		};
+                        };
 	}
 
-	print qq
-	{	</table>
+	print qq{	</table>
 	};
 }
 
