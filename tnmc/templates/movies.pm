@@ -171,7 +171,7 @@ sub show_movie_list_home{
         
         print qq{
             <td align="right">&nbsp;&nbsp;$movieInfo{$movieID}->{rank}&nbsp;&nbsp;</td>
-            <td valign="top">
+            <td valign="top">$bold
                 <a href="/movies/movie_view.cgi?movieID=$movieID" target="viewmovie">
                 $movieInfo{$movieID}->{title}</a></td>
             <td>&nbsp;&nbsp;&nbsp;</td>
