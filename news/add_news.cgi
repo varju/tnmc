@@ -25,6 +25,7 @@ if ($USERID) {
     $news{newsId} = 0;
     $news{userId} = $USERID;
     $news{date} = 0;
+    $news{expires} = 0;
     $news{value} = "";
 
     news_edit(\%news);

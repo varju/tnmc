@@ -22,6 +22,7 @@ $news{newsId} = $tnmc_cgi->param('newsId');
 $news{userId} = $tnmc_cgi->param('userId');
 $news{value} = $tnmc_cgi->param('value');
 $news{date} = $tnmc_cgi->param('date');
+$news{expires} = $tnmc_cgi->param('expires');
 
 set_news_item(\%news);
 

@@ -50,8 +50,12 @@ sub news_print {
         my $userId = $$news_row{userId};
         my $value = $$news_row{value};
         my $date = $$news_row{date};
+        my $expires = $$news_row{expires};
         
         print "<p>$date\n";
+        if ($expires) {
+            print " (until $expires)\n";
+        }
         print "<p>$value\n";
         print "<p>-<i>$userId</i>\n";
 
@@ -79,6 +83,7 @@ sub news_edit {
     my $userId = $$news_ref{userId};
     my $date = $$news_ref{date};
     my $value = $$news_ref{value};
+    my $expires = $$news_ref{expires};
 
     my $userlist = get_user_list("WHERE groupAdmin='1'");
 
@@ -88,6 +93,10 @@ sub news_edit {
   <tr>
     <td><b>Date</b></td>
     <td><input type="text" name="date" value="$date" size="14" maxlength="14"></td>
+  </tr>
+  <tr>
+    <td><b>Expires</b></td>
+    <td><input type="text" name="expires" value="$expires" size="14" maxlength="14"></td>
   </tr>
   <tr>
     <td><b>User</b></td>
