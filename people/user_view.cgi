@@ -52,6 +52,8 @@ sub show_user
                 phoneClearnet
                 phonePrimary
                 phoneTextMail
+                address
+                blurb
                 );
     
     &get_user_extended($userID, \%user);
