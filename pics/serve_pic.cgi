@@ -203,9 +203,9 @@ sub serve_file{
 sub errorExit{
     ($message) = @_;
     
-    &header();
+    &tnmc::template::header();
     print "$message";
-    &footer();
+    &tnmc::template::footer();
 }
     
 

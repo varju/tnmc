@@ -18,14 +18,14 @@ require 'fieldtrip/FIELDTRIP.pl';
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 $tripID = &tnmc::cgi::param(tripID);
 &show_trip_all($tripID);
 
-&footer();
-db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 
 #######################################
@@ -35,7 +35,7 @@ sub show_trip_all{
     my (%trip);
     &get_trip($tripID, \%trip);
 
-    &show_heading($trip{title});
+    &tnmc::template::show_heading($trip{title});
         
     print qq{
         <table border="0" cellpadding="1" cellspacing="0">

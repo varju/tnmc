@@ -18,10 +18,10 @@ use tnmc::user;
     #############
     ### Main logic
     
-    &db_connect();
-    &header();
+    &tnmc::db::db_connect();
+    &tnmc::template::header();
     
-    &show_heading ("Make a Suggestion / Report a Bug");
+    &tnmc::template::show_heading ("Make a Suggestion / Report a Bug");
     
     print qq{
         <form action="/user/suggestion_submit.cgi" method="post">
@@ -40,9 +40,9 @@ use tnmc::user;
         if ($USERID{groupDev} >= 1){
             $heading .= qq{ - <a href="/development/suggestions.cgi"><font color="ffffff">Edit</font></a>};
         }
-        &show_heading ($heading);
+        &tnmc::template::show_heading ($heading);
 
-        my $suggBlurb =  &get_general_config("suggestions");
+        my $suggBlurb = &tnmc::general_config::get_general_config("suggestions");
         $suggBlurb =~ s/\n/<br>/gs;
         print "<p>$suggBlurb<p>";
         
@@ -50,15 +50,15 @@ use tnmc::user;
         if ($USERID{groupDev} >= 1){
             $heading .= qq{ - <a href="/development/todo_list.cgi"><font color="ffffff">Edit</font></a>};
         }
-        &show_heading ($heading);
+        &tnmc::template::show_heading ($heading);
 
-        my $devBlurb =  &get_general_config("devBlurb");
+        my $devBlurb = &tnmc::general_config::get_general_config("devBlurb");
         $devBlurb =~ s/\n/<br>/gs;
         print "<p>$devBlurb<p>";
     }
 
-    &footer();
-    db_disconnect();
+    &tnmc::template::footer();
+    &tnmc::db::db_disconnect();
 }
 
 

@@ -19,10 +19,10 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&header();
-&db_connect();
+&tnmc::template::header();
+&tnmc::db::db_connect();
 
-&show_heading('Security - View Sessions');
+&tnmc::template::show_heading('Security - View Sessions');
 
 my $userID = &tnmc::cgi::param('userID');
 my @sessions;
@@ -31,8 +31,8 @@ my @sessions;
 &show_session_list(\@sessions);
 
 
-&footer();
-&db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 ##########################################################
 #### sub procedures.
@@ -66,7 +66,7 @@ sub show_session_list{
         my (%session, %user);
         
         &tnmc::security::session::get_session($sessionID, \%session);
-        &get_user($session{'userID'}, \%user);
+        &tnmc::user::get_user($session{'userID'}, \%user);
         
         my $first_online = &tnmc::util::date::format_date('numeric', $session{'firstOnline'});
         my $last_online = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});

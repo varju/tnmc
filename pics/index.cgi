@@ -18,19 +18,18 @@ use tnmc::pics::show;
 #############
 ### Main logic
 
-&header();
-
+&tnmc::template::header();
 
 &show_page();
 
-&footer();
+&tnmc::template::footer();
 
 
 
 ###################################################################
 sub show_page{
     
-    &show_heading("Pics");
+    &tnmc::template::show_heading("Pics");
     ## search
     my $url = "/pics/search_thumb.cgi";
     print qq{
@@ -57,7 +56,7 @@ sub show_page{
     };
     
     ## recent albums
-    &show_heading("Recent Albums");
+    &tnmc::template::show_heading("Recent Albums");
     my @albums = &list_recent_albums();
     &tnmc::pics::show::show_album_listing_info(\@albums);
     print qq{

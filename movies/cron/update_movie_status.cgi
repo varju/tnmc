@@ -17,10 +17,10 @@ use tnmc::movies::faction;
 #############
 ### Main logic
 
-&db_connect();
+my $dbh = &tnmc::db::db_connect();
 
 my $sql = "SELECT NOW()";
-my $sth = $dbh_tnmc->prepare($sql);
+my $sth = $dbh->prepare($sql);
 $sth->execute();
 my ($timestamp) = $sth->fetchrow_array();
 $sth->finish;
@@ -56,13 +56,13 @@ foreach my $nightID (@nights){
 #
 
 $sql = "UPDATE Movies SET statusNew = '0' WHERE statusShowing = '1'";
-$sth = $dbh_tnmc->prepare($sql);
+$sth = $dbh->prepare($sql);
 $sth->execute();
 $sth->finish;
 
 
 $sql = "UPDATE Movies SET statusBanned = '0'";
-$sth = $dbh_tnmc->prepare($sql);
+$sth = $dbh->prepare($sql);
 $sth->execute();
 $sth->finish;
 
@@ -85,7 +85,7 @@ foreach my $factionID (@factions){
             # get the date for the $i-th night from now.
             
             $sql = "SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%Y-%m-%d' )";
-            $sth = $dbh_tnmc->prepare($sql);
+            $sth = $dbh->prepare($sql);
             $sth->execute($i * 7);
             my ($i_date) = $sth->fetchrow_array();
             $sth->finish();
@@ -109,7 +109,7 @@ foreach my $factionID (@factions){
 }
 
 # the end.
-&db_disconnect();
+&tnmc::db::db_disconnect();
 
 
 

@@ -6,16 +6,12 @@ use strict;
 # module configuration
 #
 
-BEGIN {
-    
-    require Exporter;
+BEGIN
+{
     require AutoLoader;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    use vars qw(@ISA);
     
-    @ISA = qw(Exporter AutoLoader);
-    
-    @EXPORT = qw(list_movies show_current_nights show_night);
-    @EXPORT_OK = qw();
+    @ISA = qw(AutoLoader);
 }
 
 1;
@@ -51,7 +47,8 @@ sub show_special_movie_select{
     $sql = "SELECT movieID
              FROM MovieVotes
             WHERE userID = ? AND type = ?";
-    $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql);
     $sth->execute($effectiveUserID, $vote_type);
     my ($current_vote) = $sth->fetchrow_array();
     $sth->finish();
@@ -97,7 +94,8 @@ sub show_night{
     my (%movie);
     
     my $sql = "SELECT DATE_FORMAT('$night{date}', 'W M D, Y')";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($next_tuesday_string) = $sth->fetchrow_array();
     $sth->finish();
@@ -153,7 +151,8 @@ sub list_movies{
     @$movie_list_ref = ();
     
     $sql = "SELECT movieID from Movies $where_clause $by_clause";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@$movie_list_ref, $row[0]);

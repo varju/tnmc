@@ -19,13 +19,13 @@ srand;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 &show_full_login();
 
-&footer();
-&db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 
 
@@ -72,7 +72,8 @@ sub show_full_login{
                         };
 
     $sql = "SELECT userID, username, fullname FROM Personal WHERE groupDead != '1' ORDER BY fullname ASC";
-    $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     
     while (@row = $sth->fetchrow_array()){
@@ -113,7 +114,7 @@ sub show_full_login{
                         };
 
     $sql = "SELECT userID, username, fullname FROM Personal WHERE groupDead != '1' ORDER BY fullname ASC";
-    $sth = $dbh_tnmc->prepare($sql);
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     
     while (@row = $sth->fetchrow_array()){

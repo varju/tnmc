@@ -6,20 +6,21 @@ use strict;
 # module configuration
 #
 
-BEGIN {
+BEGIN
+{
     use tnmc::config;
     use tnmc::security::auth;
     require tnmc::util::date;
-    
-    require Exporter;
+
     require AutoLoader;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter AutoLoader);
-    @EXPORT = qw(new_nav_menu new_nav_login);
-    @EXPORT_OK = qw();
-    
+    use vars qw(@ISA);
+
+    @ISA = qw(AutoLoader);
 }
+
+1;
+
+__END__
 
 #
 # module routines
@@ -211,14 +212,15 @@ sub new_nav_login{
                 };
 
 		if ($USERID_LAST_KNOWN){
-			&get_user($USERID_LAST_KNOWN, \%user);
+			&tnmc::user::get_user($USERID_LAST_KNOWN, \%user);
 			if (!$user{username} && $user{fullname}){
 				print qq{<option value="$USERID_LAST_KNOWN" selected>$user{fullname}\n};
 			}
 		}
 
+                my $dbh = &tnmc::db::db_connect();
                 $sql = "SELECT userID, username FROM Personal WHERE groupDead != '1' && username != '' ORDER BY username";
-                $sth = $dbh_tnmc->prepare($sql);
+                $sth = $dbh->prepare($sql);
                 $sth->execute();
                 
     while (@row = $sth->fetchrow_array()){

@@ -16,7 +16,7 @@ use tnmc::movies::theatres;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my @theatres = &tnmc::movies::theatres::list_theatres();
 
@@ -30,5 +30,5 @@ foreach my $theatreid ( @theatres){
 print "<tr><td></td><td><a href=\"theatre_edit_admin.cgi?theatreID=0\">New theatre...</a></td><td></td></tr>\n";
 print "</table>";
 
-&footer();
+&tnmc::template::footer();
 

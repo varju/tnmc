@@ -16,13 +16,13 @@ use tnmc::template;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 if ($USERID) {
-    &show_heading ("dev job list");
+    &tnmc::template::show_heading ("dev job list");
     
-    my $devBlurb =  &get_general_config("devBlurb");
+    my $devBlurb = &tnmc::general_config::get_general_config("devBlurb");
     
     print qq 
     {       <form action="development_set_submit.cgi" method="post">
@@ -41,6 +41,6 @@ if ($USERID) {
             }; 
 }
 
-&footer();
-db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 

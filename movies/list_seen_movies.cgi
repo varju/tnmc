@@ -18,11 +18,11 @@ use tnmc::movies::show;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 &show_seen_movie_list();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs 
@@ -33,7 +33,7 @@ use tnmc::movies::show;
 sub show_seen_movie_list{
     my (@movies, %movie, $movieID, $key, %USER, $isAdmin);
 
-    &list_movies(\@movies, "WHERE statusSeen = '1'", 'ORDER BY date DESC, title');
+    &tnmc::movies::show::list_movies(\@movies, "WHERE statusSeen = '1'", 'ORDER BY date DESC, title');
 
     # it occurs to me that there's a proper way to do this... oh well, too late now.
     my $i = 0;
@@ -41,9 +41,9 @@ sub show_seen_movie_list{
         $i++;
     }
 
-    &show_heading("Movies that we've been to (well, at least $i of them)");
+    &tnmc::template::show_heading("Movies that we've been to (well, at least $i of them)");
     
-    &get_user($USERID, \%USER);
+    &tnmc::user::get_user($USERID, \%USER);
     if ($USER{groupAdmin}){
         $isAdmin = 'e';
     }
@@ -64,7 +64,8 @@ sub show_seen_movie_list{
                 };
         }
         my $sql = "SELECT DATE_FORMAT('$movie{date}', '%b %d')";
-        my $sth = $dbh_tnmc->prepare($sql); 
+	my $dbh = &tnmc::db::db_connect();
+        my $sth = $dbh->prepare($sql); 
         $sth->execute();
         my ($dateString) = $sth->fetchrow_array();
         $sth->finish();

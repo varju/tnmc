@@ -17,7 +17,7 @@ require 'fieldtrip/FIELDTRIP.pl';
     #############
     ### Main logic
 
-    &header();
+    &tnmc::template::header();
 
     %survey;
 
@@ -49,4 +49,4 @@ require 'fieldtrip/FIELDTRIP.pl';
     }; 
     
 
-    &footer();
+    &tnmc::template::footer();

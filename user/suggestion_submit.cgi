@@ -18,17 +18,17 @@ use tnmc::cgi;
     #############
     ### Main logic
     
-    &db_connect();
+    my $dbh = &tnmc::db::db_connect();
     &tnmc::security::auth::authenticate();
 
     my $sql = "SELECT NOW()";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($time) = $sth->fetchrow_array();
     $sth->finish();
     
-    my $newSuggestion  =  &tnmc::cgi::param('suggestion');
-    my $oldSuggestions =  &get_general_config("suggestions");
+    my $newSuggestion  = &tnmc::cgi::param('suggestion');
+    my $oldSuggestions = &tnmc::general_config::get_general_config("suggestions");
 
     my $SUGG = 
         "$USERID{username} $USERID - $time \n"
@@ -36,11 +36,11 @@ use tnmc::cgi;
         . $newSuggestion . "\n\n"
         . $oldSuggestions;
 
-    &set_general_config('suggestions', $SUGG);
+    &tnmc::general_config::set_general_config('suggestions', $SUGG);
 
     sms_admin_notify("IDEA: $newSuggestion");
 
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 
     print "Location: /user/suggestion_add.cgi\n\n";
 }

@@ -22,13 +22,13 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $factionID = &tnmc::cgi::param('factionID');
 
 &show_night_create_form($factionID);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -50,7 +50,7 @@ sub show_night_create_form{
     my (@movies, %movie);
     
     # movieID select list
-    &list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
+    &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
     my %movieID_sel = ($night{'movieID'}, 'SELECTED');
     
     # factionID select list
@@ -58,11 +58,11 @@ sub show_night_create_form{
     my %factionID_sel = ($night{'factionID'}, 'SELECTED');
     
     # godID select list
-    my $users = &get_user_list();
+    my $users = &tnmc::user::get_user_list();
     my %godID_sel = ($night{'godID'}, 'SELECTED');
     
     # show the form to the user...
-    &show_heading("Create Movie Night");
+    &tnmc::template::show_heading("Create Movie Night");
     
     print qq{
         <form action="night_edit_admin_submit.cgi" method="post">

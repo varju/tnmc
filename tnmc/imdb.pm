@@ -5,21 +5,11 @@ use strict;
 #
 # module configuration
 #
-BEGIN {
+BEGIN
+{
     use LWP::UserAgent;
     use HTTP::Request::Common qw(POST);
-    
-#    use tnmc::general_config;
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    
-    @EXPORT = qw(imdb_get_movie_list imdb_get_movie_info);
-    
-    @EXPORT_OK = qw();
-}
+}    
 
 #
 # module routines

@@ -15,7 +15,8 @@ use strict;
 # module configuration
 #
 
-BEGIN{
+BEGIN
+{
     #
     # note: there is a second BEGIN (and an associated END) below that
     # aotomatically connect and disconnect to the db.
@@ -24,20 +25,13 @@ BEGIN{
     use DBI;
     use AutoLoader;
     use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc $dbh);
+    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc);
     
     @ISA = qw(Exporter AutoLoader);
-    
-    @EXPORT = qw(db_connect 
-                 db_disconnect 
-                 db_get_cols_list
-                 db_get_row
-                 db_set_row
-                 $dbh_tnmc
-                 $dbh);
-    
-    @EXPORT_OK = qw($dbh);
 
+    @EXPORT = ();
+
+    @EXPORT_OK = ();
 }
 
 #
@@ -74,10 +68,10 @@ sub db_disconnect{
 #
 
 BEGIN {
-    $dbh = &db_connect();
+    db_connect();
 }
 END {
-    &db_disconnect();
+    db_disconnect();
 }
 
 1;

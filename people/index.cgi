@@ -14,13 +14,13 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
-&show_heading ("TNMC People");
+&tnmc::template::show_heading ("TNMC People");
 
 &show_users();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs 
@@ -31,7 +31,7 @@ sub show_users(){
 
     my (@users, $userID, %user);
 
-    &list_users(\@users, "WHERE groupDead != '1'", 'ORDER BY
+    &tnmc::user::list_users(\@users, "WHERE groupDead != '1'", 'ORDER BY
 username');
 
     print qq
@@ -49,7 +49,7 @@ username');
     
     foreach $userID (@users)
     {    
-        &get_user_extended($userID, \%user);
+        &tnmc::user::get_user_extended($userID, \%user);
         $user{"phone$user{phonePrimary}"} = '' unless $user{"phone$user{phonePrimary}"};
         
         print qq

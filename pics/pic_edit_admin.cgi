@@ -20,7 +20,7 @@ use tnmc::pics::show;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 $picID = &tnmc::cgi::param('picID');
 %pic;	
@@ -45,4 +45,4 @@ print qq{
     </form>
 }; 
 
-&footer();
+&tnmc::template::footer();

@@ -37,7 +37,8 @@ sub set_pic{
     my (%pic, $junk) = @_;
     my ($sql, $sth, $return);
     
-    &db_set_row(\%pic, $dbh_tnmc, 'Pics', 'picID');
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_set_row(\%pic, $dbh, 'Pics', 'picID');
 }
 
 ########################################
@@ -49,7 +50,8 @@ sub del_pic{
     ### Delete the pic
     
     $sql = "DELETE FROM Pics WHERE picID = '$picID'";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     $sth->finish;
 }
@@ -59,8 +61,9 @@ sub get_pic{
     my ($picID, $pic_ref, $junk) = @_;
     
     my $sql = "SELECT * FROM Pics WHERE picID = ?";
-    my $sth = $dbh_tnmc->prepare($sql)
-        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql)
+        or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($picID);
     my $ref = $sth->fetchrow_hashref() || return;
     $sth->finish;
@@ -112,7 +115,8 @@ sub list_pics{
     @$pic_list_ref = ();
     
     $sql = "SELECT picID from Pics $where_clause $by_clause";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@$pic_list_ref, $row[0]);
@@ -366,7 +370,8 @@ sub pic_add{
     # db: get picID
     print "saving to data/ ($pic{filename})\n";
     my $sql = "SELECT picID FROM Pics WHERE filename = ?";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute($pic{filename});
     my ($picID) = $sth->fetchrow_array();
     $sth->finish();

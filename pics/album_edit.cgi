@@ -23,7 +23,7 @@ use strict;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $albumID = &tnmc::cgi::param('albumID');
 
@@ -35,7 +35,7 @@ else{
         You don\'t have permission to edit this album.
     };
 }
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -46,7 +46,7 @@ sub show_album_edit_form{
     my %album;	
     &get_album($albumID, \%album);
     
-    &show_heading("album edit");
+    &tnmc::template::show_heading("album edit");
     print qq {
         <form action="album_edit_submit.cgi" method="post">
         <input type="hidden" name="albumID" value="$albumID">
@@ -104,7 +104,7 @@ sub show_album_edit_form{
         <tr><td><b>Owner</b></td>
             <td><select name="albumOwnerID">
     };
-    my $users = &get_user_list("WHERE groupPics >= 1");
+    my $users = &tnmc::user::get_user_list("WHERE groupPics >= 1");
     foreach my $username (sort keys %$users){
         my $userID = $users->{$username};
         print qq{<option $sel{$userID} value="$userID">$username</option>\n};

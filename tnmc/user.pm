@@ -5,17 +5,9 @@ use strict;
 #
 # module configuration
 #
-
-BEGIN {
+BEGIN
+{
     use tnmc::db;
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    @EXPORT = qw(set_user del_user get_user get_user_cache get_user_extended list_users get_user_list);
-    @EXPORT_OK = qw();
-    
 }
 
 #
@@ -26,13 +18,14 @@ sub set_user{
     my (%user, $junk) = @_;
     my ($sql, $sth, $return);
     
-    &db_set_row(\%user, $dbh_tnmc, 'Personal', 'userID');
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_set_row(\%user, $dbh, 'Personal', 'userID');
     
     ###############
     ### Return the User ID
     
     $sql = "SELECT userID FROM Personal WHERE username = '$user{username}'";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     ($return) = $sth->fetchrow_array();
     $sth->finish;
@@ -47,8 +40,9 @@ sub del_user{
     ###############
     ### Delete the user
     
+    my $dbh = &tnmc::db::db_connect();
     $sql = "DELETE FROM Personal WHERE userID = '$userID'";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     $sth->finish;
 }
@@ -56,9 +50,10 @@ sub del_user{
 sub get_user{
     my ($userID, $user_ref) = @_;
     
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT * FROM Personal WHERE userID = ?";
-    my $sth = $dbh_tnmc->prepare($sql)
-        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $sth = $dbh->prepare($sql)
+        or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($userID);
     my $ref = $sth->fetchrow_hashref() || return;
     $sth->finish;
@@ -89,8 +84,9 @@ sub get_user_extended{
     my ($userID, $user_ref, $junk) = @_;
     my ($condition);
 
+    my $dbh = &tnmc::db::db_connect();
     $condition = "userID = '$userID'";
-    &db_get_row($user_ref, $dbh_tnmc, 'Personal', $condition);
+    &tnmc::db::db_get_row($user_ref, $dbh, 'Personal', $condition);
 
     if (!$user_ref->{username}){
         $user_ref->{username} = $user_ref->{fullname};
@@ -106,7 +102,8 @@ sub list_users{
     @$user_list_ref = ();
 
     $sql = "SELECT userID from Personal $where_clause $by_clause";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@$user_list_ref, $row[0]);
@@ -121,8 +118,9 @@ sub get_user_list {
 
     my %results;
 
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT userID,username from Personal $where_clause";
-    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (my @row = $sth->fetchrow_array()){
         my $userid = shift(@row);

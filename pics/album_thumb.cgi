@@ -14,7 +14,7 @@ use tnmc::pics::new;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $nav = &get_nav;
 my $albumID = $nav->{'albumID'};
@@ -26,7 +26,7 @@ my $piclist = &album_get_piclist_from_nav($nav);
 # show thumbs
 &show_thumbs($piclist, $nav);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs

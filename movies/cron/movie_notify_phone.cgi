@@ -20,7 +20,7 @@ use tnmc::movies::faction;
     #############
     ### Main logic
 
-    &db_connect();
+    &tnmc::db::db_connect();
     
     my @nights = &list_active_nights();
     
@@ -45,7 +45,7 @@ use tnmc::movies::faction;
         &smsBroadcast(\@users, $message);
     }
     
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 }
 
 

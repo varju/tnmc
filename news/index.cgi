@@ -12,13 +12,13 @@ use tnmc::news::util;
 #############
 ### Main logic
 
-header();
+&tnmc::template::header();
 
 if ($USERID) {
-    show_heading("news");
+    &tnmc::template::show_heading("news");
 
     my $news_ref = get_news();
     news_print($news_ref,0,1,1);
 }
     
-footer();
+&tnmc::template::footer();

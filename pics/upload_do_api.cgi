@@ -49,7 +49,7 @@ sub do_upload_api{
     print "checking upload\n";
     ## grab the normal image params
     my %pic;
-    foreach my $key (&db_get_cols_list('Pics')){
+    foreach my $key (&tnmc::db::db_get_cols_list('Pics')){
         $pic{$key} = &tnmc::cgi::param($key);
         print "$key - $pic{$key}\n";
     }

@@ -23,7 +23,7 @@ my @params = &tnmc::cgi::param();
 
 foreach my $key (@params) {
     my $val = &tnmc::cgi::param($key);
-    &set_general_config($key, $val);
+    &tnmc::general_config::set_general_config($key, $val);
 }
 
 print "Location: index.cgi\n\n";

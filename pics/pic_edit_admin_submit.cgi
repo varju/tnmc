@@ -19,7 +19,7 @@ use tnmc::pics::pic;
     
 my %pic;
 
-my @cols = &db_get_cols_list('Pics');
+my @cols = &tnmc::db::db_get_cols_list('Pics');
 foreach $key (@cols){
     $pic{$key} = &tnmc::cgi::param($key);
 }

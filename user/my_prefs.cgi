@@ -16,14 +16,14 @@ use tnmc::user;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 if ($USERID){ 
-    my @cols = &db_get_cols_list('Personal');
+    my @cols = &tnmc::db::db_get_cols_list('Personal');
 
     my %user;
-    &get_user($USERID, \%user);
+    &tnmc::user::get_user($USERID, \%user);
     
     print qq{
             <form action="my_prefs_submit.cgi" method="post">
@@ -47,7 +47,7 @@ if ($USERID){
     }
     
     
-    &show_heading ("basic info");
+    &tnmc::template::show_heading ("basic info");
     
     $user{birthdate} = substr($user{birthdate}, 0, 10);
     print qq{
@@ -97,7 +97,7 @@ if ($USERID){
             <p>
             };
 
-    &show_heading ("phones and text mail");
+    &tnmc::template::show_heading ("phones and text mail");
     
     my (%sel_primary_phone, %sel_text_mail, %sel_movie_notify);
     $sel_primary_phone{$user{phonePrimary}} = 'selected';
@@ -158,7 +158,7 @@ if ($USERID){
 
             };
     
-    &show_heading("pics");
+    &tnmc::template::show_heading("pics");
     my %sel_random_pic;
     $sel_random_pic{$user{I_am_a_misanthrope}} = 'checked';
     
@@ -173,7 +173,7 @@ if ($USERID){
                         </table>
                         };
 
-    &show_heading("colours");
+    &tnmc::template::show_heading("colours");
     my $sel_colour_bg = $user{colour_bg} || '#99ff00';
     print qq{
             <table cellpadding="0" border="0" cellspacing="0">
@@ -191,5 +191,5 @@ if ($USERID){
             }; 
 }
 
-&footer();
-db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();

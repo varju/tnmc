@@ -18,7 +18,7 @@ use tnmc::pics::new;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my %pic;
 my $picID = &tnmc::cgi::param('picID');
@@ -42,7 +42,7 @@ else{
 }
 if (&auth_access_pic_view($picID, \%pic)){
     # show the exif info
-    show_heading("Exif info");
+    &tnmc::template::show_heading("Exif info");
     my $exif = &tnmc::pics::pic::get_exif($picID);
     print "<table>";
     foreach my $key (keys %$exif){
@@ -52,7 +52,7 @@ if (&auth_access_pic_view($picID, \%pic)){
     
 }
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -112,7 +112,7 @@ sub show_pic_edit_form{
                 <td><select name="ownerID">
     };
 
-    my $user_list_ref = &get_user_list();
+    my $user_list_ref = &tnmc::user::get_user_list();
     foreach $username (sort keys %$user_list_ref){
         my $selected = 'selected' if ($pic{ownerID} == $user_list_ref->{$username});
         print qq{<option $selected value="$user_list_ref->{$username}">$username\n};

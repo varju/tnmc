@@ -18,16 +18,16 @@ require 'fieldtrip/FIELDTRIP.pl';
     #############
     ### Main logic
     
-    &db_connect();
+    &tnmc::db::db_connect();
 
-    @cols = &db_get_cols_list('Fieldtrips');
+    @cols = &tnmc::db::db_get_cols_list('Fieldtrips');
      foreach $key (@cols)
     {
          $trip{$key} = &tnmc::cgi::param($key);
     }
     &set_trip(%trip);
     
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 
     print "Location: index.cgi\n\n";
 

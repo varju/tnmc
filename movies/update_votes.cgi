@@ -45,14 +45,14 @@ sub do_update_votes{
     $vote_count{'1'} = 0 unless defined $vote_count{'1'};
     $vote_count{'-1'} = 0 unless defined $vote_count{'-1'};
     if ($vote_count{'1'} < $vote_count{'-1'}){
-        &header();
+        &tnmc::template::header();
         print qq{
             <p><b>Hey silly...</b>
                 <p>What\'s the point in having $vote_count{-1} anti-votes
                 and only $vote_count{1} real votes?
                 <p>Why don\'t ya go back and try to be a little more positive next time \'round.
                 };
-        &footer();
+        &tnmc::template::footer();
         exit(1);
     }
     
@@ -68,7 +68,8 @@ sub do_update_votes{
         if (defined ($movieID)){
             ### Kill old Special vote.
             my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '$vote_type' AND userID = '$userID'";
-            my $sth = $dbh_tnmc->prepare($sql);
+	    my $dbh = &tnmc::db::db_connect();
+            my $sth = $dbh->prepare($sql);
             $sth->execute();
             $sth->finish();
             

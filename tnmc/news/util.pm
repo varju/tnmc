@@ -54,7 +54,8 @@ sub get_todays_news {
                   AND (n.date <= NOW())
              ORDER BY n.date DESC";
 
-    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute();
     while (my @row = $sth->fetchrow_array()) {
         my %news_row;
@@ -80,7 +81,8 @@ sub get_news {
                  FROM News as n LEFT JOIN Personal as p USING (userID)
              ORDER BY n.date DESC";
 
-    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute();
     while (my @row = $sth->fetchrow_array()) {
         my %news_row;
@@ -108,9 +110,11 @@ sub set_news_item {
     my $date = $$news_ref{date};
     my $expires = $$news_ref{expires};
 
+    my $dbh = &tnmc::db::db_connect();
+
     if ($newsId) {
         $sql = "DELETE FROM News WHERE newsID=?";
-        $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
         $sth->execute($newsId);
         $sth->finish();
     }
@@ -127,7 +131,7 @@ sub set_news_item {
 
     $sql = "INSERT INTO News (newsID, userID, value, date, expires) 
                  VALUES (?, ?, ?, ?, ?)";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($newsId, $userId, $value, $date, $expires);
     $sth->finish();
 }
@@ -139,7 +143,8 @@ sub get_news_item {
                  FROM News as n
                 WHERE n.newsID=?";
 
-    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($newsId);
     my @row = $sth->fetchrow_array();
     $sth->finish();
@@ -158,7 +163,8 @@ sub del_news_item {
     my ($newsId) = @_;
 
     my $sql = "DELETE FROM News WHERE newsID='$newsId'";
-    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute();
     $sth->finish();
 }

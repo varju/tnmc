@@ -29,7 +29,7 @@ sub get_session{
     my ($sessionID, $session) = @_;
     
     # make sure we have a handle
-    my $dbh = tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     # fetch from the db
     my $sql = "SELECT * from SessionInfo WHERE sessionID = ?";
@@ -50,7 +50,7 @@ sub set_session{
     my ($session) = @_;
     
     # make sure we have a handle
-    my $dbh = tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     my @key_list = sort( keys(%$session) );
     my $key_list = join ( ',', @key_list);
@@ -69,7 +69,7 @@ sub del_session{
     my ($sessionID) = @_;
     
     # make sure we have a handle
-    my $dbh = tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     # fetch from the db
     my $sql = "DELETE from SessionInfo WHERE sessionID = ?";
@@ -82,7 +82,7 @@ sub revoke_session{
     my ($sessionID) = @_;
     
     # make sure we have a handle
-    my $dbh = tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     # save to the db
     my $sql = "UPDATE SessionInfo SET open = 0 WHERE sessionID = ?";
@@ -96,7 +96,7 @@ sub hit_session{
     my ($sessionID) = @_;
     
     # make sure we have a handle
-    my $dbh = tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     # save to the db
     my $sql = "UPDATE SessionInfo SET hits = (hits + 1), lastOnline = NULL WHERE sessionID = ?";

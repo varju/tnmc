@@ -26,11 +26,12 @@ sub set_night{
     my (%night, $junk) = @_;
     my ($sql, $sth, $return);
     
-    &db_set_row(\%night, $dbh_tnmc, 'MovieNights', 'nightID');
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_set_row(\%night, $dbh, 'MovieNights', 'nightID');
     
     if (!$night{nightID}){
-        $sql = "SELECT nightID FROM MovieNights WHERE date = " . $dbh_tnmc->quote($night{date});
-        $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+        $sql = "SELECT nightID FROM MovieNights WHERE date = " . $dbh->quote($night{date});
+        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
         $sth->execute;
         ($return) = $sth->fetchrow_array();
         $sth->finish;
@@ -45,7 +46,8 @@ sub get_night{
     my ($condition);
 
     $condition = "(nightID = '$nightID' OR date = '$nightID')";
-    &db_get_row($night_ref, $dbh_tnmc, 'MovieNights', $condition);
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_get_row($night_ref, $dbh, 'MovieNights', $condition);
 }
 
 # BLOCK: get_next night
@@ -63,7 +65,8 @@ sub get_next_night{
     ### BUG ALERT (?)
     
     $sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= NOW() ORDER BY date LIMIT 1";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     ($get_next_night_cache) = $sth->fetchrow_array();
     $sth->finish();
@@ -79,7 +82,8 @@ sub list_nights{
     @$night_list_ref = ();
 
     $sql = "SELECT nightID from MovieNights $where_clause $by_clause";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@$night_list_ref, $row[0]);
@@ -101,7 +105,8 @@ sub list_future_nights{
     else{
         $sql = "SELECT nightID from MovieNights WHERE date >= NOW() ORDER BY date, nightID";
     }
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@night_list, $row[0]);
@@ -117,7 +122,8 @@ sub list_active_nights{
     my @night_list = ();
     
     $sql = "SELECT nightID from MovieNights WHERE date >= NOW() && movieID ORDER BY date, nightID";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@night_list, $row[0]);
@@ -139,7 +145,8 @@ sub list_moviegod_nights{
     $sql = "SELECT nightID from MovieNights
              WHERE date >= NOW() and godID = ?
              ORDER BY date, nightID";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($userID);
     while (@row = $sth->fetchrow_array()){
         push (@night_list, $row[0]);
@@ -162,7 +169,7 @@ sub show_moviegod_links{
     return if ($userID == 38);
     
     my %user;
-    &get_user($userID, \%user);
+    &tnmc::user::get_user($userID, \%user);
     
     # have to be in group movies to touch
     return if (! $user{groupMovies});
@@ -226,7 +233,7 @@ sub is_movie_seen_by_faction{
                 WHERE factionID = ?
                   AND movieID = ?
                   AND date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)";
-    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($factionID, $movieID);
     my @row = $sth->fetchrow_array();
     $sth->finish;

@@ -18,7 +18,7 @@ require 'fieldtrip/FIELDTRIP.pl';
     #############
     ### Main logic
     
-    &db_connect();
+    &tnmc::db::db_connect();
     
     $tripID = &tnmc::cgi::param('tripID');
     $userID = &tnmc::cgi::param('userID');
@@ -28,14 +28,14 @@ require 'fieldtrip/FIELDTRIP.pl';
     
     
     
-    @cols = &db_get_cols_list('FieldtripSurvey');
+    @cols = &tnmc::db::db_get_cols_list('FieldtripSurvey');
     foreach $key (@cols){
          $survey{$key} = &tnmc::cgi::param($key) if (defined &tnmc::cgi::param($key));
     }
 
     &set_tripSurvey(%survey);
 
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 
     print "Location: index.cgi\n\n";
 

@@ -16,12 +16,12 @@ use tnmc::movies::show;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
-&show_heading('List all Movies');
+&tnmc::template::show_heading('List all Movies');
 &show_admin_movie_list();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -32,7 +32,7 @@ use tnmc::movies::show;
 sub show_admin_movie_list{
     my (@movies, %movie, $movieID, $key);
 
-    &list_movies(\@movies, '', 'ORDER BY title');
+    &tnmc::movies::show::list_movies(\@movies, '', 'ORDER BY title');
 
     print qq{
                 <table cellspacing="3" cellpadding="0" border="0">

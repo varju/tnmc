@@ -16,7 +16,7 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-db_connect();
+&tnmc::db::db_connect();
 
 # boot the user.
 &tnmc::security::auth::authenticate();
@@ -28,7 +28,7 @@ print &tnmc::cgi::redirect(
 			   -cookie=>$cookie
 			   );
 
-db_disconnect();
+&tnmc::db::db_disconnect();
 
 ##########################################################
 #### The end.

@@ -17,7 +17,7 @@ use tnmc::cgi;
     #############
     ### Main logic
     
-    &header();
+    &tnmc::template::header();
     
     my $factionID = &tnmc::cgi::param('factionID');
     my $userID = &tnmc::cgi::param('userID');
@@ -26,7 +26,7 @@ use tnmc::cgi;
     my $user = &tnmc::user::get_user_cache($userID);
     my $prefs =  &tnmc::movies::faction::load_faction_prefs($factionID, $userID);
     
-    &show_heading("Faction Prefs for $user->{username} in $faction->{name}");
+    &tnmc::template::show_heading("Faction Prefs for $user->{username} in $faction->{name}");
     
     my %sel_membership = ($prefs->{membership} => 'checked');
     my %sel_attendance = ($prefs->{attendance} => 'selected');
@@ -68,7 +68,7 @@ use tnmc::cgi;
     };
     
     
-    &footer();
+    &tnmc::template::footer();
 }
 
 

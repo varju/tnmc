@@ -17,9 +17,9 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
-&show_heading("compare movies");
+&tnmc::template::show_heading("compare movies");
 
 my $movieID = &tnmc::cgi::param('movieID');
 my @movies;
@@ -32,7 +32,7 @@ foreach my $key (&tnmc::cgi::param()){
 
 &show_movie_vote_comparison(@movies);
 
-&footer();
+&tnmc::template::footer();
 
 
 
@@ -53,13 +53,13 @@ sub show_movie_vote_comparison{
     }
 
     my @users;
-    &list_users(\@users, "", "ORDER BY userID");
+    &tnmc::user::list_users(\@users, "", "ORDER BY userID");
 
     my %movie_vote_count = ();
 
     foreach my $userID (@users){
         my %user;
-        &get_user($userID, \%user);
+        &tnmc::user::get_user($userID, \%user);
 
         my $vote_count = 0;
         foreach $movieID (@movies){

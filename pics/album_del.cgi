@@ -19,7 +19,7 @@ use tnmc::pics::link;
 	#############
 	### Main logic
 
-	&header();
+	&tnmc::template::header();
 
 	%album;	
 	$albumID = &tnmc::cgi::param('albumID');
@@ -61,6 +61,8 @@ use tnmc::pics::link;
             }else{
                 ### Delete the album
 
+		my $dbh = &tnmc::db::db_connect();
+
                 print qq{
                     <b>Album Deleted:</b>
                     <p>
@@ -68,7 +70,7 @@ use tnmc::pics::link;
                 };
                 
                 $sql = "DELETE FROM PicLinks WHERE albumID = $albumID";
-                $sth = $dbh_tnmc->prepare($sql);
+                $sth = $dbh->prepare($sql);
                 $sth->execute();
 
                 &del_album($albumID);
@@ -80,6 +82,5 @@ use tnmc::pics::link;
             }
         }
 	
-	&footer();
-
+	&tnmc::template::footer();
 }

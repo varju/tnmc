@@ -47,7 +47,7 @@ sub format_date{
     }
     elsif ($format eq 'full_date'){
         require tnmc::db;
-        my $dbh = $tnmc::db::dbh;
+	my $dbh = &tnmc::db::db_connect();
         
         my $sql = "SELECT DATE_FORMAT(?, 'W M D, Y')";
         my $sth = $dbh->prepare($sql);

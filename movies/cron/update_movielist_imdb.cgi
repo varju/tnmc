@@ -20,7 +20,7 @@ use tnmc::imdb;
     #############
     ### Main logic
 
-    &db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     print "Content-type: text/html\n\n<pre>\n";
     
@@ -29,7 +29,7 @@ use tnmc::imdb;
     print "***********************************************************\n";
     print "\n\n";
     
-    my %list = imdb_get_movie_list();
+    my %list = &tnmc::imdb::imdb_get_movie_list();
     
     my $i = keys %list;
     print "$i movies found online at imdb.com\n\n";
@@ -43,7 +43,7 @@ use tnmc::imdb;
     my %mPremise;
     
     foreach my $mID (sort(keys(%list))){
-        my %movieInfo = imdb_get_movie_info($mID);
+        my %movieInfo = &tnmc::imdb::imdb_get_movie_info($mID);
         if (!defined %movieInfo) {
             print "\n$mID (failed - parse error)";
             next;
@@ -70,7 +70,7 @@ use tnmc::imdb;
         ### Try to find movie in DB via mybcID
 
         my $sql = "SELECT movieID FROM Movies WHERE imdbID = '$mID'";
-        my $sth = $dbh_tnmc->prepare($sql);
+        my $sth = $dbh->prepare($sql);
         $sth->execute();
         my @row = $sth->fetchrow_array();
         $sth->finish();
@@ -85,8 +85,8 @@ use tnmc::imdb;
             ### Try to find movie in DB via Title
     
             $sql = "SELECT movieID FROM Movies
-                 WHERE title = " . $dbh_tnmc->quote($mTitle{$mID});
-            $sth = $dbh_tnmc->prepare($sql);
+                 WHERE title = " . $dbh->quote($mTitle{$mID});
+            $sth = $dbh->prepare($sql);
             $sth->execute();
             @row = $sth->fetchrow_array();
             $sth->finish();
@@ -142,7 +142,7 @@ use tnmc::imdb;
       }
     }
 
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 }
 
 

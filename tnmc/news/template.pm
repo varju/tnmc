@@ -85,7 +85,7 @@ sub news_edit {
     my $value = $$news_ref{value};
     my $expires = $$news_ref{expires};
 
-    my $userlist = get_user_list("WHERE groupAdmin='1'");
+    my $userlist = &tnmc::user::get_user_list("WHERE groupAdmin='1'");
 
     print qq{
 <form action="edit_news_submit.cgi" method="post">

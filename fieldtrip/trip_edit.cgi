@@ -17,13 +17,13 @@ require 'fieldtrip/FIELDTRIP.pl';
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 $tripID = &tnmc::cgi::param('tripID');
 
 show_edit_form($tripID);
 
-&footer();
+&tnmc::template::footer();
 
 
 ##################################################
@@ -35,7 +35,7 @@ sub show_edit_form{
     
     &get_trip($tripID, \%trip);
     
-    &show_heading("trip edit");
+    &tnmc::template::show_heading("trip edit");
     print qq {
         <form action="trip_edit_submit.cgi" method="post">
         <input type="hidden" name="tripID" value="$tripID">

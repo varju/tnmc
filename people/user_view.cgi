@@ -15,15 +15,15 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
-&show_heading("user detail");
+&tnmc::template::show_heading("user detail");
 
 my $userID = &tnmc::cgi::param('userID');
 
 &show_user($userID);
 
-&footer("userView");
+&tnmc::template::footer("userView");
 
 
 ##################################################################
@@ -53,7 +53,7 @@ sub show_user
                 blurb
                 );
     
-    &get_user_extended($userID, \%user);
+    &tnmc::user::get_user_extended($userID, \%user);
     
     print qq 
     {

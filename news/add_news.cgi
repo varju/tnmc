@@ -12,10 +12,10 @@ use tnmc::news::util;
 #############
 ### Main logic
 
-header();
+&tnmc::template::header();
 
 if ($USERID) {
-    show_heading("add news entry");
+    &tnmc::template::show_heading("add news entry");
 
     my %news;
     $news{newsId} = 0;
@@ -27,4 +27,4 @@ if ($USERID) {
     news_edit(\%news);
 }
     
-footer();
+&tnmc::template::footer();

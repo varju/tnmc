@@ -18,15 +18,15 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&header();
-&db_connect();
+&tnmc::template::header();
+&tnmc::db::db_connect();
 
 my $groupID = &tnmc::cgi::param('groupID');
 &show_group_selector($groupID);
 &show_edit_group($groupID);
 
-&footer();
-&db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 
 #########################################
@@ -38,7 +38,8 @@ sub show_group_selector{
     my @groups = ();
 
     my $sql = "EXPLAIN Personal";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     while (my ($field, $junk) = $sth->fetchrow_array()){
         if ($field =~ s/^group//){
@@ -76,11 +77,12 @@ sub show_edit_group{
     my @ranks = ('0', '1');
 
 
-    &list_users(\@users, '', 'ORDER BY username');
-    get_user($users[0], \%user);
+    &tnmc::user::list_users(\@users, '', 'ORDER BY username');
+    &tnmc::user::get_user($users[0], \%user);
 
     my $sql = "SELECT DISTINCT group$group FROM Personal ORDER BY group$group";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     while (my @row = $sth->fetchrow_array()){
         next if ($row[0] == 1);
@@ -89,7 +91,7 @@ sub show_edit_group{
     }
     $sth->finish();
 
-    &show_heading("Group Administration: $group");
+    &tnmc::template::show_heading("Group Administration: $group");
     print qq{
         <form action="/admin/groups_change_submit.cgi" method="post">
         <input type="hidden" name="group" value="$group">
@@ -115,7 +117,7 @@ sub show_edit_group{
                     </tr>
             };
         }
-                get_user($userID, \%user);
+                &tnmc::user::get_user($userID, \%user);
         print qq{
             <tr>    <td>$userID</td>
                 <td><b>$user{username}</b></td>

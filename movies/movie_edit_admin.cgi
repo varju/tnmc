@@ -17,12 +17,12 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $movieID = &tnmc::cgi::param('movieID');
 &print_movie_edit_admin_form($movieID);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -32,7 +32,7 @@ sub print_movie_edit_admin_form{
     my ($movieID) = @_;
     
     my %movie;
-    my @cols = &db_get_cols_list('Movies');
+    my @cols = &tnmc::db::db_get_cols_list('Movies');
     &get_movie($movieID, \%movie);
     
     print qq 

@@ -18,11 +18,11 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-db_connect();
+my $dbh = &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
     
 my %user;
-my @cols = &db_get_cols_list('Personal');
+my @cols = &tnmc::db::db_get_cols_list('Personal');
 
 foreach my $key (@cols){
     if (&tnmc::cgi::param($key)){
@@ -33,10 +33,10 @@ foreach my $key (@cols){
 }
 $user{groupDev} = '0';
 $user{userID} = 0;
-my $userID = &set_user(%user);
+my $userID = &tnmc::user::set_user(%user);
 
 my $sql = "SELECT userID FROM Personal WHERE username = '$user{username}' ORDER BY userID DESC";
-my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
 $sth->execute;
 ## get the last row
 ($userID) = $sth->fetchrow_array();
@@ -44,7 +44,7 @@ $sth->finish;
 
 sms_admin_notify("New User Created: $userID - $user{username} - $user{fullname} - $user{email} - $userID}");
     
-&header();
+&tnmc::template::header();
 
 print qq{
         <form method="post" action="/user/login.cgi">
@@ -61,6 +61,6 @@ print qq{
         
         };
     
-&footer();
+&tnmc::template::footer();
 
-&db_disconnect();
+&tnmc::db::db_disconnect();

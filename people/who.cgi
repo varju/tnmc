@@ -16,17 +16,17 @@ use tnmc::util::date;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
-&show_heading('Who\'s online now');
+&tnmc::template::show_heading('Who\'s online now');
 &show_recent_users_list(60, 1);
 
 print "<p>";
 
-&show_heading('last 24 hrs');
+&tnmc::template::show_heading('last 24 hrs');
 &show_recent_users_list(1440, undef());
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -56,7 +56,7 @@ sub show_recent_users_list{
         
         &tnmc::security::session::get_session($sessionID, \%session);
         my $userID = $session{'userID'};
-        &get_user($userID, \%user);
+        &tnmc::user::get_user($userID, \%user);
         
         my $first_online = &tnmc::util::date::format_date('numeric', $session{'firstOnline'});
         my $last_online = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});

@@ -62,7 +62,7 @@ sub smsShout{
     if ($msg eq ''){ return 0;}
     
     ### Get the user info from the db
-    &get_user($userID, \%user);
+    &tnmc::user::get_user($userID, \%user);
     
     ### Get the sender info
     if ($USERID){

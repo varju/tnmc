@@ -16,15 +16,15 @@ use tnmc::cgi;
 
 #############
 ### Main logic
-&header();
+&tnmc::template::header();
 
-&show_heading("movie detail");
+&tnmc::template::show_heading("movie detail");
 
 my $movieID = &tnmc::cgi::param('movieID');
 
 &show_movie_extended($movieID);
 
-&footer("movieView");
+&tnmc::template::footer("movieView");
 
 #
 # subs

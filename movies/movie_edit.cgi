@@ -16,12 +16,12 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $movieID = &tnmc::cgi::param('movieID');
 &show_movie_edit_form($movieID);
 
-&footer();
+&tnmc::template::footer();
 
 
 #

@@ -30,7 +30,7 @@ sub do_add_album{
     my %album;
     
     ## get the cgi info
-    @cols = &db_get_cols_list('PicAlbums');
+    @cols = &tnmc::db::db_get_cols_list('PicAlbums');
     foreach $key (@cols){
         $album{$key} = &tnmc::cgi::param($key);
     }
@@ -38,21 +38,23 @@ sub do_add_album{
     ## save the album
     &set_album(%album);
     
+    my $dbh = &tnmc::db::db_connect();
+
     ## get the albumID
     $sql = "SELECT albumID from PicAlbums WHERE albumTitle = ? AND albumOwnerID = ? AND albumDateStart = ? AND albumDateEnd = ? ORDER BY albumID DESC";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($album{albumTitle}, $album{albumOwnerID}, $album{albumDateStart}, $album{albumDateEnd});
     ($albumID, $junk)  = $sth->fetchrow_array();
     $sth->finish;
     
     ## complain bitterly if we couldn't find the albumID
     if (!$albumID){
-        &header();
+        &tnmc::template::header();
         print "<b>Error: Could not determine albumID!!!</b><br>\n";
         print "Album May have been partially created, but pics could not be added. Please investigate this before trying again<br>\n";
         print "<hr> <b>Dump:</b> <b>";
         print %album;
-        &footer();
+        &tnmc::template::footer();
         return 0;
     }
     

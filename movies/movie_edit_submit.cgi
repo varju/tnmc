@@ -17,7 +17,7 @@ use tnmc::cgi;
 
 my %movie;
 
-my @cols = &db_get_cols_list('Movies');
+my @cols = &tnmc::db::db_get_cols_list('Movies');
 
 foreach my $key (@cols){
     $movie{$key} = &tnmc::cgi::param($key);

@@ -16,13 +16,13 @@ use tnmc::template;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 if ($USERID) {
-    &show_heading ("suggestions");
+    &tnmc::template::show_heading ("suggestions");
     
-    my $suggestions = &get_general_config("suggestions");
+    my $suggestions = &tnmc::general_config::get_general_config("suggestions");
     
     print qq 
     {       <form action="development_set_submit.cgi" method="post">
@@ -41,5 +41,5 @@ if ($USERID) {
             }; 
 }
 
-&footer();
-db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();

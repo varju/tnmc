@@ -19,7 +19,7 @@ use tnmc::movies::faction;
     #############
     ### Main logic
     
-    &db_connect();
+    my $dbh = &tnmc::db::db_connect();
 
     my @nights = &list_active_nights();
 
@@ -31,7 +31,7 @@ use tnmc::movies::faction;
     my $to_email = $tnmc_email;
     
     my $sql = "SELECT DATE_FORMAT(NOW(), 'W M D, Y')";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($today_string) = $sth->fetchrow_array();
     my $today_string = &tnmc::util::date::format_date('full_date', &tnmc::util::date::now());
@@ -53,7 +53,7 @@ use tnmc::movies::faction;
         
         
         $sql = "SELECT DATE_FORMAT('$night{'date'}', 'W M D, Y')";
-        $sth = $dbh_tnmc->prepare($sql);
+        $sth = $dbh->prepare($sql);
         $sth->execute();
         my $date_string = &tnmc::util::date::format_date('full_date', $night{'date'});
         $sth->finish();
@@ -75,7 +75,7 @@ use tnmc::movies::faction;
     close SENDMAIL;
     
     
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 
 }
 

@@ -16,11 +16,11 @@ use tnmc::pics::show;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 &show_all_albums();
 
-&footer();
+&tnmc::template::footer();
 
 
 ###################################################################
@@ -28,7 +28,7 @@ sub show_all_albums{
     
     my $add_link = qq{<a href="album_add.cgi"><font color="ffffff">Add</font></a>};
     
-    &show_heading("Albums - $add_link");
+    &tnmc::template::show_heading("Albums - $add_link");
     
     my @albums;
     &tnmc::pics::album::list_albums(\@albums, 

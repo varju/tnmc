@@ -26,6 +26,7 @@ sub get_theatre{
     my ($theatreID) = @_;
     
     # fetch from the db
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT * from MovieTheatres WHERE theatreID = ?";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($theatreID);
@@ -39,6 +40,7 @@ sub get_theatre_by_mybcid{
     my ($mybcid) = @_;
     
     # fetch from the db
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT * from MovieTheatres WHERE mybcid = ?";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($mybcid);
@@ -57,6 +59,7 @@ sub set_theatre{
     my @var_list = map {$hash->{$_}} @key_list;
     
     # save to the db
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "REPLACE INTO MovieTheatres ($key_list) VALUES($ref_list)";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute(@var_list) or return 0;
@@ -66,6 +69,7 @@ sub set_theatre{
 sub del_theatre{
     my ($theatreid) = @_;
     
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "DELETE from MovieTheatres WHERE theatreID = ?";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($theatreid);
@@ -76,6 +80,7 @@ sub list_theatres{
     my @list;
     
     # fetch from the db
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT theatreID FROM MovieTheatres ORDER BY name";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute() or return 0;

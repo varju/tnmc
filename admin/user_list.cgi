@@ -16,14 +16,14 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
-&db_connect();
+&tnmc::template::header();
+&tnmc::db::db_connect();
 
-&show_heading('<a id="personal">Personal</a>');
+&tnmc::template::show_heading('<a id="personal">Personal</a>');
 &show_edit_users_list();
 
-&db_disconnect();
-&footer();
+&tnmc::db::db_disconnect();
+&tnmc::template::footer();
 
 ##########################################################
 #### sub procedures.
@@ -33,8 +33,8 @@ use tnmc::user;
 sub show_edit_users_list{
     my (@users, %user, $userID, $key);
 
-    &list_users(\@users, '', 'ORDER BY username');
-    get_user($users[0], \%user);
+    &tnmc::user::list_users(\@users, '', 'ORDER BY username');
+    &tnmc::user::get_user($users[0], \%user);
 
     print qq{
                 <table cellspacing="3" cellpadding="0" border="0">
@@ -48,7 +48,7 @@ sub show_edit_users_list{
 
 
         foreach $userID (@users){
-                get_user($userID, \%user);
+                &tnmc::user::get_user($userID, \%user);
         print qq{
             <tr>
                 <td nowrap>

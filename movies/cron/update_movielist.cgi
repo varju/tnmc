@@ -20,7 +20,7 @@ use tnmc::mybc;
     #############
     ### Main logic
 
-    &db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     print "Content-type: text/html\n\n<pre>\n";
     
@@ -29,13 +29,13 @@ use tnmc::mybc;
     print "***********************************************************\n";
     print "\n\n";
     
-    my %list = mybc_get_movie_list();
+    my %list = &tnmc::mybc::mybc_get_movie_list();
     
     my $i = keys %list;
     print "$i movies found online at mybc.com\n\n";
     
     ### list of valid theatres
-    my %valid_theatres = mybc_get_valid_theatres();
+    my %valid_theatres = &tnmc::mybc::mybc_get_valid_theatres();
         
     print "***********************************************************\n";
     print "****        MYBC:  Retrieve the Movie Info             ****\n";
@@ -49,7 +49,7 @@ use tnmc::mybc;
     my %mOurTheatres;
     
     foreach my $mID (sort(keys(%list))){
-        my %movieInfo = mybc_get_movie_info($mID);
+        my %movieInfo = &tnmc::mybc::mybc_get_movie_info($mID);
         if (!defined %movieInfo) {
             print "\n$mID (failed - parse error)";
             next;
@@ -84,7 +84,7 @@ use tnmc::mybc;
     print "***********************************************************\n";
 
     my $sql = "UPDATE Movies SET statusShowing = '0', theatres = ''";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     $sth->finish();
 
@@ -96,7 +96,7 @@ use tnmc::mybc;
         ### Try to find movie in DB via mybcID
 
         $sql = "SELECT movieID FROM Movies WHERE mybcID = '$mID'";
-        $sth = $dbh_tnmc->prepare($sql);
+        $sth = $dbh->prepare($sql);
         $sth->execute();
         my @row = $sth->fetchrow_array();
         $sth->finish();
@@ -111,8 +111,8 @@ use tnmc::mybc;
             ### Try to find movie in DB via Title
     
             $sql = "SELECT movieID FROM Movies
-                 WHERE title = " . $dbh_tnmc->quote($mTitle{$mID});
-            $sth = $dbh_tnmc->prepare($sql);
+                 WHERE title = " . $dbh->quote($mTitle{$mID});
+            $sth = $dbh->prepare($sql);
             $sth->execute();
             @row = $sth->fetchrow_array();
             $sth->finish();
@@ -173,5 +173,5 @@ use tnmc::mybc;
     require tnmc::movies::night;
     &tnmc::movies::night::update_all_cache_movieIDs();
     
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 }

@@ -18,12 +18,12 @@ use strict;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $albumID = &tnmc::cgi::param('albumID');
 &show_album_edit_admin_form($albumID);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs

@@ -18,7 +18,7 @@ use tnmc::db;
     #############
     ### Main logic
     
-    &header();
+    &tnmc::template::header();
     
     my $factionID = &tnmc::cgi::param('factionID');
     
@@ -47,7 +47,7 @@ use tnmc::db;
                 }; 
     
     
-    &footer();
+    &tnmc::template::footer();
 }
 
 

@@ -5,15 +5,6 @@ use strict;
 #
 # module configuration
 #
-BEGIN {
-    
-    require Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    @EXPORT = qw(get_general_config set_general_config);
-    @EXPORT_OK = qw();
-}
 
 #
 # module routines
@@ -23,7 +14,7 @@ sub get_general_config{
         my ($name, $value_ref, $junk) = @_;
         
         require tnmc::db;
-        my $dbh = $tnmc::db::dbh;
+	my $dbh = &tnmc::db::db_connect();
         
         my $sql = 'SELECT value from GeneralConfig WHERE name = ?';
         my $sth = $dbh->prepare($sql);
@@ -38,7 +29,7 @@ sub set_general_config{
         my ($name, $value, $junk) = @_;
         
         require tnmc::db;
-        my $dbh = $tnmc::db::dbh;
+	my $dbh = &tnmc::db::db_connect();
         
         my ($sql, $sth);
         
@@ -53,5 +44,3 @@ sub set_general_config{
 }
 
 1;
-
-

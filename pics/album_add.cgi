@@ -15,18 +15,18 @@ use tnmc::util::date;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 &show_album_add_form();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
 #
 
 sub show_album_add_form{
-    &show_heading("Add a new Album");
+    &tnmc::template::show_heading("Add a new Album");
     my $now = &tnmc::util::date::now();
     print qq {
 	<form action="album_add_submit.cgi" method="post">

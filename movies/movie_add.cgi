@@ -14,11 +14,11 @@ use tnmc::movies::show;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 &show_add_movie_form();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -32,7 +32,7 @@ sub show_add_movie_form
                 <form action="movie_edit_submit.cgi" method="post">
                 <input type="hidden" name="movieID" value="0">
     };
-    &show_heading ("add a new movie");
+    &tnmc::template::show_heading ("add a new movie");
     
         print qq{
                 <table border="0">

@@ -19,7 +19,7 @@ use tnmc::movies::night;
     #############
     ### Main logic
     
-    &db_connect();
+    &tnmc::db::db_connect();
     
     my @nights = &list_future_nights();
     my %next_night;
@@ -29,7 +29,8 @@ use tnmc::movies::night;
     my $vote_blurb = $next_night{'voteBlurb'};
     
     my $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($next_tuesday_string) = $sth->fetchrow_array();
     $sth->finish();
@@ -50,7 +51,7 @@ use tnmc::movies::night;
     
     my $to_email = $tnmc_email;
     
-    my $vote_blurb =  &get_general_config("movie_vote_blurb");
+    my $vote_blurb = &tnmc::general_config::get_general_config("movie_vote_blurb");
     
     open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
     print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
@@ -68,7 +69,7 @@ use tnmc::movies::night;
 
     close SENDMAIL;
 
-    &db_disconnect();
+    &tnmc::db::db_disconnect();
 }
 
 ###################################################################
@@ -82,7 +83,7 @@ sub print_email_movielist{
     open (RELEASES, $filename);
 
         print RELEASES "\nnew releases:\n=============\n";
-        list_movies(\@movies, "WHERE statusShowing AND statusNew AND NOT (statusSeen OR 0)", 'ORDER BY Title');
+        &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND statusNew AND NOT (statusSeen OR 0)", 'ORDER BY Title');
 
         foreach $movieID (@movies){
                 get_movie($movieID, \%movie);
@@ -96,7 +97,7 @@ sub print_email_movielist{
         print CURRENT "\nnow showing:\n============\n";
 
     # load up the movie info
-        list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", '');
+        &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", '');
 
         my %movieInfo;
         foreach $movieID (@movies){
@@ -134,7 +135,7 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID
         print COMING "\ncoming soon:\n============\n";
 
     # load up the movie info
-        list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))", '');
+        &tnmc::movies::show::list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))", '');
         foreach $movieID (@movies){
                 my $anon = {};     ### create an anonymous hash.
                 &get_movie_extended2($movieID, $anon);

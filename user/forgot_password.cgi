@@ -22,15 +22,15 @@ srand;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 my $userID = &tnmc::cgi::param('userID');
 &show_forgot_password($userID);
 
 
-&footer();
-&db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 
 
@@ -42,12 +42,12 @@ sub show_forgot_password{
     my ($userID) = @_;
     
     my %user;
-    &get_user($userID, \%user);
+    &tnmc::user::get_user($userID, \%user);
     
     if ($user{'email'}){
         &send_password_to_user($userID);
         
-        &show_heading('I forgot my password');
+        &tnmc::template::show_heading('I forgot my password');
         print qq{
             <p>
             Forget your password?
@@ -74,7 +74,7 @@ sub send_password_to_user{
     my ($userID) = @_;
     
     my %user;
-    &get_user($userID, \%user);
+    &tnmc::user::get_user($userID, \%user);
     
     my %message = 
         ( 'AddrTo' => $user{'email'},

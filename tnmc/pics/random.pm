@@ -18,7 +18,8 @@ sub show_random_pic{
     my ($offset) = @_;
     
     my $sql = "SELECT DATE_FORMAT(NOW(), '%m%j%H%i')";
-    my $sth = $dbh_tnmc->prepare($sql); 
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql); 
     $sth->execute();
     my ($seed) = $sth->fetchrow_array();
     $seed = int ($seed / 10);
@@ -43,7 +44,8 @@ sub get_random_pic{
     my ($seed, $offset) = @_;
     
     my $sql = "SELECT count(*) FROM Pics WHERE typePublic >= 1";
-    my $sth = $dbh_tnmc->prepare($sql); 
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql); 
     $sth->execute();
     my ($count_pics) = $sth->fetchrow_array();
     
@@ -57,7 +59,8 @@ sub get_random_pic{
     }
     
     $sql = "SELECT picID FROM Pics WHERE typePublic >= 1 LIMIT $index, 1";
-    $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($picID) = $sth->fetchrow_array();
     

@@ -17,16 +17,16 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 my $userID = &tnmc::cgi::param('userID');
 
 if ($userID)
 { 
     my %user;    
-    my @cols = &db_get_cols_list('Personal');
-    &get_user($userID, \%user);
+    my @cols = &tnmc::db::db_get_cols_list('Personal');
+    &tnmc::user::get_user($userID, \%user);
     
     print qq 
     {    <form action="user_edit_submit.cgi" method="post">
@@ -49,6 +49,6 @@ if ($userID)
             }; 
 }
 
-&footer();
+&tnmc::template::footer();
 
-&db_disconnect();
+&tnmc::db::db_disconnect();

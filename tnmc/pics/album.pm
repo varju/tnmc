@@ -33,20 +33,21 @@ sub set_album{
     my (%album, $junk) = @_;
     my ($sql, $sth, $return);
     
-    &db_set_row(\%album, $dbh_tnmc, 'PicAlbums', 'albumID');
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_set_row(\%album, $dbh, 'PicAlbums', 'albumID');
 }
 
 sub del_album{
     my ($albumID) = @_;
     my ($sql, $sth, $return);
     
-    my $dbh_tnmc = &tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     ###############
     ### Delete the album
     
     $sql = "DELETE FROM PicAlbums WHERE albumID = '$albumID'";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     $sth->finish;
     
@@ -57,7 +58,8 @@ sub get_album{
     my ($condition);
 
     $condition = "(albumID = '$albumID')";
-    &db_get_row($album_ref, $dbh_tnmc, 'PicAlbums', $condition);
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_get_row($album_ref, $dbh, 'PicAlbums', $condition);
 }
 
 # sub get_user_cache;
@@ -84,14 +86,12 @@ sub list_albums{
     my ($album_list_ref, $where_clause, $by_clause, $junk) = @_;
     my (@row, $sql, $sth);
 
-    my $dbh_tnmc = &tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     @$album_list_ref = ();
 
-    my $dbh_tnmc = &tnmc::db::db_connect();
-    
     $sql = "SELECT albumID from PicAlbums $where_clause $by_clause";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
         push (@$album_list_ref, $row[0]);
@@ -107,7 +107,7 @@ sub list_valid_albums{
     
     use tnmc::security::auth;
     
-    my $dbh_tnmc = &tnmc::db::db_connect();
+    my $dbh = &tnmc::db::db_connect();
     
     @$album_list_ref = ();
     
@@ -115,7 +115,7 @@ sub list_valid_albums{
               FROM PicAlbums
              WHERE (albumDateStart <= ? && albumDateEnd >= ?)
                AND (albumTypePublic >= 2 OR albumOwnerID = $USERID)";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($timestamp, $timestamp);
     while (@row = $sth->fetchrow_array()){
         push (@$album_list_ref, $row[0]);

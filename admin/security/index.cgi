@@ -16,15 +16,15 @@ use tnmc::util::date;
 #############
 ### Main logic
 
-&header();
-&db_connect();
+&tnmc::template::header();
+&tnmc::db::db_connect();
 
-&show_heading('Security');
+&tnmc::template::show_heading('Security');
 &show_security_users_list();
 
 
-&footer();
-&db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 ##########################################################
 #### sub procedures.
@@ -34,7 +34,7 @@ use tnmc::util::date;
 sub show_security_users_list{
     my (@users, %user, $userID, $key);
 
-    &list_users(\@users, '', "ORDER BY username");
+    &tnmc::user::list_users(\@users, '', "ORDER BY username");
 
     print qq{
         <table cellspacing="0" cellpadding="0" border="0">
@@ -55,7 +55,7 @@ sub show_security_users_list{
 
     foreach $userID (@users){
         my (@sessions, %user);
-        &get_user($userID, \%user);
+        &tnmc::user::get_user($userID, \%user);
         &tnmc::security::session::list_sessions_for_user($userID, \@sessions);
 
         my $num_sessions = scalar @sessions;

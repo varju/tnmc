@@ -17,12 +17,12 @@ require 'fieldtrip/FIELDTRIP.pl';
     #############
     ### Main logic
 
-    &header();
+    &tnmc::template::header();
 
     %trip;
     $tripID = &tnmc::cgi::param('tripID');
     
-     @cols = &db_get_cols_list('Fieldtrips');
+     @cols = &tnmc::db::db_get_cols_list('Fieldtrips');
            &get_trip($tripID, \%trip);
       
     print qq 
@@ -55,4 +55,4 @@ require 'fieldtrip/FIELDTRIP.pl';
     }; 
     
 
-    &footer();
+    &tnmc::template::footer();

@@ -16,11 +16,11 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&db_connect();
+&tnmc::db::db_connect();
 
 &tnmc::security::auth::authenticate();
 
-my @cols = &db_get_cols_list('SessionInfo');
+my @cols = &tnmc::db::db_get_cols_list('SessionInfo');
 
 my %session;
 foreach my $key (@cols) {
@@ -28,7 +28,7 @@ foreach my $key (@cols) {
 }
 &tnmc::security::session::set_session(\%session);
 
-&db_disconnect();
+&tnmc::db::db_disconnect();
 
 print "Location: index.cgi\n\n";
 

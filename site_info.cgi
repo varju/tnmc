@@ -15,11 +15,11 @@ use tnmc::template;
 #############
 ### Main logic
 
-&db_connect();
+&tnmc::db::db_connect();
 
-&header();
+&tnmc::template::header();
 
-&show_heading("site info");
+&tnmc::template::show_heading("site info");
 
 print qq 
 {    <TABLE>
@@ -115,6 +115,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
         <P>
 };    
 
-&footer();
+&tnmc::template::footer();
 
-&db_disconnect();
+&tnmc::db::db_disconnect();

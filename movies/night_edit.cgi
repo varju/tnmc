@@ -22,13 +22,13 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $nightID = &tnmc::cgi::param('nightID');
 
 &show_night_edit_form($nightID);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -49,11 +49,11 @@ sub show_night_edit_form{
     my %factionID_sel = ($night{'factionID'}, 'SELECTED');
     
     # godID select list
-    my $users = &get_user_list();
+    my $users = &tnmc::user::get_user_list();
     my %godID_sel = ($night{'godID'}, 'SELECTED');
     
     # show the form to the user...
-    &show_heading("Edit/Set Movie Night");
+    &tnmc::template::show_heading("Edit/Set Movie Night");
     
     print qq{
         <form action="night_edit_submit.cgi" method="post">

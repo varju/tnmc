@@ -5,20 +5,12 @@ use strict;
 #
 # module configuration
 #
-BEGIN {
+BEGIN
+{
     use LWP::UserAgent;
     use HTTP::Request::Common qw(POST);
     
     use tnmc::general_config;
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    
-    @EXPORT = qw(mybc_get_movie_list mybc_get_valid_theatres mybc_get_movie_info);
-    
-    @EXPORT_OK = qw();
 }
 
 #
@@ -52,7 +44,7 @@ sub mybc_get_movie_list {
 sub mybc_get_valid_theatres {
     my %results;
 
-    my $valid_theatres = get_general_config("movie_valid_theatres");
+    my $valid_theatres = &tnmc::general_config::get_general_config("movie_valid_theatres");
     my @valid_theatres = split(/\s/, $valid_theatres);
     foreach my $theatre (@valid_theatres){
         $results{$theatre} = 1;

@@ -17,16 +17,16 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 my $sessionID = &tnmc::cgi::param('sessionID');
 
 &show_session_admin_edit_form($sessionID);
 
-&footer();
+&tnmc::template::footer();
 
-&db_disconnect();
+&tnmc::db::db_disconnect();
 
 #############
 ### Subs
@@ -37,10 +37,10 @@ sub show_session_admin_edit_form{
     return if ! $sessionID;
     
     my %session;
-    my @cols = &db_get_cols_list('SessionInfo');
+    my @cols = &tnmc::db::db_get_cols_list('SessionInfo');
     &tnmc::security::session::get_session($sessionID, \%session);
     
-    &show_heading("Edit Session: $sessionID");
+    &tnmc::template::show_heading("Edit Session: $sessionID");
     
     print qq 
     {    <form action="session_edit_submit.cgi" method="post">

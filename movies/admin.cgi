@@ -19,11 +19,11 @@ use tnmc::movies::show;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 &show_admin_page();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -34,7 +34,7 @@ sub show_admin_page{
     if ($USERID){
         
         ## List of Future Nights
-        &show_heading ("upcoming movie nights");
+        &tnmc::template::show_heading ("upcoming movie nights");
         my @NIGHTS = &list_future_nights();
         foreach my $nightID (@NIGHTS){
             my %night;
@@ -45,10 +45,10 @@ sub show_admin_page{
             };
         }
         print qq{<br><p>};
-        &show_heading ("administration");
+        &tnmc::template::show_heading ("administration");
         
-        my $valid_theatres = &get_general_config("movie_valid_theatres");
-        my $other_theatres = &get_general_config("movie_other_theatres");
+        my $valid_theatres = &tnmc::general_config::get_general_config("movie_valid_theatres");
+        my $other_theatres = &tnmc::general_config::get_general_config("movie_other_theatres");
 
         print qq{
             <form action="admin_submit.cgi" method="post">

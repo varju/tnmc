@@ -16,14 +16,14 @@ use tnmc::user;
     #############
     ### Main logic
 
-    &db_connect();
-    &header();
+    &tnmc::db::db_connect();
+    &tnmc::template::header();
     
     print qq{
           <form action="broadcast_send.cgi" method="post">
     };
 
-    &show_heading("cell phone broadcast centre");
+    &tnmc::template::show_heading("cell phone broadcast centre");
     print qq { 
         <table border="0" cellpadding="0" cellspacing="0" width="350">
 
@@ -38,13 +38,13 @@ use tnmc::user;
 
         ### User List of people who have messaging on
 my @users;
-        &list_users(\@users, "WHERE phoneTextMail != 'none'", 'ORDER BY username');
+        &tnmc::user::list_users(\@users, "WHERE phoneTextMail != 'none'", 'ORDER BY username');
 
     my $i = 0;
 
     foreach my $userid (@users){
         my %user;
-        &get_user($userid, \%user);
+        &tnmc::user::get_user($userid, \%user);
 
         next unless $user{username};
 
@@ -85,6 +85,6 @@ my @users;
     }; 
     
 
-    &footer();
+    &tnmc::template::footer();
 
-    db_disconnect();
+    &tnmc::db::db_disconnect();

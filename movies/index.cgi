@@ -25,7 +25,7 @@ use tnmc::movies::night;
 ### Main logic
 
 
-&header();
+&tnmc::template::header();
 
 ## Variables
 my $sortOrder = &tnmc::cgi::param('sortOrder') || 'order';
@@ -40,11 +40,11 @@ my @nights = &tnmc::movies::night::list_future_nights();
 my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
 
 &show_local_nav($sortOrder, $e_userID, $USERID, $nightID);
-&show_heading ("Factions &amp; Attendance");
+&tnmc::template::show_heading ("Factions &amp; Attendance");
 &tnmc::movies::attendance::show_my_attendance_chooser($e_userID, $nightID);
 &show_movies_enhanced($sortOrder, $e_userID, $USERID, $nightID);
 
-&footer();
+&tnmc::template::footer();
 
 
 
@@ -90,7 +90,8 @@ sub show_local_nav{
         };
         
         my $sql = "SELECT userID, username FROM Personal WHERE groupMovies >= 1  ORDER BY username";
-        my $sth = $dbh_tnmc->prepare($sql);
+	my $dbh = &tnmc::db::db_connect();
+        my $sth = $dbh->prepare($sql);
         $sth->execute();
         
         while (my ($userID, $username) = $sth->fetchrow_array()){
@@ -131,7 +132,7 @@ sub show_movies_enhanced{
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
     
-    &show_heading ("Detailed Votes");
+    &tnmc::template::show_heading ("Detailed Votes");
     
     ##################################################################
     ### Start of list
@@ -171,7 +172,7 @@ sub show_movies_enhanced{
     
     ########################
     # Coming Soon
-    &list_movies(\@movie_list, "WHERE (statusNew AND NOT (statusShowing OR 0))", 'ORDER BY title');
+    &tnmc::movies::show::list_movies(\@movie_list, "WHERE (statusNew AND NOT (statusShowing OR 0))", 'ORDER BY title');
     &show_movie_list_enhanced( \@movie_list,
                               $displaySortOrder, $effectiveUserID, $sortOrder, $nightID);
     

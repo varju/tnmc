@@ -21,7 +21,7 @@ use tnmc::pics::album;
     
     my %album;
     
-    my @cols = &db_get_cols_list('PicAlbums');
+    my @cols = &tnmc::db::db_get_cols_list('PicAlbums');
     foreach my $key (@cols){
      	$album{$key} = &tnmc::cgi::param($key);
     }

@@ -19,7 +19,7 @@ use tnmc::db;
     #############
     ### Main logic
     
-    &header();
+    &tnmc::template::header();
     
     my %hash;	
     my $ID = &tnmc::cgi::param('theatreID');
@@ -30,7 +30,7 @@ use tnmc::db;
 		<form action="theatre_edit_admin_submit.cgi" method="post">
 		<table>
                 };
-    my @cols = &db_get_cols_list('MovieTheatres');
+    my @cols = &tnmc::db::db_get_cols_list('MovieTheatres');
     foreach my $key (sort @cols){
         print qq {
             <tr valign=top><td>$key</td>
@@ -53,7 +53,7 @@ use tnmc::db;
                 }; 
     
     
-    &footer();
+    &tnmc::template::footer();
 }
 
 

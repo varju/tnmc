@@ -3,8 +3,6 @@ package tnmc::mail::send;
 use strict;
 use Mail::Sendmail;
 
-use tnmc::db;
-
 #
 # module configuration
 #

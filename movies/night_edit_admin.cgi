@@ -18,7 +18,7 @@ use tnmc::cgi;
     #############
     ### Main logic
     
-    &header();
+    &tnmc::template::header();
     
     my %night;	
     my $nightID = &tnmc::cgi::param('nightID');
@@ -52,7 +52,7 @@ use tnmc::cgi;
                 }; 
     
     
-    &footer();
+    &tnmc::template::footer();
 }
 
 

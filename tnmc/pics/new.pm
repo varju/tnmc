@@ -58,7 +58,7 @@ sub album_get_piclist_from_nav{
         #
         #&list_links_for_album(\@pics, $nav->{albumID});
         #
-        my $dbh_tnmc = &tnmc::db::db_connect();
+        my $dbh = &tnmc::db::db_connect();
         my $albumID = $nav->{'albumID'};
         
         my (@row, $sql, $sth);
@@ -70,7 +70,7 @@ sub album_get_piclist_from_nav{
                    AND ((ownerID = '$USERID') OR typePublic = 1)
                    AND (p.rateContent >= '$min_rating')
                  ORDER BY p.timestamp, p.picID";
-        $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr
+        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr
 \n";
         $sth->execute;
         while (@row = $sth->fetchrow_array()){
@@ -101,7 +101,7 @@ sub get_nav{
 sub show_thumbs{
     my ($piclist, $nav) = @_;
     
-    &show_heading("Pictures");
+    &tnmc::template::show_heading("Pictures");
     
     # no pictures... bail
     if (! scalar @$piclist){
@@ -218,14 +218,14 @@ sub show_album_thumb_header{
     my %album;
     &get_album($albumID, \%album);
     my %owner;
-    &get_user($album{albumOwnerID}, \%owner);
+    &tnmc::user::get_user($album{albumOwnerID}, \%owner);
     
     # set defaults
     my  $displayLevel = 'admin';
     $album{albumTitle} ||= '(Untitled)';
     
     ## heading
-    &show_heading("Album");
+    &tnmc::template::show_heading("Album");
     
     my $edit_links;
     if (&auth_access_album_edit($albumID, \%album)){
@@ -514,7 +514,7 @@ sub show_piclist{
         if ($listType eq 'list'){
             
             my %owner;
-            &get_user($pic{ownerID}, \%owner);
+            &tnmc::user::get_user($pic{ownerID}, \%owner);
             
             my $DISPLAYtitle = $pic{title} || '(untitled)';
             print qq{
@@ -563,7 +563,7 @@ sub show_piclist{
         elsif( ($listType eq 'admin') && $can_edit){
             
             my %owner;
-            &get_user($pic{ownerID}, \%owner);
+            &tnmc::user::get_user($pic{ownerID}, \%owner);
             
             my %sel_content;
             my %sel_image;
@@ -938,7 +938,7 @@ sub show_slide_pic{
     &get_pic($picID, \%pic);
     
     my %owner;
-    &get_user($pic{ownerID}, \%owner);
+    &tnmc::user::get_user($pic{ownerID}, \%owner);
     
     ## setup the edit links
     my $edit_link;
@@ -951,7 +951,8 @@ sub show_slide_pic{
 
     ## setup the fancy timestamp;
     my $sql = "SELECT DATE_FORMAT('$pic{timestamp}', '%a, %b %d %Y - %l:%i %p')";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($fancy_timestamp) = $sth->fetchrow_array();
     $sth->finish();

@@ -27,11 +27,11 @@ my (%user, %old_user);
 my $userID = &tnmc::cgi::param('userID');
 my $password = &tnmc::cgi::param('password');
 my $location = &tnmc::cgi::param('location');
-&get_user($userID, \%user);
+&tnmc::user::get_user($userID, \%user);
 
 ### BUG: the old-user stuff doesn't work right now!
 my $old_user; #  = $tnmc_cookie_in{'userID'};
-#&get_user($old_user, \%old_user);
+#&tnmc::user::get_user($old_user, \%old_user);
 
 
 if (!$location) {
@@ -43,7 +43,7 @@ if ( !$userID
           && ($user{'password'} ne ''))
      )
 {
-    &header();
+    &tnmc::template::header();
     print qq{
         <p>
         <b>Oopsie-daisy!</b>
@@ -52,7 +52,7 @@ if ( !$userID
         <p>
         If you\'ve forgotten it, you can have your <a href="/user/entry_page.cgi">password emailed to you</a>.
     };
-    &footer();
+    &tnmc::template::footer();
 
     &tnmc::log::log_login(0,$old_user,$old_user{username},$userID,
                           $user{username},$password);

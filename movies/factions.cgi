@@ -17,9 +17,9 @@ use tnmc::movies::night;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
-&show_heading("Factions");
+&tnmc::template::show_heading("Factions");
 my @factions = &tnmc::movies::faction::list_factions();
 
 print "<a href='/movies/faction_edit_admin.cgi?factionID=0'>New Faction</a><p>" if ($USERID{groupMovies} >= 100);
@@ -27,7 +27,7 @@ foreach my $factionID (@factions){
     &show_faction($factionID);
 }
 
-&footer();
+&tnmc::template::footer();
 
 
 #
@@ -43,7 +43,7 @@ sub show_faction{
     my $is_faction_admin = ($faction->{godID} == $USERID || $USERID{groupMovies} >= 100)? 1 : 0;
     
     &tnmc::user::get_user($faction->{'godID'}, \%god);
-    &show_heading("$faction->{'name'}");
+    &tnmc::template::show_heading("$faction->{'name'}");
     
     print qq{
         <table border=0 cellpadding=0 cellspacing=0>

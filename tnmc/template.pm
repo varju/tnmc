@@ -5,14 +5,9 @@ use strict;
 #
 # module configuration
 #
-BEGIN {
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK $style $AUTOLOAD);
-    
-    @ISA = qw(Exporter );
-    @EXPORT = qw(header footer show_heading get_font_size);
-    @EXPORT_OK = qw();
+BEGIN
+{
+    use vars qw($style $AUTOLOAD);
     
     $style = 'html_orig';
 }

@@ -17,8 +17,8 @@ require 'fieldtrip/FIELDTRIP.pl';
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 my @trips;
 &list_trips(\@trips, 'WHERE is_active = 1', 'ORDER BY starttime DESC');
@@ -26,8 +26,8 @@ foreach my $tripID (@trips){
     show_trip($tripID);
 }
 
-&footer();
-db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 
 #######################################
@@ -51,17 +51,18 @@ sub show_trip{
     ### view link
     $view_link = qq{ - <a href="trip_view.cgi?tripID=$tripID"><font color="ffffff">view</font></a>};
     
-    &show_heading($trip{title} . $view_link . $edit_link . $del_link . $survey_link);
+    &tnmc::template::show_heading($trip{title} . $view_link . $edit_link . $del_link . $survey_link);
     
     
     $sql = qq{SELECT COUNT(*), SUM(interest) FROM FieldtripSurvey WHERE (tripID = '$tripID') AND (interest >= '1')};
-    $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     ($InterestT, $InterestA) = $sth->fetchrow_array();
     $InterestA = int ($InterestA / 3);
     
     $sql = qq{SELECT COUNT(*) FROM FieldtripSurvey WHERE (tripID = '$tripID') AND (interest = '3')};
-    $sth = $dbh_tnmc->prepare($sql);
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     ($Interest3) = $sth->fetchrow_array();
     
@@ -75,7 +76,7 @@ sub show_trip{
     if ($trip{useCost}){
         $sql = qq{SELECT SUM(MoneyExpenseProRated), SUM(MoneyExpenseShared), SUM(MoneyExpensePortion), SUM(MoneyPaid)
                         FROM FieldtripSurvey WHERE (tripID = '$tripID') AND (interest >= '1')};
-        $sth = $dbh_tnmc->prepare($sql);
+        $sth = $dbh->prepare($sql);
         $sth->execute();
         ($EXPpro, $EXPshare, $EXPsum, $EXPpaid) = $sth->fetchrow_array();
     }
@@ -88,7 +89,7 @@ sub show_trip{
             FROM FieldtripSurvey AS f LEFT JOIN Personal AS p USING (userID)
            WHERE (tripID = '$tripID') AND interest >= '1'
            ORDER BY p.username};
-    $sth = $dbh_tnmc->prepare($sql);
+    $sth = $dbh->prepare($sql);
     $sth->execute();
 
     print qq{
@@ -106,7 +107,7 @@ sub show_trip{
     my $i = 0;
     while (@row = $sth->fetchrow_array()){
         $i ++;
-        &get_user($row[0], \%user);
+        &tnmc::user::get_user($row[0], \%user);
         &get_tripSurvey($tripID, $row[0], \%survey);
         
         if     ($survey{interest} == 3)  {    $font = '<b>';}
@@ -132,7 +133,7 @@ sub show_trip{
         
         if ($trip{useRides}){
             if($survey{drivingWith}){
-                &get_user($survey{drivingWith}, \%driver);
+                &tnmc::user::get_user($survey{drivingWith}, \%driver);
                 print qq{<td>$driver{username}</td>};
             }else{
                 print qq{<td></td>};
@@ -173,7 +174,7 @@ sub show_trip{
             <select name="userID">
         };
 
-        my $users = get_user_list();
+        my $users = &tnmc::user::get_user_list();
         foreach $username (sort keys %$users){
             print qq{<option value="$users->{$username}">$username\n};
         }

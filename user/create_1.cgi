@@ -14,17 +14,17 @@ use tnmc::template;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
-my @cols = &db_get_cols_list('Personal');
+my @cols = &tnmc::db::db_get_cols_list('Personal');
 
 print qq{
         <form action="create_2.cgi" method="post">
         <input type="hidden" name="userID" value="0">
         };
 
-&show_heading ("Create New Account: Step 1");
+&tnmc::template::show_heading ("Create New Account: Step 1");
 
 print qq{
         <table>
@@ -51,4 +51,4 @@ print qq{
             </form>
             }; 
 
-&footer();
+&tnmc::template::footer();

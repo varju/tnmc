@@ -7,7 +7,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::cgi;
 
-db_connect();
+&tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
 print "Content-type: text/html\n\n";
@@ -85,4 +85,4 @@ foreach my $var (sort keys %ENV) {
 print "<p><b><font color=\"0000ff\">ENV dump:</font></b><br> ";
 print %ENV;
 
-db_disconnect();
+&tnmc::db::db_disconnect();

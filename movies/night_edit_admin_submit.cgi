@@ -18,7 +18,7 @@ use tnmc::cgi;
 
 &tnmc::security::auth::authenticate();
 
-my @cols = &db_get_cols_list('MovieNights');
+my @cols = &tnmc::db::db_get_cols_list('MovieNights');
 
 my %night;
 foreach my $key (@cols){

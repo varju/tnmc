@@ -16,17 +16,17 @@ use tnmc::pics::pic;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 &show_upload_pic_page();
 &show_upload_api_page();
-&footer();
+&tnmc::template::footer();
         
 
 sub show_upload_api_page{
     %pic;	
     
-    my @cols = &db_get_cols_list("Pics");
-    &show_heading("upload api");
+    my @cols = &tnmc::db::db_get_cols_list("Pics");
+    &tnmc::template::show_heading("upload api");
     print qq {
         
         <form action="api_upload_submit.cgi" method="post" enctype="multipart/form-data">
@@ -92,9 +92,9 @@ sub show_upload_api_page{
 sub show_upload_pic_page{
     %pic;	
     
-    my @cols = &db_get_cols_list("Pics");
+    my @cols = &tnmc::db::db_get_cols_list("Pics");
     
-    &show_heading("upload pic");
+    &tnmc::template::show_heading("upload pic");
 
     print qq {
         

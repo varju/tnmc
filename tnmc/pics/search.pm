@@ -95,7 +95,7 @@ sub search_do_text{
              WHERE $sql_accessible
                    $sql_text
              ORDER BY timestamp, picID";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute(@sql_text);
     
     while (my @row = $sth->fetchrow_array()){
@@ -119,7 +119,7 @@ sub search_do_date_span{
                AND (timestamp >= ?)
                AND (timestamp <= ?)
              ORDER BY timestamp, picID";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute($from, $to);
     
     while (my @row = $sth->fetchrow_array()){
@@ -144,7 +144,7 @@ sub search_do_my_unreleased{
                AND ( (typePublic != 1)  )
                AND ( (typePublic != 2)  )
              ORDER BY timestamp, picID";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute($USERID);
     
     while (my @row = $sth->fetchrow_array()){
@@ -167,7 +167,7 @@ sub search_do_untitled{
              WHERE $sql_accessible
                AND ((title = '')  OR ( title IS NULL))
              ORDER BY timestamp, picID";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     
     while (my @row = $sth->fetchrow_array()){
@@ -200,7 +200,7 @@ sub search_do_user{
              WHERE $sql_accessible
                AND (ownerID = ?)
              ORDER BY timestamp, picID";
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $sth = $dbh->prepare($sql);
     $sth->execute($nav->{'userID'});
     
     while (my @row = $sth->fetchrow_array()){

@@ -21,13 +21,13 @@ use tnmc::pics::new;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $nav = &get_nav();
 
 &show_album_view($nav);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -39,10 +39,10 @@ sub show_album_view{
     ## get some info
     my %album;
     &get_album($nav->{'albumID'}, \%album);
-    &get_user($album{albumOwnerID}, \%owner);
+    &tnmc::user::get_user($album{albumOwnerID}, \%owner);
     
     ## heading
-    &show_heading(qq|
+    &tnmc::template::show_heading(qq|
         <a href="/pics/"><font color="ffffff">Pics</font></a> -> 
         <a href="album_index.cgi"><font color="ffffff">Albums</font></a> -> 
         $album{'albumTitle'}

@@ -3,8 +3,9 @@
 use tnmc;
 use tnmc::db;
 
+my $dbh = &tnmc::db::db_connect();
 
-$dbh_tnmc->do(q{
+$dbh->do(q{
     CREATE TABLE News
         (newsID INT NOT NULL AUTO_INCREMENT,
          userID INT,
@@ -13,8 +14,7 @@ $dbh_tnmc->do(q{
          PRIMARY KEY (newsID))
         });
 
-$dbh_tnmc->do(q{
+$dbh->do(q{
     ALTER TABLE News
         ADD COLUMN expires TIMESTAMP AFTER date
         });
-

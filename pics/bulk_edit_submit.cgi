@@ -26,9 +26,9 @@ use tnmc::pics::link;
 
 sub do_bulk_edit{
 
-    &header();
+    &tnmc::template::header();
     
-    &show_heading("Bulk edit - save changes");
+    &tnmc::template::show_heading("Bulk edit - save changes");
     my $destination = &tnmc::cgi::param(destination);
     print "<p><a href=\"$destination\">continue</a><br><br>\n\n";
     
@@ -94,19 +94,19 @@ sub do_bulk_edit{
     if ($debug){
         # user output
         print $moo;
-        &show_heading("pics");
+        &tnmc::template::show_heading("pics");
         foreach $picID (keys(%PICS)){
             print  %{$PICS{$picID}};
             print "<p>";
         }
-        &show_heading("links");
+        &tnmc::template::show_heading("links");
         foreach $key (keys(%LINKS)){
             print  %{$LINKS{$key}};
             print "<p>";
         }
     }
     
-    &footer();
+    &tnmc::template::footer();
     
     ## save all the pics to the db
     foreach $picID (keys(%PICS)){

@@ -17,16 +17,16 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&db_connect();
+&tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
 my @params = &tnmc::cgi::param();
 
 foreach my $key (@params) {
     my $val = &tnmc::cgi::param($key);
-    &set_general_config($key, $val);
+    &tnmc::general_config::set_general_config($key, $val);
 }
 
-&db_disconnect();
+&tnmc::db::db_disconnect();
 
 print "Location: /development/\n\n";

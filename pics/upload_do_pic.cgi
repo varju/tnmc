@@ -22,9 +22,9 @@ use tnmc::security::auth;
 ### Main logic
 
 
-&header();
+&tnmc::template::header();
 &do_upload_pic();
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -41,7 +41,7 @@ sub do_upload_pic{
     
     ## grab the normal image params
     my %pic;
-    foreach my $key (&db_get_cols_list('Pics')){
+    foreach my $key (&tnmc::db::db_get_cols_list('Pics')){
         $pic{$key} = &tnmc::cgi::param($key);
     }
     

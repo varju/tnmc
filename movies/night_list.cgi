@@ -16,7 +16,7 @@ use tnmc::movies::night;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $next = &get_next_night();
 
@@ -54,5 +54,5 @@ foreach my $nightID (@nights){
 
 print "</table>";
 
-&footer();
+&tnmc::template::footer();
 

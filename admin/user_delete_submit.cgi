@@ -16,14 +16,14 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-db_connect();
+&tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
 my $userID = &tnmc::cgi::param('userID');    
 if ($userID) {
-    &del_user($userID);
+    &tnmc::user::del_user($userID);
 }
 
-db_disconnect();
+&tnmc::db::db_disconnect();
 
 print "Location: index.cgi\n\n";

@@ -16,17 +16,17 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&db_connect();
+&tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
-my @cols = &db_get_cols_list('Personal');
+my @cols = &tnmc::db::db_get_cols_list('Personal');
 
 my %user;
 foreach my $key (@cols) {
     $user{$key} = &tnmc::cgi::param($key);
 }
-&set_user(%user);
+&tnmc::user::set_user(%user);
 
-&db_disconnect();
+&tnmc::db::db_disconnect();
 
 print "Location: /user/my_prefs.cgi\n\n";

@@ -23,14 +23,14 @@ my %album;
 my $albumID = &tnmc::cgi::param('albumID');
 
 if (!$albumID){
-    &header();
+    &tnmc::template::header();
     print "Error: Invalid form data\n";
-    &footer();
+    &tnmc::template::footer();
 }
 elsif(!&auth_access_album_edit($albumID, undef)){
-    &header();
+    &tnmc::template::header();
     print "Error: Invalid user permissions\n";
-    &footer();
+    &tnmc::template::footer();
 }
 else{
     &get_album($albumID, \%album);

@@ -18,13 +18,13 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::db::db_connect();
+&tnmc::template::header();
 
 &do_broadcast();
 
-&footer();        
-&db_disconnect();
+&tnmc::template::footer();        
+&tnmc::db::db_disconnect();
 
 sub do_broadcast{
     
@@ -48,13 +48,13 @@ sub do_broadcast{
     };
 
     my %user;
-    &get_user($USERID, \%user);
+    &tnmc::user::get_user($USERID, \%user);
     
     open (LOG, '>>broadcast.log');
     print LOG "$user{username} \"$message\" [";
     
     foreach $_ (@userList){
-        &get_user($_, \%user);
+        &tnmc::user::get_user($_, \%user);
         print qq{
             $user{username}
         };

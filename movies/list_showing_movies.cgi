@@ -18,12 +18,12 @@ use tnmc::movies::vote;
 #############
 ### Main logic
     
-&header();
-&db_connect();
+&tnmc::template::header();
+&tnmc::db::db_connect();
 
 &show_showing_movie_list();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs 
@@ -33,9 +33,9 @@ use tnmc::movies::vote;
 sub show_showing_movie_list{
     my (@movies, %movie, $movieID, $key);
 
-    &list_movies(\@movies, "WHERE statusShowing = '1'", 'ORDER BY title');
+    &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing = '1'", 'ORDER BY title');
 
-    &show_heading("All Movies that are Currently Showing in Vancouver");
+    &tnmc::template::show_heading("All Movies that are Currently Showing in Vancouver");
     print qq{
         <font color="0000ff">Blue means we\'ve seen it</font><br>
         <b>Bold means you voted for it</b><br>

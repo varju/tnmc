@@ -18,8 +18,8 @@ require 'fieldtrip/FIELDTRIP.pl';
 	#############
 	### Main logic
 
-	&db_connect();
-	&header();
+	my $dbh = &tnmc::db::db_connect();
+	&tnmc::template::header();
 
 	%trip;	
 	$tripID = &tnmc::cgi::param('tripID');
@@ -68,7 +68,7 @@ require 'fieldtrip/FIELDTRIP.pl';
                 };
                 
                 $sql = "DELETE FROM FieldtripSurvey WHERE tripID = $tripID";
-                $sth = $dbh_tnmc->prepare($sql);
+                $sth = $dbh->prepare($sql);
                 $sth->execute();
 
                 &del_trip($tripID);
@@ -80,7 +80,7 @@ require 'fieldtrip/FIELDTRIP.pl';
             }
         }
 	
-	&footer();
+	&tnmc::template::footer();
 
-	&db_disconnect();
+	&tnmc::db::db_disconnect();
 }

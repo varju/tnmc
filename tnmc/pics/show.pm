@@ -134,12 +134,13 @@ sub show_album_listing{
         my $date_string =  &tnmc::util::date::format_date('short_month_day', $album{albumDateStart}) . ' - ' . &tnmc::util::date::format_date('short_month_day', $album{albumDateEnd});
         
         my $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
-        my $sth = $dbh_tnmc->prepare($sql); 
+	my $dbh = &tnmc::db::db_connect();
+        my $sth = $dbh->prepare($sql); 
         $sth->execute();
         my ($num_pics) = $sth->fetchrow_array();
         
         my %owner;
-        &get_user($album{albumOwnerID}, \%owner);
+        &tnmc::user::get_user($album{albumOwnerID}, \%owner);
         
         print qq{
             <tr>
@@ -177,17 +178,18 @@ sub show_album_info{
     }
 
     my $sql = "SELECT DATE_FORMAT('$album{albumDateStart}', '%b %d %Y') ";
-    my $sth = $dbh_tnmc->prepare($sql); 
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql); 
     $sth->execute();
     my ($date_string) = $sth->fetchrow_array();
 
     $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
-    $sth = $dbh_tnmc->prepare($sql); 
+    $sth = $dbh->prepare($sql); 
     $sth->execute();
     my ($num_pics) = $sth->fetchrow_array();
 
     my %owner;
-    &get_user($album{albumOwnerID}, \%owner);
+    &tnmc::user::get_user($album{albumOwnerID}, \%owner);
 
     if (!$album{albumCoverPic}){
         my @pics;

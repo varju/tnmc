@@ -29,7 +29,8 @@ sub list_active_movie_titles{
             WHERE statusShowing = '1' AND statusSeen != '1' AND statusBanned != 1
             ";
     
-    my $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     
     while (my @row = $sth->fetchrow_array()){
@@ -45,13 +46,15 @@ sub set_movie{
     my (%movie, $junk) = @_;
     my ($sql, $sth, $return);
     
-    &tnmc::db::db_set_row(\%movie, $dbh_tnmc, 'Movies', 'movieID');
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::db::db_set_row(\%movie, $dbh, 'Movies', 'movieID');
     
     ###############
     ### Return the Movie ID
     
-    $sql = "SELECT movieID FROM Movies WHERE title = " . $dbh_tnmc->quote($movie{title});
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sql = "SELECT movieID FROM Movies WHERE title = " . $dbh->quote($movie{title});
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     ($return) = $sth->fetchrow_array();
     $sth->finish;
@@ -64,8 +67,9 @@ sub get_movie{
     my ($condition);
     
     my $sql = "SELECT * FROM Movies WHERE movieID = ?";
-    my $sth = $dbh_tnmc->prepare($sql)
-        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    my $sth = $dbh->prepare($sql)
+        or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($movieID);
     my $ref = $sth->fetchrow_hashref();
     $sth->finish;
@@ -257,7 +261,8 @@ sub get_movie_extended{
         WHERE v.movieID = '$movieID'
         ORDER BY p.username ASC";
 
-    $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql);
     
     $sth->execute();
     
@@ -379,7 +384,8 @@ sub del_movie{
     ### Delete the movie
     
     $sql = "DELETE FROM Movies WHERE movieID = '$movieID'";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
     $sth->finish;
 }

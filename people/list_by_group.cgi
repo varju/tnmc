@@ -15,19 +15,19 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 my $group = &tnmc::cgi::param('group');
 my $cutoff = &tnmc::cgi::param('cutoff');
 my $limit = &tnmc::cgi::param('limit');
 
 my @users;
-&list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');
+&tnmc::user::list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');
 
-&show_heading ("$group People (min: $cutoff)");
+&tnmc::template::show_heading ("$group People (min: $cutoff)");
 &show_user_listing(@users);
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -53,7 +53,8 @@ sub show_user_listing{
     };
     
     foreach $userID (@users)
-    {    &get_user_extended($userID, \%user);
+    {
+	&tnmc::user::get_user_extended($userID, \%user);
         
         print qq
         {    <tr>

@@ -14,11 +14,11 @@ use tnmc::pics::search;
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 &show_search_index();
 
-&footer();
+&tnmc::template::footer();
 
 #
 # subs
@@ -36,7 +36,7 @@ sub show_search_form_text{
     
     my $url = "/pics/search_thumb.cgi";
     
-    &show_heading("search by text");
+    &tnmc::template::show_heading("search by text");
     
     print qq{
         <table>
@@ -64,7 +64,7 @@ sub show_search_form_date_span{
     
     my $url = "/pics/search_thumb.cgi";
     
-    &show_heading("search by date");
+    &tnmc::template::show_heading("search by date");
     
     print qq{
         <table>
@@ -93,7 +93,7 @@ sub show_search_form_my_unreleased{
     
     my $url = "/pics/search_thumb.cgi";
     
-    &show_heading("search for my unreleased");
+    &tnmc::template::show_heading("search for my unreleased");
     
     print qq{
         <table>
@@ -116,7 +116,7 @@ sub show_search_form_untitled{
     
     my $url = "/pics/search_thumb.cgi";
     
-    &show_heading("search for untitled pics");
+    &tnmc::template::show_heading("search for untitled pics");
     
     print qq{
         <table>
@@ -140,7 +140,7 @@ sub show_search_form_user{
     
     my $url = "/pics/search_thumb.cgi";
 
-    &show_heading("search by user");
+    &tnmc::template::show_heading("search by user");
 
     print qq{
         <table>

@@ -17,7 +17,7 @@ require 'fieldtrip/FIELDTRIP.pl';
 #############
 ### Main logic
 
-&header();
+&tnmc::template::header();
 
 $tripID = &tnmc::cgi::param('tripID');
 $userID = &tnmc::cgi::param('userID');
@@ -25,7 +25,7 @@ if (!$userID){$userID = $USERID;}
 
 &show_survey_form($tripID, $userID);
     
-&footer();
+&tnmc::template::footer();
 
 
 ########################################
@@ -36,7 +36,7 @@ sub show_survey_form{
     my (%trip, %TripAdminUser, %survey);
     &get_tripSurvey($tripID, $userID, \%survey);
     &get_trip($tripID, \%trip);
-    &get_user($trip{AdminUserID}, \%TripAdminUser);
+    &tnmc::user::get_user($trip{AdminUserID}, \%TripAdminUser);
     
     $selInterest{int($survey{interest})} = 'selected';
     $selDriving{$survey{driving}} = 'selected';
@@ -91,7 +91,8 @@ sub show_survey_form{
                 FROM FieldtripSurvey as s, Personal as p
                WHERE (s.tripID = '$tripID') AND (s.userID = p.userID) AND (s.driving >= '2') AND (s.interest >= '2')
             ORDER BY s.driving DESC, s.interest DESC};
-    $sth = $dbh_tnmc->prepare($sql);
+    my $dbh = &tnmc::db::db_connect();
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     while (@row = $sth->fetchrow_array()){
         print qq{

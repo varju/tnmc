@@ -17,15 +17,15 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-&header();
-&db_connect();
+&tnmc::template::header();
+&tnmc::db::db_connect();
 
-&show_heading('<a id="personal">Personal</a>');
+&tnmc::template::show_heading('<a id="personal">Personal</a>');
 &show_basic_users_list();
 
 
-&footer();
-&db_disconnect();
+&tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
 ##########################################################
 #### sub procedures.
@@ -37,7 +37,7 @@ sub show_basic_users_list{
 
     my $order = &tnmc::cgi::param('order') || 'username';
 
-    &list_users(\@users, '', "ORDER BY $order");
+    &tnmc::user::list_users(\@users, '', "ORDER BY $order");
 
     print qq{
         <table cellspacing="0" cellpadding="0" border="0">
@@ -53,7 +53,7 @@ sub show_basic_users_list{
     };
 
     foreach $userID (@users){
-        get_user($userID, \%user);
+        &tnmc::user::get_user($userID, \%user);
         print qq{
             <tr>
                 <td nowrap>$user{userID}</td>
