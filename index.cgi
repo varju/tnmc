@@ -7,7 +7,6 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-
 use lib '/usr/local/apache/tnmc';
 
 use tnmc::cookie;
