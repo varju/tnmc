@@ -10,7 +10,7 @@ sub format_date{
     return 'never' if !$date;
     
     # get the date 
-    $date =~ /(....)-?(..)-?(..) ?(..):?(..):?(..)/;
+    $date =~ /(\d\d\d\d)-?(\d\d)-?(\d\d) ?(\d\d):?(\d\d):?(\d\d)/;
     my ($yyyy, $mm, $dd, $h, $m, $s, @date);
     $yyyy = $1;
     $mm = $2;
