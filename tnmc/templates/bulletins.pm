@@ -1,12 +1,31 @@
-##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca (nov/98)
-##################################################################
-### Opening Stuff. Modules and all that. nothin' much interesting.
+package tnmc::bulletins;
 
+use strict;
 
-&show_bulletins();
+use tnmc::cookie;
+use tnmc::general_config;
 
-################################################################################
+#
+# module configuration
+#
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+
+@ISA = qw(Exporter);
+
+@EXPORT = qw(show_bulletins);
+
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
+
 sub show_bulletins
 {
         my ($bulletins);
@@ -42,7 +61,4 @@ sub show_bulletins
         }
 }
 
-
-
-# keepin perl happy...
-return 1;
+1;

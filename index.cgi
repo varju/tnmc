@@ -14,6 +14,7 @@ use CGI;
 use lib '/usr/local/apache/tnmc';
 use tnmc;
 
+use tnmc::bulletins;
 
 	#############
 	### Main logic
@@ -26,7 +27,7 @@ use tnmc;
 		print &greeting($user{'fullname'})
 	}
 	
-	require 'bulletins/HOMEPAGE.pl';
+show_bulletins();
 	
 	require 'movies/HOMEPAGE.pl';
 
