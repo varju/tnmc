@@ -106,27 +106,16 @@ sub print_email_movielist{
 
 	# print out a line for each movie 
         foreach $movieID (@movies){
-		#
-		# KLUDGE: We're not allowed html output, so let's make up some sort of vote string
-		#
-		$votes_string = '';
-                $num_votes = list_votes_by_movie(\@votes, $movieID);
-                foreach $userID (@votes){
-                        &get_user($userID, \%user); 
-                        $vote = &get_vote($movieID, $userID);
-                        if ($vote > 0){         $votes_string .= "$user{username} ";       }
-       	                if ($vote < 0){         $votes_string .= "($user{username}) ";      }
-                }
 
 		# These next few lines format the output.
 		#
 format CURRENT =
 @< @<<<<<<<<<<<<<<<<<<<<<< ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-$movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $votes_string
+$movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID}->{votesText}
 ~                          ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                           $votes_string
+                           $movieInfo{$movieID}->{votesText}
 ~                          ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                           $votes_string
+                           $movieInfo{$movieID}->{votesText}
 .
 		# okay, now print it out
 		write CURRENT;
@@ -153,25 +142,14 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $votes_string
 
 	# print a little ditty out for each movie
         foreach $movieID (@movies){
-		#
-		# KLUDGE: We're not allowed html output, so let's make up some sort of vote string
-		#
-		$votes_string = '';
-                $num_votes = list_votes_by_movie(\@votes, $movieID);
-                foreach $userID (@votes){
-                        &get_user($userID, \%user);
-                        $vote = &get_vote($movieID, $userID);
-                        if ($vote > 0){         $votes_string .= "$user{username} ";       }
-       	                if ($vote < 0){         $votes_string .= "($user{username}) ";      }
-                }
 
 format COMING =
 @<<< @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}
         ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        $votes_string
+        $movieInfo{$movieID}->{votesText}
 ~       ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        $votes_string
+        $movieInfo{$movieID}->{votesText}
 .
 		# okay, now print it out
 		write COMING;
