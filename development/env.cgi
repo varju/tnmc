@@ -3,11 +3,11 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 
 db_connect();
-cookie_get();
+&tnmc::security::auth::authenticate();
 
 print "Content-type: text/html\n\n";
 print qq{
@@ -44,6 +44,17 @@ print @names;
 print "<p> ";
 foreach my $name (@names){
     my $value = $tnmc_cgi->param($name);
+    print "<b>$name</b> : $value<br>";
+}
+
+print "\n<p><b><font color=\"0000ff\">CGI.pm Query Data:</font></b><br>\n";
+
+my @names = $tnmc_cgi->url_param();
+print @names;
+
+print "<p> ";
+foreach my $name (@names){
+    my $value = $tnmc_cgi->url_param($name);
     print "<b>$name</b> : $value<br>";
 }
 
