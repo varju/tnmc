@@ -28,7 +28,7 @@ use tnmc;
     &show_heading ($heading);
     $devBlurb =  &get_general_config("devBlurb");
     $devBlurb =~ s/\n/<br>/gs;
-    print $devBlurb;
+    print "<p>" . $devBlurb;
     
     $heading = "suggestion box";
     if ($USERID{groupDev} >= 1){
@@ -39,7 +39,7 @@ use tnmc;
     &show_heading ($heading);
     $suggBlurb =  &get_general_config("suggestions");
     $suggBlurb =~ s/\n/<br>/gs;
-    print $suggBlurb;
+    print "<p>" . $suggBlurb;
     
     
     &footer();
