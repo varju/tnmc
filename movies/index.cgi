@@ -189,6 +189,19 @@ sub show_movies_enhanced
         <br></font>
     };
 
+
+    ########################
+    ### Do the Favorite Movie Stuff
+    if ($REAL_USER{groupMovies} >= 100){
+        print qq{
+            <font face="verdana">
+            <b>Super Favorite Movie:</b><br>
+        };
+        &show_superfavorite_movie_select($effectiveUserID);
+        print qq{
+            <br></font>
+        };
+    }
     ########################
     ### Warn if modifying another user's votes.
 

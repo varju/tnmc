@@ -152,6 +152,11 @@ sub get_movie_extended{
                 $movie->{votesFaveAway} ++;
             }
         }
+        elsif ($Vtype == 3){
+            $movie->{votesHTML} .= "<b><font style='background-color: #ffff88'>&nbsp;$Vperson&nbsp;</font></b> ";
+            $movie->{votesText} .= "**[$Vperson!** ";
+            $movie->{votesSuperfave} ++;
+        }
         elsif ($Vtype == 2){
             if ($Ubday ne '' && $Ubday <= 3 && $Ubday >= -3){
             $movie->{votesHTML} .= "<b><font style='background-color: #ff88ff'>&nbsp;$Vperson&nbsp;</font></b> ";
@@ -181,6 +186,7 @@ sub get_movie_extended{
 
     ### Do the rank stuff
     $movie->{order} += 1.0 *  $movie->{votesFor};
+    $movie->{order} += 5   *  $movie->{votesSuperfave};
     $movie->{order} += 1.5 *  $movie->{votesFave};
     $movie->{order} += 10  *  $movie->{votesFaveBday};
     $movie->{order} -= 0.5 *  $movie->{votesAgainst};

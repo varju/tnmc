@@ -16,7 +16,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(show_favorite_movie_select show_current_movie list_movies show_current_nights show_night);
+@EXPORT = qw(show_superfavorite_movie_select show_favorite_movie_select show_current_movie list_movies show_current_nights show_night);
 @EXPORT_OK = qw();
 
 #
@@ -41,6 +41,46 @@ sub show_favorite_movie_select{
     $sql = "SELECT movieID
              FROM MovieVotes
             WHERE userID = '$effectiveUserID' AND type = '2'";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute;
+    ($favoriteMovie) = $sth->fetchrow_array();
+    $sth->finish();
+
+    $sql = "SELECT movieID, title
+             FROM Movies
+            WHERE statusShowing = '1' AND statusSeen != '1' AND statusBanned != 1
+        
+            ORDER BY title";
+
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute;
+
+    while (@row = $sth->fetchrow_array()){
+            if ($favoriteMovie == $row[0]){         $faveSel = 'selected';}
+            else{                                   $faveSel = '';}
+            print qq{               <option value="$row[0]" $faveSel>$row[1]\n};
+    }
+    $sth->finish;
+    
+    print qq{
+        </select>
+    };
+}
+
+sub show_superfavorite_movie_select{
+
+    my ($effectiveUserID) = @_;
+    my ($sql, $sth, @row, $favoriteMovie, $faveSel);
+
+    print qq{
+        <select name="superfavoriteMovie">
+        <option value="0">none
+        <option value="0">
+    };
+
+    $sql = "SELECT movieID
+             FROM MovieVotes
+            WHERE userID = '$effectiveUserID' AND type = '3'";
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute;
     ($favoriteMovie) = $sth->fetchrow_array();
