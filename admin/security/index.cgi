@@ -76,7 +76,7 @@ sub show_security_users_list{
             <tr>
                 <td nowrap>$user{userID}</td>
                 <td></td>
-                <td nowrap><a href="session_view.cgi?userID=$userID">$user{username}</a></td>
+                <td nowrap><a href="admin/security/session_view.cgi?userID=$userID">$user{username}</a></td>
                 <td></td>
                 <td nowrap>$num_open_sessions / $num_sessions</td>
                 <td></td>

@@ -63,7 +63,7 @@ sub show_movie_edit_form{
     }
     
     print qq{
-        <form action="movie_edit_submit.cgi" method="post">
+        <form action="movies/movie_edit_submit.cgi" method="post">
         <input type="hidden" name="movieID" value="$movieID">
         <table>
 

@@ -182,7 +182,7 @@ sub show_moviegod_links{
         foreach my $nightID (@nights){
             my %night;
             &get_night($nightID, \%night);
-            print "<a href=\"\/movies\/night_edit.cgi?nightID=$nightID\">", &tnmc::util::date::format_date('short_date', $night{date}), "</a>\n";
+            print "<a href=\"movies\/night_edit.cgi?nightID=$nightID\">", &tnmc::util::date::format_date('short_date', $night{date}), "</a>\n";
             print " - " if ($nightID ne $nights[scalar(@nights) - 1]);
         }
     }

@@ -26,7 +26,7 @@ require 'fieldtrip/FIELDTRIP.pl';
            &get_trip($tripID, \%trip);
       
     print qq 
-    {    <form action="trip_edit_submit.cgi" method="post">
+    {    <form action="fieldtrip/trip_edit_submit.cgi" method="post">
         <table>
     };
 

@@ -25,7 +25,7 @@ if ($USERID) {
     my $suggestions = &tnmc::general_config::get_general_config("suggestions");
     
     print qq 
-    {       <form action="development_set_submit.cgi" method="post">
+    {       <form action="fieldtrip/development_set_submit.cgi" method="post">
                         <table>
         
                         <tr>

@@ -59,10 +59,10 @@ sub show_search_slide_header{
     ## album navigation stuff
     print qq{
         <b>
-        <a href="/">TNMC</a> &nbsp; -> &nbsp;
-        <a href="index.cgi">Pics</a> &nbsp; -> &nbsp;
-        <a href="search_index.cgi">Search</a> &nbsp; -> &nbsp;
-        <a href="$search_url">Results</a> &nbsp; -> &nbsp;
+        <a href="index.cgi">TNMC</a> &nbsp; -> &nbsp;
+        <a href="pics/index.cgi">Pics</a> &nbsp; -> &nbsp;
+        <a href="pics/search_index.cgi">Search</a> &nbsp; -> &nbsp;
+        <a href="pics/$search_url">Results</a> &nbsp; -> &nbsp;
         Slideshow &nbsp;&nbsp;
         </b>
     };

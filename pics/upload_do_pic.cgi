@@ -56,7 +56,7 @@ sub do_upload_pic{
     if ($result){
         my $picID = $conf{picID};
         print "<b>Upload Successfull</b><br>id: $picID<br>\n";
-        print "<a href=\"pic_edit.cgi?picID=$picID\">Continue</a><br>\n";
+        print "<a href=\"pics\/pic_edit.cgi?picID=$picID\">Continue</a><br>\n";
     }
     else{
         print "<b>Upload failed</b><br>\n";

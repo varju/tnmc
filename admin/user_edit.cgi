@@ -29,7 +29,7 @@ if ($userID)
     &tnmc::user::get_user($userID, \%user);
     
     print qq 
-    {    <form action="user_edit_submit.cgi" method="post">
+    {    <form action="admin/user_edit_submit.cgi" method="post">
             <table>
             };
     

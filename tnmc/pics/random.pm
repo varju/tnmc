@@ -32,7 +32,7 @@ sub show_random_pic{
     $pic{description} &&= " ($pic{description})";
     my $date = $pic{timestamp};
     $date =~ s/\s.*//;
-    my $pic_url = "/pics/search_slide.cgi?search=date-span&search_from=$date+00%3A00&search_to=$date+23%3A59%3A59&picID=$picID";
+    my $pic_url = "pics/search_slide.cgi?search=date-span&search_from=$date+00%3A00&search_to=$date+23%3A59%3A59&picID=$picID";
     print qq{
         <a href="$pic_url"><img src="$pic_img" width="80" height="64" border="0" alt="$pic{title}$pic{description}"></a>
     };

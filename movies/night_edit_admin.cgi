@@ -26,7 +26,7 @@ use tnmc::cgi;
     &get_night($nightID, \%night);
     
     print qq{
-		<form action="night_edit_admin_submit.cgi" method="post">
+		<form action="movies/night_edit_admin_submit.cgi" method="post">
 		<table>
                 };
     

@@ -186,7 +186,7 @@ sub show_my_attendance_chooser{
         }
         else{
             print qq{
-                <td align="center"><a href="index.cgi?nightID=$nightID&effectiveUserID=$userID"><font color="888888"><b>$date_string</b></font></a></td>
+                <td align="center"><a href="movies/index.cgi?nightID=$nightID&effectiveUserID=$userID"><font color="888888"><b>$date_string</b></font></a></td>
                 <td>&nbsp;&nbsp;</td>
             };
         }
@@ -202,7 +202,7 @@ sub show_my_attendance_chooser{
         print qq{
             <td>
             <!-- hide the form tag here so it doesn\'t strech things -->
-            <form action="/movies/night_attendance_submit.cgi" method="post">
+            <form action="movies/night_attendance_submit.cgi" method="post">
             <input type="hidden" name="userID" value="$userID">\&nbsp\;
             </td>
             </tr>
@@ -270,7 +270,7 @@ sub show_my_attendance_chooser{
         if (($userID == $night->{'godID'})
             || ($user->{groupMovies} >= 100)
             ){
-            print qq{<a href="/movies/night_edit.cgi?nightID=$nightID">$god->{'username'}</a>};
+            print qq{<a href="movies/night_edit.cgi?nightID=$nightID">$god->{'username'}</a>};
         }
         else {
             print $god->{'username'};
@@ -283,7 +283,7 @@ sub show_my_attendance_chooser{
     
     print qq{
         <td valign="top" align="center">
-            <a href="/movies/factions.cgi">More&nbsp;factions...</a>
+            <a href="movies/factions.cgi">More&nbsp;factions...</a>
         </td>
     </table>
     };

@@ -36,7 +36,7 @@ sub print_movie_edit_admin_form{
     &get_movie($movieID, \%movie);
     
     print qq 
-    {    <form action="movie_edit_submit.cgi" method="post">
+    {    <form action="movies/movie_edit_submit.cgi" method="post">
         <table>
     };
 

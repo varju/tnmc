@@ -37,7 +37,7 @@ sub show_edit_form{
     
     &tnmc::template::show_heading("trip edit");
     print qq {
-        <form action="trip_edit_submit.cgi" method="post">
+        <form action="fieldtrip/trip_edit_submit.cgi" method="post">
         <input type="hidden" name="tripID" value="$tripID">
         <table>
          

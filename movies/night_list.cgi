@@ -22,7 +22,7 @@ my $next = &get_next_night();
 
 my %next;
 &get_night($next, \%next);
-print qq{Next? <a href="night_edit_admin.cgi?nightID=$next{nightID}">$next{date}</a>};
+print qq{Next? <a href="movies/night_edit_admin.cgi?nightID=$next{nightID}">$next{date}</a>};
 
 print "<hr>";
 
@@ -45,7 +45,7 @@ foreach my $nightID (@nights){
     print qq{
         <tr>
         <td> $nightID
-        <td><a href="night_edit_admin.cgi?nightID=$nightID">$night{date}</a>
+        <td><a href="movies/night_edit_admin.cgi?nightID=$nightID">$night{date}</a>
         <td> $night{'factionID'}
         <td> $night{'movieID'}
             <br>

@@ -26,7 +26,7 @@ use tnmc::db;
     my @cols = &tnmc::db::db_get_cols_list("MovieFactions");
     
     print qq{
-		<form action="faction_edit_admin_submit.cgi" method="post">
+		<form action="movies/faction_edit_admin_submit.cgi" method="post">
 		<table>
                 };
     

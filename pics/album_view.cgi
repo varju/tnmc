@@ -43,8 +43,8 @@ sub show_album_view{
     
     ## heading
     &tnmc::template::show_heading(qq|
-        <a href="/pics/"><font color="ffffff">Pics</font></a> -> 
-        <a href="album_index.cgi"><font color="ffffff">Albums</font></a> -> 
+        <a href="pics/"><font color="ffffff">Pics</font></a> -> 
+        <a href="pics/album_index.cgi"><font color="ffffff">Albums</font></a> -> 
         $album{'albumTitle'}
         |);
     
@@ -65,17 +65,17 @@ sub show_album_view{
         <b>Owner:</b> $owner{username}
         <b>Album ID:</b> $album{albumID}
         <p>
-        [ <a href="album_thumb.cgi?albumID=$albumID">Thumbnails</a> 
-        - <a href="album_slide.cgi?albumID=$albumID">Slideshow</a> ]
+        [ <a href="pics/album_thumb.cgi?albumID=$albumID">Thumbnails</a> 
+        - <a href="pics/album_slide.cgi?albumID=$albumID">Slideshow</a> ]
         <p>
     };
     
     ## Admin options 
     if (&auth_access_album_edit($albumID, \%album)){
         print  qq{
-            [ <a href="album_edit.cgi?albumID=$albumID">Edit</a>
-            - <a href="album_edit_admin.cgi?albumID=$albumID">Admin</a>
-            - <a href="album_del.cgi?albumID=$albumID">Del</a> ]
+            [ <a href="pics/album_edit.cgi?albumID=$albumID">Edit</a>
+            - <a href="pics/album_edit_admin.cgi?albumID=$albumID">Admin</a>
+            - <a href="pics/album_del.cgi?albumID=$albumID">Del</a> ]
             <p>
         };
         

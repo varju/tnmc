@@ -90,7 +90,7 @@ sub show_movies_home{
             <tr><th>&nbsp;N / ? / Y</th>
                 <th>&nbsp;&nbsp;\#</th>
                 <th colspan="3" height="14">
-                    <form action="/movies/update_votes.cgi" method="post">
+                    <form action="movies/update_votes.cgi" method="post">
                     <input type="hidden" name="userID" value="$effectiveUserID">
                     &nbsp;now showing</th>
                 </tr>

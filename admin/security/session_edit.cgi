@@ -43,7 +43,7 @@ sub show_session_admin_edit_form{
     &tnmc::template::show_heading("Edit Session: $sessionID");
     
     print qq 
-    {    <form action="session_edit_submit.cgi" method="post">
+    {    <form action="admin/security/session_edit_submit.cgi" method="post">
             <table>
             };
     

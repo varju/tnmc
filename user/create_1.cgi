@@ -20,7 +20,7 @@ use tnmc::template;
 my @cols = &tnmc::db::db_get_cols_list('Personal');
 
 print qq{
-        <form action="create_2.cgi" method="post">
+        <form action="user/create_2.cgi" method="post">
         <input type="hidden" name="userID" value="0">
         };
 

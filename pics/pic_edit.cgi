@@ -30,7 +30,7 @@ my $pic_img = &get_pic_url($picID, ['mode'=>'big']);
 print qq{  <img width="320" src="$pic_img">\n};
 
 # give admin users a link
-print qq{  <br><a href="pic_edit_admin.cgi?picID=$picID">Admin</a>\n} if ($USERID{groupPics} >= 100);
+print qq{  <br><a href="pics/pic_edit_admin.cgi?picID=$picID">Admin</a>\n} if ($USERID{groupPics} >= 100);
 
 # Give the owner an edit section:
 if (&auth_access_pic_edit($picID, \%pic)){
@@ -78,7 +78,7 @@ sub show_pic_edit_form{
     
     print qq{
 
-        <form action="pic_edit_submit.cgi" method="post">
+        <form action="pics/pic_edit_submit.cgi" method="post">
         <input type="hidden" name="picID" value="$picID">
         <input type="hidden" name="destination" value="">
         <input type="submit" value="Submit">

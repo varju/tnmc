@@ -40,16 +40,16 @@ sub show_trip{
     my ($edit_link, $del_link, $survey_link, $view_link);
 
     if ($USERID eq $trip{AdminUserID}){
-        $edit_link = qq{ - <a href="trip_edit.cgi?tripID=$tripID"><font color="ffffff">edit</font></a>};
-        $del_link = qq{ - <a href="trip_del.cgi?tripID=$tripID"><font color="ffffff">del</font></a>};
+        $edit_link = qq{ - <a href="fieldtrip/trip_edit.cgi?tripID=$tripID"><font color="ffffff">edit</font></a>};
+        $del_link = qq{ - <a href="fieldtrip/trip_del.cgi?tripID=$tripID"><font color="ffffff">del</font></a>};
     }
     
     ### survey link
     if ($USERID){
-        $survey_link = qq{ - <a href="survey.cgi?tripID=$tripID&userID=$USERID"><font color="ffffff">survey</font></a>};
+        $survey_link = qq{ - <a href="fieldtrip/survey.cgi?tripID=$tripID&userID=$USERID"><font color="ffffff">survey</font></a>};
     }
     ### view link
-    $view_link = qq{ - <a href="trip_view.cgi?tripID=$tripID"><font color="ffffff">view</font></a>};
+    $view_link = qq{ - <a href="fieldtrip/trip_view.cgi?tripID=$tripID"><font color="ffffff">view</font></a>};
     
     &tnmc::template::show_heading($trip{title} . $view_link . $edit_link . $del_link . $survey_link);
     
@@ -116,7 +116,7 @@ sub show_trip{
         else                              {    $font = '';}
         
         if ($USERID == $trip{AdminUserID}){
-            $edit = qq{<a href="survey.cgi?tripID=$tripID&userID=$row[0]">$i</a></td>};
+            $edit = qq{<a href="fieldtrip/survey.cgi?tripID=$tripID&userID=$row[0]">$i</a></td>};
         }else{    $edit = $i;}
         
         print qq{
@@ -169,7 +169,7 @@ sub show_trip{
     if ($USERID eq $trip{AdminUserID}){
         
         print qq{
-            <form method=get action="survey.cgi">
+            <form method=get action="fieldtrip/survey.cgi">
             <input type="hidden" name="tripID" value="$tripID">
             <select name="userID">
         };

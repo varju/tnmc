@@ -25,7 +25,7 @@ if ($USERID) {
     my $devBlurb = &tnmc::general_config::get_general_config("devBlurb");
     
     print qq 
-    {       <form action="development_set_submit.cgi" method="post">
+    {       <form action="fieldtrip/development_set_submit.cgi" method="post">
                         <table>
         
                         <tr>

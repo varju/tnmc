@@ -49,7 +49,7 @@ sub show_group_selector{
     $sth->finish();
 
     print qq{
-        <form action="/admin/groups.cgi" method="post">
+        <form action="admin/groups.cgi" method="post">
         <select name="groupID" defaultoption="$group" onChange="form.submit();">
     };
     
@@ -93,7 +93,7 @@ sub show_edit_group{
 
     &tnmc::template::show_heading("Group Administration: $group");
     print qq{
-        <form action="/admin/groups_change_submit.cgi" method="post">
+        <form action="admin/groups_change_submit.cgi" method="post">
         <input type="hidden" name="group" value="$group">
                 <table cellspacing="0" cellpadding="1" border="0">
     };

@@ -34,7 +34,7 @@ sub show_search_index{
 
 sub show_search_form_text{
     
-    my $url = "/pics/search_thumb.cgi";
+    my $url = "pics/search_thumb.cgi";
     
     &tnmc::template::show_heading("search by text");
     
@@ -62,7 +62,7 @@ sub show_search_form_text{
 
 sub show_search_form_date_span{
     
-    my $url = "/pics/search_thumb.cgi";
+    my $url = "pics/search_thumb.cgi";
     
     &tnmc::template::show_heading("search by date");
     
@@ -91,7 +91,7 @@ sub show_search_form_date_span{
 
 sub show_search_form_my_unreleased{
     
-    my $url = "/pics/search_thumb.cgi";
+    my $url = "pics/search_thumb.cgi";
     
     &tnmc::template::show_heading("search for my unreleased");
     
@@ -114,7 +114,7 @@ sub show_search_form_my_unreleased{
 
 sub show_search_form_untitled{
     
-    my $url = "/pics/search_thumb.cgi";
+    my $url = "pics/search_thumb.cgi";
     
     &tnmc::template::show_heading("search for untitled pics");
     
@@ -138,7 +138,7 @@ sub show_search_form_user{
     
     require tnmc::user;
     
-    my $url = "/pics/search_thumb.cgi";
+    my $url = "pics/search_thumb.cgi";
 
     &tnmc::template::show_heading("search by user");
 

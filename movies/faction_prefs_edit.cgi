@@ -33,7 +33,7 @@ use tnmc::cgi;
     my %sel_notify_phone = ($prefs->{notify_phone} => 'checked');
     
     print qq{
-            <form action="faction_prefs_edit_admin_submit.cgi" method="post">
+            <form action="movies/faction_prefs_edit_admin_submit.cgi" method="post">
             <input type="hidden" name="factionID" value="$prefs->{factionID}">
             <input type="hidden" name="userID" value="$prefs->{userID}">
 	    <table>

@@ -40,7 +40,7 @@ sub show_admin_page{
             my %night;
             &get_night ($nightID, \%night);
             print qq{
-                <a href="night_edit.cgi?nightID=$nightID">$night{date}</a>
+                <a href="movies/night_edit.cgi?nightID=$nightID">$night{date}</a>
                 ($nightID)<br>
             };
         }
@@ -51,7 +51,7 @@ sub show_admin_page{
         my $other_theatres = &tnmc::general_config::get_general_config("movie_other_theatres");
 
         print qq{
-            <form action="admin_submit.cgi" method="post">
+            <form action="movies/admin_submit.cgi" method="post">
             <table>
 
             <tr>

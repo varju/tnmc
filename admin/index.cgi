@@ -42,11 +42,11 @@ sub show_basic_users_list{
     print qq{
         <table cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <th><a href="index.cgi?order=userID">userID</a></td>
+            <th><a href="admin/index.cgi?order=userID">userID</a></td>
             <th>&nbsp;&nbsp;</td>
-            <th><a href="index.cgi?order=username">username</a></td>
+            <th><a href="admin/index.cgi?order=username">username</a></td>
             <th>&nbsp;&nbsp;</td>
-            <th><a href="index.cgi?order=fullname">fullname</a></td>
+            <th><a href="admin/index.cgi?order=fullname">fullname</a></td>
             <th>&nbsp;&nbsp;</td>
             <th>&nbsp;&nbsp;</td>
         </tr>
@@ -63,8 +63,8 @@ sub show_basic_users_list{
                 <td nowrap>$user{fullname}</td>
                 <td></td>
                 <td nowrap>
-                <a href="user_edit.cgi?userID=$userID">[Edit]</a> 
-                <a href="user_delete_submit.cgi?userID=$userID">[Del]</a>
+                <a href="admin/user_edit.cgi?userID=$userID">[Edit]</a> 
+                <a href="admin/user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
             </tr>
         };

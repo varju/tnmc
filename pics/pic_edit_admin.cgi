@@ -27,7 +27,7 @@ $picID = &tnmc::cgi::param('picID');
 &get_pic($picID, \%pic);
 
 print qq {
-    <form action="pic_edit_admin_submit.cgi" method="post">
+    <form action="pics/pic_edit_admin_submit.cgi" method="post">
     <table>
 };
 

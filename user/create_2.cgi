@@ -47,10 +47,10 @@ sms_admin_notify("New User Created: $userID - $user{username} - $user{fullname} 
 &tnmc::template::header();
 
 print qq{
-        <form method="post" action="/user/login.cgi">
+        <form method="post" action="user/login.cgi">
         <input type="hidden" name="userID" value="$userID">
         <input type="hidden" name="password" value="$user{password}">
-        <input type="hidden" name="location" value="/user/my_prefs.cgi">
+        <input type="hidden" name="location" value="user/my_prefs.cgi">
 
         <b>Account created</b>
         <p>

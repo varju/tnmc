@@ -113,7 +113,7 @@ sub show_night{
             
             <TR>
             <TD nowrap><B>Movie: </TD>
-            <TD nowrap><a href="/movies/movie_view.cgi?movieID=$night{'movieID'}" target="viewmovie">$movie{'title'}</a></TD>
+            <TD nowrap><a href="movies/movie_view.cgi?movieID=$night{'movieID'}" target="viewmovie">$movie{'title'}</a></TD>
             </TR>
             
             <TR>

@@ -52,8 +52,8 @@ sub show_edit_users_list{
         print qq{
             <tr>
                 <td nowrap>
-                <a href="user_edit.cgi?userID=$userID">[Edit]</a> 
-                <a href="user_delete_submit.cgi?userID=$userID">[Del]</a>
+                <a href="admin/user_edit.cgi?userID=$userID">[Edit]</a> 
+                <a href="admin/user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
         };
         foreach $key (keys %user){
@@ -66,7 +66,7 @@ sub show_edit_users_list{
 
     print qq{
         <tr>
-        <form method="post" action="user_edit_submit.cgi">
+        <form method="post" action="admin/user_edit_submit.cgi">
         <td><input type="submit" value="Add:"></td>
     };
 

@@ -48,7 +48,7 @@ sub show_album_edit_form{
     
     &tnmc::template::show_heading("album edit");
     print qq {
-        <form action="album_edit_submit.cgi" method="post">
+        <form action="pics/album_edit_submit.cgi" method="post">
         <input type="hidden" name="albumID" value="$albumID">
             <p>
             <b>Title</b><br>

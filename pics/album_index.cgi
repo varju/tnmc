@@ -26,7 +26,7 @@ use tnmc::pics::show;
 ###################################################################
 sub show_all_albums{
     
-    my $add_link = qq{<a href="album_add.cgi"><font color="ffffff">Add</font></a>};
+    my $add_link = qq{<a href="pics/album_add.cgi"><font color="ffffff">Add</font></a>};
     
     &tnmc::template::show_heading("Albums - $add_link");
     

@@ -46,7 +46,7 @@ require 'fieldtrip/FIELDTRIP.pl';
             if (!$CONFIRM){
                 ### Ask for confirmation
                 print qq {
-                    <form action="trip_del.cgi" method="post">
+                    <form action="fieldtrip/trip_del.cgi" method="post">
                     <input type="hidden" name="tripID" value="$tripID">
                     <b>Are you SURE that you want to permanently delete this trip?</b>
                     <p>
@@ -75,7 +75,7 @@ require 'fieldtrip/FIELDTRIP.pl';
 
                 print qq{
                     <p>
-                    <a href="index.cgi">Continue</a>
+                    <a href="fieldtrip/index.cgi">Continue</a>
                 };
             }
         }

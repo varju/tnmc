@@ -84,9 +84,9 @@ sub get_pic_url{
         
         &get_pic($picID, \%pic);
         if ($pic{typePublic}){
-            $pic_url = "/pics/pub/cache/thumb/$picID";
+            $pic_url = "pics/pub/cache/thumb/$picID";
         }else{
-            $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
+            $pic_url = "pics/serve_pic.cgi?mode=thumb&picID=$picID";
         }
     }
     elsif (($format{mode} eq 'small') ||
@@ -95,12 +95,12 @@ sub get_pic_url{
            ($format{mode} eq 'raw')){
         &get_pic($picID, \%pic);
         if ($pic{typePublic}){
-            $pic_url = "/pics/pub/cache/full/$picID";
+            $pic_url = "pics/pub/cache/full/$picID";
         }else{
-            $pic_url = "/pics/serve_pic.cgi?picID=$picID";
+            $pic_url = "pics/serve_pic.cgi?picID=$picID";
         }
     }else{
-        $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
+        $pic_url = "pics/serve_pic.cgi?mode=thumb&picID=$picID";
     }
     
     return $pic_url;

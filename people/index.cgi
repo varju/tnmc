@@ -54,7 +54,7 @@ username');
         
         print qq
         {    <tr>
-            <td nowrap><a href="user_view.cgi?userID=$userID" target="viewuser">$user{'username'}</a></td>
+            <td nowrap><a href="people/user_view.cgi?userID=$userID" target="viewuser">$user{'username'}</a></td>
 
             <td></td>
             <td nowrap>$user{'fullname'}</td>

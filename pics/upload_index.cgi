@@ -29,7 +29,7 @@ sub show_upload_api_page{
     &tnmc::template::show_heading("upload api");
     print qq {
         
-        <form action="api_upload_submit.cgi" method="post" enctype="multipart/form-data">
+        <form action="pics/api_upload_submit.cgi" method="post" enctype="multipart/form-data">
 
         <table>
             
@@ -98,7 +98,7 @@ sub show_upload_pic_page{
 
     print qq {
         
-        <form action="upload_do_pic.cgi" method="post" enctype="multipart/form-data">
+        <form action="pics/upload_do_pic.cgi" method="post" enctype="multipart/form-data">
         <table>
             
             <tr><td><b>File</b></td>

@@ -20,7 +20,7 @@ use tnmc::user;
     &tnmc::template::header();
     
     print qq{
-          <form action="broadcast_send.cgi" method="post">
+          <form action="broadcast/broadcast_send.cgi" method="post">
     };
 
     &tnmc::template::show_heading("cell phone broadcast centre");

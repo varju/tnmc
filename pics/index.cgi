@@ -31,7 +31,7 @@ sub show_page{
     
     &tnmc::template::show_heading("Pics");
     ## search
-    my $url = "/pics/search_thumb.cgi";
+    my $url = "pics/search_thumb.cgi";
     print qq{
         <table><tr><td>
           <form method="get" action="$url">

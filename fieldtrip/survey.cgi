@@ -43,7 +43,7 @@ sub show_survey_form{
     $selDrivingWith{$survey{drivingWith}} = 'selected';
       
     print qq {
-        <form action="survey_submit.cgi" method="post">
+        <form action="fieldtrip/survey_submit.cgi" method="post">
         <input type="hidden" name="userID" value="$userID">
         <input type="hidden" name="tripID" value="$tripID">
         

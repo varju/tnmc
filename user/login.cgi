@@ -50,7 +50,7 @@ if ( !$userID
         <p>
         You entered the wrong password.
         <p>
-        If you\'ve forgotten it, you can have your <a href="/user/entry_page.cgi">password emailed to you</a>.
+        If you\'ve forgotten it, you can have your <a href="user/entry_page.cgi">password emailed to you</a>.
     };
     &tnmc::template::footer();
 

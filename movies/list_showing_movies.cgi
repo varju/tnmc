@@ -62,7 +62,7 @@ sub show_showing_movie_list{
                 <td nowrap>$movie{rank}</td>
                 <td nowrap>$my_vote$seen_colour$movie{title}</td>
                 <td nowrap>&nbsp;&nbsp;$movie{theatres}</td>
-                <td nowrap>&nbsp;<a href="movie_view.cgi?movieID=$movieID" target="viewmovie">v</a>
+                <td nowrap>&nbsp;<a href="movies/movie_view.cgi?movieID=$movieID" target="viewmovie">v</a>
             </tr>
         };
         }

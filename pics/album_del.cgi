@@ -46,7 +46,7 @@ use tnmc::pics::link;
             if (!$CONFIRM){
                 ### Ask for confirmation
                 print qq {
-                    <form action="album_del.cgi" method="post">
+                    <form action="pics/album_del.cgi" method="post">
                     <input type="hidden" name="albumID" value="$albumID">
                     <b>Are you SURE that you want to permanently delete this album?</b>
                     <p>
@@ -77,7 +77,7 @@ use tnmc::pics::link;
 
                 print qq{
                     <p>
-                    <a href="index.cgi">Continue</a>
+                    <a href="pics/index.cgi">Continue</a>
                 };
             }
         }

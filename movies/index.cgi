@@ -59,7 +59,7 @@ sub show_local_nav{
     $sortSel{$sortOrder} = 'selected';
     
     print qq{
-        <form action="index.cgi" method="get">
+        <form action="movies/index.cgi" method="get">
         <input type="hidden" name="nightID" value="$nightID">
         <table border="0" cellpading="0" cellspacing="0" ><tr valign="top">
           <td>
@@ -142,11 +142,11 @@ sub show_movies_enhanced{
             <tr  bgcolor="ffffff">
                 <td><b>Edit</b></td>
             <td align="center"><b>&nbsp;N&nbsp;&nbsp;?&nbsp;&nbsp;Y&nbsp;</b></td>
-            <td align="right">&nbsp;&nbsp;<a href="index.cgi?sortOrder=rank&effectiveUserID=$effectiveUserID"><b>#</b></a></td>
-            <td align="right">&nbsp;&nbsp;<a href="index.cgi?sortOrder=votesFor&effectiveUserID=$effectiveUserID"><b>+</b></a></td>
-            <td align="right">&nbsp;&nbsp;<a href="index.cgi?sortOrder=votesAgainst&effectiveUserID=$effectiveUserID"><b>-</b></a></td>
+            <td align="right">&nbsp;&nbsp;<a href="movies/index.cgi?sortOrder=rank&effectiveUserID=$effectiveUserID"><b>#</b></a></td>
+            <td align="right">&nbsp;&nbsp;<a href="movies/index.cgi?sortOrder=votesFor&effectiveUserID=$effectiveUserID"><b>+</b></a></td>
+            <td align="right">&nbsp;&nbsp;<a href="movies/index.cgi?sortOrder=votesAgainst&effectiveUserID=$effectiveUserID"><b>-</b></a></td>
             <td>&nbsp;&nbsp;</td>
-            <td><a href="index.cgi?sortOrder=title&effectiveUserID=$effectiveUserID"><b>Title</b></a></td>
+            <td><a href="movies/index.cgi?sortOrder=title&effectiveUserID=$effectiveUserID"><b>Title</b></a></td>
             <td>&nbsp;&nbsp;</td>
             <td><b>$displaySortOrder</b></td>
             <td>&nbsp;&nbsp;</td>
@@ -154,7 +154,7 @@ sub show_movies_enhanced{
             </tr>
         <tr>
             <td colspan="11" bgcolor="cccccc" align="right">
-                <form action="/movies/update_votes.cgi" method="post">
+                <form action="movies/update_votes.cgi" method="post">
                 <input type="hidden" name="userID" value="$effectiveUserID">
                 <font color="888888"><b>now showing </td></tr>
     };
@@ -276,7 +276,7 @@ sub show_movie_list_enhanced {
         
         print qq{
             <tr valign="top">
-                <td><a href="movie_edit.cgi?movieID=$movieID"><font color="cccccc">$movieID</a></td>
+                <td><a href="movies/movie_edit.cgi?movieID=$movieID"><font color="cccccc">$movieID</a></td>
                 <td valign="top" nowrap><input type="radio" name="v$movieID" value="-1" $vote_status_word{'-1'}><input type="radio" name="v$movieID" value="0" $vote_status_word{'0'}><input type="radio" name="v$movieID" value="1" $vote_status_word{'1'} $vote_status_word{'2'}></td>
                 <td align="right">$movieInfo{$movieID}->{rank}</td>
                 <td align="right">$movieInfo{$movieID}->{votesForTotal}</td>
@@ -286,7 +286,7 @@ sub show_movie_list_enhanced {
         };
         if ( ($movieInfo{$movieID}->{statusShowing}) &&($movieInfo{$movieID}->{statusNew}) ){ print qq{<b>}; }
         print qq{
-                    <a href="movie_view.cgi?movieID=$movieID" target="viewmovie">
+                    <a href="movies/movie_view.cgi?movieID=$movieID" target="viewmovie">
                         $movieInfo{$movieID}->{title}</a></td>
                 <td></td>
                 <td>$movieInfo{$movieID}->{$extraField}</td>

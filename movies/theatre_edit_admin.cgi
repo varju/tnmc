@@ -27,7 +27,7 @@ use tnmc::db;
     my $hash = &tnmc::movies::theatres::get_theatre($ID);
     
     print qq{
-		<form action="theatre_edit_admin_submit.cgi" method="post">
+		<form action="movies/theatre_edit_admin_submit.cgi" method="post">
 		<table>
                 };
     my @cols = &tnmc::db::db_get_cols_list('MovieTheatres');

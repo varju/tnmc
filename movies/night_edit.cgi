@@ -56,7 +56,7 @@ sub show_night_edit_form{
     &tnmc::template::show_heading("Edit/Set Movie Night");
     
     print qq{
-        <form action="night_edit_submit.cgi" method="post">
+        <form action="movies/night_edit_submit.cgi" method="post">
         <input type="hidden" name="nightID" value="$nightID">
         <input type="hidden" name="LOCATION" value="$ENV{HTTP_REFERER}">
         <table>

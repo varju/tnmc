@@ -22,7 +22,7 @@ use tnmc::movies::night;
 &tnmc::template::show_heading("Factions");
 my @factions = &tnmc::movies::faction::list_factions();
 
-print "<a href='/movies/faction_edit_admin.cgi?factionID=0'>New Faction</a><p>" if ($USERID{groupMovies} >= 100);
+print "<a href='movies/faction_edit_admin.cgi?factionID=0'>New Faction</a><p>" if ($USERID{groupMovies} >= 100);
 foreach my $factionID (@factions){
     &show_faction($factionID);
 }
@@ -70,7 +70,7 @@ sub show_faction{
     if ($is_faction_admin){
         print qq{
             <br>
-            <form action="/movies/faction_prefs_edit.cgi" method="get">
+            <form action="movies/faction_prefs_edit.cgi" method="get">
             <input type="hidden" name="factionID" value="$factionID">
             <select name="userID">
         };
@@ -92,18 +92,18 @@ sub show_faction{
     my @nights = &tnmc::movies::night::list_future_nights($factionID);
     foreach my $nightID (@nights){
         my %night; &tnmc::movies::night::get_night($nightID, \%night);
-        print qq{<a href="/movies/index.cgi?nightID=$nightID">$night{'date'}</a><br>};
+        print qq{<a href="movies/index.cgi?nightID=$nightID">$night{'date'}</a><br>};
     }
     print qq{
                 </td></tr>
             <tr>
             <td colspan=2><br>
     };
-    print qq{<a href="/movies/faction_edit_admin.cgi?factionID=$factionID">admin</a> - delete - } if $is_faction_admin;
-    print qq{<a href="/movies/night_create.cgi?factionID=$factionID">new night</a> -  } if $is_faction_admin;
+    print qq{<a href="movies/faction_edit_admin.cgi?factionID=$factionID">admin</a> - delete - } if $is_faction_admin;
+    print qq{<a href="movies/night_create.cgi?factionID=$factionID">new night</a> -  } if $is_faction_admin;
     
     print qq{
-        <a href="/movies/faction_prefs_edit.cgi?factionID=$factionID&userID=$USERID">prefs</a>
+        <a href="movies/faction_prefs_edit.cgi?factionID=$factionID&userID=$USERID">prefs</a>
         <br>
         <br>
             </td></tr>

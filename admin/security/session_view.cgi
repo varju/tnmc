@@ -90,7 +90,7 @@ sub show_session_list{
                 <td></td>
                 <td nowrap>$font$last_online</td>
                 <td></td>
-                <td nowrap><a href="session_edit.cgi?sessionID=$sessionID">edit</a></td>
+                <td nowrap><a href="admin/security/session_edit.cgi?sessionID=$sessionID">edit</a></td>
             </tr>
         };
         

@@ -36,7 +36,7 @@ sub show_album_edit_admin_form{
     
     print qq {
         
-        <form action="album_edit_admin_submit.cgi" method="post">
+        <form action="pics/album_edit_admin_submit.cgi" method="post">
             <table>
     };
     

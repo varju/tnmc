@@ -29,7 +29,7 @@ sub show_album_add_form{
     &tnmc::template::show_heading("Add a new Album");
     my $now = &tnmc::util::date::now();
     print qq {
-	<form action="album_add_submit.cgi" method="post">
+	<form action="pics/album_add_submit.cgi" method="post">
         
         <input type="hidden" name="albumID" value="0">
         <input type="hidden" name="albumOwnerID" value="$USERID">

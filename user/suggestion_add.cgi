@@ -24,7 +24,7 @@ use tnmc::user;
     &tnmc::template::show_heading ("Make a Suggestion / Report a Bug");
     
     print qq{
-        <form action="/user/suggestion_submit.cgi" method="post">
+        <form action="user/suggestion_submit.cgi" method="post">
         <table><tr><td>
     <textarea cols=40 rows=10 wrap=virtual name="suggestion"></textarea>
     </td></tr></table>
@@ -38,7 +38,7 @@ use tnmc::user;
 
         my $heading = "The Suggestion Box";
         if ($USERID{groupDev} >= 1){
-            $heading .= qq{ - <a href="/development/suggestions.cgi"><font color="ffffff">Edit</font></a>};
+            $heading .= qq{ - <a href="development/suggestions.cgi"><font color="ffffff">Edit</font></a>};
         }
         &tnmc::template::show_heading ($heading);
 
@@ -48,7 +48,7 @@ use tnmc::user;
         
         $heading = "The To do List";
         if ($USERID{groupDev} >= 1){
-            $heading .= qq{ - <a href="/development/todo_list.cgi"><font color="ffffff">Edit</font></a>};
+            $heading .= qq{ - <a href="development/todo_list.cgi"><font color="ffffff">Edit</font></a>};
         }
         &tnmc::template::show_heading ($heading);
 

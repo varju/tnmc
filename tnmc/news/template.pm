@@ -61,8 +61,8 @@ sub news_print {
         print "<br clear=\"all\">\n";
 
         if ($edit_links && $USERID{groupAdmin}) {
-            print "<p><a href='edit_news.cgi?newsId=$newsId'>edit</a>\n";
-            print " <a href='delete_news.cgi?newsId=$newsId'>delete</a>\n";
+            print "<p><a href='news/edit_news.cgi?newsId=$newsId'>edit</a>\n";
+            print " <a href='news/delete_news.cgi?newsId=$newsId'>delete</a>\n";
         }
         if (++$i < $count) {
             print "<hr noshade>\n";
@@ -88,7 +88,7 @@ sub news_edit {
     my $userlist = &tnmc::user::get_user_list("WHERE groupAdmin='1'");
 
     print qq{
-<form action="edit_news_submit.cgi" method="post">
+<form action="news/edit_news_submit.cgi" method="post">
 <table>
   <tr>
     <td><b>Date</b></td>

@@ -38,7 +38,7 @@ sub show_admin_movie_list{
                 <table cellspacing="3" cellpadding="0" border="0">
         <tr>
         <td>
-        <form method="post" action="movie_edit_admin.cgi">
+        <form method="post" action="movies/movie_edit_admin.cgi">
         <input type="submit" value="Add">
         </form>
         </td>
@@ -56,8 +56,8 @@ sub show_admin_movie_list{
         print qq{
             <tr>
                 <td nowrap>
-                <a href="movie_edit_admin.cgi?movieID=$movieID">[Edit]</a> 
-                <a href="movie_delete_submit.cgi?movieID=$movieID">[Del]</a>
+                <a href="movies/movie_edit_admin.cgi?movieID=$movieID">[Edit]</a> 
+                <a href="movies/movie_delete_submit.cgi?movieID=$movieID">[Del]</a>
                 </td>
         };
         foreach $key (keys %movie){
@@ -69,7 +69,7 @@ sub show_admin_movie_list{
 
     print qq{
         <tr>
-        <form method="post" action="movie_edit.cgi">
+        <form method="post" action="movies/movie_edit.cgi">
         <td><input type="submit" value="Add"></td>
         </form>
         </tr>

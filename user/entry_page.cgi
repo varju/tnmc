@@ -52,7 +52,7 @@ sub show_full_login{
     print qq{
         <p><br><br>
         <u><b>New Users:</b></u><br>
-        <a href="/user/create_1.cgi">
+        <a href="user/create_1.cgi">
         Create a New Account</a><br>
         <br>
         <p>
@@ -62,7 +62,7 @@ sub show_full_login{
     ### Enhanced Login
     print qq{
         <p><br><br>
-            <form action="/user/login.cgi" method="post">
+            <form action="user/login.cgi" method="post">
 	    <input type="hidden" name="location" value="$tnmc_url">
             <b>Enhanced Login:</b><br>
                         <!-- <select onChange="form.submit();" name="userID"> -->
@@ -104,7 +104,7 @@ sub show_full_login{
     ### lost password
     print qq{
         <p><br>
-            <form action="/user/forgot_password.cgi" method="post">
+            <form action="user/forgot_password.cgi" method="post">
 	    <input type="hidden" name="location" value="$tnmc_url">
                 <br><b>Lost Passwords:</b><br>
                         <!-- <select onChange="form.submit();" name="userID"> -->
