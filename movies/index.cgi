@@ -262,7 +262,7 @@ sub show_movie_list_enhanced {
         };
         if ( ($movieInfo{$movieID}->{statusShowing}) &&($movieInfo{$movieID}->{statusNew}) ){ print qq{<b>}; }
         print qq{
-                    <a href="movie_view.cgi?movieID=$movieID" target="_new">
+                    <a href="movie_view.cgi?movieID=$movieID" target="viewmovie">
                         $movieInfo{$movieID}->{title}</a></td>
                 <td></td>
                 <td>$movieInfo{$movieID}->{$extraField}</td>

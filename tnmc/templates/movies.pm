@@ -172,7 +172,7 @@ sub show_movie_list_home{
         };
         if ($movieInfo{$movieID}->{statusNew}){ print qq{<b>}; }
         print qq{
-                    <a href="/movies/movie_view.cgi?movieID=$movieID" target="_new">
+                    <a href="/movies/movie_view.cgi?movieID=$movieID" target="viewmovie">
                         $movieInfo{$movieID}->{title}</a></td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
                 <td>$movieInfo{$movieID}->{votesHTML}</td>
