@@ -189,7 +189,7 @@ sub show_movie_list{
                       LEFT JOIN MovieVotes as v USING (movieID)
                       LEFT JOIN Personal as p USING (userID)
 		$whereClause
-		ORDER BY m.title ASC, p.username ASC";
+		ORDER BY m.title ASC, m.movieID ASC, p.username ASC";
 
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
