@@ -15,7 +15,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
 
-@EXPORT = qw(show_pic_listing show_album_listing set_pic del_pic
+@EXPORT = qw(show_pic_listing show_album_info show_album_listing set_pic del_pic
              get_pic list_pics set_album del_album get_album 
              list_albums add_link del_link get_link list_links 
              list_links_for_album list_links_for_date);
@@ -74,6 +74,7 @@ sub show_pic_listing{
     
 }
 
+########################################
 sub show_album_listing{
     my ($albums_ref, $params_ref) = @_;
 
@@ -145,6 +146,55 @@ sub show_album_listing{
     };
 }
 
+########################################
+sub show_album_info{
+    my ($albumID) = @_;
+
+    my %album;
+    &get_album($albumID, \%album);
+
+    if (! $album{albumTitle}){
+        $album{albumTitle} = '(Untitled)';
+    }
+
+    my $sql = "SELECT DATE_FORMAT('$album{albumDateStart}', '%b %d %Y') ";
+    my $sth = $dbh_tnmc->prepare($sql); 
+    $sth->execute();
+    my ($date_string) = $sth->fetchrow_array();
+
+    $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
+    $sth = $dbh_tnmc->prepare($sql); 
+    $sth->execute();
+    my ($num_pics) = $sth->fetchrow_array();
+
+    my %owner;
+    &get_user($album{albumOwnerID}, \%owner);
+
+    if (!$album{albumCoverPic}){
+        my @pics;
+        &list_links_for_album(\@pics, $albumID);
+        $album{albumCoverPic} = @pics[0];
+    }
+    
+    print qq{
+        <table>
+            <tr>
+                <td valign="top"><a href="album_view.cgi?albumID=$albumID">
+                    <img src="serve_pic.cgi?picID=$album{albumCoverPic}&mode=thumb" width="80" height="64" border="0"></a></td>
+                <td valign="top"><a href="album_view.cgi?albumID=$albumID">
+                    <b>$album{albumTitle}</b></a><br>
+                    $album{albumDescription}<br>
+                    Date: $date_string - 
+                    Owner: $owner{username} - 
+                    Pics: $num_pics<br>
+                    </td>
+            </tr>
+        </table>
+    };
+        
+}
+
+########################################
 sub set_pic{
     my (%pic, $junk) = @_;
     my ($sql, $sth, $return);
@@ -152,6 +202,7 @@ sub set_pic{
     &db_set_row(\%pic, $dbh_tnmc, 'Pics', 'picID');
 }
 
+########################################
 sub del_pic{
     my ($picID) = @_;
     my ($sql, $sth, $return);
@@ -165,6 +216,7 @@ sub del_pic{
     $sth->finish;
 }
 
+########################################
 sub get_pic{
     my ($picID, $pic_ref, $junk) = @_;
     my ($condition);
@@ -173,6 +225,7 @@ sub get_pic{
     &db_get_row($pic_ref, $dbh_tnmc, 'Pics', $condition);
 }
 
+########################################
 sub list_pics{
     my ($pic_list_ref, $where_clause, $by_clause, $junk) = @_;
     my (@row, $sql, $sth);
@@ -190,6 +243,7 @@ sub list_pics{
     return scalar(@$pic_list_ref);
 }
 
+########################################
 sub set_album{
     my (%album, $junk) = @_;
     my ($sql, $sth, $return);
