@@ -7,7 +7,7 @@
 
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 
@@ -22,7 +22,7 @@ $force = 0;
     $basePicDir = "data/";
     &db_connect();
     
-    &cookie_get();
+    &tnmc::security::auth::authenticate();
     
 
     $cgih = new CGI;
@@ -52,7 +52,7 @@ sub serve_picture{
     elsif (! -e $picfile){
         errorExit( "pic not found!");
     }
-    
+     
     ## THUMBNAIL
     if ($mode eq "thumb"){
 
@@ -106,8 +106,70 @@ sub serve_picture{
             # $p->Write(STDOUT);
         }
     }
+    ## THUMBNAIL
+    elsif ($mode eq "bright"){
+
+        ## serve it from the cache if we can
+        my $cache_file = "$basePicDir/cache/$mode/$picID";
+#        if (! $force && -f "$cache_file"){
+#            &serve_file($cache_file);
+#        }
+#        else{
+        {
+            use Image::Magick;
+            
+            print "Content-type: image/jpeg\n\n";
+
+            my($image, $x);
+            
+            $image = Image::Magick->new;
+            $x = $image->Read($picfile);
+
+
+
+            $x = $image->Normalize();
+
+            $x = $image->Minify();
+#            $x = $image->Minify();
+#            $x = $image->Minify();
+#            $x = $image->Sample(width=>'160', height=>'128');
+
+#            $x = $image->Minify();
+
+#            $x = $image->Despeckle();
+#            $x = $image->ReduceNoise();
+
+#            $x = $image->Modulate(brightness=>'100', saturation=>'100', hue=>'100' );
+
+
+
+            $x = $image->Write(file=>STDOUT, compress=>'JPEG');
+#            open (CACHE, ">$cache_file");
+#            $x = $image->Write(file=>CACHE, compress=>'JPEG');
+#            close (CACHE);
+
+            # $x = $image->Sample(width=>'320', height=>'240');
+            # $x = $image->Rotate(degrees=>'90');
+
+            # warn "$x" if "$x";
+
+            # $p = Image::Magick->new;
+            # $p->Read($picfile);
+            # $p->Set(attribute => value, ...)
+            # ($a, ...) = p->Get("attribute", ...)
+            # $p->routine(parameter => value, ...)
+            # $p->Mogrify("Routine", parameter => value, ...)
+            # $p->Write(STDOUT);
+        }
+    }
     else{
-        &serve_file($picfile);
+        ## serve it from the cache if we can
+        my $cache_file = "$basePicDir/cache/full/$picID";
+        if (! $force && -f "$cache_file"){
+            &serve_file($cache_file);
+        }else{
+            &serve_file($picfile);
+        }
     }
 
 }

@@ -7,11 +7,12 @@
 
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
-
+use tnmc::cgi;
 use tnmc::user;
+
 require 'pics/PICS.pl';
 
 
@@ -39,6 +40,8 @@ $albumID = $cgih->param('albumID');
 ################################################################################
 sub get_nav_info_from_url{
     my ($nav_ref) = @_;
+    
+    my $tnmc_cgi = &tnmc::cgi::get_cgih();
     
     $nav_ref->{albumID} = $tnmc_cgi->param('albumID');
     $nav_ref->{picID} = $tnmc_cgi->param('picID');
@@ -341,7 +344,7 @@ sub show_piclist{
 
     my @PICS = @{$nav->{pics}};
     my $albumID = $nav->{albumID};
-    my $listType = $nav->{listType} || 'thumbnail';
+    my $listType = $nav->{listType} || 'grid';
     my $listColumns = $nav->{listColumns};
     my $start = $nav->{listStart};
     my $limit = $nav->{listLimit} || 20;
@@ -349,7 +352,7 @@ sub show_piclist{
 
     ## security: make sure the person should be given admin mode
     if ($listType eq 'admin' && ! &access_pics_admin()){
-        $listType = 'thumbnail';
+        $listType = 'grid';
     }
     
 
@@ -405,21 +408,25 @@ sub show_piclist{
             &get_user($pic{ownerID}, \%user);
             $owners{$pic{ownerID}} = $user{username};
         }
-
+        
         my $pic_url = "pic_view.cgi?picID=$picID&albumID=$albumID&dateID=$dateID";
         my $pic_src;
-
+        
         if ($nav->{listSize} eq 'mini'){
-            $pic_src = qq{src="serve_pic.cgi?mode=thumb&picID=$picID" height="64" width="80"};
+            $pic_img = &get_pic_url($picID, ['mode'=>'mini']);
+            $pic_src = qq{src="$pic_img" height="64" width="80"};
         }
         elsif ($nav->{listSize} eq 'small'){
-            $pic_src = qq{src="serve_pic.cgi?picID=$picID" height="256" width="320"};
+            $pic_img = &get_pic_url($picID, ['mode'=>'small']);
+            $pic_src = qq{src="$pic_img" height="256" width="320"};
         }
         elsif ($nav->{listSize} eq 'big'){
-            $pic_src = qq{src="serve_pic.cgi?picID=$picID" height="480" width="640"};
+            $pic_img = &get_pic_url($picID, ['mode'=>'big']);
+            $pic_src = qq{src="$pic_img" height="640" width="480"};
         }
         else{ ## thumb
-            $pic_src = qq{src="serve_pic.cgi?mode=thumb&picID=$picID" height="128" width="160"};
+            $pic_img = &get_pic_url($picID, ['mode'=>'thumb']);
+            $pic_src = qq{src="$pic_img" height="128" width="160"};
         }
 
         my $pic_desc;

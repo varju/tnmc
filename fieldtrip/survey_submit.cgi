@@ -6,7 +6,12 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use lib '/tnmc';
-use tnmc;
+
+use tnmc::security::auth;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
+
 require 'fieldtrip/FIELDTRIP.pl';
 
     #############
@@ -15,10 +20,18 @@ require 'fieldtrip/FIELDTRIP.pl';
     $cgih = new CGI;
     
     &db_connect();
-
+    
+    $tripID = $cgih->param('tripID');
+    $userID = $cgih->param('userID');
+    
+    my %survey;
+    &get_tripSurvey($tripID, $userID, \%survey);
+    
+    
+    
     @cols = &db_get_cols_list('FieldtripSurvey');
-     foreach $key (@cols){
-         $survey{$key} = $cgih->param($key);
+    foreach $key (@cols){
+         $survey{$key} = $cgih->param($key) if (defined $cgih->param($key));
     }
 
     &set_tripSurvey(%survey);

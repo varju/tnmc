@@ -5,7 +5,13 @@
 ##################################################################
 
 use lib '/tnmc';
-use tnmc;
+
+
+use tnmc::security::auth;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
+
 require 'fieldtrip/FIELDTRIP.pl';
 
     #############

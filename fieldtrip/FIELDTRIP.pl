@@ -58,6 +58,23 @@ sub del_trip{
     $sth->finish;
 }
 
+
+###################################################################
+sub list_trips{
+    my ($list_ref, $where, $order) = @_;
+
+    @$list_ref = ();
+    $sql = "SELECT tripID FROM Fieldtrips $where $order";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute;
+    while (my @row = $sth->fetchrow_array()){
+        push @$list_ref, $row[0];
+    }
+    $sth->finish;
+    return (scalar @$list_ref);
+}
+
+
 ###################################################################
 sub get_tripSurvey{
         my ($tripID, $userID, $survey_ref) = @_;
@@ -78,7 +95,6 @@ sub set_tripSurvey{
 
     &db_set_row(\%survey, $dbh_tnmc, 'FieldtripSurvey', 'userID');
 }
-
 
 # keepin perl happy...
 return 1;

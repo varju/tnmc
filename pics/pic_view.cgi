@@ -7,7 +7,7 @@
 
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
@@ -17,11 +17,15 @@ require 'pics/PICS.pl';
 {
 	#############
 	### Main logic
-
+        
 	&db_connect();
 	
-        &cookie_get();
-
+        &tnmc::security::auth::authenticate();
+        
+        #
+        # get the pic-view-info
+        #
+        
 	%pic;
 	$cgih = new CGI;
 	$picID = $cgih->param('picID');
@@ -36,7 +40,7 @@ require 'pics/PICS.pl';
         ## get our list of pictures for navigation
         @PICS;
         if ($albumID){
-            &get_album($albumID, \%album);
+           &get_album($albumID, \%album);
             &list_links_for_album(\@PICS, $albumID);
         }
         elsif ($dateID){
@@ -53,33 +57,11 @@ require 'pics/PICS.pl';
             $curr_index ++;
         }
             
-        
-        $album_url = "album_view.cgi?albumID=$albumID";
-        $album_prev_index =  ($curr_index - 1) % scalar(@PICS);
-        $album_next_index =  ($curr_index + 1) % scalar(@PICS);
-        
-        $album_prev_url = "pic_view.cgi?picID=$PICS[$album_prev_index]&albumID=$albumID&dateID=$dateID";
-        $album_next_url = "pic_view.cgi?picID=$PICS[$album_next_index]&albumID=$albumID&dateID=$dateID";
-           
-        $next_url = $album_next_url;
-        $prev_url = $album_prev_url;
 
-        
-
-        ##############################
-        ## get some fancy stuff (timestamp)
-        my $sql = "SELECT DATE_FORMAT('$pic{timestamp}', '%b %d %Y (%a) - %l:%i %p')";
-        my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        my ($fancy_timestamp) = $sth->fetchrow_array();
-        $sth->finish();
-        
         ##############################
         ## Print it all out
 
-        ## say "hi"
-        print "Content-type: text/html\n\n";
-        print qq{<body bgcolor="000000" text="aaaacc" link="9999ff" vlink="6666cc">};
+        &show_header_black();
 
         ## global and local nav
         &show_nav();
@@ -91,57 +73,86 @@ require 'pics/PICS.pl';
         my $start = (($start + $span - 1) >= scalar(@PICS))? scalar(@PICS) - $span: $start;
         $start = 0 if $start < 0;
         &show_thumb_nav(\@PICS, $start, $start + $span - 1);
-
-	### Give the owner an edit link
-        my $edit_link;
-        if ( $USERID && ($pic{ownerID} eq $USERID) ){
-            $edit_link = qq{<a href="pic_edit.cgi?picID=$picID">Edit</a>};
-        }
-
         
-        ## the big picture
-        $scale =  $cgih->param('scale') || 'auto';
-        if ($scale eq 'auto'){
-
-            my $min_pic_width = 500;
-            my $max_pic_width = 999;
-            if($pic{width} < $min_pic_width){
-                $scale = 1 + int ($min_pic_width / $pic{width});
-            }
-            elsif($pic{width} > $max_pic_width){
-                $scale = (1 / int ($pic{width} / $min_pic_width) );
-            }
-            else{
-                $scale = 1;
-            }
-        }
-
-        $WIDTH = $pic{width} * $scale;
-        $HEIGHT = $pic{height} * $scale;
-        print qq{
-            <table align="center" border="0">
-                <tr><td colspan="3"><img
-                        width="$WIDTH" height="$HEIGHT"
-                        src="/pics/serve_pic.cgi?picID=$pic{picID}"
-                    ></td></tr>
-                <tr>
-                    <td valign="top"><b>$pic{title}</b></td>
-                    <td valign="top">$edit_link</td>
-                    <td align="right" valign="top">
-                        $owner{username} - $fancy_timestamp<td>
-                </tr>
-                    <tr><td colspan="3">$pic{description}</td></tr>
-                    <tr><td colspan="3">$pic{comments}</td></tr>
-            </table>
-
-        };
-
-
-
+        &show_pic_view_body($picID, $cgih->param('scale'));
+        
 	&db_disconnect();
-
+        
+        &show_footer_black();
 }
 
+sub show_header_black{
+    ## say "hi"
+    print "Content-type: text/html\n\n";
+    print qq{<body bgcolor="000000" text="aaaacc" link="9999ff" vlink="6666cc">};
+}
+
+sub show_footer_black{
+    # stub
+}
+
+
+sub show_pic_view_body{
+    my ($picID, $scale) = @_;
+    
+    my %pic;
+    &get_pic($picID, \%pic);
+    
+    ### Give the owner an edit link
+    my $edit_link;
+    
+    if ( $USERID && ( ($pic{ownerID} eq $USERID) || $USERID{groupPics} >= 100) ){
+        $edit_link = qq{<a href="pic_edit.cgi?picID=$picID">Edit</a>};
+    }
+
+    ## fancy timestamp;
+    my $sql = "SELECT DATE_FORMAT('$pic{timestamp}', '%b %d %Y (%a) - %l:%i %p')";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    my ($fancy_timestamp) = $sth->fetchrow_array();
+    $sth->finish();
+    
+    
+    ## the big picture
+    $scale =  $cgih->param('scale') || 'auto';
+    if ($scale eq 'auto'){
+        
+        my $min_pic_width = 500;
+        my $max_pic_width = 999;
+        if($pic{width} < $min_pic_width){
+            $scale = 1 + int ($min_pic_width / $pic{width});
+        }
+        elsif($pic{width} > $max_pic_width){
+            $scale = (1 / int ($pic{width} / $min_pic_width) );
+        }
+        else{
+            $scale = 1;
+        }
+    }
+    
+    $WIDTH = $pic{width} * $scale;
+    $HEIGHT = $pic{height} * $scale;
+    my $pic_img = &get_pic_url($picID, ['mode'=>'full']);
+    
+    print qq{
+        <table align="center" border="0">
+            <tr><td colspan="3"><img
+                width="$WIDTH" height="$HEIGHT"
+                    src="$pic_img"
+                ></td></tr>
+            <tr>
+                <td valign="top"><b>$pic{title}</b></td>
+                <td valign="top" align="right">
+                    $edit_link
+                    $owner{username} - $fancy_timestamp<td>
+            </tr>
+                <tr><td colspan="3">$pic{description}</td></tr>
+                <tr><td colspan="3">$pic{comments}</td></tr>
+        </table>
+
+    };
+
+}
 
 ######################################################################
 sub show_nav{
@@ -154,6 +165,9 @@ sub show_nav{
         <tr><td nowrap><b>
         <a href="index.cgi">Pics</a> &nbsp; -> &nbsp; 
     };
+    
+    my $album_url = "album_view.cgi?albumID=$albumID";
+
     if ($albumID){
         print qq{    <a href="album_list.cgi">Albums</a> &nbsp; -> &nbsp; \n};
         print qq{    <a href="$album_url">$album{albumTitle}</a> &nbsp;&nbsp; \n};
@@ -234,7 +248,7 @@ sub show_thumb_nav{
     print "<table align=\"center\" ><tr>\n";
     for (my $i = $start; $i <= $end; $i++){
         my $url = &make_pic_url($i);
-        my $image = "serve_pic.cgi?mode=thumb&picID=@PICS[$i]";
+        my $image = get_pic_url(@PICS[$i], ['mode'=>'thumb']);
 
         print "<td>";
         printf("%i<br>", $i + 1);

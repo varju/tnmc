@@ -1,53 +1,83 @@
 #!/usr/bin/perl
 
 ##################################################################
-#       Scott Thompson - (june/2000)
+#       Scott Thompson - (apr/2001)
 ##################################################################
 
 use lib '/tnmc';
-use tnmc;
+
+use tnmc::security::auth;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
+
 require 'fieldtrip/FIELDTRIP.pl';
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &header();
+&header();
+
+$cgih = new CGI;
+$tripID = $cgih->param('tripID');
+
+show_edit_form($tripID);
+
+&footer();
+
+
+##################################################
+sub show_edit_form{
+    my ($tripID) = @_;
+
 
     %trip;
-    $cgih = new CGI;
-    $tripID = $cgih->param('tripID');
     
-     @cols = &db_get_cols_list('Fieldtrips');
-           &get_trip($tripID, \%trip);
-      
-    print qq 
-    {    <form action="trip_edit_submit.cgi" method="post">
+    &get_trip($tripID, \%trip);
+    
+    &show_heading("trip edit");
+    print qq {
+        <form action="trip_edit_submit.cgi" method="post">
+        <input type="hidden" name="tripID" value="$tripID">
         <table>
-    };
+         
+        <tr><th colspan="2">basic info</th></tr>
 
-    foreach $key (@cols)
-           {       
-        print qq 
-        {    
-            <tr valign=top><td><b>$key</b></td>
-        };
-    
-        if (($key eq 'description')
-           || ($key eq 'blurb'))
-        {    print qq {<td><textarea cols="20" rows="5" name="$key">$trip{$key}</textarea></td>};
-        }
-        else
-        {    print qq {<td><input type="text" name="$key" value="$trip{$key}"></td>};
-        }
-        
-        print "</tr>";
-           }
+        <tr><td><b>title</b></td>
+            <td><input type="text" name="title" value="$trip{title}"></td></tr>
+        <tr><td><b>description</b></td>
+            <td><textarea cols="20" rows="5" name="description">$trip{description}</textarea></td></tr>
 
-    print qq
-    {    </table>
+        <tr><td><b>blurb</b></td>
+            <td><textarea cols="20" rows="5" name="blurb">$trip{blurb}</textarea></td></tr>
+
+        <tr><th colspan="2">date/time</th></tr>
+
+        <tr><td><b>useWhen</b></td>
+            <td><input type="text" name="useWhen" value="$trip{useWhen}"></td></tr>
+        <tr><td><b>startTime</b></td>
+            <td><input type="text" name="startTime" value="$trip{startTime}"></td></tr>
+        <tr><td><b>endTime</b></td>
+            <td><input type="text" name="endTime" value="$trip{endTime}"></td></tr>
+
+        <tr><th colspan="2">rides</th></tr>
+
+        <tr><td><b>useRides</b></td>
+            <td><input type="text" name="useRides" value="$trip{useRides}"></td></tr>
+
+        <tr><th colspan="2">cost</th></tr>
+
+        <tr><td><b>useCost</b></td>
+            <td><input type="text" name="useCost" value="$trip{useCost}"></td></tr>
+        <tr><td><b>cost</b></td>
+            <td><input type="text" name="cost" value="$trip{cost}"></td></tr>
+
+        <tr><th colspan="2">questionaire</th></tr>
+
+
+        </table>
         <input type="submit" value="Submit">
         </form>
-    }; 
-    
+    };
 
-    &footer();
+}

@@ -8,7 +8,7 @@
 
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 

@@ -7,7 +7,7 @@
 
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 
 require 'pics/PICS.pl';
@@ -18,7 +18,7 @@ require 'pics/PICS.pl';
 
     $cgih = new CGI;
     &db_connect();
-    &cookie_get();
+    &tnmc::security::auth::authenticate();
     print "Content-type: text/plain\n\n";
     
 
@@ -134,7 +134,7 @@ sub import_extended_info{
     my ($height, $width) = $image->Get('base_rows', 'base_columns');
     $pic{height} = $height;
     $pic{width} = $width;
-
+    
     
     &set_pic(%pic);
     
