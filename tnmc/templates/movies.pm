@@ -34,8 +34,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 
 sub show_movies {
-    &db_connect();
-
     my ($next_tuesday, $next_tuesday_string, $sql, $sth);
 
     $next_tuesday = &get_next_night();
@@ -57,8 +55,6 @@ sub show_movies {
             &show_movies_home();
         }
     }
-
-    db_disconnect();
 }
 
 
