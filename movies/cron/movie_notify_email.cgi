@@ -12,68 +12,73 @@ use tnmc::config;
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
+use tnmc::movies::night;
 
+{
     #############
     ### Main logic
-
+    
     &db_connect();
 
-    my $winner_blurb = &get_general_config("movie_winner_blurb");
-    my $current_movie =  &get_general_config("movie_current_movie");
-        my $current_cinema = &get_general_config("movie_current_cinema");
-        my $current_showtime = &get_general_config("movie_current_showtime");
-        my $current_meeting_place = &get_general_config("movie_current_meeting_place");
-        my $current_meeting_time = &get_general_config("movie_current_meeting_time");
-        
-        my $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-        my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        my ($next_tuesday) = $sth->fetchrow_array();
-        $sth->finish();
-        
-        $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
-        $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        my ($next_tuesday_string) = $sth->fetchrow_array();
-        $sth->finish();
-  
+    my @nights = &list_active_nights();
 
     # If there is no current movie, don't do anything.
-    if (!$current_movie) 
-    {
-        exit;
-    }
-
-
+    exit if (! scalar(@nights));
+    
+    # send the mail
+    
+    my $to_email = $tnmc_email;
+    $to_email = 'scottt@interchange.ubc.ca';
+    
+    my $sql = "SELECT DATE_FORMAT(NOW(), 'W M D, Y')";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    my ($today_string) = $sth->fetchrow_array();
+    $sth->finish();
+    
+    
+    open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
+    print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
+    print SENDMAIL "To: tnmc-list <$to_email>\n";
+    print SENDMAIL "Subject: $today_string\n";
+    print SENDMAIL "\n";
+    
+    foreach my $nightID (@nights){
+        
+        my %night;
+        &get_night($nightID, \%night);
+        
         my %movie;
-    &get_movie($current_movie, \%movie);
-    my $current_movie_name = $movie{'title'};
-
+        &get_movie($night{'movieID'}, \%movie);
         
-        my $to_email = $tnmc_email;
-
-        open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
-        print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
-        print SENDMAIL "To: tnmc-list <$to_email>\n";
-        print SENDMAIL "Subject: $next_tuesday_string\n";
+        $sql = "SELECT DATE_FORMAT('$night{'date'}', 'W M D, Y')";
+        $sth = $dbh_tnmc->prepare($sql);
+        $sth->execute();
+        my ($date_string) = $sth->fetchrow_array();
+        $sth->finish();
+        
         print SENDMAIL "\n";
-        
-    print SENDMAIL "\n";
-    print SENDMAIL "$winner_blurb\n";
-    print SENDMAIL "\n";
-    print SENDMAIL "Movie:           $current_movie_name\n";
-    print SENDMAIL "Cinema:          $current_cinema\n";
-    print SENDMAIL "Showtime:        $current_showtime\n";
-    print SENDMAIL "Meeting Time:    $current_meeting_time\n";
-    print SENDMAIL "Meeting Place:   $current_meeting_place\n";
-
-        close SENDMAIL;
-
-
+        print SENDMAIL "$night{'winnerBlurb'}\n";
+        print SENDMAIL "\n";
+        print SENDMAIL "Movie:           $movie{'title'}\n";
+        print SENDMAIL "Date:            $date_string\n" if ($date_string ne $today_string);
+        print SENDMAIL "Cinema:          $night{'theatre'}\n";
+        print SENDMAIL "Showtime:        $night{'showtime'}\n";
+        print SENDMAIL "Meeting Time:    $night{'meetingTime'}\n";
+        print SENDMAIL "Meeting Place:   $night{'meetingPlace'}\n";
+    }
+    
+    close SENDMAIL;
+    
+    
     &db_disconnect();
 
+}
 
 ##########################################################
 #### The end.
 ##########################################################
+
+
+
 

@@ -33,16 +33,20 @@ $sth->finish;
 # (1) Set this week's movie to "seen"
 #
 
-my $movieID = &get_general_config('movie_current_movie');
+my @nights = list_active_nights();
 
-if ($movieID)
-{
+foreach my $nightID (@nights){
+    
+    my %night;
+    &get_night($nightID, \%night);
+    
+    my $movieID = $night{'movieID'};
     my %movie;
     &get_movie($movieID, \%movie);
     $movie{'statusSeen'} = "1";
     $movie{'date'} = $timestamp;
     &set_movie(%movie);
-    &set_general_config('movie_current_movie', 0);
+    
 }
 
 #
@@ -69,6 +73,7 @@ $sth->finish;
 
 my $numberOfWeeksToShow = 3;
 
+# attendance crud
 if (1 == 1){
     # $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
     # $sth = $dbh_tnmc->prepare($sql);
@@ -101,6 +106,7 @@ if (1 == 1){
     # $sth->finish();
 }
 
+# nights
 foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
     
     # get the date for the $i-th night from now.
@@ -119,7 +125,7 @@ foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
     # add the night
     my %night = (
                  nightID => 0,
-                 date => "$i_date 19:00:00");
+                 date => "$i_date 23:00:00");
     set_night(%night);
     print "add $i_date\n";
 }
@@ -127,5 +133,3 @@ foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
 
 # the end.
 &db_disconnect();
-
-

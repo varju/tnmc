@@ -13,54 +13,55 @@ use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
 use tnmc::movies::show;
+use tnmc::movies::night;
 
+{
     #############
     ### Main logic
-
+    
     &db_connect();
 #    print "Content-type: text/html\n\n<pre>";
 #    &print_email_movielist(">-");
-
-
-    my $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-    my $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute();
-    my ($next_tuesday) = $sth->fetchrow_array();
-    $sth->finish();
-
+    
+    my @nights = &get_future_nights();
+    my %next_night;
+    &get_night{$nights[0], \%next_night};
+    
+    my $next_tuesday = $next_night{'date'}
+    my $vote_blurb = $next_night{'voteBlurb'}
+    
     $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
     my ($next_tuesday_string) = $sth->fetchrow_array();
     $sth->finish();
-
     
-
+    
     #
     # put the movielist in a temporary file
     #
-
+    
     my $filename = "$tnmc_basepath/movies/cron/send_movielist.txt";
     open (FILE, ">$filename");
     close(FILE);
     &print_email_movielist(">>$filename");
-
+    
     #
     # send the mail
     #
-
-        my $to_email = $tnmc_email;
     
-        my $vote_blurb =  &get_general_config("movie_vote_blurb");
-
+    my $to_email = $tnmc_email;
+    
+    my $vote_blurb =  &get_general_config("movie_vote_blurb");
+    
     open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
     print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
     print SENDMAIL "To: tnmc-list <$to_email>\n";
     print SENDMAIL "Subject: $next_tuesday_string\n";
     print SENDMAIL "\n";
-
-    print SENDMAIL $vote_blurb;
-
+    
+    print SENDMAIL $vote_blurb'};
+    
     open(MESSAGE, "<$filename");
     while (<MESSAGE>){
         print SENDMAIL $_;
@@ -70,8 +71,8 @@ use tnmc::movies::show;
     close SENDMAIL;
 
     &db_disconnect();
+}
 
-    
 ###################################################################
 sub print_email_movielist{
 
@@ -170,4 +171,7 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}
 ##########################################################
 #### The end.
 ##########################################################
+
+
+
 
