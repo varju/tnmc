@@ -63,7 +63,6 @@ sub cookie_tostring {
                                 -value   => \%tnmc_cookie_in,
                                 -expires => '+1y',
                                 -path    => '/',
-                                -domain  => $tnmc_domain,
                                 -secure  => '0'
                                 );
     
