@@ -40,7 +40,7 @@ use tnmc::movies::show;
     # put the movielist in a temporary file
     #
 
-    my $filename = "send_movielist.txt";
+    my $filename = "$tnmc_basepath/movies/cron/send_movielist.txt";
     open (FILE, ">$filename");
     close(FILE);
     &print_email_movielist(">>$filename");
