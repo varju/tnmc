@@ -5,6 +5,7 @@ use strict;
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
+use tnmc::movies::night;
 
 
 #
@@ -15,7 +16,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(show_favorite_movie_select show_current_movie list_movies);
+@EXPORT = qw(show_favorite_movie_select show_current_movie list_movies show_current_nights show_night);
 @EXPORT_OK = qw();
 
 #
@@ -141,6 +142,76 @@ sub show_current_movie
                 };
         return (1);
     }
+}
+
+
+
+sub show_current_nights{
+    
+    my @nights = &list_active_nights();
+    foreach my $nightID (@nights){
+        &show_night($nightID);
+    }
+    
+    return scalar (@nights);
+}
+
+
+sub show_night{
+    my ($nightID) = @_;
+    
+    my %night;
+    &get_night($nightID, \%night);
+
+    
+        my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
+    my (%movie);
+    
+    my $sql = "SELECT DATE_FORMAT('$night{date}', 'W M D, Y')";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    my ($next_tuesday_string) = $sth->fetchrow_array();
+    $sth->finish();
+    
+    $night{'winnerBlurb'} =~ s/\n/<br>/g;
+    
+    my %movie;
+    &get_movie($night{'movieID'}, \%movie);
+    
+    print qq{
+        <TABLE CELLSPACING=0 CELLPADDING=0 width="100">
+            <TR>
+            <TD colspan="2">$night{'winnerBlurb'}<p><br></TD>
+            </TR>
+            
+            <TR>
+            <TD nowrap><B>Movie: </TD>
+            <TD nowrap><a href="/movies/movie_view.cgi?movieID=$night{'movieID'}" target="viewmovie">$movie{'title'}</a></TD>
+            </TR>
+            
+            <TR>
+            <TD nowrap><B>Cinema: </TD>
+            <TD nowrap>$night{'theatre'}</TD>
+            </TR>
+            
+            <TR>
+            <TD nowrap><B>Showtime: </TD>
+            <TD nowrap>$night{'showtime'}</TD>
+            </TR>
+            
+            <TR>
+            <TD nowrap><B>Meeting time: </TD>
+            <TD nowrap>$night{'meetingTime'}</TD>
+            </TR>
+            
+            <TR>
+            <TD nowrap><B>Meeting place: </TD>
+            <TD nowrap>$night{'meetingPlace'}</TD>
+            </TR>
+            
+        </TABLE>
+        <P>
+    };
 }
 
 sub list_movies{

@@ -13,7 +13,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(set_night get_night get_next_night list_nights);
+@EXPORT = qw(set_night get_night get_next_night list_nights list_future_nights list_active_nights);
 @EXPORT_OK = qw();
 
 #
@@ -86,5 +86,36 @@ sub list_nights{
     return scalar @$night_list_ref;
 }
 
+sub list_future_nights{
+    my (@row, $sql, $sth);
+    
+    my @night_list = ();
+    
+    $sql = "SELECT nightID from MovieNights WHERE date >= NOW()";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute;
+    while (@row = $sth->fetchrow_array()){
+        push (@night_list, $row[0]);
+    }
+    $sth->finish;
+
+    return @night_list;
+}
+
+sub list_active_nights{
+    my (@row, $sql, $sth);
+    
+    my @night_list = ();
+    
+    $sql = "SELECT nightID from MovieNights WHERE date >= NOW() && movieID";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute;
+    while (@row = $sth->fetchrow_array()){
+        push (@night_list, $row[0]);
+    }
+    $sth->finish;
+
+    return @night_list;
+}
 
 1;
