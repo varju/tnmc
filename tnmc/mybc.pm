@@ -45,66 +45,69 @@ sub mybc_get_movie_list
     return %results;
 }
 
-sub mybc_get_valid_theatres {
+sub mybc_get_valid_theatres
+{
     my %results;
 
     my $valid_theatres = &tnmc::general_config::get_general_config("movie_valid_theatres");
     my @valid_theatres = split(/\s/, $valid_theatres);
-    foreach my $theatre (@valid_theatres){
+    foreach my $theatre (@valid_theatres)
+    {
         $results{$theatre} = 1;
     }
 
     return %results;
 }
 
-sub mybc_get_movie_info {
+sub mybc_get_movie_info
+{
     my ($mID) = @_;
     my %info;
 
-    my $URL = "http://www2.mybc.com/movies/movies/$mID.html";
-    my $req = new HTTP::Request GET => $URL;
     my $ua = new LWP::UserAgent;
+    my $URL = "http://www.mytelus.com/movies/mdetails.do?movieID=$mID";
+    my $req = new HTTP::Request GET => $URL;
     my $res = $ua->request($req);
-    
-    my $mTheatres;
 
     my $text = $res->content;
-
-    if ($text =~ s/.*?<font face="Verdana, Arial, sans-serif" size="1">//s) {
-        $text =~ /<font size=\"?\d\"?><b>((.)*)<\/b><\/font>/im;
-        $info{title} = $1;
-        $info{title} =~ s/^(The|A)\s+(.*)$/$2, $1/;
-
-        if ($text =~ m|<b>PREMISE</b></font>\s*<BR>\s*(.*?)\s*<br><br>|si) {
-            $info{premise} = $1;
-            chomp $info{premise};
-        }
-        
-        $info{stars} = 0;
-        if ($text =~ /<IMG SRC=\"\/movies\/images\/star_(.*)\.gif/m) {
-            $info{stars} = $1;
-            $info{stars} =~ s/_half/.5/;
-        }
-        
-        if ($text =~ m|<B><I>@ THESE LOCATIONS</I></B>\:</font><br>\s+<font face="Verdana,Arial" size="1">\s(.*?)</font>|si) {
-            $mTheatres = $1;
-        }
+    if ($text =~ m|<form method="get" action="/movies/theatres.do">.*<font class="header" color="#49166d">(.*?)</font>|si)
+    {
+	$info{title} = $1;
+	if ($info{title} =~ /^(The|A)\s+(.*)$/)
+	{
+	    $info{title} = "$2, $1";
+	}
     }
-    else {
-        return ();
+    return () unless $info{title};
+
+    if ($text =~ m|<b>Premise</b></font>\s*<br>\s*(.*?)\s*<br><br>|si)
+    {
+	$info{premise} = $1;
     }
-    
-    # Extract the Theatres
-    my @lines = split('\n', $mTheatres);
+
+    if ($text =~ m|<b>our rating</b>.*?<img src="/images/movies/stars/star_(\d+).gif"|si)
+    {
+	$info{stars} = $1 / 2;
+    }
+    else
+    {
+	$info{stars} = 0;
+    }
+
+    $URL = "http://www.mytelus.com/movies/theatres.do?prov=BC&movieID=$mID";
+    $req = new HTTP::Request GET => $URL;
+    $res = $ua->request($req);
+    $text = $res->content;
+
     my %mTheatres = ();
-    foreach my $mTh (@lines) {
-        next unless $mTh;
-
-        if ($mTh =~ /.*?theatres\/(.+)\.html\">(.+)<\/a>/) {
-            $mTheatres{$1} = $2;
-        }
+    my @lines = split('\n', $text);
+    foreach my $line (@lines)
+    {
+	if ($line =~ m|<a href="/movies/tdetails.do\?theatreID=(.*?)">(.*?)</a>|si)
+	{
+	    $mTheatres{$1} = $2;
+	}
     }
-    $mTheatres{foo} = "bar";
     $info{theatres} = \%mTheatres;
 
     return %info;
