@@ -17,6 +17,8 @@ require 'MOVIES.pl';
 	&db_connect();
 	&header();
 
+	$sortOrder = $tnmc_cgi->param('sortOrder');
+
 	&get_user($USERID, \%REAL_USER);
 
 	if (  ($REAL_USER{groupAdmin})
@@ -27,30 +29,12 @@ require 'MOVIES.pl';
 	}
 	&get_user($effectiveUserID, \%USER);
 
-	&show_movieMenu();
 	&show_movies();
-#	&show_add_movie_form();
 
 
 
 	#############
 	### Main logic
-
-	&get_user($USERID, \%REAL_USER);
-#
-#	if (  ($REAL_USER{groupAdmin})
-#	   && ($tnmc_cgi->param('effectiveUserID')) ){
-#		$effectiveUserID = $tnmc_cgi->param('effectiveUserID');
-#	}else{
-#		$effectiveUserID = $USERID;
-#	}
-#	&get_user($effectiveUserID, \%USER);
-
-#	&show_movieMenu();
-#	&show_movies();
-#	&show_add_movie_form();
-
-
 
 
 #	$current_movie =  &get_general_config("movie_current_movie");
@@ -79,6 +63,7 @@ sub show_movies
 			<table border="0" cellpading="0" cellspacing="0" width="100%"><tr valign="top">
 			<td align="right">
 				<form action="index.cgi" method="post">
+				<input type="hidden" name="sortOrder" value="$sortOrder">
 				<font face="verdana" size="-1" color="888888">
 
 				<font face="verdana" size="-1" color="888888"><b>
@@ -202,10 +187,11 @@ sub show_movie_list{
 		&get_movie_extended($movieID, $anon);
 		$movieInfo{$movieID} = $anon;
 	}
-	
-#        @list = sort  {       $movieInfo{$b}->{order}
-#                        <=>     $movieInfo{$a}->{order}}
-#                        @list ;
+	if ($sortOrder){
+		@list = sort  {       $movieInfo{$b}->{$sortOrder}
+			      <=>     $movieInfo{$a}->{$sortOrder}}
+			@list ;
+	}
 
 	foreach $movieID (@list){
 

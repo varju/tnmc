@@ -16,9 +16,6 @@ require 'MOVIES.pl';
         &db_connect();
         &header();
 
-
-        &show_movieMenu();
-
 	&show_heading("Here's how the database bits map to the movie status:");
 
 	print qq{

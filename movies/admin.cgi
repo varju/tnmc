@@ -16,9 +16,6 @@ require 'MOVIES.pl';
 	&db_connect();
 	&header();
 
-        &show_movieMenu();
-	print "<br>";
-
 	%user;	
 	$cgih = new CGI;
 
@@ -41,6 +38,7 @@ require 'MOVIES.pl';
 		$winner_blurb = &get_general_config("movie_winner_blurb");
 
 		$valid_theatres = &get_general_config("movie_valid_theatres");
+		$current_nightID = &get_general_config("movie_current_nightID");
 
 
 		$current_movie{$current_movie} = "SELECTED";
@@ -95,6 +93,11 @@ require 'MOVIES.pl';
 			<tr>
 			<td><b>Winner Blurb</td>
 			<td><textarea cols="19" rows="5" wrap="virtual" name="movie_winner_blurb">$winner_blurb</textarea></td>
+			</tr>
+
+			<tr>
+			<td><b>Current NightID</td>
+			<td><input type="text" name="movie_current_nightID" value="$current_nightID"></td>
 			</tr>
 
 			<tr>

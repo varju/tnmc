@@ -16,9 +16,6 @@ require 'MOVIES.pl';
 	&db_connect();
 	&header();
 	
-	&show_movieMenu();
-	print "<br>";
-
 	&show_heading('Movie Attendance');
 	&list_my_attendance($USERID);
 

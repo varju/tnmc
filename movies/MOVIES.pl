@@ -12,75 +12,6 @@ require 'db_access.pl';
 
 
 ##########################################################
-sub show_movieMenu
-{
-	&db_connect();
-
-	my %USER;
-	&get_user($USERID, \%USER);
-
-	print qq{
-		<font face="verdana" size="-1" color="888888"><b>
-	
-		<a href="index.cgi">
-		<font face="verdana" size="-1" color="888888"><b>
-		Votes</b></font></a>
-
-			&#149;
-
-		<a href="attendance.cgi">
-		<font face="verdana" size="-1" color="888888"><b>
-		Attendance</b></font></a>
-
-			&#149;
-
-		<a href="list_seen_movies.cgi">
-		<font face="verdana" size="-1" color="888888"><b>
-		Seen</b></font></a>
-
-			&#149;
-
-		<a href="movie_add.cgi">
-		<font face="verdana" size="-1" color="888888"><b>
-		Add a Movie</b></font></a>
-
-			&#149;
-
-		<a href="help.cgi">
-		<font face="verdana" size="-1" color="888888"><b>
-		Information</b></font></a>
-	};
-
-	if ($USER{groupAdmin}){
-		print qq{
-
-			<br>
-
-			<a href="list_all_movies.cgi">
-			<font face="verdana" size="-1" color="888888"><b>
-			All Movies</b></font></a>
-			
-			&#149;
-			
-			<a href="admin.cgi">
-			<font face="verdana" size="-1" color="888888"><b>
-			Admin</b></font></a>
-
-			&#149;
-			
-			<a href="movies.cgi">
-			<font face="verdana" size="-1" color="888888"><b>
-			Testing</b></font></a>
-
-		};
-	}
-	print qq{
-		</b></font><br>
-	};
-
-}
-
-##########################################################
 sub show_favorite_movie_select{
 
 	my ($effectiveUserID) = @_;
@@ -324,7 +255,6 @@ sub get_night{
 	my ($condition);
 
 	$condition = "(nightID = '$nightID' OR date = '$nightID')";
-	print $condition;
 	&db_get_row($night_ref, $dbh_tnmc, 'MovieNights', $condition);
 }
 

@@ -15,8 +15,6 @@ require 'MOVIES.pl';
 	&db_connect();
 	&header();
 
-	&show_movieMenu();
-
 	&show_add_movie_form();
 
 	&footer();
