@@ -17,11 +17,15 @@ use tnmc::news::util;
 if ($USERID) {
     &tnmc::template::show_heading("add news entry");
 
+    my ($sec,$min,$hour,$day,$mon,$yr) = localtime();
+    $mon++;
+    $yr += 1900;
+
     my %news;
     $news{newsId} = 0;
     $news{userId} = $USERID;
-    $news{date} = 0;
-    $news{expires} = 0;
+    $news{date} = sprintf("%04d%02d%02d%02d%02d%02d", $yr, $mon, $day, $hour, $min, $sec);
+    $news{expires} = &tnmc::news::util::news_default_expiry();
     $news{value} = "";
 
     &tnmc::news::template::news_edit(\%news);

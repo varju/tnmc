@@ -117,7 +117,7 @@ sub set_news_item {
     }
 
     if (!$expires) {
-        $expires = &news_default_expiry($date);
+        $expires = &news_default_expiry();
     }
 
     $sql = "INSERT INTO News (newsID, userID, value, date, expires) 
@@ -161,8 +161,6 @@ sub del_news_item {
 }
 
 sub news_default_expiry {
-    my ($date) = @_;
-
     # figure out today's date
     my ($sec,$min,$hour,$day,$mon,$yr) = localtime();
     $mon++;
