@@ -1,16 +1,47 @@
-#!/usr/bin/perl
+package tnmc::broadcast;
+
+use strict;
+
+use LWP::UserAgent;
+use HTTP::Request::Common qw(POST);
+
+use tnmc::cookie;
+use tnmc::user;
+
+#
+# module configuration
+#
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+
+@ISA = qw(Exporter);
+
+@EXPORT = qw(smsBroadcast
+             smsShout
+             sms_send_fido
+             sms_send_fido_tap_zing
+             sms_send_telus
+             sms_send_tapzing
+             sms_send_rogers
+             sms_send_vstream
+             );
+
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
 
 ##################################################################
 #       Scott Thompson - fido, tapzing, generic stuff
 #       Jeff Steinbok  - telus, vstream
 #       Alex Varju     - rogers
 ##################################################################
-
-use LWP::UserAgent;
-use HTTP::Request::Common qw(POST);
-# use HTTP::Request::Form;
-
-
 
 # &sms_send_fido   ('7281655', "this is a test");
 # &sms_send_rogers ('8891066', "alex, call me if you get this. - scott");
@@ -250,6 +281,8 @@ sub sms_send_rogers{
 sub sms_send_vstream{
 
         my ($phone, $msg, $junk) = @_;
+        my $areacode;
+        my $start;
 
 	### get the areacode, if they have one.
 	$phone =~ s/\D//g;
@@ -283,5 +316,4 @@ sub sms_send_vstream{
 
 }
 
-# keep perl happy
-return 1;
+1;

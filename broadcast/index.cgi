@@ -5,12 +5,13 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'broadcast/BROADCAST.pl';
+
+use tnmc::db;
+use tnmc::broadcast;
+use tnmc::template;
+use tnmc::user;
 
 	#############
 	### Main logic
@@ -34,13 +35,15 @@ require 'broadcast/BROADCAST.pl';
 		<tr>
 	};
 
-	
+
         ### User List of people who have messaging on
+my @users;
         &list_users(\@users, "WHERE phoneTextMail != 'none'", 'ORDER BY username');
 
-	$i = 0;
+	my $i = 0;
 
-	foreach $userid (@users){
+	foreach my $userid (@users){
+            my %user;
 		&get_user($userid, \%user);
 		print qq{
 			<td>

@@ -11,7 +11,7 @@ use CGI;
 use lib '/usr/local/apache/tnmc';
 use tnmc;
 
-        require 'broadcast/BROADCAST.pl';
+use tnmc::broadcast;
 
 	#############
 	### Main logic

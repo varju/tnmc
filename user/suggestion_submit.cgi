@@ -11,6 +11,7 @@ use CGI;
 use lib '/usr/local/apache/tnmc';
 use tnmc;
 use tnmc::config;
+use tnmc::broadcast;
 
 	#############
 	### Main logic
@@ -38,7 +39,6 @@ use tnmc::config;
 
 	&set_general_config('suggestions', $SUGG);
 
-	require 'broadcast/BROADCAST.pl';
 	&smsShout('1', "IDEA: $newSuggestion");
 
 	&db_disconnect();

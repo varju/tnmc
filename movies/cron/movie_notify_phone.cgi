@@ -8,7 +8,8 @@
 use lib '/usr/local/apache/tnmc';
 use tnmc;
 require 'movies/MOVIES.pl';
-require 'broadcast/BROADCAST.pl';
+
+use tnmc::broadcast;
 
 	#############
 	### Main logic

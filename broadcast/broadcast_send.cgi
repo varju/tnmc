@@ -5,9 +5,14 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'broadcast/BROADCAST.pl';
+
+use tnmc::broadcast;
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
 
 	#############
 	### Main logic
@@ -15,11 +20,11 @@ require 'broadcast/BROADCAST.pl';
 	&db_connect();
 
 
-      	  	$cgih = new CGI;
-		$message = $cgih->param('message');
-        	@params =  $cgih->param();
+      	  	my $cgih = new CGI;
+		my $message = $cgih->param('message');
+        	my @params =  $cgih->param();
 
-		@userList = ();
+		my @userList = ();
 		
 		&header();
 
@@ -31,12 +36,13 @@ require 'broadcast/BROADCAST.pl';
 
 		&smsBroadcast(\@userList, $message);
 		
-		$numRec = $#userList + 1;
+		my $numRec = $#userList + 1;
 		print qq{
 			<b> $numRec Recipients:</b><br>
 			<hr noshade size="1">
 		};
 
+my %user;
 		&get_user($USERID, \%user);
 
 		open (LOG, '>>broadcast.log');
