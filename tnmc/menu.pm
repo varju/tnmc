@@ -99,7 +99,7 @@ sub new_nav_menu{
             &show_menu_item( 1, "/pics/date_list.cgi", "Date List", "");
             &show_menu_item( 0, "", "", "");
             &show_menu_item( 1, "/pics/album_add.cgi", "Add Album", "");
-            &show_menu_item( 1, "/pics/api_upload_submit.cgi", "Upload Pic", "");
+            &show_menu_item( 1, "/pics/api_upload.cgi", "Upload Pic", "");
         }
         &show_menu_item( 0, "", "", "");
     }
