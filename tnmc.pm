@@ -76,7 +76,6 @@ require 'db_access.pl';
 require 'template.pl';
 require 'user.pl';
 require 'general_config.pl';
-require 'broadcast/broadcast.pl';
 
 
 # keepin perl happy...

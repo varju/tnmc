@@ -10,7 +10,7 @@ use CGI;
 
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
-
+require 'broadcast/BROADCAST.pl';
 
 	#############
 	### Main logic
