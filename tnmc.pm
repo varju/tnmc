@@ -12,47 +12,47 @@ use CGI;
 
 BEGIN
 {
-        use Exporter ();
+    use Exporter ();
 
-        use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
+    use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
 		$dbh_tnmc
                 $USERID_LAST_KNOWN $USERID %USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
 
-        @ISA = qw(Exporter);
+    @ISA = qw(Exporter);
 
-        @EXPORT_OK = qw(
-                        );
+    @EXPORT_OK = qw(
+                    );
 
-        @EXPORT = qw(
-			&header
-			&footer
-			&show_heading
-			&get_cookie
-			&get_general_config
-			&set_general_config
-                        &get_user
-                        &set_user
-			&del_user
-			&list_users
-			&show_bulletins
+    @EXPORT = qw(
+                 &header
+                 &footer
+                 &show_heading
+                 &get_cookie
+                 &get_general_config
+                 &set_general_config
+                 &get_user
+                 &set_user
+                 &del_user
+                 &list_users
+                 &show_bulletins
 
-			&db_connect
-			&db_disconnect
-                        $dbh_tnmc
+                 &db_connect
+                 &db_disconnect
+                 $dbh_tnmc
 
-			$USERID
-			%USERID
-			$LOGGED_IN
-			$tnmc_cgi
-                        %user
+                 $USERID
+                 %USERID
+                 $LOGGED_IN
+                 $tnmc_cgi
+                 %user
 
-			&db_get_cols_list
-			&db_get_row
-			&db_set_row
-			
-                        );
+                 &db_get_cols_list
+                 &db_get_row
+                 &db_set_row
+                 
+                 );
 
-	%EXPORT_TAGS = ( );
+    %EXPORT_TAGS = ( );
 }
 
 ##########################################################
