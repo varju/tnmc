@@ -48,10 +48,10 @@ sub set_user{
     return &tnmc::db::item::replaceItem($table, $key, $_[0]);
 }
 
-sub del_user{
-    # usage: &del_user($userID)
-    return &tnmc::db::item::delItem($table, $key, $_[0]);
-}
+#sub del_user{
+#    # usage: &del_user($userID)
+#    return &tnmc::db::item::delItem($table, $key, $_[0]);
+#}
 
 sub list_teams{
     # usage: &list_teams("WHERE condition = true ORDER BY column")
