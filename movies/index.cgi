@@ -119,7 +119,7 @@ sub show_movies
 		<tr  bgcolor="ffffff">
 			<td><b>Edit</b></td>
 			<td align="center"><b>N &nbsp;&nbsp; ? &nbsp;&nbsp; Y</b></td>
-			<td align="right">&nbsp;&nbsp;<b>!</b></td>
+			<td align="right">&nbsp;&nbsp;<b>#</b></td>
 			<td align="right">&nbsp;&nbsp;<b>+</b></td>
 			<td align="right">&nbsp;&nbsp;<b>-</b></td>
 			<td>&nbsp;&nbsp;</td>
