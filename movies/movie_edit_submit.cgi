@@ -11,22 +11,23 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::movies::movie;
 
+{
     #############
     ### Main logic
     
-        my %movie;
+    my %movie;
     my $cgih = new CGI;
     
     &db_connect();
 
     my @cols = &db_get_cols_list($dbh_tnmc, 'Movies');
-     foreach my $key (@cols)
+    foreach my $key (@cols)
     {
-         $movie{$key} = $cgih->param($key);
+        $movie{$key} = $cgih->param($key);
     }
     &set_movie(%movie);
     
     &db_disconnect();
 
     print "Location: index.cgi\n\n";
-
+}

@@ -13,6 +13,7 @@ use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::show;
 
+{
     #############
     ### Main logic
     
@@ -24,17 +25,14 @@ use tnmc::movies::show;
 
     &db_disconnect();
     &footer();
+}
 
-##########################################################
-#### sub procedures.
-##########################################################
 
 #########################################
 sub show_admin_movie_list{
     my (@movies, %movie, $movieID, $key);
 
     &list_movies(\@movies, '', 'ORDER BY title');
-#    &get_movie($movie[0], \%movie);
 
     print qq{
                 <table cellspacing="3" cellpadding="0" border="0">
@@ -78,10 +76,3 @@ sub show_admin_movie_list{
                 </table>
         };
 }
-
-
-##########################################################
-#### The end.
-##########################################################
-
-

@@ -6,30 +6,25 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
-    #############
-    ### Main logic
-    
-    &header();
-    &db_connect();
-    
-    $cgih = new CGI;
-    $groupID = $cgih->param('groupID');
-    
-    &show_group_selector($groupID);
-    &show_edit_group($groupID);
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
 
-     &db_disconnect();
-    &footer();
+#############
+### Main logic
 
-##########################################################
-#### sub procedures.
-##########################################################
+&header();
+&db_connect();
+
+my $groupID = $tnmc_cgi->param('groupID');
+&show_group_selector($groupID);
+&show_edit_group($groupID);
+
+&db_disconnect();
+&footer();
 
 
 #########################################
@@ -142,9 +137,3 @@ sub show_edit_group{
         </form>
         };
 }
-
-##########################################################
-#### The end.
-##########################################################
-
-

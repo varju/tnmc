@@ -5,27 +5,24 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
+
 use tnmc::config;
+use tnmc::db;
+use tnmc::template;
 
+#############
+### Main logic
 
-    #############
-    ### Main logic
+&db_connect();
 
-    &db_connect();
+&header();
 
-    &header();
+&show_heading("site info");
 
-    &show_heading("site info");
-
-    $cgih = new CGI;
-
-    print qq 
-    {    <TABLE>
+print qq 
+{    <TABLE>
 
         <TR>
         <TD VALIGN=TOP><B>Hosting:</B></TD>
@@ -70,18 +67,14 @@ use tnmc::config;
         <TR>
         <TD VALIGN=TOP><B>Stats:</B></TD>
         <TD>
-    };
+        };
 
-        @file_status = stat("/tnmc/source/tnmc.tar.gz");
-        use POSIX qw(strftime);
-        $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
-        
-    print qq{
+my @file_status = stat("/tnmc/source/tnmc.tar.gz");
+use POSIX qw(strftime);
+my $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
+
+print qq{
             over 8000 lines of perl code!<br>
-                        <!-- 
-            $proper_requests cgi requests<br>
-            $total_files files served<br>
-            -->
             </TD>
         </TR>
 
@@ -115,7 +108,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         </TABLE>
         <P>
-    };    
-    &footer();
+};    
 
-    &db_disconnect();
+&footer();
+
+&db_disconnect();

@@ -5,26 +5,31 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
+use strict;
+use lib '/tnmc';
+
+use tnmc::cookie;
+use tnmc::db;
 use tnmc::movies::night;
 
+{
+    #############
+    ### Main logic
+    
+    &db_connect();
 
-	#############
-	### Main logic
-	
-	$cgih = new CGI;
-	
-	&db_connect();
+    cookie_get();
 
-	@cols = &db_get_cols_list($dbh_tnmc, 'MovieNights');
- 	foreach $key (@cols){
-	 	$night{$key} = $cgih->param($key);
-	}
+    my @cols = &db_get_cols_list($dbh_tnmc, 'MovieNights');
 
-	&set_night(%night);
-	
-	&db_disconnect();
-
-	print "Location: index.cgi\n\n";
-
+    my %night;
+    foreach my $key (@cols){
+        $night{$key} = $tnmc_cgi->param($key);
+    }
+    
+    &set_night(%night);
+    
+    &db_disconnect();
+    
+    print "Location: index.cgi\n\n";
+}

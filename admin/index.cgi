@@ -6,30 +6,28 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
-require 'basic_testing_tools.pl';
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
 
-    #############
-    ### Main logic
-    
-    &header();
-    &db_connect();
+#############
+### Main logic
 
-                &show_heading('<a id="personal">Personal</a>');
-                &show_edit_users_list();
+&header();
+&db_connect();
 
-     &db_disconnect();
-    &footer();
+&show_heading('<a id="personal">Personal</a>');
+&show_edit_users_list();
+
+&db_disconnect();
+&footer();
 
 ##########################################################
 #### sub procedures.
 ##########################################################
-
 
 #########################################
 sub show_edit_users_list{
@@ -75,7 +73,7 @@ sub show_edit_users_list{
     foreach $key (keys %user){
         next unless defined $user{$key};
 
-        $len = length($user{$key}) + 1;
+        my $len = length($user{$key}) + 1;
         print qq{
             <td><input type="text" name="$key" size="$len"></td>
         };
@@ -89,9 +87,3 @@ sub show_edit_users_list{
                 </table>
         };
 }
-
-##########################################################
-#### The end.
-##########################################################
-
-

@@ -15,6 +15,7 @@ use tnmc::user;
 use tnmc::movies::movie;
 use tnmc::movies::show;
 
+{
     #############
     ### Main logic
     
@@ -25,17 +26,14 @@ use tnmc::movies::show;
 
     &db_disconnect();
     &footer();
+}
 
-##########################################################
-#### sub procedures.
-##########################################################
 
 #########################################
 sub show_seen_movie_list{
     my (@movies, %movie, $movieID, $key, %USER, $isAdmin);
 
     &list_movies(\@movies, "WHERE statusSeen = '1'", 'ORDER BY date DESC, title');
-#    &get_movie($movie[0], \%movie);
 
     # it occurs to me that there's a proper way to do this... oh well, too late now.
     my $i = 0;
@@ -89,10 +87,3 @@ sub show_seen_movie_list{
                 </table>
         };
 }
-
-
-##########################################################
-#### The end.
-##########################################################
-
-

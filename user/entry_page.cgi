@@ -8,7 +8,6 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc;
 use tnmc::cookie;
 use tnmc::db;
 use tnmc::template;

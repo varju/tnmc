@@ -12,6 +12,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::movies::movie;
 
+{
     #############
     ### Main logic
 
@@ -25,4 +26,4 @@ use tnmc::movies::movie;
     }
 
     print "Location: index.cgi\n\n";
-
+}

@@ -12,6 +12,7 @@ use tnmc::template;
 use tnmc::db;
 use tnmc::movies::movie;
 
+{
     #############
     ### Main logic
 
@@ -26,6 +27,7 @@ use tnmc::movies::movie;
     &show_movie_extended($movieID);
     
     &footer("movieView");
+}
 
 
 ##################################################################
@@ -122,4 +124,3 @@ sub show_movie_extended
         }; 
     }
 }
-

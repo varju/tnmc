@@ -7,7 +7,6 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-
 use lib '/tnmc';
 
 use tnmc::cookie;
@@ -18,6 +17,7 @@ use tnmc::movies::movie;
 use tnmc::movies::night;
 use tnmc::movies::show;
 
+{
     #############
     ### Main logic
 
@@ -134,11 +134,7 @@ use tnmc::movies::show;
                 ($nightID)<br>
             };
         }
-        
-     
     }
 
-    
-
     &footer();
-
+}

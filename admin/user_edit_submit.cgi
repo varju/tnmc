@@ -5,28 +5,29 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
-require 'basic_testing_tools.pl';
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::user;
 
-    #############
-    ### Main logic
-    
-    $cgih = new CGI;
-    
-    &db_connect();
+#############
+### Main logic
 
-    @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
-     foreach $key (@cols)
-    {     $user{$key} = $cgih->param($key);
-    }
-    &set_user(%user);
-    
-    &db_disconnect();
+&db_connect();
 
-    print "Location: index.cgi\n\n";
+cookie_get();
+
+my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+
+my %user;
+foreach my $key (@cols) {
+    $user{$key} = $tnmc_cgi->param($key);
+}
+&set_user(%user);
+
+&db_disconnect();
+
+print "Location: index.cgi\n\n";
 

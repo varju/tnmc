@@ -6,20 +6,20 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-
 use lib '/tnmc';
 
 use tnmc::db;
 use tnmc::template;
 
-        #############
-        ### Main logic
-
-        &db_connect();
-        &header();
-
+{
+    #############
+    ### Main logic
+    
+    &db_connect();
+    &header();
+    
     &show_heading("Here's how the database bits map to the movie status:");
-
+    
     print qq{
     <pre><p>
             seen    showing    new    
@@ -30,7 +30,6 @@ use tnmc::template;
     seen        1    -    -    
     </pre>
     };
-
 
     &show_heading("Here's now the rank gets calculated");
 
@@ -53,10 +52,7 @@ use tnmc::template;
     $moo =~ s/\</&lt;/g;    
     $moo =~ s/\>/&gt;/g;    
     print "<pre><p>$moo</pre>";
-
-
-        &footer();
-        &db_disconnect();
-
-#######################################
-
+    
+    &footer();
+    &db_disconnect();
+}

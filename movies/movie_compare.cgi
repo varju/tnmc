@@ -14,6 +14,7 @@ use tnmc::movies::movie;
 use tnmc::movies::vote;
 use tnmc::user;
 
+{
     #############
     ### Main logic
 
@@ -34,6 +35,8 @@ use tnmc::user;
     &show_movie_vote_comparison(@movies);
     
     &footer();
+}
+
 
 ##################################################################
 sub show_movie_vote_comparison{
@@ -91,6 +94,4 @@ sub show_movie_vote_comparison{
         print qq{<td align="center"><hr> $movie_vote_count{$movieID} </td>};
     }
     print "</td></table>";
-
 }
-

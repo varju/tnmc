@@ -6,7 +6,6 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-
 use lib '/tnmc';
 
 use tnmc::cookie;
@@ -14,6 +13,7 @@ use tnmc::db;
 use tnmc::template;
 use tnmc::movies::attend;
 
+{
     #############
     ### Main logic
 
@@ -27,22 +27,18 @@ use tnmc::movies::attend;
         <p>
 <b>Poem:</b>
 <p>
-If you're gone for a long time,<br>
+If you\'re gone for a long time,<br>
 Kidnapped by the orcish hordes.<br>
 Then to be all fair and kind,<br>
 Your votes will be quite ignored.<br>
 <br>
-If you're lost for just one week.<br>
+If you\'re lost for just one week.<br>
 (Perchance away on a short trip?<br>
 With all your friends from Chesapeake.)<br>
 Those votes of yours will just be flipped.<br>
 <br>
-        
-        
-        
     };
 
     &footer();
     &db_disconnect();
-
-
+}

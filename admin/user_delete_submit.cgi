@@ -5,26 +5,24 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
-require 'basic_testing_tools.pl';
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::user;
 
+#############
+### Main logic
 
-    #############
-    ### Main logic
+db_connect();
+cookie_get();
 
-    $cgih = new CGI;
-    $userID = $cgih->param('userID');    
-    
-    if ($userID)
-    {     &db_connect();
-        &del_user($userID);
-        &db_disconnect();
-    }
+my $userID = $tnmc_cgi->param('userID');    
+if ($userID) {
+    &del_user($userID);
+}
 
-    print "Location: index.cgi\n\n";
+db_disconnect();
 
+print "Location: index.cgi\n\n";

@@ -7,27 +7,28 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-use CGI;
-
 use lib '/tnmc';
 
+use tnmc::cookie;
 use tnmc::db;
 use tnmc::general_config;
 
+{
     #############
     ### Main logic
     
     &db_connect();
 
-    my $cgih = new CGI;
-    my @params =  $cgih->param();
+    cookie_get();
+
+    my @params =  $tnmc_cgi->param();
         
-    foreach $_ (@params)
-    {    my $val = $cgih->param($_);
-        &set_general_config($_, $val);
-        }
+    foreach my $key (@params) {
+        my $val = $tnmc_cgi->param($key);
+        &set_general_config($key, $val);
+    }
 
     &db_disconnect();
 
     print "Location: index.cgi\n\n";
-
+}

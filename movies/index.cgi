@@ -8,8 +8,6 @@
    ### minor modifications by Grant 00-11-24 to add in quick buttons for sorting table
 
 use strict;
-use CGI;
-
 use lib '/tnmc';
 
 use tnmc::cookie;
@@ -21,43 +19,39 @@ use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::vote;
 
+#############
+### Main logic
 
-    #############
-    ### Main logic
+&db_connect();
+&header();
 
-    &db_connect();
-    &header();
+## Global Variable ( bad scott! )
+my $sortOrder = $tnmc_cgi->param('sortOrder');
+if (!$sortOrder){
+    $sortOrder = 'order';
+}
 
-    ## Global Variable ( bad scott! )
-    my $sortOrder = $tnmc_cgi->param('sortOrder');
-    if (!$sortOrder){
-        $sortOrder = 'order';
-    }
+my (%REAL_USER, $effectiveUserID, %USER);
 
-    my (%REAL_USER, $effectiveUserID, %USER);
+&get_user($USERID, \%REAL_USER);
 
-    &get_user($USERID, \%REAL_USER);
+if (  ($REAL_USER{groupAdmin})
+      && ($tnmc_cgi->param('effectiveUserID')) ){
+    $effectiveUserID = $tnmc_cgi->param('effectiveUserID');
+}else{
+    $effectiveUserID = $USERID;
+}
+&get_user($effectiveUserID, \%USER);
 
-    if (  ($REAL_USER{groupAdmin})
-       && ($tnmc_cgi->param('effectiveUserID')) ){
-        $effectiveUserID = $tnmc_cgi->param('effectiveUserID');
-    }else{
-        $effectiveUserID = $USERID;
-    }
-    &get_user($effectiveUserID, \%USER);
+&show_movies();
 
-    &show_movies();
-
-
-    &footer();
-    &db_disconnect();
-
+&footer();
+&db_disconnect();
 
 
 ##########################################################
 sub show_movies
 {
-
     # mini-hack
     my $displaySortOrder = $sortOrder;
     if ( ($displaySortOrder eq 'title')

@@ -5,50 +5,49 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&db_connect();
+&header();
 
-    %user;    
-    $cgih = new CGI;
-    $userID = $cgih->param('userID');
+my $userID = $tnmc_cgi->param('userID');
+
+if ($userID)
+{ 
+    my %user;    
+    my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+    &get_user($userID, \%user);
     
-    if ($userID)
-    { 
-         @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
-            &get_user($userID, \%user);
-          
-        print qq 
-        {    <form action="user_edit_submit.cgi" method="post">
+    print qq 
+    {    <form action="user_edit_submit.cgi" method="post">
             <table>
-        };
+            };
     
-        foreach $key (@cols)
-            {       print qq 
+    foreach my $key (@cols)
+    {       print qq 
             {    
                 <tr><td><b>$key</td>
                     <td><input type="text" name="$key" value="$user{$key}"></td>
                 </tr>
-            };
-            }
+                };
+        }
     
-        print qq
-        {    </table>
+    print qq
+    {    </table>
             <input type="submit" value="Submit">
             </form>
-        }; 
-    }
-    
+            }; 
+}
 
-    &footer();
+&footer();
 
-    &db_disconnect();
+&db_disconnect();

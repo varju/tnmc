@@ -15,6 +15,7 @@ use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::vote;
 
+{
     #############
     ### Main logic
     
@@ -25,10 +26,8 @@ use tnmc::movies::vote;
 
     &db_disconnect();
     &footer();
+}
 
-##########################################################
-#### sub procedures.
-##########################################################
 
 #########################################
 sub show_showing_movie_list{
@@ -38,7 +37,7 @@ sub show_showing_movie_list{
 
     &show_heading("All Movies that are Currently Showing in Vancouver");
     print qq{
-        <font color="0000ff">Blue means we've seen it</font><br>
+        <font color="0000ff">Blue means we\'ve seen it</font><br>
         <b>Bold means you voted for it</b><br>
         <br>
                 <table cellspacing="0" cellpadding="1" border="0" width="100%">
@@ -78,10 +77,3 @@ sub show_showing_movie_list{
                 </table>
         };
 }
-
-
-##########################################################
-#### The end.
-##########################################################
-
-

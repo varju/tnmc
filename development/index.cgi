@@ -5,11 +5,13 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::general_config;
+use tnmc::template;
 
 {
     #############
@@ -18,15 +20,13 @@ use tnmc;
     &db_connect();
     &header();
     
-    %user;    
-    $cgih = new CGI;
-    
-    $heading = "dev job list";
+    my $heading = "dev job list";
     if ($USERID{groupDev} >= 1){
         $heading .= qq{ - <a href="/development/todo_list.cgi"><font color="ffffff">Edit</font></a>};
     }
     &show_heading ($heading);
-    $devBlurb =  &get_general_config("devBlurb");
+
+    my $devBlurb =  &get_general_config("devBlurb");
     $devBlurb =~ s/\n/<br>/gs;
     print "<p>" . $devBlurb;
     
@@ -35,15 +35,13 @@ use tnmc;
         $heading .= qq{ - <a href="/development/suggestions.cgi"><font color="ffffff">Edit</font></a>};
     }
     $heading .= qq{ - <a href="/user/suggestion_add.cgi"><font color="ffffff">Submit</font></a>};
-
     &show_heading ($heading);
-    $suggBlurb =  &get_general_config("suggestions");
+
+    my $suggBlurb =  &get_general_config("suggestions");
     $suggBlurb =~ s/\n/<br>/gs;
     print "<p>" . $suggBlurb;
     
-    
     &footer();
-
 }
 
 

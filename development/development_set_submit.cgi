@@ -5,27 +5,27 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
+
 use tnmc::config;
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::general_config;
 
-        #############
-        ### Main logic
-        
-        $cgih = new CGI;
-        
-        &db_connect();
+#############
+### Main logic
 
-        @params =  $cgih->param();
-        
-        foreach $_ (@params)
-        {       $val = $cgih->param($_);
-                &set_general_config($_, $val);
-        }
+&db_connect();
+cookie_get();
 
-        &db_disconnect();
+my @params = $tnmc_cgi->param();
 
-        print "Location: /development/\n\n";
+foreach my $key (@params) {
+    my $val = $tnmc_cgi->param($key);
+    &set_general_config($key, $val);
+}
+
+&db_disconnect();
+
+print "Location: /development/\n\n";
