@@ -73,13 +73,7 @@ sub show_seen_movie_list{
             <tr>
                 <td nowrap>$movie{title}</td>
                 <td nowrap>$dateString</td>
-                <td nowrap>&nbsp;<a href="
-                    javascript:window.open(
-                    'movie_view.cgi?movieID=$movieID',
-                    'ViewMovie',
-                    'resizable,height=350,width=450');
-                    index.cgi
-                    ">v</a>
+                <td nowrap>&nbsp;<a href="movie_view.cgi?movieID=$movieID" target="viewmovie">v</a>
                     <a href="movie_edit_admin.cgi?movieID=$movieID">$isAdmin</a></td>
             </tr>
         };

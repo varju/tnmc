@@ -57,13 +57,7 @@ sub show_user_listing{
         
         print qq
         {    <tr>
-            <td nowrap><a href="
-                                        javascript:window.open(
-                                                'user_view.cgi?userID=$userID',
-                                                'ViewUser',
-                                                'resizable,height=400,width=450');
-                                                index.cgi
-                                        ">$user{'username'}</a></td>
+            <td nowrap><a href="user_view.cgi?userID=$userID" target="viewuser">$user{'username'}</a></td>
 
             <td></td>
             <td nowrap>$user{'fullname'}</td>

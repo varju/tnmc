@@ -69,10 +69,7 @@ sub show_movie
         if ($movie{'mybcID'})
         {    $mybcID = $movie{'mybcID'};
             print qq 
-            {    <tr><td><b><a href="
-                javascript:window.open(
-                    'http://www2.mybc.com/movies/movies/$mybcID.html',
-                        'ViewMYBC'); index.cgi">myBC Info</a>
+            {    <tr><td><b><a href="http://www2.mybc.com/movies/movies/$mybcID.html" target="mybc">myBC Info</a>
             };
         }
         print qq
@@ -114,10 +111,7 @@ sub show_movie_extended
         if ($movie{'mybcID'})
         {    $mybcID = $movie{'mybcID'};
             print qq 
-            {    <tr><td><b><a href="
-                javascript:window.open(
-                    'http://www2.mybc.com/movies/movies/$mybcID.html',
-                        'ViewMYBC'); index.cgi">myBC Info</a>
+            {    <tr><td><b><a href="http://www2.mybc.com/movies/movies/$mybcID.html" target="mybc">myBC Info</a>
             };
         }
         print qq

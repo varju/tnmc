@@ -50,13 +50,7 @@ sub show_users()
             {	<tr>
 			<td nowrap>$user{'username'}</td>
 			<td></td>
-			<td nowrap><a href="
-                                        javascript:window.open(
-                                                'user_view.cgi?userID=$userID',
-                                                'ViewUser',
-                                                'resizable,height=400,width=450');
-                                                index.cgi
-                                        ">$user{'fullname'}</a></td>
+			<td nowrap><a href="user_view.cgi?userID=$userID" target="viewuser">$user{'fullname'}</a></td>
 
 			<td></td>
 			<td>$user{"phone$user{phonePrimary}"}</td>
