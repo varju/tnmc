@@ -5,33 +5,28 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
+use tnmc::db;
+use tnmc::template;
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&db_connect();
+&header();
 
-    %user;    
-    $cgih = new CGI;
-    
+my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
 
-     @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
-
-    print qq{
+print qq{
         <form action="create_2.cgi" method="post">
         <input type="hidden" name="userID" value="0">
-    };
+        };
 
-    &show_heading ("Create New Account: Step 1");
+&show_heading ("Create New Account: Step 1");
 
-    print qq{
+print qq{
         <table>
                                 <tr><td><b>username</td>
                                     <td><input type="text" name="username" value=""></td>
@@ -54,9 +49,6 @@ use tnmc;
 
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
-    }; 
+            }; 
 
-    
-
-    &footer();
-
+&footer();

@@ -5,30 +5,29 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
-use tnmc::config;
-use tnmc::broadcast;
 
+use tnmc::broadcast;
+use tnmc::cookie;
+use tnmc::general_config;
+use tnmc::db;
+
+{
     #############
     ### Main logic
-    
-    $cgih = new CGI;
     
     &db_connect();
     &cookie_get();
 
-    $sql = "SELECT NOW()";
-    $sth = $dbh_tnmc->prepare($sql);
+    my $sql = "SELECT NOW()";
+    my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
-    ($time) = $sth->fetchrow_array();
+    my ($time) = $sth->fetchrow_array();
+    $sth->finish();
 
-    my $newSuggestion  =  $cgih->param(suggestion);
-        
-    $oldSuggestions =  &get_general_config("suggestions");
+    my $newSuggestion  =  $tnmc_cgi->param('suggestion');
+    my $oldSuggestions =  &get_general_config("suggestions");
 
     my $SUGG = 
           $oldSuggestions
@@ -44,4 +43,4 @@ use tnmc::broadcast;
     &db_disconnect();
 
     print "Location: /\n\n";
-
+}

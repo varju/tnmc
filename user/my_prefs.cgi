@@ -5,53 +5,52 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&db_connect();
+&header();
 
-    %user;    
-    $cgih = new CGI;
+if ($USERID){ 
+    my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+
+    my %user;
+    &get_user($USERID, \%user);
     
-    if ($USERID){ 
-
-         @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
-        &get_user($USERID, \%user);
-
-        print qq{
+    print qq{
             <form action="my_prefs_submit.cgi" method="post">
             <input type="hidden" name="userID" value="$USERID">
-        };
-
-        ### Let's not let the demo user change their prefs.
-          if ($user{username} eq 'demo'){
-            print qq{
+            };
+    
+    ### Let's not let the demo user change their prefs.
+    if ($user{username} eq 'demo'){
+        print qq{
                 </form>
                 <form method="post">
-            };
-        }
-
-        foreach $key (@cols){
-            if ($key =~ /^group/){
-                print qq{
-                    <input type="hidden" name="$key" value="$user{$key}">
                 };
-            }
-            }
-
-
-        &show_heading ("basic info");
-
-        $user{birthdate} = substr($user{birthdate}, 0, 10);
-        print qq{
+    }
+    
+    foreach my $key (@cols){
+        if ($key =~ /^group/){
+            print qq{
+                    <input type="hidden" name="$key" value="$user{$key}">
+                    };
+        }
+    }
+    
+    
+    &show_heading ("basic info");
+    
+    $user{birthdate} = substr($user{birthdate}, 0, 10);
+    print qq{
             <table>
                                 <tr><td><b>username</td>
                                     <td><input type="text" name="username" value="$user{username}"></td>
@@ -76,35 +75,35 @@ use tnmc;
                                 <tr><td><b>address</td>
                                     <td><textarea name="address" wrap="virtual" rows="3">$user{address}</textarea></td>
                                 </tr>
-                };
-        if (!$user{birthdate}) {    $user{birthdate} = '0000-00-00';}
-        if ($user{birthdate} eq '0000-00-00'){
-            print qq{
+                                };
+    if (!$user{birthdate}) {    $user{birthdate} = '0000-00-00';}
+    if ($user{birthdate} eq '0000-00-00'){
+        print qq{
                                 <tr><td><b>birthdate</td>
                                     <td><input type="text" name="birthdate" value="$user{birthdate}"></td>
                                 </tr>
-            };
-        }else{
-            print qq{
+                                };
+    }else{
+        print qq{
                                 <tr><td><b>birthdate</td>
                                     <td><input type="hidden" name="birthdate" value="$user{birthdate}">
                                         $user{birthdate}</td>
                                 </tr>
-            };
-        }
-        print qq{
+                                };
+    }
+    print qq{
 
             </table>
             <p>
-        };
+            };
 
-        &show_heading ("phones and text mail");
-
-
-        $sel_primary_phone{$user{phonePrimary}} = 'selected';
-        $sel_text_mail{$user{phoneTextMail}} = 'selected';
-
-        print qq{
+    &show_heading ("phones and text mail");
+    
+    my (%sel_primary_phone, %sel_text_mail, %sel_movie_notify);
+    $sel_primary_phone{$user{phonePrimary}} = 'selected';
+    $sel_text_mail{$user{phoneTextMail}} = 'selected';
+    
+    print qq{
             <table>
 
             <tr>
@@ -157,30 +156,28 @@ use tnmc;
             </table>
             <p>
 
-        };
-        
-        &show_heading("movies");
-
-        $sel_movie_notify{$user{movieNotify}} = 'checked';
-
-
-        print qq{
+            };
+    
+    &show_heading("movies");
+    
+    $sel_movie_notify{$user{movieNotify}} = 'checked';
+    
+    
+    print qq{
             <table cellpadding="0" border="0" cellspacing="0">
                                 
                                 <tr><td><b>Movie notification?</td>
                 <td><b>    <input type="radio" name="movieNotify" value="1" $sel_movie_notify{1}>on </td>
-                <td><b>    <input type="radio" name="movieNotify" value="0" $sel_movie_notiry{0}>off
+                <td><b>    <input type="radio" name="movieNotify" value="0" $sel_movie_notify{0}>off
                                 </td></tr>
                         </table>
-        };
+                        };
 
-        print qq{
+    print qq{
             <p>
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
-        }; 
-    }
-    
+            }; 
+}
 
-    &footer();
-
+&footer();

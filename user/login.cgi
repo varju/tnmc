@@ -5,8 +5,6 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use CGI;
-
 use strict;
 use lib '/tnmc';
 
