@@ -3,7 +3,9 @@
 # this file simply pre-loads some modules that we're going to want to
 # use later
 
-use CGI;
+use CGI ();
+CGI->compile(':all');
+
 use DBI;
 
 use lib '/tnmc';
