@@ -16,7 +16,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 @ISA = qw(Exporter);
 
 @EXPORT = qw(show_pic_listing show_album_info show_album_listing set_pic del_pic
-             get_pic list_pics set_album del_album get_album 
+             get_pic get_pic_url list_pics set_album del_album get_album 
              list_albums add_link del_link get_link list_links 
              list_links_for_album list_links_for_date);
 
@@ -176,11 +176,13 @@ sub show_album_info{
         $album{albumCoverPic} = @pics[0];
     }
     
+    my $pic_img = &get_pic_url($album{albumCoverPic}, ['mode'=>'thumb']);
+    
     print qq{
         <table>
             <tr>
                 <td valign="top"><a href="album_view.cgi?albumID=$albumID">
-                    <img src="serve_pic.cgi?picID=$album{albumCoverPic}&mode=thumb" width="80" height="64" border="0"></a></td>
+                    <img src="$pic_img" width="80" height="64" border="0"></a></td>
                 <td valign="top"><a href="album_view.cgi?albumID=$albumID">
                     <b>$album{albumTitle}</b></a><br>
                     $album{albumDescription}<br>
@@ -223,6 +225,37 @@ sub get_pic{
 
     $condition = "(picID = '$picID')";
     &db_get_row($pic_ref, $dbh_tnmc, 'Pics', $condition);
+}
+
+########################################
+sub get_pic_url{
+    my ($picID, $format, $junk) = @_;
+    my %format = @$format;
+    
+    my %pic;
+    my $pic_url;
+    
+    if (($format{mode} eq 'mini') ||
+        ($format{mode} eq 'thumb')){
+        
+        &get_pic($picID, \%pic);
+        if ($pic{typePublic}){
+            $pic_url = "/pics/pub/cache/thumb/$picID";
+        }else{
+            $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
+        }
+    }
+    elsif (($format{mode} eq 'small') ||
+           ($format{mode} eq 'big') ||
+           ($format{mode} eq 'full') ||
+           ($format{mode} eq 'raw')){
+        $pic_url = "/pics/serve_pic.cgi?picID=$picID";
+    }else{
+        $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
+    }
+    
+    return $pic_url;
+    
 }
 
 ########################################

@@ -25,6 +25,26 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 # module routines
 #
 
+sub list_active_movie_titles{
+    my %list;
+    
+    my $sql = "SELECT movieID, title
+             FROM Movies
+            WHERE statusShowing = '1' AND statusSeen != '1' AND statusBanned != 1
+            ";
+    
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    
+    while (my @row = $sth->fetchrow_array()){
+        $list{$row[1]} = $row[0];
+    }
+    $sth->finish;
+    
+    return \%list;
+}
+
+
 sub set_movie{
     my (%movie, $junk) = @_;
     my ($sql, $sth, $return);
@@ -174,17 +194,6 @@ sub get_movie_extended{
                             + $movie->{votesForAway}
                             + $movie->{votesForLost};
 
-    # encourage movies with good ratings!
-    # my $rating = $movie->{rating};
-    # if ($rating != 0){
-    #    $rating -= 2.5;
-    #    if ($rating >= 1){
-    #        $movie->{order} *=     1 + ( $rating / 5 );
-    #    }else{
-    #        $movie->{order} +=        $rating;
-    #    }
-    # }
-
     ### stoopid f---ed up rounding math.
     $movie->{rank} = $movie->{order};
     if ($movie->{rank} > 0)    {    $movie->{rank} += 0.5; }
@@ -204,5 +213,6 @@ sub del_movie{
     $sth->execute;
     $sth->finish;
 }
+
 
 1;

@@ -108,9 +108,10 @@ sub new_nav_menu{
     if ($USERID{groupAdmin}){
         &show_menu_item( 0, "", "", "<hr noshade size='1'>");
 
-        if (&show_menu_item( 0, "/admin/", "Admin", "") || $USERID == 1){
-            &show_menu_item( 1, "/admin/", "All users", "");
+        if (&show_menu_item( 0, "/admin/", "Admin", "")){
+            &show_menu_item( 1, "/admin/user_list.cgi", "All users", "");
             &show_menu_item( 1, "/admin/groups.cgi", "Groups", "");
+            &show_menu_item( 1, "/admin/user_edit.cgi?userID=0", "Add User", "");
         }
         &show_menu_item( 0, "", "", "");
     }
