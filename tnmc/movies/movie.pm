@@ -87,6 +87,8 @@ sub get_movie_extended{
     $movie->{votesForAway} = 0;
     $movie->{votesFaveAway} = 0;
     $movie->{votesForLost} = 0;
+    $movie->{votesHTML} = '';
+    $movie->{votesText} = '';
 
     # find out who voted for the movie...
     while (@row = $sth->fetchrow_array()){
