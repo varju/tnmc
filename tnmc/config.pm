@@ -18,6 +18,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 
 my $tnmc_hostname = 'tnmc.dhs.org';
-my $tnmc_url = "http://$tnmc_hostname:8080";
+my $tnmc_url = "http://$tnmc_hostname";
 
 1;
