@@ -428,7 +428,7 @@ sub get_movie_extended{
 		$Unext = $row[6];
 
 		if ( ($Vperson eq 'demo')
-		   && ($userID != 38)){
+		   && ($USERID != 38)){
 			#
 			# Do nothing
 			#
