@@ -43,6 +43,10 @@ sub show_movies {
         
         if ($USERID && $USERID{groupMovies}){
             
+            ## show moviegod links
+            use tnmc::movies::night;
+            &tnmc::movies::night::show_moviegod_links($USERID);
+            
             ## show attendance form
             &tnmc::movies::attend::list_my_attendance($USERID);
             
