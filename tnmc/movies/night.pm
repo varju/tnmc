@@ -1,6 +1,7 @@
 package tnmc::movies::night;
 
 use strict;
+use POSIX qw(strftime);
 
 use tnmc::db;
 
@@ -54,10 +55,7 @@ sub get_next_night{
     my ($sql, $sth, $return);
 
     if (!$date){
-        $sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d')";
-        $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-        $sth->execute;
-        ($date) = $sth->fetchrow_array();
+        $date = strftime("%Y%m%d", localtime());
     }
 
     $sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= '$date' LIMIT 1";
