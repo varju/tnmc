@@ -43,15 +43,20 @@ if (  ($REAL_USER{groupAdmin})
 }
 &get_user($effectiveUserID, \%USER);
 
-&show_movies();
+&show_movies_enhanced($effectiveUserID, $sortOrder, \%REAL_USER, \%USER);
 
 &footer();
 &db_disconnect();
 
 
 ##########################################################
-sub show_movies
+sub show_movies_enhanced
 {
+    my ($effectiveUserID, $sortOrder, $real_user, $user) = @_;
+
+    my %REAL_USER = %{$real_user};
+    my %USER = %{$user};
+    
     # mini-hack
     my $displaySortOrder = $sortOrder;
     if ( ($displaySortOrder eq 'title')
@@ -62,7 +67,16 @@ sub show_movies
        ){
         $displaySortOrder = ''
     }
-    my %sortSel;
+    my %sortSel = ('title','',
+                   'rank','',
+                   'votesFor','',
+                   'votesAgainst','',
+                   'votesAway','',
+                   'movieID','',
+                   'rating','',
+                   'type','',
+                   'theatres','');
+
     $sortSel{$sortOrder} = 'selected';
     print qq{
         <form action="index.cgi" method="get">
@@ -140,7 +154,8 @@ sub show_movies
 
     ########################
     # Now Showing
-    show_movie_list( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )", $displaySortOrder);
+    show_movie_list_enhanced( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )", 
+                              $displaySortOrder, $effectiveUserID, $sortOrder);
 
     print qq{    <tr>
             <td colspan="11" bgcolor="cccccc" align="right">
@@ -149,7 +164,8 @@ sub show_movies
 
     ########################
     # Coming Soon
-    show_movie_list( "WHERE (statusNew AND NOT (statusShowing OR 0))", $displaySortOrder);
+    show_movie_list_enhanced( "WHERE (statusNew AND NOT (statusShowing OR 0))", 
+                              $displaySortOrder, $effectiveUserID, $sortOrder);
 
     print qq{\n    </table><p>\n};
 
@@ -172,7 +188,7 @@ sub show_movies
     ########################
     ### Warn if modifying another user's votes.
 
-    my $useridNotice;
+    my $useridNotice = '';
     if ($effectiveUserID != $USERID){
         $useridNotice = qq{
             <font face="arial" size="+1" color="086DA5"><i><b>
@@ -192,9 +208,9 @@ sub show_movies
 
 
 ##########################################################
-sub show_movie_list{
+sub show_movie_list_enhanced {
 
-    my ($whereClause, $extraField, $junk) = @_;
+    my ($whereClause, $extraField, $effectiveUserID, $sortOrder) = @_;
 
     my (@movies, $anon, $movieID, %movieInfo);
     my ($boldNew, %vote_status_word, @list);
@@ -220,14 +236,18 @@ sub show_movie_list{
     }
 
     foreach my $movieID (@list){
+        my %vote_status_word = ('-1','', '0','', '1','', '2','');
+        $movieInfo{$movieID}->{votesFor} = 0 unless defined $movieInfo{$movieID}->{votesFor};
+        $movieInfo{$movieID}->{votesFave} = 0 unless defined $movieInfo{$movieID}->{votesFave};
+        $movieInfo{$movieID}->{votesBday} = 0 unless defined $movieInfo{$movieID}->{votesBday};
 
-                my %vote_status_word = ();
-                my $vote = &get_vote($movieID, $effectiveUserID);
-                $vote_status_word{$vote} = "CHECKED";
-                
+        my $vote = &get_vote($movieID, $effectiveUserID);
+        $vote_status_word{$vote} = "CHECKED";
+
         my $votesFor = $movieInfo{$movieID}->{votesFor}
               + $movieInfo{$movieID}->{votesFave}
               + $movieInfo{$movieID}->{votesBday};
+
         print qq{
             <tr valign="top">
                 <td><a href="movie_edit.cgi?movieID=$movieID"><font color="cccccc">$movieID</a></td>

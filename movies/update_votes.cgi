@@ -24,7 +24,7 @@ use tnmc::template;
     my $userID = $tnmc_cgi->param('userID');
     my @params =  $tnmc_cgi->param();
     
-    my %vote_count = {};
+    my %vote_count = ();
     my $favoriteMovie = $tnmc_cgi->param('favoriteMovie');
     
     ### count the number of positive/negative/neutral votes.
