@@ -5,9 +5,6 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
 use strict;
 use lib '/usr/local/apache/tnmc';
 
@@ -17,8 +14,6 @@ use tnmc::db;
 
 #############
 ### Main logic
-
-my $tnmc_cgi = new CGI;
 
 # retrieve the old cookie
 get_cookie();
