@@ -159,6 +159,7 @@ require 'movies/MOVIES.pl';
 		foreach $_ (sort(keys(%mTheatres))){
 			if ($valid_theatres{$_}){
 				push (@mShowing, $mID);
+				$mOurTheatres{$mID} = $mOurTheatres{$mID} . ' ' . $_;
 				print " $_";
 			}
 		}
@@ -169,9 +170,11 @@ require 'movies/MOVIES.pl';
 	print "****               Update the Database                 ****\n";
 	print "***********************************************************\n";
 
+
+
         &db_connect();
 
-	$sql = "UPDATE Movies SET statusShowing = '0'";
+	$sql = "UPDATE Movies SET statusShowing = '0', theatres = ''";
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
 	$sth->finish();
@@ -179,7 +182,7 @@ require 'movies/MOVIES.pl';
 
 	foreach $mID (@mShowing){
 	  if ($mID){
-		print "$mTitle{$mID} ($mID) ";
+		printf ("(%s)	%-40.40s", $mID, $mTitle{$mID});
 	
 		####################
 		### Try to find movie in DB via mybcID
@@ -191,7 +194,7 @@ require 'movies/MOVIES.pl';
 		$movieID = $row[0];
 		
 		if ($movieID){
-			print "			...Found (mybcID)\n";
+			print "   ..Found (mybcID)\n";
 		}
 		else {
 		
@@ -206,7 +209,7 @@ require 'movies/MOVIES.pl';
 			$movieID = $row[0];
 			
 			if ($movieID){
-				print "			...Found (Title)\n";
+				print "   ..Found (Title)\n";
 			}
 		}
 
@@ -216,6 +219,7 @@ require 'movies/MOVIES.pl';
 
 			$dbMovie{mybcID} = $mID;
 			$dbMovie{statusShowing} = '1';
+			$dbMovie{theatres} = $mOurTheatres{$mID};
 
 #			if (! $dbMovie{rating}){
 				$dbMovie{rating} = $mStars{$mID};
@@ -238,6 +242,7 @@ require 'movies/MOVIES.pl';
 		$newMovie{title} = $mTitle{$mID};
 		$newMovie{rating} = $mStars{$mID};
 		$newMovie{description} = $mPremise{$mID};
+		$newMovie{theatres} = $mOurTheatres{$mID};
 		$newMovie{statusShowing} = '1';
 		$newMovie{statusNew} = '1';
 		$newMovie{statusSeen} = '0';
@@ -246,7 +251,7 @@ require 'movies/MOVIES.pl';
 		
 		&set_movie(%newMovie);
 		
-		print "			...New Movie\n";
+		print "   ..New Movie\n";
 		
 		
 	  }
