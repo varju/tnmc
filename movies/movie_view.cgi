@@ -35,6 +35,8 @@ sub show_movie
 {
     my ($movieID, $junk) = @_;    
     my (@cols, $movie, $key, $mybcID);
+
+    my %movie;
     
     if ($movieID)
     { 
