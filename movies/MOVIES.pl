@@ -184,7 +184,12 @@ sub show_current_movie
 
                         <TR>
                         <TD nowrap><B>Movie: </TD>
-                        <TD nowrap>$movie{'title'}</TD>
+                        <TD nowrap><a href="javascript:window.open(
+                                                '/movies/movie_view.cgi?movieID=$current_movie',
+                                                'ViewMovie',
+                                                'resizable,height=350,width=450');
+                                                index.cgi
+                                           ">$movie{'title'}</a></TD>
                         </TR>
                         
                         <TR>
