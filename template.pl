@@ -81,7 +81,7 @@ th{
 	<TITLE>TNMC Online</TITLE>
 </HEAD>
 
-<BODY BACKGROUND="http://tnmc.dhs.org/template/bg.gif" zzbgcolor="84ff00">
+<BODY BACKGROUND="http://tnmc.dhs.org/template/bg.gif">
 <center>
 
 <!-- 
@@ -319,9 +319,8 @@ SIZE="-2">
 sub show_heading{
 	my ($heading_text, $colour, $junk) = @_;
 	print qq{
-		<table border="0" cellpadding="1" cellspacing="0"
-bgcolor="448800" zzbgcolor="086da5"
-width="100%">
+		<table border="0" cellpadding="1" cellspacing="0" 
+bgcolor="448800" width="100%">
 		<tr><td nowrap>&nbsp;<font color="ffffff"><b>
 		$heading_text</b></font></td></tr></table>
 	};
