@@ -26,9 +26,9 @@ require 'MOVIES.pl';
 	if (!&show_current_movie()){
 	
 		if ($USERID && $user{groupMovies}){
-			&show_movies($USERID);
+			&show_movies_home($USERID);
 		}else{
-			&show_movies();
+			&show_movies_home();
 		}
 	}
 
@@ -36,7 +36,7 @@ require 'MOVIES.pl';
 
 
 ##########################################################
-sub show_movies
+sub show_movies_home
 {
 	my ($effectiveUserID) = @_;
 	
@@ -53,7 +53,7 @@ sub show_movies
 	                                &nbsp;now showing</th>
 				    </tr>
 		};
-		show_movie_list($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+		show_movie_list_home($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
 
 		print qq{
 	                        <tr><td></td>
@@ -88,14 +88,14 @@ sub show_movies
 	                        <tr><th colspan="4" height="14">
 	                                &nbsp;now showing</th></tr>
 		};
-		show_movie_list($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+		show_movie_list_home($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
 		print qq{\n	</table><p>\n};
 	}
 }
 
 
 ##########################################################
-sub show_movie_list{
+sub show_movie_list_home{
 
 	my ($effectiveUserID, $whereClause, $junk) = @_;
 	
