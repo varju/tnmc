@@ -33,7 +33,7 @@ sub messages_print_list {
 
     print "<table>\n";
     print "<tr>\n";
-    print "  <td><b>from</b></td>\n";
+    print "  <td><b>to/from</b></td>\n";
     print "  <td><b>subject</b></td>\n";
     print "  <td><b>date</b></td>\n";
     print "</tr>\n";
@@ -41,8 +41,16 @@ sub messages_print_list {
     foreach my $msg (@$messages_ref) {
         my $url = "view_message.cgi?Id=$$msg{Id}";
 
+        my $tofrom;
+        if ($$msg{Sent}) {
+            $tofrom = "to: " . mail_format_from($$msg{AddrTo},$from_format);
+        }
+        else {
+            $tofrom = mail_format_from($$msg{AddrFrom},$from_format);
+        }
+
         print "<tr>\n";
-        print "  <td><a href='$url'>", mail_format_from($$msg{AddrFrom},$from_format), "</a></td>\n";
+        print "  <td><a href='$url'>", $tofrom, "</a></td>\n";
         print "  <td>", $$msg{Subject}, "</td>\n";
         print "  <td>", $$msg{Date}, "</td>\n";
         print "</tr>\n";
@@ -55,17 +63,26 @@ sub message_print {
     my ($msg) = @_;
 
     my $from_format = mail_get_pref($USERID,'From');
-    my $AddrFrom = mail_format_from($$msg{AddrFrom},$from_format);
     my $Subject = $$msg{Subject};
     my $Date = $$msg{Date};
     my $Body = $$msg{Body};
+
+    my ($tofrom, $tofrom_label);
+    if ($$msg{Sent}) {
+        $tofrom_label = "to";
+        $tofrom = mail_format_from($$msg{AddrTo},$from_format);
+    }
+    else {
+        $tofrom_label = "from";
+        $tofrom = mail_format_from($$msg{AddrFrom},$from_format);
+    }
 
     my $delete_url = "delete_message.cgi?Id=$$msg{Id}";
 
     print "<table>\n";
     print "<tr>\n";
-    print "  <td><b>from</b></td>\n";
-    print "  <td>", $AddrFrom, "</td>\n";
+    print "  <td><b>", $tofrom_label, "</b></td>\n";
+    print "  <td>", $tofrom, "</td>\n";
     print "</tr>\n";
 
     print "<tr>\n";

@@ -37,8 +37,9 @@ sub message_store {
         $sth->finish();
     }
 
-    $sql = "INSERT INTO Mail (Id, UserId, AddrTo, AddrFrom, Date, ReplyTo, Subject, Body, Header)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Mail (Id, UserId, AddrTo, AddrFrom, Date, ReplyTo, 
+                              Subject, Body, Header, Sent)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($$message_ref{'Id'},
                   $$message_ref{'UserId'},
@@ -48,7 +49,9 @@ sub message_store {
                   $$message_ref{'ReplyTo'},
                   $$message_ref{'Subject'},
                   $$message_ref{'Body'},
-                  $$message_ref{'Header'});
+                  $$message_ref{'Header'},
+                  $$message_ref{'Sent'},
+                  );
 
     $sth->finish();
 }
@@ -59,7 +62,7 @@ sub get_message_list {
     my @messages;
 
     $sql = "SELECT Id, DATE_FORMAT(Date, '%Y-%m-%d %r'), AddrTo, AddrFrom, 
-                   ReplyTo, Subject, Body, Header
+                   ReplyTo, Subject, Body, Header, Sent
               FROM Mail WHERE UserId=?";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($UserId);
@@ -75,6 +78,7 @@ sub get_message_list {
         $message{Subject} = shift @row;
         $message{Body} = shift @row;
         $message{Header} = shift @row;
+        $message{Sent} = shift @row;
 
         push(@messages,\%message);
     }
@@ -91,7 +95,7 @@ sub get_message {
     my %message = undef;
 
     $sql = "SELECT Id, DATE_FORMAT(Date, '%Y-%m-%d %r'), AddrTo, AddrFrom, 
-                   ReplyTo, Subject, Body, Header
+                   ReplyTo, Subject, Body, Header, Sent
               FROM Mail WHERE UserId=? AND Id=?";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($UserId,$Id);
@@ -106,6 +110,7 @@ sub get_message {
         $message{Subject} = shift @row;
         $message{Body} = shift @row;
         $message{Header} = shift @row;
+        $message{Sent} = shift @row;
     }
     $sth->finish();
 

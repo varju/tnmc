@@ -25,4 +25,9 @@ $dbh_tnmc->do(q{
          Value VARCHAR(20))
         });
 
+$dbh_tnmc->do(q{
+    ALTER TABLE Mail
+        ADD COLUMN Sent INT
+        });
+
 db_disconnect();
