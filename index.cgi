@@ -18,6 +18,9 @@ use tnmc::templates::bulletins;
 use tnmc::templates::movies;
 use tnmc::templates::user;
 
+# set up the random number generator
+srand;
+
 	#############
 	### Main logic
 
@@ -44,68 +47,60 @@ show_user_homepage();
 
 sub greeting
 {
-	my ($fullname) = @_;
-	my (@greetings, $greeting);
+    my ($fullname) = @_;
 
-        my $hour;
-        ($_,$_,$hour) = localtime(time());
+    my $hour;
+    ($_,$_,$hour) = localtime(time());
 
-	### this isn't even remotely tidy; but, hey, it's just for fun!
-	{
-		@greetings = (
-			"Hello",
-			"Howdy",
-			"G'day",
-			"G'day mate",
-			"Aloha",
-			"Howdy pardner"
-			);
+    ### this isn't even remotely tidy; but, hey, it's just for fun!
+    my @greetings = (
+                     "Hello",
+                     "Howdy",
+                     "G'day",
+                     "G'day mate",
+                     "Aloha",
+                     "Howdy pardner"
+                     );
 
-		### Before 6 am.
-		if ($hour < 5)
-		{	@greetings = (@greetings,
-				"Top o' the morning to you",
-				"Good morning"
-				);
-		}
-		### Exactly 6 am.
-		if ($hour == 6)
-		{	@greetings = (
-				"Good morning, how's the sunrise today?"
-				);
-		}
-		### from 7 am till noon
-		elsif ($hour < 12)
-		{	@greetings = (@greetings,
-				"Good Morning", "Good Morning", "Good Morning"
-				);
-		}
-		### From noon 'till 6 pm
-		elsif ($hour < 18)
-		{	@greetings = (@greetings,
-				"Good Afternoon", "Good Afternoon", "Good Afternoon"
-				);
-		}
-		### After 6 pm.
-		else 
-		{	@greetings = (@greetings, 
-				"Good Evening", "Good Evening", "Good Evening"
-				);
-		}
-	}
-	
-	srand;
+    ### Before 6 am.
+    if ($hour < 5) {
+        push(@greetings,
+             "Top o' the morning to you",
+             "Good morning");
+    }
+    ### Exactly 6 am.
+    elsif ($hour == 6) {
+    	@greetings = ("Good morning, how's the sunrise today?");
+    }
+    ### from 7 am till noon
+    elsif ($hour < 12) {
+    	push(@greetings,
+             "Good Morning", 
+             "Good Morning",
+             "Good Morning");
+    }
+    ### From noon 'till 6 pm
+    elsif ($hour < 18) {
+    	push(@greetings,
+             "Good Afternoon",
+             "Good Afternoon",
+             "Good Afternoon");
+    }
+    ### After 6 pm.
+    else {
+        push(@greetings, 
+             "Good Evening",
+             "Good Evening",
+             "Good Evening");
+    }
+    
+    my $greeting = @greetings[int(rand ($#greetings + 1) ) ]; 
 
-	$greeting = @greetings[int(rand ($#greetings + 1) ) ]; 
-
-	return qq{
-	        <font style="font-size: 8pt ;"><b>$greeting $fullname.</b><P>
+    return qq{
+        <font style="font-size: 8pt ;"><b>$greeting $fullname.</b><P>
 	};
-
-
 }
 
 ##########################################################
 #### The end.
 ##########################################################
-
