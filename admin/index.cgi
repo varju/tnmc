@@ -86,57 +86,6 @@ sub show_edit_users_list{
         };
 }
 
-#########################################
-sub show_edit_movie_list{
-	my (@movies, %movie, $movieID, $key);
-
-	&list_movies(\@movies, '', 'ORDER BY title');
-	&get_movie($movie[0], \%movie);
-
-	print qq{
-                <table cellspacing="3" cellpadding="0" border="0">
-		<tr>
-		<td>
-		<form method="post" action="movie_edit.cgi">
-		<input type="submit" value="Add">
-		</form>
-		</td>
-	};
-
-	foreach $key (keys %movie){
-		if ($key eq 'description') {next;}
-		print "<td><b>$key</b></td>";
-	}
-	print qq{</tr>\n};
-
-
-        foreach $movieID (@movies){
-                &get_movie($movieID, \%movie);
-		print qq{
-			<tr>
-				<td nowrap>
-				<a href="movie_edit.cgi?movieID=$movieID">[Edit]</a> 
-				<a href="movie_delete_submit.cgi?movieID=$movieID">[Del]</a>
-				</td>
-		};
-		foreach $key (keys %movie){
-			if ($key eq 'description') {next;}
-			print "<td>$movie{$key}</td>";
-		}
-		print qq{</tr>\n};
-        }
-
-	print qq{
-		<tr>
-		<form method="post" action="movie_edit.cgi">
-		<td><input type="submit" value="Add"></td>
-		</form>
-		</tr>
-                </table>
-        };
-}
-
-
 ##########################################################
 #### The end.
 ##########################################################
