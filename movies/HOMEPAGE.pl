@@ -88,7 +88,7 @@ sub show_movies
 	                        <tr><th colspan="4" height="14">
 	                                &nbsp;now showing</th></tr>
 		};
-		show_movie_list($effectiveUserID, "WHERE (statusShowing AND NOT (statusSeen OR 0))");
+		show_movie_list($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
 		print qq{\n	</table><p>\n};
 	}
 }
