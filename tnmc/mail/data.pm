@@ -12,7 +12,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(message_store get_message_list get_message);
+@EXPORT = qw(message_store get_message_list get_message delete_message);
 @EXPORT_OK = qw();
 
 #
@@ -83,7 +83,7 @@ sub get_message_list {
 }
 
 sub get_message {
-    my ($UserId,$Id) = @_;
+    my ($UserId, $Id) = @_;
     # note: we use the UserId for security purposes
     
     my ($sql, $sth);
@@ -109,6 +109,16 @@ sub get_message {
     $sth->finish();
 
     return \%message;
+}
+
+sub delete_message {
+    my ($UserId, $Id) = @_;
+    my ($sql, $sth);
+
+    $sql = "DELETE FROM Mail WHERE Id=? AND UserId=?";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($Id,$UserId);
+    $sth->finish();
 }
 
 1;

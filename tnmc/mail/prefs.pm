@@ -12,7 +12,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(mail_set_pref mail_get_pref);
+@EXPORT = qw(mail_set_pref mail_get_pref mail_get_all_prefs mail_set_all_prefs);
 @EXPORT_OK = qw();
 
 #
@@ -59,7 +59,48 @@ sub mail_get_pref {
     }
     $sth->finish();
 
+    print STDERR "mail_get_pref: in with $UserId, $Pref and out with $Value\n";
+
     return $Value;
+}
+
+sub mail_get_all_prefs {
+    my ($UserId) = @_;
+    my ($sql, $sth);
+    my %prefs;
+
+    $sql = "SELECT Pref, Value
+              FROM MailPrefs
+             WHERE UserId=?";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($UserId);
+
+    while (my @row = $sth->fetchrow_array()) {
+        my $Pref = shift @row;
+        my $Value = shift @row;
+
+        $prefs{$Pref} = $Value;
+    }
+    $sth->finish();
+
+    return \%prefs;
+}
+
+sub mail_set_all_prefs {
+    my ($UserId, $prefs_ref) = @_;
+    my ($sql,$sth);
+
+    $sql = "DELETE FROM MailPrefs WHERE UserId=?";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($UserId);
+    $sth->finish();
+
+
+    $sql = "INSERT INTO MailPrefs (UserId, Pref, Value)
+                 VALUES (?, ?, ?)";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($UserId, 'From', $$prefs_ref{From});
+    $sth->finish();
 }
 
 1;
