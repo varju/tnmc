@@ -70,12 +70,19 @@ th {
 <TITLE>TNMC Online</TITLE>
 </HEAD>
 
-<BODY BACKGROUND="/template/bg.gif">
+<BODY BGCOLOR="#99ff00">
 <center>
 
 <TABLE BORDER="0" CELLPADDING=0 CELLSPACING=0 background="">
 <TR>
-  <TD colspan="4" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif"><IMG width="290" height="36" SRC="/template/logo/$logo"></TD>
+  <TD colspan="4">
+    <TABLE BORDER="0" CELLPADDING=0 CELLSPACING=0>
+    <TR>
+      <TD><IMG width="290" height="36" SRC="/template/logo/$logo"></TD>
+      <TD width="100%" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif">&nbsp;</TD>
+    </TR>
+    </TABLE>
+  </TD>
   <TD ALIGN="left" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif"><FONT style="font-size: 20pt" COLOR="#FFFFFF" FACE="verdana" SIZE="+2">
     <B>$username</B></FONT>&nbsp;</TD>
   <TD><IMG SRC="/template/top_right.gif"></TD>
@@ -125,8 +132,7 @@ sub footer{
 </TR>
 
 <TR>
-  <td BACKGROUND="/template/bottom_bg.gif">
-    <img src="/template/bottom_left2.gif"></td>
+  <td><img src="/template/bottom_left2.gif"></td>
   <td bgcolor="888888" colspan="2" BACKGROUND="/template/bottom_bg_cp.gif">
     <FONT FACE="verdana" SIZE="-2">
     <a href="/" style="text-decoration:none"><font color="000000">$tnmc_url</a>
