@@ -11,6 +11,7 @@ use tnmc;
 
 my @options = ({"key" => "yes", "val" => "Yes"},
 	       {"key" => "late", "val" => "Late"},
+	       {"key" => "early", "val" => "Leave Early"},
 	       {"key" => "maybe", "val" => "Maybe"},
 	       {"key" => "no", "val" => "No"},
 	       {"key" => "undef", "val" => "--"});

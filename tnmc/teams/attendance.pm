@@ -14,6 +14,7 @@ use vars qw(%type);
 
 %type = ( "yes" => "Yes",
 	  "late" => "Late",
+	  "early" => "Leave Early",
 	  "maybe" => "Maybe",
 	  "no" => "No",
 	  "undef" => "--");
