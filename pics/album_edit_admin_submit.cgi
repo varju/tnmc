@@ -11,8 +11,8 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
+use tnmc::pics::album;
 
-require 'pics/PICS.pl';
 
 {
 	#############

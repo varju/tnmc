@@ -8,6 +8,7 @@ use tnmc::user;
 use tnmc::pics::pic;
 use tnmc::pics::album;
 use tnmc::pics::link;
+use tnmc::util::date;
 
 #
 # module configuration
@@ -48,7 +49,7 @@ sub show_random_pic{
     $pic{description} &&= " ($pic{description})";
     my $date = $pic{timestamp};
     $date =~ s/\s.*//;
-    my $pic_url = "pics/search_slide.cgi?search=date-span&search_from=$date+00%3A00&search_to=$date+23%3A59%3A59&picID=$picID";
+    my $pic_url = "/pics/search_slide.cgi?search=date-span&search_from=$date+00%3A00&search_to=$date+23%3A59%3A59&picID=$picID";
     print qq{
         <a href="$pic_url"><img src="$pic_img" width="80" height="64" border="0" alt="$pic{title}$pic{description}"></a>
     };
@@ -112,7 +113,7 @@ sub show_pic_listing{
         print qq{
             <tr>
             <td>$i</td>
-            <td><a href="pic_view.cgi?picID=$picID&albumID=$albumID&dateID=$dateID">$pic{title}</a> $pic{flags}</td>
+            <td><a href="/pics/pic_view.cgi?picID=$picID&albumID=$albumID&dateID=$dateID">$pic{title}</a> $pic{flags}</td>
             <td>$pic{timestamp}</td>
             <td>&nbsp;&nbsp;</td>
             <td>$pic{ownerID}</td>
@@ -141,14 +142,15 @@ sub show_album_listing{
                 <td>&nbsp;&nbsp;</td>
                 <td><b>Date</td>
                 <td>&nbsp;&nbsp;</td>
+                <td><b>Pub</td>
+                <td>&nbsp;&nbsp;</td>
                 <td><b>Owner</td>
                 <td>&nbsp;&nbsp;</td>
                 <td><b>Size</td>
             </tr>
     };
-
-
-
+    
+    
     my $curr_date = '0';
     foreach my $albumID (@albums){
 
@@ -162,29 +164,27 @@ sub show_album_listing{
             $curr_date = substr($album{albumDateStart}, 0, 4);
             print qq{
                 <tr>
-                    <th colspan="7">&nbsp;$curr_date</th>
+                    <th colspan="9">&nbsp;$curr_date</th>
                 </tr>
             };
         }
+        my $date_string =  &tnmc::util::date::format_date('short_month_day', $album{albumDateStart}) . ' - ' . &tnmc::util::date::format_date('short_month_day', $album{albumDateStart});
         
-        my $sql = "SELECT DATE_FORMAT('$album{albumDateStart}', '%b %d')";
+        my $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
         my $sth = $dbh_tnmc->prepare($sql); 
         $sth->execute();
-        my ($date_string) = $sth->fetchrow_array();
-
-        $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
-        $sth = $dbh_tnmc->prepare($sql); 
-        $sth->execute();
         my ($num_pics) = $sth->fetchrow_array();
-
+        
         my %owner;
         &get_user($album{albumOwnerID}, \%owner);
-
+        
         print qq{
             <tr>
                 <td><a href="album_thumb.cgi?albumID=$albumID">$album{albumTitle}</a></td>
                 <td></td>
                 <td>$date_string</td>
+                <td></td>
+                <td>$album{albumTypePublic}</td>
                 <td></td>
                 <td>$owner{username}</td>
                 <td></td>

@@ -414,7 +414,7 @@ sub show_piclist{
     
     if($listType eq 'admin'){
         print qq{
-            <form method="post" action="pic_edit_list_submit.cgi">
+            <form method="post" action="bulk_edit_submit.cgi">
             <input type="hidden" name="destination" value="$ENV{REQUEST_URI}">
             <tr><th>&nbsp;</th><th>Rating: Worse < - > Better</th></tr>
         };
@@ -538,15 +538,54 @@ sub show_piclist{
 
                     <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"><input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0">
                     Image ($pic{width} x $pic{height})<br>
+            };
 
+            ### album info
+            my @valid_albums;
+            &tnmc::pics::album::list_valid_albums(\@valid_albums, $pic{'timestamp'});
+            my @pic_albums;
+            &tnmc::pics::link::list_links_for_pic(\@pic_albums, $picID);
+            if (! scalar(@pic_albums)  && scalar(@valid_albums) ){
+                @pic_albums = (0); #allow creation of a new link
+            }
+            foreach my $albumID (@pic_albums){
+                if ($albumID){
+                    my $link = &tnmc::pics::link::get_link($picID, $albumID,);
+                    
+                    print "<select name=\"LINK$link->{'linkID'}_albumID\">\n";
+                    my %album; # print current album separately in case it's not in valid list
+                    &tnmc::pics::album::get_album_cache($albumID, \%album);
+                    print "<option  value=\"$albumID\">$albumID. $album{'albumTitle'}</option>\n";
+                }
+                else{
+                    print "<select name=\"NEWLINK${picID}_albumID\">\n";
+                }
+                print "<option value=\"0\">(none)</option>\n";
+                print "<option value=\"$albumID\">-----</option>\n";
+                foreach my $valid_albumID (@valid_albums){ 
+                    my %valid_album;
+                    &tnmc::pics::album::get_album_cache($valid_albumID, \%valid_album);
+                    print "<option value=\"$valid_albumID\">$valid_albumID. $valid_album{'albumTitle'}</option>\n";
+                }
+                print "</select><br>\n";
+                
+            }
+            
+            ### other usefull info
+            print qq{
                     $i. $pic{timestamp} - $owner{username} $pic{flags}<br>
             };
+            
+            
+            ### edit/admin links
             if ($USERID eq $pic{ownerID}){
                 print qq{       <a href="pic_edit.cgi?picID=$picID">edit</a> &\#149; };
             }
             if ($USERID eq $nav->{album}->{albumOwnerID}){
                 print qq{       <a href="link_del.cgi?picID=$picID&albumID=$albumID">unlink</a> };
             }
+            
+            ### the end
             print qq{
                 </td>
             };

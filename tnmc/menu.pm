@@ -98,14 +98,11 @@ sub new_nav_menu{
 
     if ($USERID{groupPics}){
         if (&show_menu_item( 0, "/pics/", "Pics", "")){
-            &show_menu_item( 1, "/pics/album_list.cgi", "Album List", "");
-            &show_menu_item( 1, "/pics/date_list.cgi", "Date List", "");
+            &show_menu_item( 1, "/pics/album_index.cgi", "Albums", "");
             &show_menu_item( 1, "/pics/search_index.cgi", "Search", "");
             &show_menu_item( 0, "", "", "");
-            &show_menu_item( 1, "/pics/api_upload.cgi", "Upload Pic", "");
-            if ($USERID{groupPics} >= 10 ){
-                &show_menu_item( 1, "/pics/album_add.cgi", "Add Album", "");
-            }
+            &show_menu_item( 1, "/pics/upload_index.cgi", "Upload Pics", "");
+            &show_menu_item( 1, "/pics/album_add.cgi", "Add Album", "");
         }
         &show_menu_item( 0, "", "", "");
         
@@ -144,6 +141,7 @@ sub new_nav_menu{
                 &show_menu_item( 1, "/development/todo_list.cgi", "To&nbsp;do&nbsp;List", "");
                 &show_menu_item( 1, "/development/suggestions.cgi", "Suggestions", "");
                 &show_menu_item( 1, "/development/env.cgi", "Enviroment", "");
+                &show_menu_item( 1, "/admin/errorlog.cgi", "Error Log", "");
                 &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
             }elsif ($USERID == 1){
                 &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");

@@ -11,8 +11,6 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 
-require 'pics/PICS.pl';
-
 
 #############
 ### Main logic
