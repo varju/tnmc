@@ -24,7 +24,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 @ISA = qw(Exporter);
 
 @EXPORT = qw(
-             album_get_piclist_from_nav get_nav show_thumbs has_access_album_edit show_album_thumb_header show_album_nav_menu_basic show_album_nav_menu_full access_pics_admin show_piclist
+             album_get_piclist_from_nav get_nav show_thumbs 
+
+             auth_access_album_edit auth_access_album_view auth_access_pic_edit auth_access_pic_view
+             
+             show_album_thumb_header show_album_nav_menu_basic show_album_nav_menu_full access_pics_admin show_piclist
              
              show_album_slide_header show_slide array_get_index show_slide_nav_menu_basic show_slide_thumbnails show_slide_pic make_nav_url
              );
@@ -120,25 +124,94 @@ sub show_thumbs{
     
 }
 
-sub has_access_album_edit{
-    my ($albumID, $album, $userID, $user) = @_;
+sub auth_access_album_edit{
+    my ($albumID, $album) = @_;
+    use tnmc::security::auth;
+    return &_has_access_album('view', $albumID, $album, $USERID, undef);
+}
+
+sub auth_access_album_view{
+    my ($albumID, $album) = @_;
+    use tnmc::security::auth;
+    return &_has_access_album('view', $albumID, $album, $USERID, undef);
+}
+
+sub _has_access_album{
+    my ($access, $albumID, $album, $userID, $user) = @_;
     
     # get the info if we have to.
     if (! defined $album){
         %$album = ();
         &get_album($albumID, $album);
     }
-    if (! defined $user){
-        %$user = ();
-        &get_user($userID, $user);
+    if (! defined $userID){
+        $userID = $user->{userID};
     }
     
     # decide if user has access
-    if ( ($album->{albumOwnerID} == $userID) ||
-         ($user->{groupPics} >= 100) ){
+    if ($album->{ownerID} == $userID){
         return 1;
     }
+    elsif ($album->{albumTypePublic} eq 2){
+        return 1 if $access = 'view';
+        return 1 if $access = 'edit';
+    }
+    elsif ($album->{albumTypePublic} eq 1){
+        return 1 if $access = 'view';
+        return 0 if $access = 'edit';
+    }
+    elsif ($album->{albumTypePublic} eq 0){
+        return 0;
+    }
+    else{
+        return 0;
+    }
 }
+
+sub auth_access_pic_edit{
+    my ($picID, $pic) = @_;
+    use tnmc::security::auth;
+    return &_has_access_pic('edit', $picID, $pic, $USERID, undef);
+}
+
+sub auth_access_pic_view{
+    my ($picID, $pic) = @_;
+    use tnmc::security::auth;
+    return &_has_access_pic('view', $picID, $pic, $USERID, undef);
+}
+
+sub _has_access_pic{
+    my ($access, $picID, $pic, $userID, $user) = @_;
+    
+    # get the info if we have to.
+    if (! defined $pic){
+        %$pic = ();
+        &get_pic($picID, $pic);
+    }
+    if (! defined $userID){
+        $userID = $user->{userID};
+    }
+    
+    # decide if user has access
+    if ($pic->{ownerID} == $userID){
+        return 1;
+    }
+    elsif ($pic->{typePublic} eq 2){
+        return 1 if $access = 'view';
+        return 1 if $access = 'edit';
+    }
+    elsif ($pic->{typePublic} eq 1){
+        return 1 if $access = 'view';
+        return 0 if $access = 'edit';
+    }
+    elsif ($pic->{typePublic} eq 0){
+        return 0;
+    }
+    else{
+        return 0;
+    }
+}
+
 
 sub show_album_thumb_header{
     my ($albumID, $nav, $piclist) = @_;
@@ -157,10 +230,12 @@ sub show_album_thumb_header{
     &show_heading("Album");
     
     my $edit_links;
-    if (&has_access_album_edit($albumID, \%album, $USERID, undef)){
+    if (&auth_access_album_edit($albumID, \%album)){
         $edit_links = qq{
-            [ <a href="album_edit_admin.cgi?albumID=$albumID">Edit</a>
-            - <a href="album_del.cgi?albumID=$albumID">Del</a> ]
+            [ <a href="album_edit.cgi?albumID=$albumID">Edit</a>
+            - <a href="album_edit_admin.cgi?albumID=$albumID">Admin</a> 
+            - <a href="album_del.cgi?albumID=$albumID">Del</a> 
+            - <a href="album_view.cgi?albumID=$albumID">View</a> ]
         };
     }
     

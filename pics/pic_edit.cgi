@@ -13,7 +13,7 @@ use tnmc::user;
 use tnmc::cgi;
 
 use tnmc::pics::pic;
-
+use tnmc::pics::new;
 
 #############
 ### Main logic
@@ -21,20 +21,27 @@ use tnmc::pics::pic;
 &header();
 
 my %pic;
-my $cgih = &tnmc::cgi::cgih();
+my $cgih = &tnmc::cgi::get_cgih();
 my $picID = $cgih->param('picID');
 
 &get_pic($picID, \%pic);
 
 # show the user a scaled down pic
 my $pic_img = &get_pic_url($picID, ['mode'=>'big']);
-print qq{  <img width="400" src="$pic_img">\n};
+print qq{  <img width="320" src="$pic_img">\n};
+
+# give admin users a link
 print qq{  <br><a href="pic_edit_admin.cgi?picID=$picID">Admin</a>\n} if ($USERID{groupPics} >= 100);
 
 # Give the owner an edit section:
-if ( $USERID && ($pic{ownerID} eq $USERID) ){
+if (&auth_access_pic_edit($picID, \%pic)){
+    
     &show_pic_edit_form();
 }
+else{
+    print "You don't have permission to edit thie pic";
+}
+        
 
 &footer();
 
@@ -47,6 +54,7 @@ sub show_pic_edit_form{
     my ($pic) = @_;
 
     my %pic;
+
     &get_pic($picID, \%pic);
     
     my %typePublic;
@@ -108,11 +116,12 @@ sub show_pic_edit_form{
             };
             if ($USERID == $pic{ownerID}){
                 print qq{
-                    <tr><td><b>Public</td>
+                    <tr><td><b>Access</td>
                         <td>
                         <select name="typePublic">
-                        <option $typePublic{0} value="0">hide
-                        <option $typePublic{1} value="1">show
+                        <option $typePublic{2} value="2">public view/edit
+                        <option $typePublic{1} value="1">public view
+                        <option $typePublic{0} value="0">hidden
                             </select>
                         </td>
                     </tr>

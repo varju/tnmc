@@ -18,7 +18,7 @@ BEGIN{
                  set_pic del_pic get_pic
                  get_pic_url list_pics
                  
-                 update_cache save_pic get_file_info
+                 update_cache update_cache_pub save_pic get_file_info
                  );
     
     @EXPORT_OK = qw();
@@ -129,6 +129,7 @@ sub save_pic{
     
     &set_pic(%pic);
     &update_cache($pic{picID});
+    &update_cache_pub($pic{picID});
 }
 
 ########################################
@@ -157,8 +158,6 @@ sub update_cache{
     # full image
     {
         my $dir = "/tnmc/pics/data/cache/full/";
-        &tnmc::util::file::make_directory($dir);
-        
         my $filename = $dir . $picID;
         
         open (CACHE, ">$filename");
@@ -172,22 +171,42 @@ sub update_cache{
         $x = $image->Sample(width=>'160', height=>'128');
         
         my $dir = "/tnmc/pics/data/cache/thumb/";
-        &tnmc::util::file::make_directory($dir);
-        
         my $filename = $dir . $picID;
         
         open (CACHE, ">$filename");
         $x = $image->Write('file'=>*CACHE, 'compress'=>'JPEG');
         close (CACHE);
-        
-        # to do..
-        if ($pic{'typePublic'}){
-            # save a thumbnail to the pub dir
-        }else{
-            
+    }
+    
+}
+
+sub update_cache_pub{
+    my ($picID) = @_;
+    
+    use tnmc::util::file;
+    
+    my %pic;
+    &get_pic($picID, \%pic);
+
+    
+    my $cache_dir = "/tnmc/pics/data/cache/";
+    my $pub_dir = "/tnmc/pics/pub/cache/";
+    my @modes = ('thumb');
+    
+    # clear existing cached pic
+    foreach my $mode (@modes){
+        unlink("$pub_dir$mode\/$picID");
+    }
+    
+    if ($pic{'typePublic'}){
+        foreach my $mode (@modes){
+            &tnmc::util::file::copy
+                ( "$cache_dir$mode\/$picID",
+                  "$pub_dir$mode\/$picID"
+                  );
         }
     }
-
+    
 }
 
 ########################################

@@ -22,7 +22,7 @@ use tnmc::pics::show;
 
 &header();
 
-$cgih = &tnmc::cgi::cgih();
+$cgih = &tnmc::cgi::get_cgih();
 
 $picID = $cgih->param('picID');
 %pic;	

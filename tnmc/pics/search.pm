@@ -160,7 +160,7 @@ sub search_do_test{
 
 sub search_get_accessible_condition{
     my $USERID = $tnmc::security::auth::USERID;
-    return "((ownerID = '$USERID') OR typePublic = 1)";
+    return "((ownerID = '$USERID') OR typePublic >= 1)";
 }
 
 return 1;

@@ -28,7 +28,7 @@ if (!$albumID){
     print "Error: Invalid form data\n";
     &footer();
 }
-elsif(!&has_access_album_edit($albumID, undef, $USERID, undef)){
+elsif(!&auth_access_album_edit($albumID, undef)){
     &header();
     print "Error: Invalid user permissions\n";
     &footer();

@@ -76,10 +76,19 @@ sub show_pic_listing{
     
 }
 
+sub show_album_listing_info{
+    my ($albums_ref, $params_ref) = @_;
+    my @albums = (@$albums_ref);
+
+    foreach my $albumID(@albums){
+        &show_album_info($albumID);
+    }
+}
+
 ########################################
 sub show_album_listing{
     my ($albums_ref, $params_ref) = @_;
-
+    
     use tnmc::pics::album;
     use tnmc::pics::link;
     use tnmc::util::date;

@@ -71,7 +71,7 @@ sub show_album_view{
     };
     
     ## Admin options 
-    if (&has_access_album_edit($albumID, \%album, $USERID, undef)){
+    if (&auth_access_album_edit($albumID, \%album)){
         print  qq{
             [ <a href="album_edit.cgi?albumID=$albumID">Edit</a>
             - <a href="album_edit_admin.cgi?albumID=$albumID">Admin</a>

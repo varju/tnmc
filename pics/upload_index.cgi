@@ -9,7 +9,7 @@ use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::template;
-use tnmc::cgi;
+use tnmc::db;
 
 use tnmc::pics::pic;
 
@@ -17,13 +17,14 @@ use tnmc::pics::pic;
 ### Main logic
 
 &header();
+&show_upload_page();
+&footer();
+        
 
 sub show_upload_page{
     %pic;	
-    $cgih = &tnmc::cgi::get_cgih();
-    $picID = $cgih->param('picID');
     
-    &get_pic($picID, \%pic);
+    my @cols = &db_get_cols_list("Pics");
     
     print qq {
         
@@ -59,7 +60,7 @@ sub show_upload_page{
                     carefull of the \'filename\'</td></tr>
         };
 	
-        foreach $key (keys %pic){
+        foreach $key (@cols){
             
             # please don't kill existing images
             next if ($key eq 'picID');
@@ -72,7 +73,7 @@ sub show_upload_page{
             
             print qq{	
                 <tr><td><b>$key</td>
-                    <td><input type="text" name="$key" value="$pic{$key}"></td>
+                    <td><input type="text" name="$key" value=""></td>
                 </tr>
             };
        	}
@@ -82,7 +83,5 @@ sub show_upload_page{
 	    <input type="submit" value="Submit">
 	    </form>
 	};
-        
-	&footer();
         
 }

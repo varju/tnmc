@@ -28,7 +28,7 @@ use strict;
 my $cgih = &tnmc::cgi::get_cgih;
 my $albumID = $cgih->param('albumID');
 
-if (&has_access_album_edit($albumID, undef, $USERID, undef)){
+if (&auth_access_album_edit($albumID, undef)){
     &show_album_edit_form($albumID);
 }
 else{
