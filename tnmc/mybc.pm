@@ -34,8 +34,8 @@ sub mybc_get_movie_list {
     my $res = $ua->request($req);
     
     my $text = $res->content;
-    $text =~ s/.*\n\<SELECT name\=\"movieid\"\>\n//s;
-    $text =~ s/\n\<\/SELECT\>\n.*//s;
+    $text =~ s/.*\n\<SELECT name\=\"movieid\"\>\n//si;
+    $text =~ s/\n\<\/SELECT\>\n.*//si;
     
     my @list = split("\n", $text);
     
@@ -74,7 +74,7 @@ sub mybc_get_movie_info {
 
     my $text = $res->content;
 
-    if ($text =~ s/.*?movies\/images\/title2\.gif\" width\=111 height\=33 alt\=\"\" border\=\"0\"\>//s) {
+    if ($text =~ s/.*?<font face="Verdana, Arial, sans-serif" size="1">//s) {
         $text =~ /<font size=\"?3\"?><b>((.)*)<\/b><\/font>/im;
         $info{title} = $1;
         $info{title} =~ s/^(The|A)\s+(.*)$/$2, $1/;
@@ -85,12 +85,12 @@ sub mybc_get_movie_info {
             $info{stars} =~ s/_half/.5/;
         }
         
-        if ($text =~ m|<b>PREMISE</b>\n<BR>(.*?)<P>|s) {
+        if ($text =~ m|<b>PREMISE</b></font>\n<BR>(.*?)<br><br>|si) {
             $info{premise} = $1;
             chomp $info{premise};
         }
         
-        if ($text =~ m|<B><I>@ THESE LOCATIONS</I></B>:</font><br>\n<FONT FACE="Verdana,Arial" SIZE="1">(.*)</FONT>|s) {
+        if ($text =~ m|<B><I>@ THESE LOCATIONS</I></B>:</font><br>\n<FONT FACE="Verdana,Arial" SIZE="1">(.*?)</FONT>|si) {
             $mTheatres = $1;
         }
     }
@@ -108,8 +108,9 @@ sub mybc_get_movie_info {
             $mTheatres{$1} = $2;
         }
     }
+    $mTheatres{foo} = "bar";
     $info{theatres} = \%mTheatres;
-    
+
     return %info;
 }
 
