@@ -48,7 +48,7 @@ sub show_admin_page{
         &show_heading ("administration");
         
         my $valid_theatres = &get_general_config("movie_valid_theatres");
-        my $other_theatres = &get_general_config("movie_other_theatres);
+        my $other_theatres = &get_general_config("movie_other_theatres");
 
         print qq{
             <form action="admin_submit.cgi" method="post">
