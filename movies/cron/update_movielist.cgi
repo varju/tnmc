@@ -217,9 +217,9 @@ require 'movies/MOVIES.pl';
 			$dbMovie{mybcID} = $mID;
 			$dbMovie{statusShowing} = '1';
 
-			if (! $dbMovie{rating}){
+#			if (! $dbMovie{rating}){
 				$dbMovie{rating} = $mStars{$mID};
-			}
+#			}
 
 			if (20 > length($dbMovie{description})){
 				$dbMovie{description} = $mPremise{$mID};
