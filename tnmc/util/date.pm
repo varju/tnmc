@@ -29,6 +29,11 @@ sub format_date{
                    'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
         return  "$mon $dd, $yyyy";
     }
+    elsif ($format eq 'short_month_day'){
+        my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+                   'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
+        return  "$mon $dd";
+    }
 }
 
 return 1;
