@@ -1,4 +1,4 @@
-package tnmc::mail::prefs;
+package tnmc::mail::prefs::data;
 
 use strict;
 
@@ -58,8 +58,6 @@ sub mail_get_pref {
         $Value = undef;
     }
     $sth->finish();
-
-    print STDERR "mail_get_pref: in with $UserId, $Pref and out with $Value\n";
 
     return $Value;
 }

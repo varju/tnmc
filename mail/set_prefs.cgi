@@ -9,7 +9,7 @@ use tnmc::config;
 use tnmc::cookie;
 use tnmc::db;
 
-use tnmc::mail::prefs;
+use tnmc::mail::prefs::data;
 
 #############
 ### Main logic

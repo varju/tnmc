@@ -72,6 +72,7 @@ sub new_nav_menu{
     
     if ( $USERID == 1 || $USERID == 5 ) {
         if (&show_menu_item( 0, "/mail/", "Mail", "")) {
+            &show_menu_item( 1, "/mail/compose_message.cgi", "Compose", "")
             &show_menu_item( 1, "/mail/show_prefs.cgi", "Prefs", "")
         }
         &show_menu_item( 0, "", "", "");
