@@ -1,4 +1,4 @@
-package tnmc::template::html_orig;
+package tnmc::template::html_orig_v2;
 
 use strict;
 
@@ -62,8 +62,28 @@ th {
     color: #00067F;
     text-decoration: none;
 }
+
+.tnmcHeading {
+    font-family: verdana, helvetica, arial, sans-serif;
+    font-size: $font_size;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold ;
+}
+
 </style>
-    
+<script>
+<!--
+    function toggle_div(layer){
+        if (document.getElementById(layer).style.display != "none"){
+            document.getElementById(layer).style.display = "none";
+        }
+        else{
+            document.getElementById(layer).style.display = "block";
+        }
+    }
+-->
+</script>    
 <TITLE>TNMC Online</TITLE>
 <base href="$tnmc_url">
 </HEAD>
@@ -87,7 +107,7 @@ th {
 
 <TR valign="top">
   <TD bgcolor="ffffff" BACKGROUND="template/body_bg.gif">&nbsp;</td>
-  <TD bgcolor="ffffff"><br>
+  <TD bgcolor="ffffff"><br><div>
     };
 }
 
@@ -97,7 +117,7 @@ sub footer{
     
     
     print q{
-  <br></TD>
+  </div><br></TD>
 
   <TD bgcolor="ffffff">
     <img src="template/blank_dot.gif" width="13" height="1"></td>
@@ -191,11 +211,19 @@ sub show_menu_item{
 ###################################################################
 sub show_heading{
     my ($heading_text) = @_;
+    my $i = rand();
     print qq{
+        </div>
     <table border="0" cellpadding="1" cellspacing="0" bgcolor="448800" width="100%">
-      <tr><td nowrap>&nbsp;<font color="ffffff"><b>
-      $heading_text</b></font></td></tr>
+      <tr><td nowrap>&nbsp;<font color="#ffffff"><b>
+              $heading_text</b>
+          </font>
+          </td>
+          <td align=right>
+              <a href='javascript:toggle_div("header$i");' class="tnmcHeading">&nbsp;&#149;&nbsp;</a>
+          </td></tr>
     </table>
+    <div id="header$i" class="tnmcContent">
     };
 }
 

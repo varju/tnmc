@@ -1,20 +1,70 @@
+##################################################################
+#	Scott Thompson (mar 2003)
+##################################################################
+
 package tnmc::user;
 
 use strict;
+use tnmc;
+use tnmc::db;
 
 #
 # module configuration
 #
-BEGIN
-{
-    use tnmc::db;
-}
+
+my $table = 'Personal';
+my $key = 'userID';
 
 #
 # module routines
 #
 
+sub new_user{
+    # usage: my $user_hash = &new_user();
+    return &tnmc::db::item::newItem($table, $key);
+}
+
+sub add_user{
+    # usage: &add_user($user_hash);
+    return &tnmc::db::item::addItem($table, $key, $_[0]);
+}
+
+sub get_user{
+    if (scalar(@_) == 1){
+	## NEW-STYLE
+	# usage: my $user_hash = &get_user($userID);
+	return &tnmc::db::item::getItem($table, $key, $_[0]);
+    }
+    else{
+	## OLD-STYLE
+	my ($userID, $user_ref) = @_;
+	my $hash =  &tnmc::db::item::getItem($table, $key, $_[0]);
+	%$user_ref = %$hash;
+    }
+}
+
 sub set_user{
+    # usage: &set_user($user_hash);
+    return &tnmc::db::item::replaceItem($table, $key, $_[0]);
+}
+
+#sub del_user{
+#    # usage: &del_user($userID)
+#    return &tnmc::db::item::delItem($table, $key, $_[0]);
+#}
+
+sub list_teams{
+    # usage: &list_teams("WHERE condition = true ORDER BY column")
+    return &tnmc::db::item::listItems($table, $key, $_[0]);
+}
+
+#
+# old
+#
+
+
+
+sub old_set_user{
     my (%user, $junk) = @_;
     my ($sql, $sth, $return);
     
@@ -33,7 +83,7 @@ sub set_user{
     return $return;
 }
 
-sub del_user{
+sub old_del_user{
     my ($userID) = @_;
     my ($sql, $sth);
     
@@ -47,7 +97,7 @@ sub del_user{
     $sth->finish;
 }
 
-sub get_user{
+sub old_get_user{
     
     if (scalar(@_) == 1){
 	## NEW-STYLE

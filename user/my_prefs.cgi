@@ -12,6 +12,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::config;
 
 #############
 ### Main logic
@@ -22,8 +23,8 @@ use tnmc::user;
 if ($USERID){ 
     my @cols = &tnmc::db::db_get_cols_list('Personal');
 
-    my %user;
-    &tnmc::user::get_user($USERID, \%user);
+    my $user = &tnmc::user::get_user($USERID);
+    my %user = %$user;
     
     print qq{
             <form action="user/my_prefs_submit.cgi" method="post">
@@ -50,12 +51,13 @@ if ($USERID){
     &tnmc::template::show_heading ("basic info");
     
     $user{birthdate} = substr($user{birthdate}, 0, 10);
+    my %sel_gender = ($user{gender} => 'checked');
     print qq{
             <table>
                                 <tr><td><b>username</td>
                                     <td><input type="text" name="username" value="$user{username}"></td>
                                 </tr>
-                                
+
                                 <tr><td><b>fullname</td>
                                     <td><input type="text" name="fullname" value="$user{fullname}"></td>
                                 </tr>
@@ -92,7 +94,11 @@ if ($USERID){
                                 };
     }
     print qq{
-
+	      <tr><td><b>gender</td>
+		  <td>
+		  <input type="radio" name="gender" value="F" $sel_gender{F}> Girl 
+		  <input type="radio" name="gender" value="M" $sel_gender{M}> Boy
+                                </td></tr>
             </table>
             <p>
             };
@@ -158,28 +164,29 @@ if ($USERID){
 
             };
     
-    &tnmc::template::show_heading("pics");
-    my %sel_random_pic;
-    $sel_random_pic{$user{I_am_a_misanthrope}} = 'checked';
-    
-    
-    print qq{
-            <table cellpadding="0" border="0" cellspacing="0">
-                                
-                                <tr><td><b>Random nav-bar Picture?</td>
-                <td><b>    <input type="radio" name="I_am_a_misanthrope" value="0" $sel_random_pic{0}>on </td>
-                <td><b>    <input type="radio" name="I_am_a_misanthrope" value="1" $sel_random_pic{1}>off
-                                </td></tr>
-                        </table>
-                        };
-
-    &tnmc::template::show_heading("colours");
-    my $sel_colour_bg = $user{colour_bg} || '#99ff00';
+    &tnmc::template::show_heading("template");
+    my $sel_template_colour_bg = $user{template_colour_bg} || '#99ff00';
+    my %sel_template_html = ($user{template_html} => 'selected');
     print qq{
             <table cellpadding="0" border="0" cellspacing="0">
             <tr>
+              <td><b>Template</td>
+	      <td valign="top" nowrap><br>
+                <select name="template_html">
+	     };
+    my @templates = &tnmc::template::list_templates();
+    foreach my $template (@templates){
+	print qq{
+	          <option $sel_template_html{$template} value="$template">$template</option>
+		};
+    }
+    print qq{
+                </select>
+              </td>
+            </tr>
+            <tr>
               <td><b>Background colour&nbsp;</td>
-              <td><input type="text" name="colour_bg" value="$sel_colour_bg" size="7"></td>
+              <td><input type="text" name="template_colour_bg" value="$sel_template_colour_bg" size="7"></td>
             </tr>
             </table>
 	    };
@@ -200,7 +207,7 @@ if ($USERID){
                         };
     print qq{
             <p>
-            <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
+            <input type="image" border=0 src="$tnmc_url/template/submit.gif" alt="Submit Changes">
             </form>
             }; 
 }

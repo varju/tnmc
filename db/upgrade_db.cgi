@@ -20,7 +20,7 @@ require tnmc::template;
 
 &tnmc::template::header();
 
-&upgrade_db_01();
+&upgrade_db_02();
 
 &tnmc::template::footer();
 
@@ -28,6 +28,17 @@ require tnmc::template;
 #
 # subs
 #
+
+sub upgrade_db_02{
+    
+    # create teams db (scott - mar 2003)
+    
+    my $dbh = &tnmc::db::db_connect();
+    
+    $dbh->do("ALTER TABLE Personal
+      ADD META text
+    ");
+}
 
 sub upgrade_db_01{
     
@@ -112,7 +123,7 @@ CREATE TABLE FieldtripSurvey (
   MoneyNotes text,
   comments text
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE Fieldtrips (
@@ -130,14 +141,14 @@ CREATE TABLE Fieldtrips (
   is_active int(1) NOT NULL default '0',
   PRIMARY KEY  (tripID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE GeneralConfig (
   name varchar(255) default NULL,
   value text
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE Mail (
@@ -153,7 +164,7 @@ CREATE TABLE Mail (
   Sent int(11) default NULL,
   PRIMARY KEY  (Id)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MailPrefs (
@@ -161,7 +172,7 @@ CREATE TABLE MailPrefs (
   Pref varchar(20) default NULL,
   Value varchar(20) default NULL
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieAttendance (
@@ -172,7 +183,7 @@ CREATE TABLE MovieAttendance (
   movie20020219 char(20) default NULL,
   PRIMARY KEY  (userID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieFactionPrefs (
@@ -183,7 +194,7 @@ CREATE TABLE MovieFactionPrefs (
   notify_phone int(11) default NULL,
   PRIMARY KEY  (userID,factionID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieFactions (
@@ -195,7 +206,7 @@ CREATE TABLE MovieFactions (
   theatres text,
   PRIMARY KEY  (factionID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieNightAttendance (
@@ -204,7 +215,7 @@ CREATE TABLE MovieNightAttendance (
   type int(11) default NULL,
   PRIMARY KEY  (userID,nightID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieNights (
@@ -223,7 +234,7 @@ CREATE TABLE MovieNights (
   valid_theatres text,
   PRIMARY KEY  (nightID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieTheatres (
@@ -232,7 +243,7 @@ CREATE TABLE MovieTheatres (
   name char(64) default NULL,
   PRIMARY KEY  (theatreID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE MovieVotes (
@@ -241,7 +252,7 @@ CREATE TABLE MovieVotes (
   type char(32) default NULL,
   KEY vote (movieID,userID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE Movies (
@@ -261,7 +272,7 @@ CREATE TABLE Movies (
   PRIMARY KEY  (movieID),
   KEY title (title)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE News (
@@ -272,7 +283,7 @@ CREATE TABLE News (
   expires timestamp(14) NOT NULL,
   PRIMARY KEY  (newsID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE Personal (
@@ -310,7 +321,7 @@ CREATE TABLE Personal (
   PRIMARY KEY  (userID),
   KEY userid (username)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE PicAlbums (
@@ -325,7 +336,7 @@ CREATE TABLE PicAlbums (
   albumCoverPic int(11) default NULL,
   PRIMARY KEY  (albumID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE PicLinks (
@@ -335,7 +346,7 @@ CREATE TABLE PicLinks (
   KEY link (picID,albumID),
   KEY linkID (linkID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE Pics (
@@ -354,7 +365,7 @@ CREATE TABLE Pics (
   normalize int(2) default NULL,
   PRIMARY KEY  (picID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
     $dbh->do("
 CREATE TABLE SessionInfo (
@@ -368,7 +379,7 @@ CREATE TABLE SessionInfo (
   open int(1) default NULL,
   PRIMARY KEY  (sessionID)
 ) TYPE=ISAM PACK_KEYS=1;
-    "};
+    ");
 
 }
 

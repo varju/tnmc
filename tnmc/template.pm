@@ -7,9 +7,8 @@ use strict;
 #
 BEGIN
 {
+    use tnmc::security::auth;
     use vars qw($style $AUTOLOAD);
-    
-    $style = 'html_orig';
 }
 
 #
@@ -18,16 +17,23 @@ BEGIN
 
 sub set_template{
     my ($template) = @_;
-    $style = $template
+    $style = $template;
 }
 
 sub get_template{
+    if (!$style){
+	&tnmc::security::auth::authenticate();
+	$style = $tnmc::security::auth::USERID{template_html} || 'html_orig';
+    }
     return $style;
 }
 
 sub list_templates{
-    my @styles = qw(html_orig
+    my @styles = qw(
+		    html_orig
+		    html_orig_v2
 		    html_black
+		    html_2003
 		    html_blat
 		    );
     return @styles;
@@ -38,6 +44,7 @@ sub AUTOLOAD {
     my $sub = $AUTOLOAD;
     $sub =~ s/.*:://; # trim package name
     
+    my $style = &get_template();
     my $req = 'tnmc/template/' . $style . '.pm';
     require $req;
     

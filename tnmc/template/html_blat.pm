@@ -80,7 +80,7 @@ th {
 	$userline = qq{
 	    <table cellpadding=0 cellspacing=0 border=0>
 	    <form action="$tnmc_url/user/login.cgi" method="post">
-	    <input type="hidden" name="location" value="/$team->{action}->{view}">
+	    <input type="hidden" name="location" value="$tnmc_url/$team->{action}->{view}">
 	    <tr><td>
                 <select name="userID">
 		    <option value="0">Login...

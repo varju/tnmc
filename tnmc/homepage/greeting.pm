@@ -76,10 +76,11 @@ sub greeting
     my $out = $greeting;
     $out .= ' ' . $fullname if $fullname;
     
-    my $font_size = &tnmc::template::get_font_size();
+#    my $font_size = &tnmc::template::get_font_size();
     return qq{
-        <font style="font-size: $font_size;"><b>$out.</b><P>
+	<b>$out</b>
     };
+#        <font style="font-size: $font_size;"><b>$out.</b><P>
 }
 
 1;

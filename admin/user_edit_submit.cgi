@@ -26,7 +26,7 @@ my %user;
 foreach my $key (@cols) {
     $user{$key} = &tnmc::cgi::param($key);
 }
-&tnmc::user::set_user(%user);
+&tnmc::user::set_user(\%user);
 
 &tnmc::db::db_disconnect();
 

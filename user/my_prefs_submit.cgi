@@ -9,9 +9,9 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::db;
 use tnmc::user;
 use tnmc::cgi;
+use tnmc::config;
 
 #############
 ### Main logic
@@ -19,14 +19,19 @@ use tnmc::cgi;
 &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
-my @cols = &tnmc::db::db_get_cols_list('Personal');
+my @params = &tnmc::cgi::param();
+my $userID = &tnmc::cgi::param('userID');
+my $user = &tnmc::user::get_user($userID);
 
-my %user;
-foreach my $key (@cols) {
-    $user{$key} = &tnmc::cgi::param($key);
+foreach my $key (@params) {
+    next if ($key eq "submit");
+    next if ($key eq "x");
+    next if ($key eq "y");
+    next if ($key eq "");
+    $user->{$key} = &tnmc::cgi::param($key);
 }
-&tnmc::user::set_user(%user);
+&tnmc::user::set_user($user);
 
 &tnmc::db::db_disconnect();
 
-print "Location: /user/my_prefs.cgi\n\n";
+print "Location: $tnmc_url/user/my_prefs.cgi\n\n";

@@ -20,15 +20,14 @@ use tnmc::cgi;
 
 my $dbh = &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
-    
-my %user;
-my @cols = &tnmc::db::db_get_cols_list('Personal');
 
-foreach my $key (@cols){
+my $user = &tnmc::user::new_user();
+
+foreach my $key (keys %$user){
     if (&tnmc::cgi::param($key)){
-        $user{$key} = &tnmc::cgi::param($key);
+        $user->{$key} = &tnmc::cgi::param($key);
     }else{
-        $user{$key} = '';
+        $user->{$key} = '';
     }
 }
 
@@ -42,17 +41,8 @@ $user{groupAdmin} = '0';
 $user{userID} = 0;
 
 # add the user
-my $userID = &tnmc::user::set_user(%user);
+my $userID = &tnmc::user::add_user($user);
 
-my $sql = "SELECT userID FROM Personal WHERE username = '$user{username}' ORDER BY userID DESC";
-my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-$sth->execute;
-## get the last row
-($userID) = $sth->fetchrow_array();
-$sth->finish;
-
-&tnmc::broadcast::sms_admin_notify("New User Created: $userID - $user{username} - $user{fullname} - $user{email} - $userID}");
-    
 &tnmc::template::header();
 
 print qq{

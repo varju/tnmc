@@ -90,8 +90,7 @@ body {
 
 	    <div id="aboutDiv" class="tnmcMenu">
 	};
-    require tnmc::menu;
-    &tnmc::menu::new_nav_menu();
+    &show_menu();
 
     print qq{
     </div>
@@ -107,6 +106,37 @@ sub footer{
 	</div>
 	</body><\html>
 	    };
+}
+
+
+###################################################################
+sub show_menu{
+    
+    require tnmc::menu;
+    if ($LOGGED_IN) {
+	my $menu = &tnmc::menu::get_menu();
+	&tnmc::menu::print_menu($menu);
+    }
+    else {
+	&tnmc::menu::new_nav_login();
+    }
+}
+
+sub show_menu_item{
+    my ($indent, $url, $name, $text) = @_;
+    
+    my $indent_text = '';
+    while($indent--){
+        $indent_text .= '&nbsp;&nbsp;&nbsp;';
+    }
+    if ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/){
+        print qq{\t\t$indent_text<b><a href="$url" class="menulink">$name</a>$text</b><br>\n};
+        return 1;
+    }
+    else{
+        print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
+        return 0;
+    }
 }
 
 
