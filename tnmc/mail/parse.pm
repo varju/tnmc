@@ -56,7 +56,7 @@ sub message_lookup_user {
     my $users_ref = get_user_list();
 
     my $attempt;
-    if ($AddrTo =~ /(.*)\@/) {
+    if ($AddrTo =~ /<?(\S*)\@/) {
         $attempt = $1;
     }
     else {

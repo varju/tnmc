@@ -78,6 +78,7 @@ sub message_print {
     }
 
     my $delete_url = "delete_message.cgi?Id=$$msg{Id}";
+    my $reply_url = "reply_message.cgi?Id=$$msg{Id}";
 
     print "<table>\n";
     print "<tr>\n";
@@ -96,7 +97,16 @@ sub message_print {
     print "</tr>\n";
 
     print "<tr>\n";
-    print "  <td bgcolor='pink'><a href='$delete_url'>delete</a></td>\n";
+    print "  <td colspan=2>\n";
+    print "    <table><tr>\n";
+    print "    <td bgcolor='pink'><a href='$delete_url'>delete</a></td>\n";
+
+    if (!$$msg{Sent}) {
+        print "    <td bgcolor='pink'><a href='$reply_url'>reply</a></td>\n";
+    }
+
+    print "    </tr></table>\n";
+    print "  </td>\n";
     print "</tr>\n";
 
     print "<tr>\n";

@@ -32,6 +32,7 @@ $$message_ref{'Id'} = 0;
 
 # figure out the userid
 my $UserId = message_lookup_user($$message_ref{'AddrTo'});
+
 if (defined $UserId) {
     $$message_ref{'UserId'} = $UserId;
 }
