@@ -10,6 +10,7 @@ use lib '/usr/local/apache/tnmc';
 
 use tnmc::template;
 use tnmc::db;
+use tnmc::movies::movie;
 
 	#############
 	### Main logic
