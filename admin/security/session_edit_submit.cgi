@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::security::session;
 use tnmc::db;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -18,6 +19,7 @@ use tnmc::db;
 &db_connect();
 
 &tnmc::security::auth::authenticate();
+my $cgih = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('SessionInfo');
 

@@ -14,7 +14,7 @@ use tnmc::security::session;
 use tnmc::security::auth;
 use tnmc::user;
 use tnmc::util::date;
-use CGI;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -23,6 +23,7 @@ use CGI;
 &db_connect();
 
 &show_heading('Security - View Sessions');
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my $userID = $tnmc_cgi->param('userID');
 my @sessions;
@@ -57,6 +58,8 @@ sub show_session_list{
             <th>&nbsp;&nbsp;</td>
             <th>last online</td>
             <th>&nbsp;&nbsp;</td>
+            <th></td>
+            <th>&nbsp;&nbsp;</td>
         </tr>
     };
     
@@ -76,7 +79,7 @@ sub show_session_list{
         
         print qq{
             <tr>
-                <td nowrap>$font<a href="session_edit.cgi?sessionID=$sessionID">$user{username}</a></td>
+                <td nowrap>$font$user{username}</td>
                 <td></td>
                 <td nowrap>$font$session{'open'}</td>
                 <td></td>
@@ -87,6 +90,8 @@ sub show_session_list{
                 <td nowrap>$font$first_online</td>
                 <td></td>
                 <td nowrap>$font$last_online</td>
+                <td></td>
+                <td nowrap><a href="session_edit.cgi?sessionID=$sessionID">edit</a></td>
             </tr>
         };
         

@@ -12,6 +12,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::security::session;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -19,6 +20,7 @@ use tnmc::security::session;
 &db_connect();
 &header();
 
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 my $sessionID = $tnmc_cgi->param('sessionID');
 
 &show_session_admin_edit_form($sessionID);
