@@ -76,23 +76,29 @@ sub action_player{
 	my $type = $attendance->{type} || 'undef';
         my $date = &tnmc::util::date::format('day_time', $meet->{"date"});
         my $lastmod = &tnmc::util::date::format('mysql', $meet->{"date"});
-	my $no_edit = ($meet->{limits}->{time}  ||
-		       ($type eq 'yes' && ( $meet->{limits}->{T}  ||
-					    $meet->{limits}->{$roster->{gender}}
-					    )
-			));
+	my $player_shortage = ( $meet->{limits}->{T}  ||
+				$meet->{limits}->{$roster->{gender}}
+				);
+	my $no_edit = ($meet->{limits}->{time});
+	
+	my $player_shortage_warning;
+	if ($player_shortage){
+	    $player_shortage_warning = "<b>$meet->{totals}->{M}->{yes}/$meet->{totals}->{F}->{yes}</b>"; 
+	}
+	
 	my $font = ($meet->{limits}->{time})? "<font color=777777>" :"";
 	print qq{
 	    <tr><td>$font$date</td>
 		<td>$font$meet->{type}</td>
 		<td>$font$meet->{location}</td>
-	    };
+	};
 	
 	if ($no_edit){
 	    print qq{
 		<td>$font$tnmc::teams::attendance::type{$type}
-		    <input type=hidden name="$key" value="$type">
+		<input type=hidden name="$key" value="$type">
 		</td>
+		</tr>
 	    };
 	}
 	else{
@@ -100,15 +106,18 @@ sub action_player{
 		<td $bgcolor><select name="$key">
 	    };
 	    foreach my $option (@options){
-		my $selected = ($option->{key} eq $type)? "selected" : "";
+	        my $selected = ($option->{key} eq $type)? "selected" : "";
 		print qq{<option $selected value="$option->{key}">$option->{val}</option>};
 	    }
 	    print qq{
 		</select>
-		    <td><!-- lastmod: $lastmod -->$can_edit</td>
-		</td></tr>
+		$player_shortage_warning
+		</td>
+	        <td><!-- lastmod: $lastmod --></td>
+		</tr>
 	    };
 	}
+
     }
     print qq{
 	</table>
@@ -150,11 +159,8 @@ sub action_meet{
 	my $attendance = &tnmc::teams::attendance::get_attendance($meetID, $userID);
 	my $key = "type-$meetID-$userID";
 	my $type = $attendance->{type} || 'undef';
-	my $no_edit = ($meet->{limits}->{time}  ||
-		       ($type eq 'yes' && ( $meet->{limits}->{T}  ||
-					    $meet->{limits}->{$roster->{gender}}
-					    )
-			));
+	my $no_edit = ($meet->{limits}->{time});
+
 	print qq{
 	    <tr><td>$user->{username}</td>
 		<td>$roster->{gender}</td>
@@ -218,10 +224,43 @@ sub action_player_submit{
 	
 	# attendance changed: save to db
 	if ($attendance->{type} ne $val){
+
+	    # player bailing?
+	    if ($attendance->{type} eq 'yes'){
+		
+		# low on players?
+		my $meet = &tnmc::teams::meet::get_meet_extended($meetID);
+		my $roster = &tnmc::teams::roster::get_roster($meet->{teamID}, $userID);
+		
+		if ( $meet->{limits}->{T} || $meet->{limits}->{$roster->{gender}}){
+		    
+		    # send email to team
+		    
+		    my $user = &tnmc::user::get_user($userID);
+		    my $team = &tnmc::teams::team::get_team($meet->{teamID});
+		    $meet->{totals}->{$roster->{gender}}->{yes} --; ## fudge the numbers
+	            # $meet->{players_text} =~ s/\b$user->{username} //; ## fudge the users
+		    
+		    my $subject = "No $user->{username} on $meet->{date_text} ($meet->{totals}->{M}->{yes}/$meet->{totals}->{F}->{yes})";
+		    my $body = "\n\n$user->{username}\'s attendance was changed from yes to $val.\n\nThe roster for $meet->{date_text} now has $meet->{totals}->{M}->{yes} guys, $meet->{totals}->{F}->{yes} girls.\n\n";
+		    
+		    my %message =
+			( 'AddrTo' => $team->{emailList},
+			  'AddrFrom' => $team->{emailList},
+			  'Subject' => $subject,
+			  'Body' => $body,
+			  );
+		    &tnmc::mail::send::message_send(\%message);
+		    
+		}
+	    }
+	    
+	    # save to db
 	    $attendance->{type} = $val;
 	    $attendance->{timestamp} = undef();
 	    &tnmc::teams::attendance::set_attendance($attendance);
-	}
+	    
+ 	}
 	
     }
     
