@@ -10,7 +10,7 @@ sub format_date{
     return 'never' if !$date;
     
     # get the date 
-    $date =~ /^(\d{4})-?(\d{1,2})-?(\d{1,2}) ?(\d{1,2}):?(\d{1,2}):?(\d{1,2})$/;
+    $date =~ /^(\d{4})\D?(\d{1,2})\D?(\d{1,2})\D?(\d{1,2})\D?(\d{1,2})\D?(\d{1,2})$/;
     my ($yyyy, $mm, $dd, $h, $m, $s, @date);
     $yyyy = $1;
     $mm = $2;
@@ -23,6 +23,9 @@ sub format_date{
     # do the formatting
     if ($format eq 'numeric'){
         return sprintf("%4.4d/%2.2d/%2.2d %2.2d:%2.2d:%2.2d", @date);
+    }
+    elsif ($format eq 'mysql'){
+        return sprintf("%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d", @date);
     }
     elsif ($format eq 'day_time'){
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
