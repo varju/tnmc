@@ -89,7 +89,7 @@ use tnmc;
 	close (LINES);
 	$bytes_of_data = 'an unknown number of ';
 
-	open (LINES, 'cat /usr/local/apache/tnmc/* | wc -l |');
+	open (LINES, 'cd /usr/local/apache/tnmc && cat *.pl *.cgi | wc -l |');
 	$lines_of_code = <LINES>;
 	close (LINES);
 
