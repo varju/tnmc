@@ -48,17 +48,26 @@ sub del_user{
 }
 
 sub get_user{
-    my ($userID, $user_ref) = @_;
     
-    my $dbh = &tnmc::db::db_connect();
-    my $sql = "SELECT * FROM Personal WHERE userID = ?";
-    my $sth = $dbh->prepare($sql)
-        or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute($userID);
-    my $ref = $sth->fetchrow_hashref() || return;
-    $sth->finish;
-    
-    %$user_ref = %$ref;
+    if (scalar(@_) == 1){
+	## NEW-STYLE
+	require tnmc::db::item;
+	return &tnmc::db::item::getItem('Personal', 'userID', $_[0]);
+    }
+    else{
+	## OLD-STYLE
+	my ($userID, $user_ref) = @_;
+	
+	my $dbh = &tnmc::db::db_connect();
+	my $sql = "SELECT * FROM Personal WHERE userID = ?";
+	my $sth = $dbh->prepare($sql)
+	    or die "Can't prepare $sql:$dbh->errstr\n";
+	$sth->execute($userID);
+	my $ref = $sth->fetchrow_hashref() || return;
+	$sth->finish;
+	
+	%$user_ref = %$ref;
+    }
 }
 
 # sub get_user_cache;
@@ -132,6 +141,18 @@ sub get_user_list {
 
     return \%results;
 }
+
+my $by_username_cache;
+sub by_username ($$) {
+    my ($a, $b) = @_;
+    # get user list
+    if (! defined $by_username_cache){
+	my $hash = &get_user_list();
+	
+	map {$by_username_cache->{$hash->{$_}} = $_} keys %$hash;
+    }
     
+    return ($by_username_cache->{$a} cmp $by_username_cache->{$b});
+}
 
 1;

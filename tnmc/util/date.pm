@@ -4,6 +4,10 @@ use strict;
 
 #use Time::Local;
 
+sub format{
+    return &format_date(@_);
+}
+
 sub format_date{
     my ($format, $date) = @_;
     
@@ -30,10 +34,13 @@ sub format_date{
     elsif ($format eq 'day_time'){
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
                    'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
-        return sprintf("%s %s, %s:%2.2d:%2.2d", $mon, $dd, $h, $m, $s);
+        return sprintf("%s %s, %s:%2.2d", $mon, $dd, $h, $m);
     }
     elsif ($format eq 'full_time'){
         return sprintf("%2.2d:%2.2d:%2.2d", $h, $m, $s);
+    }
+    elsif ($format eq 'time'){
+        return sprintf("%2.2d:%2.2d", $h, $m);
     }
     elsif ($format eq 'short_date'){
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
@@ -44,6 +51,17 @@ sub format_date{
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
                    'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
         return  "$mon $dd";
+    }
+    elsif ($format eq 'short_wday'){
+        require tnmc::db;
+	my $dbh = &tnmc::db::db_connect();
+        
+        my $sql = "SELECT DATE_FORMAT(?, '%a %b %c')";
+        my $sth = $dbh->prepare($sql);
+        $sth->execute($date);
+        my ($ret) = $sth->fetchrow_array();
+        $sth->finish();
+        return $ret;
     }
     elsif ($format eq 'full_date'){
         require tnmc::db;

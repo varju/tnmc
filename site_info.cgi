@@ -7,15 +7,12 @@
 
 use strict;
 use lib '/tnmc';
+use tnmc;
 
 use tnmc::config;
-use tnmc::db;
-use tnmc::template;
 
 #############
 ### Main logic
-
-&tnmc::db::db_connect();
 
 &tnmc::template::header();
 
@@ -117,4 +114,3 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
 &tnmc::template::footer();
 
-&tnmc::db::db_disconnect();

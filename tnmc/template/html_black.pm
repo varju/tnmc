@@ -7,6 +7,7 @@ use strict;
 #
 
 BEGIN {
+    use tnmc::config;
     use tnmc::security::auth;
     
     use vars qw();
@@ -53,20 +54,59 @@ th {
     color: #00067F;
     text-decoration: none;
 }
+
+
+.tnmcMenu {
+    width: 120px;
+    position:absolute; 
+    font-size: 9pt;
+    padding: 10px;
+    text-align:left;
+    align: right;
+    background: 9999ff;
+    right: 10px;
+}
+
+.tnmcMain {
+    width: 100%;
+      padding-right: 130px;
+}
+
+body {
+
+}
 </style>
 <TITLE>TNMC Online</TITLE>
+<base href="$tnmc_url">
 </HEAD>
 
-<body bgcolor="000000" text="aaaacc" link="9999ff" vlink="6666cc">
-            
+<body bgcolor="000000" text="aaaacc" link="9999ff" vlink="6666cc"
 
+>
+    
     };
+
+    print qq{
+
+	    <div id="aboutDiv" class="tnmcMenu">
+	};
+    require tnmc::menu;
+    &tnmc::menu::new_nav_menu();
+
+    print qq{
+    </div>
+    <div id="mainDiv" class="tnmcMain">
+};
     
 }
 
 
 sub footer{
-    print "\n</body><\html>\n\n";
+
+    print qq{
+	</div>
+	</body><\html>
+	    };
 }
 
 
@@ -74,7 +114,7 @@ sub footer{
 sub show_heading{
     my ($heading_text) = @_;
     print qq{
-    <table border="0" cellpadding="1" cellspacing="0" bgcolor="448800" width="100%">
+    <table border="0" cellpadding="1" cellspacing="0" bgcolor="333333" width="100%">
       <tr><td nowrap>&nbsp;<font color="ffffff"><b>
       $heading_text</b></font></td></tr>
     </table>

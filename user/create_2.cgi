@@ -31,8 +31,17 @@ foreach my $key (@cols){
         $user{$key} = '';
     }
 }
+
+# some defaults
+$user{groupMovies} = '1';
+$user{groupPics} = '1';
+
+# for safetey's sake
 $user{groupDev} = '0';
+$user{groupAdmin} = '0';
 $user{userID} = 0;
+
+# add the user
 my $userID = &tnmc::user::set_user(%user);
 
 my $sql = "SELECT userID FROM Personal WHERE username = '$user{username}' ORDER BY userID DESC";

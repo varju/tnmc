@@ -16,6 +16,23 @@ BEGIN
 # module routines
 #
 
+sub set_template{
+    my ($template) = @_;
+    $style = $template
+}
+
+sub get_template{
+    return $style;
+}
+
+sub list_templates{
+    my @styles = qw(html_orig
+		    html_black
+		    html_blat
+		    );
+    return @styles;
+}
+
 sub AUTOLOAD {
     # pass the buck onto the template style we're using
     my $sub = $AUTOLOAD;

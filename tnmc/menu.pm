@@ -72,52 +72,33 @@ sub new_nav_menu{
         &show_menu_item( 0, "", "", "");
     }
 
-    if ($USERID{groupTrusted} >= 1) {
-        if (&show_menu_item( 0, "news/", "News", "")) {
-            if ($USERID{groupAdmin}) {
-                &show_menu_item( 1, "news/add_news.cgi", "Add News", "");
-            }
-        }
-        &show_menu_item( 0, "", "", "");
+    if (&show_menu_item( 0, "news/", "News", "")) {
+	if ($USERID{groupAdmin}) {
+	    &show_menu_item( 1, "news/add_news.cgi", "Add News", "");
+	}
     }
+    &show_menu_item( 0, "", "", "");
     
-    if ($USERID{groupAdmin}) {
-        if (&show_menu_item( 0, "mail/", "Mail", "")) {
-            &show_menu_item( 1, "mail/compose_message.cgi", "Compose", "");
-            &show_menu_item( 1, "mail/show_prefs.cgi", "Prefs", "");
-        }
-        &show_menu_item( 0, "", "", "");
+    &show_menu_item( 0, "broadcast/", "Broadcast", "");
+    &show_menu_item( 0, "", "", "");
+    
+    if (&show_menu_item( 0, "teams/", "Teams", "")) {
+	&show_menu_item( 1, "teams/team_mod.cgi?ACTION=add", "Add Team", "");
     }
+    &show_menu_item( 0, "", "", "");
     
-    if ($USERID{groupTrusted} >= 1){
-        &show_menu_item( 0, "broadcast/", "Broadcast", "");
-        &show_menu_item( 0, "", "", "");
+    if (&show_menu_item( 0, "pics/", "Pics", "")){
+	&show_menu_item( 1, "pics/album_index.cgi", "Albums", "");
+	&show_menu_item( 1, "pics/search_index.cgi", "Search", "");
+	&show_menu_item( 0, "", "", "");
+	&show_menu_item( 1, "pics/upload_index.cgi", "Upload Pics", "");
+	&show_menu_item( 1, "pics/album_add.cgi", "Add Album", "");
     }
-    
-    if ($USERID{groupTrusted} >= 1){
-        &show_menu_item( 0, "fieldtrip/", "FieldTrips", "");
-        &show_menu_item( 0, "", "", "");
-    }
-    
-    if ($USERID{groupCabin}){
-        &show_menu_item( 0, "cabin/", "Cabin", "");
-        &show_menu_item( 0, "", "", "");
-    }
-    
-    if ($USERID{groupPics}){
-        if (&show_menu_item( 0, "pics/", "Pics", "")){
-            &show_menu_item( 1, "pics/album_index.cgi", "Albums", "");
-            &show_menu_item( 1, "pics/search_index.cgi", "Search", "");
-            &show_menu_item( 0, "", "", "");
-            &show_menu_item( 1, "pics/upload_index.cgi", "Upload Pics", "");
-            &show_menu_item( 1, "pics/album_add.cgi", "Add Album", "");
-        }
-        &show_menu_item( 0, "", "", "");
+    &show_menu_item( 0, "", "", "");
         
-    }
     
     ## Random-Pic
-    if ($USERID{groupPics} && ! $USERID{'I_am_a_misanthrope'}){
+    if (! $USERID{'I_am_a_misanthrope'}){
         require tnmc::pics::random;
         &tnmc::pics::random::show_random_pic(); 
         &show_menu_item( 0, "", "", "");

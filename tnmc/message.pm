@@ -130,19 +130,19 @@ sub show_conv{
     my @msg_list = conv_get_msg_list($convID);
     
     ## display
-    &tnmc::template::show_heading("Messages");
     
     #show msgs
-    print qq{<table width="100%">};
+    print qq{<table width="100%" cellpadding=0 cellspacing=0 border=0>};
+    print qq{<tr><th colspan=3>Messages</th></tr>};
     foreach my $msgID (@msg_list){
 	my $msg = &get_msg($msgID);
 	my $user = &tnmc::user::get_user_cache($msg->{sender});
 	my $date = &tnmc::util::date::format_date("day_time", $msg->{date_posted});
 	print qq{
 	    <tr valign="top">
-		<td>$user->{username}</td>
+		<td nowrap>$user->{username}&nbsp;</td>
 		<td>$msg->{'body'}</td>
-		<td>$date</td>
+		<td nowrap>$date</td>
 	    </tr>
 	    };
     }
@@ -151,10 +151,10 @@ sub show_conv{
 	<tr valign="top"><td>
 	<form action="message/msg_post.cgi" method="post">
 	    <input type="hidden" name="convID" value="$convID">
-	    <b>$tnmc::security::auth::USERID{username}</b>
-		</td><td>
+	    <b>$tnmc::security::auth::USERID{username}&nbsp;</b>
+		</td><td nowrap>
 	       <input type="text" size="40" name="body">
-	    <input type="submit" value="post">
+	    <input type="submit" value="post msg">
 	    </form>
 		</td></tr>
 		
