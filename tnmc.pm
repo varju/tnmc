@@ -10,6 +10,7 @@ use strict;
 use DBI;
 use CGI;
 
+use tnmc::cookie;
 use tnmc::db;
 
 BEGIN
@@ -17,8 +18,7 @@ BEGIN
     use Exporter ();
     
     use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
-                $USERID_LAST_KNOWN $USERID %USERID $LOGGED_IN 
-                $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
+                $HOMEPAGE);
     
     @ISA = qw(Exporter);
     
@@ -38,11 +38,15 @@ BEGIN
                  &list_users
                  &show_bulletins
 
-                 $USERID
-                 %USERID
-                 $LOGGED_IN
-                 $tnmc_cgi
                  %user
+
+                 get_cookie 
+                 $tnmc_cgi
+                 %tnmc_cookie_in
+                 $USERID 
+                 $LOGGED_IN 
+                 $USERID_LAST_KNOWN 
+                 %USERID
 
                  db_connect 
                  db_disconnect 
@@ -53,22 +57,6 @@ BEGIN
                  );
 
     %EXPORT_TAGS = ( );
-}
-
-##########################################################
-sub get_cookie{
-
-	$tnmc_cgi = new CGI;
-	
-	%tnmc_cookie_in = $tnmc_cgi->cookie('TNMC');
-	if ($tnmc_cookie_in{'logged-in'} eq '1'){
-		$USERID = $tnmc_cookie_in{'userID'};
-	        &get_user($USERID, \%USERID);
-                $ENV{REMOTE_USER} = $USERID{username};
-		$LOGGED_IN = $tnmc_cookie_in{'logged-in'};
-	}else{
-		$USERID_LAST_KNOWN = $tnmc_cookie_in{'userID'};
-	}
 }
 
 ##########################################################
