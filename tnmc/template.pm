@@ -141,7 +141,7 @@ SIZE="-2">
 	{	print "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<br>";
 	}
 
-	print q{
+	print qq{
 
 	</font>
 	</TD>

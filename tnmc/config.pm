@@ -7,7 +7,7 @@ use strict;
 #
 
 use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $tnmc_hostname $tnmc_url);
 
 @ISA = qw(Exporter);
 @EXPORT = qw($tnmc_hostname $tnmc_url);
@@ -17,7 +17,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 # modules vars
 #
 
-my $tnmc_hostname = 'tnmc.dhs.org';
-my $tnmc_url = "http://$tnmc_hostname";
+$tnmc_hostname = 'tnmc.dhs.org';
+$tnmc_url = "http://$tnmc_hostname";
 
 1;
