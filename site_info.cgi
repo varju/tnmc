@@ -93,11 +93,10 @@ use tnmc;
 	$lines_of_code = <LINES>;
 	close (LINES);
 
-	open (LINES, "ls -l /usr/local/apache/tnmc/tnmc.tar.gz|");
-	$flastmod = <LINES>;
-	$flastmod = substr ($flastmod, 35, 6);
-	close (LINES);
-
+        @file_status = stat("/usr/local/apache/tnmc/tnmc.tar.gz");
+        use POSIX qw(strftime);
+        $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
+        
 	print qq{
 			$lines_of_code lines of perl code<br>
 			$bytes_of_data bytes of data stored<br>
@@ -115,11 +114,11 @@ use tnmc;
 			<b>TNMC<i>Online</i> is open source! :)</b>
 			<p>
 			If you want to use the code, please send
-			an email to tnmc @ tnmc.webct.com
+			an email to scottt @ interchange.ubc.ca
 
 
 			<pre>
-Copyright (C) 1999  Scott Thompson, Jeff Steinbok and the rest of TNMC
+Copyright (C) 1999-2000  Scott Thompson, Jeff Steinbok and the rest of TNMC
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
