@@ -75,7 +75,7 @@ sub mybc_get_movie_info {
     my $text = $res->content;
 
     if ($text =~ s/.*?<font face="Verdana, Arial, sans-serif" size="1">//s) {
-        $text =~ /<font size=\"?3\"?><b>((.)*)<\/b><\/font>/im;
+        $text =~ /<font size=\"?4\"?><b>((.)*)<\/b><\/font>/im;
         $info{title} = $1;
         $info{title} =~ s/^(The|A)\s+(.*)$/$2, $1/;
 
