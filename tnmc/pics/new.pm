@@ -211,11 +211,7 @@ sub show_album_nav_menu_basic{
                     <option value="list">list
                     <option value="thumbnail">thumbnail
                     <option value="grid">grid
-                    };
-                    print qq{
-                        <option value="admin">admin
-                    } if (&access_pics_admin());
-                    print qq{
+                    <option value="admin">admin
                     </select>
                     </td>
                 <td>
@@ -310,11 +306,7 @@ sub show_album_nav_menu_full{
                     <option value="list">list
                     <option value="thumbnail">thumbnail
                     <option value="grid">grid
-                    };
-                    print qq{
-                        <option value="admin">admin
-                    } if (&access_pics_admin());
-                    print qq{
+                    <option value="admin">admin
                     </select>
                     </td>
                 <td>
@@ -377,7 +369,7 @@ sub show_piclist{
     my $limitContent = delete($nav{limitContent});
     
     ## security: make sure the person should be given admin mode
-    if ($listType eq 'admin' && ! &access_pics_admin()){
+    if ($listType eq 'admin' && ! $USERID){
         $listType = 'grid';
     }
     
@@ -458,7 +450,8 @@ sub show_piclist{
         my $img_url = &get_pic_url($picID, ['mode'=>$listSize]);
         my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
         my $pic_src = $img_src;
-        
+        my $can_edit = ( ($pic{'type_public'}) ||
+                         ($pic{'ownerID'} eq $tnmc::security::auth::USERID) );
         
         ### showpic: list
         if ($listType eq 'list'){
@@ -509,9 +502,9 @@ sub show_piclist{
                 </td>
             };
         }
-        ### showpic: admin
-        elsif($listType eq 'admin'){
-           
+        ### showpic: admin - can edit
+        elsif( ($listType eq 'admin') && $can_edit){
+            
             my %owner;
             &get_user($pic{ownerID}, \%owner);
             
@@ -558,8 +551,31 @@ sub show_piclist{
                 </td>
             };
         }
+        ### showpic: admin - can NOT edit
+        elsif ($listType eq 'admin'){
+            
+            my $DISPLAYtitle = $pic{title} || '(untitled)';
+            my $pic_desc;
+            $pic_desc .= $pic{description} . '<br>' if ($pic{description});
+            $pic_desc .= $pic{comments} . '<br>' if ($pic{comments});
+            
+            my $show_listContent = pack "a" . ($pic{rateContent} + 3), "*****";
+            
+            print qq{
+                <td valign="top"><a href="$slide_url">
+                    <img $pic_src border="0" ></a>
+                    <br><br></td>
+                <td valign="top">
+                    <b><a href="$slide_url">$DISPLAYtitle</a></b><br>
+                    $pic_desc
+                    <br>
+                    $i $show_listContent ($pic{width}&nbsp;x&nbsp;$pic{height})<br>
+                    $pic{timestamp}<br>
+                </td>
+            };
+        }
     }
-
+    
     print qq{
         </table>
     };
