@@ -112,6 +112,7 @@ sub do_bulk_edit{
     ## save all the pics to the db
     foreach $picID (keys(%PICS)){
         &set_pic( %{$PICS{$picID}} );
+        &tnmc::pics::pic::update_cache_pub($picID);
     }
     
     ## save all the links to the db
