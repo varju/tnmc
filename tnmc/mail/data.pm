@@ -95,7 +95,7 @@ sub get_message {
     # note: we use the UserId for security purposes
     
     my ($sql, $sth);
-    my %message = undef;
+    my %message;
 
     $sql = "SELECT Id, DATE_FORMAT(Date, '%Y-%m-%d %r'), AddrTo, AddrFrom, 
                    ReplyTo, Subject, Body, Header, Sent

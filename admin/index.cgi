@@ -59,6 +59,8 @@ sub show_edit_users_list{
                 </td>
         };
         foreach $key (keys %user){
+            next unless defined $user{$key};
+
             print "<td>$user{$key}</td>";
         }
         print qq{</tr>\n};
@@ -71,6 +73,8 @@ sub show_edit_users_list{
     };
 
     foreach $key (keys %user){
+        next unless defined $user{$key};
+
         $len = length($user{$key}) + 1;
         print qq{
             <td><input type="text" name="$key" size="$len"></td>

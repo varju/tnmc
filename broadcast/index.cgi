@@ -43,8 +43,11 @@ my @users;
     my $i = 0;
 
     foreach my $userid (@users){
-            my %user;
+        my %user;
         &get_user($userid, \%user);
+
+        next unless $user{username};
+
         print qq{
             <td>
             <input type="checkbox" name="user-$userid" value="1">$user{username}

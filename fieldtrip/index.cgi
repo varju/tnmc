@@ -113,7 +113,7 @@ sub show_trip{
     while (@row = $sth->fetchrow_array()){
         $i ++;
         &get_user($row[0], \%user);
-        &get_tripSurvey($tripID, @row[0], \%survey);
+        &get_tripSurvey($tripID, $row[0], \%survey);
 
         my $myCost = ($EXPshare / $Interest3) + ($EXPpro / $EXPsum * $survey{MoneyExpensePortion});
         my $myBalance = $myCost - $survey{MoneyExpenseProRated} - $survey{MoneyExpenseShared} - $survey{MoneyPaid};

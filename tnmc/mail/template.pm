@@ -41,6 +41,11 @@ sub messages_print_list {
     foreach my $msg (@$messages_ref) {
         my $url = "view_message.cgi?Id=$$msg{Id}";
 
+        $$msg{AddrTo} = '' unless $$msg{AddrTo};
+        $$msg{AddrFrom} = '' unless $$msg{AddrFrom};
+        $$msg{Subject} = '' unless $$msg{Subject};
+        $$msg{Date} = '' unless $$msg{Date};
+
         my $tofrom;
         if ($$msg{Sent}) {
             $tofrom = "to: " . mail_format_from($$msg{AddrTo},$from_format);
@@ -157,6 +162,11 @@ sub mail_format_from {
 
 sub message_print_compose {
     my ($message_ref) = @_;
+
+    $$message_ref{AddrFrom} = '' unless $$message_ref{AddrFrom};
+    $$message_ref{AddrTo} = '' unless $$message_ref{AddrTo};
+    $$message_ref{Subject} = '' unless $$message_ref{Subject};
+    $$message_ref{Body} = '' unless $$message_ref{Body};
 
     print <<EOT;
 <form method=post action="send_message.cgi">

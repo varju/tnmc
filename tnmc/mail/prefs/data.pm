@@ -59,7 +59,7 @@ sub mail_get_pref {
     }
     $sth->finish();
 
-    return $Value;
+    return $Value || '';
 }
 
 sub mail_get_all_prefs {

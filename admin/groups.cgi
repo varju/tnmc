@@ -36,6 +36,7 @@ use tnmc;
 sub show_group_selector{
 
     my ($group) = @_;
+    $group = '' if !defined $group;
 
     my @groups = ();
 
