@@ -42,7 +42,7 @@ sub mybc_get_movie_list {
     my @list = split("\n", $text);
     
     foreach my $item (@list){
-        $item =~ /.+\"(\d+)\"\>(.*)$/;
+        $item =~ /.+\"([\da]+)\"\>(.*)$/;
         next unless $1;
         next unless $2;
         $results{$1} = $2;
