@@ -6,41 +6,47 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::db;
+use tnmc::template;
+use tnmc::movies::movie;
 
 	#############
 	### Main logic
 
 	&header();
 
-	%movie;	
-	$cgih = new CGI;
-	$movieID = $cgih->param('movieID');
+	my %movie;	
+	my $cgih = new CGI;
+	my $movieID = $cgih->param('movieID');
 	
 	&db_connect();
        	&get_movie($movieID, \%movie);
 	&db_disconnect();
 
+my ($checkboxSeen, $checkboxNotSeen);
 	if ($movie{statusSeen}){
 		$checkboxSeen = 'CHECKED';
 	}else{
 		$checkboxNotSeen = 'CHECKED';
 	}
 
+my ($checkboxShowing, $checkboxNotShowing);
 	if ($movie{statusShowing}){
 		$checkboxShowing = 'CHECKED';
 	}else{
 		$checkboxNotShowing = 'CHECKED';
 	}
-
+my ($checkboxNew, $checkboxNotNew);
 	if ($movie{statusNew}){
 		$checkboxNew = 'CHECKED';
 	}else{
 		$checkboxNotNew = 'CHECKED';
 	}
 
+my ($checkboxBanned, $checkboxNotBanned);
 	if ($movie{statusBanned}){
 		$checkboxBanned = 'CHECKED';
 	}else{

@@ -5,9 +5,15 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
+use tnmc::movies::movie;
+use tnmc::movies::show;
 
 	#############
 	### Main logic
@@ -26,13 +32,13 @@ require 'MOVIES.pl';
 
 #########################################
 sub show_seen_movie_list{
-	my (@movies, %movie, $movieID, $key);
+	my (@movies, %movie, $movieID, $key, %USER, $isAdmin);
 
 	&list_movies(\@movies, "WHERE statusSeen = '1'", 'ORDER BY date DESC, title');
-	&get_movie($movie[0], \%movie);
+#	&get_movie($movie[0], \%movie);
 
 	# it occurs to me that there's a proper way to do this... oh well, too late now.
-	$i = 0;
+	my $i = 0;
 	foreach (@movies){
 		$i++;
 	}
@@ -48,7 +54,7 @@ sub show_seen_movie_list{
                 <table cellspacing="0" cellpadding="1" border="0" width="100%">
 	};
 
-	$year = '';
+	my $year = '';
         foreach $movieID (@movies){
                 &get_movie($movieID, \%movie);
 		
@@ -59,10 +65,10 @@ sub show_seen_movie_list{
 				<tr><th colspan="5">$year</th></tr>
 			};
 		}
-		$sql = "SELECT DATE_FORMAT('$movie{date}', '%b %d')";
-		$sth = $dbh_tnmc->prepare($sql); 
+		my $sql = "SELECT DATE_FORMAT('$movie{date}', '%b %d')";
+		my $sth = $dbh_tnmc->prepare($sql); 
 		$sth->execute();
-		($dateString) = $sth->fetchrow_array();
+		my ($dateString) = $sth->fetchrow_array();
 		print qq{
 			<tr>
 				<td nowrap>$movie{title}</td>

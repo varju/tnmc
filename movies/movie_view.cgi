@@ -5,9 +5,11 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::template;
+use tnmc::db;
 
 	#############
 	### Main logic
@@ -16,9 +18,9 @@ require 'MOVIES.pl';
 
 	&show_heading("movie detail");
 
-	%movie;	
-	$cgih = new CGI;
-	$movieID = $cgih->param('movieID');
+	my %movie;	
+	my $cgih = new CGI;
+	my $movieID = $cgih->param('movieID');
 	
 	&show_movie_extended($movieID);
 	
@@ -29,7 +31,7 @@ require 'MOVIES.pl';
 sub show_movie
 {
 	my ($movieID, $junk) = @_;	
-	my (@cols, $movie, $key);
+	my (@cols, $movie, $key, $mybcID);
 	
 	if ($movieID)
 	{ 
@@ -80,7 +82,7 @@ sub show_movie
 sub show_movie_extended
 {
 	my ($movieID, $junk) = @_;	
-	my (@cols, $movie, %movie, $key);
+	my (@cols, $movie, %movie, $key, $mybcID);
 	
 	if ($movieID)
 	{ 

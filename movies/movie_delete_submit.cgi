@@ -6,16 +6,17 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
 
+use tnmc::db;
+use tnmc::movies::movie;
 
 	#############
 	### Main logic
 
-	$cgih = new CGI;
-	$movieID = $cgih->param('movieID');	
+	my $cgih = new CGI;
+	my $movieID = $cgih->param('movieID');	
 	
 	if ($movieID)
 	{ 	&db_connect();

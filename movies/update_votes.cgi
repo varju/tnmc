@@ -5,9 +5,12 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::movies::vote;
 
 	#############
 	### Main logic
@@ -15,18 +18,18 @@ require 'MOVIES.pl';
 	&db_connect();
 
 
-      	  	$cgih = new CGI;
-		$userID = $cgih->param('userID');
-        	@params =  $cgih->param();
+      	  	my $cgih = new CGI;
+		my $userID = $cgih->param('userID');
+        	my @params =  $cgih->param();
 
-		%vote_count = {};
-		$favoriteMovie = $cgih->param('favoriteMovie');
+		my %vote_count = {};
+		my $favoriteMovie = $cgih->param('favoriteMovie');
 
 
 		### count the number of positive/negative/neutral votes.
 		foreach $_ (@params){
 			if (! /^v/) { next; }
-			$type = $cgih->param($_);
+			my $type = $cgih->param($_);
 			$vote_count{$type} += 1;
 		}
 
@@ -62,8 +65,8 @@ require 'MOVIES.pl';
 
 		if ($favoriteMovie ne ''){
 			### Kill old Fave.
-			$sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
-			$sth = $dbh_tnmc->prepare($sql);
+			my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
+			my $sth = $dbh_tnmc->prepare($sql);
 			$sth->execute;
 			
 			### Set new Fave.

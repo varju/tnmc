@@ -5,19 +5,22 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::db;
+use tnmc::movies::movie;
 
 	#############
 	### Main logic
 	
-	$cgih = new CGI;
+        my %movie;
+	my $cgih = new CGI;
 	
 	&db_connect();
 
-	@cols = &db_get_cols_list($dbh_tnmc, 'Movies');
- 	foreach $key (@cols)
+	my @cols = &db_get_cols_list($dbh_tnmc, 'Movies');
+ 	foreach my $key (@cols)
 	{
 	 	$movie{$key} = $cgih->param($key);
 	}

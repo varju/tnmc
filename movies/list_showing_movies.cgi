@@ -5,9 +5,15 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::movies::movie;
+use tnmc::movies::show;
+use tnmc::movies::vote;
 
 	#############
 	### Main logic
@@ -29,12 +35,7 @@ sub show_showing_movie_list{
 	my (@movies, %movie, $movieID, $key);
 
 	&list_movies(\@movies, "WHERE statusShowing = '1'", 'ORDER BY title');
-	&get_movie($movie[0], \%movie);
 
-	if ($USERID{groupAdmin}){
-		$isAdmin = 'e';
-	}
-	
 	&show_heading("All Movies that are Currently Showing in Vancouver");
 	print qq{
 		<font color="0000ff">Blue means we've seen it</font><br>
@@ -43,7 +44,7 @@ sub show_showing_movie_list{
                 <table cellspacing="0" cellpadding="1" border="0" width="100%">
 	};
 
-	$year = '';
+	my $year = '';
         foreach $movieID (@movies){
 		my %movie = ();
                 &get_movie_extended($movieID, \%movie);
@@ -69,7 +70,6 @@ sub show_showing_movie_list{
 					'resizable,height=350,width=450');
 					index.cgi
 					">v</a>
-					<a href="movie_edit_admin.cgi?movieID=$movieID">$isAdmin</a></td>
 			</tr>
 		};
         }
