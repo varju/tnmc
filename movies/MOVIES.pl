@@ -80,7 +80,45 @@ sub show_movieMenu
 
 }
 
+##########################################################
+sub show_favorite_movie_select{
 
+	my ($effectiveUserID) = @_;
+	my ($sql, $sth, @row, $favoriteMovie, $faveSel);
+
+	print qq{
+		<select name="favoriteMovie">
+		<option value="0">none
+		<option value="0">
+	};
+
+	$sql = "SELECT movieID
+	         FROM MovieVotes
+	        WHERE userID = '$effectiveUserID' AND type = '2'";
+	$sth = $dbh_tnmc->prepare($sql);
+	$sth->execute;
+	($favoriteMovie) = $sth->fetchrow_array();
+
+	$sql = "SELECT movieID, title
+	         FROM Movies
+	        WHERE statusShowing = '1' AND statusSeen != '1'
+	        ORDER BY title";
+
+	$sth = $dbh_tnmc->prepare($sql);
+	$sth->execute;
+
+	while (@row = $sth->fetchrow_array()){
+	        if ($favoriteMovie == $row[0]){         $faveSel = 'selected';}
+	        else{                                   $faveSel = '';}
+	        print qq{               <option value="$row[0]" $faveSel>$row[1]\n};
+	}
+
+        $sth->finish;
+
+	print qq{
+		</select>
+	};
+}
 
 ##########################################################
 sub list_my_attendance{
@@ -198,12 +236,11 @@ sub show_current_movie
                 {
 			<!-- no movie selected -->
                 };
-                return;
+                return (0);
         }
-        %movie = {};
-        &get_movie($current_movie, \%movie);
-
-	        &show_heading ("Movie for $next_tuesday_string");
+	else{
+	        %movie = {};
+	        &get_movie($current_movie, \%movie);
 
                 print qq{
 		        <TABLE CELLSPACING=0 CELLPADDING=0 width="100">
@@ -239,6 +276,8 @@ sub show_current_movie
                         </TABLE>
                         <P>
                 };
+		return (1);
+	}
 }
 
 ###################################################################
@@ -256,6 +295,68 @@ sub get_attendance{
 
 	$condition = "userID = '$userID'";
 	&db_get_row($attendance_ref, $dbh_tnmc, 'MovieAttendance', $condition);
+}
+
+###################################################################
+sub set_night{
+	my (%night, $junk) = @_;
+	my ($sql, $sth, $return);
+	
+	&db_set_row(\%night, $dbh_tnmc, 'MovieNights', 'nightID');
+
+	if (!$night{nightID}){
+		$sql = "SELECT nightID FROM MovieNights WHERE date = " . $dbh_tnmc->quote($night{date});
+		$sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+		$sth->execute;
+		($return) = $sth->fetchrow_array();
+		$sth->finish;
+	}else{
+		$return = $night{nightID};
+	}
+	return $return;
+}
+
+###################################################################
+sub get_night{
+	my ($nightID, $night_ref, $junk) = @_;
+	my ($condition);
+
+	$condition = "(nightID = '$nightID' OR date = '$nightID')";
+	print $condition;
+	&db_get_row($night_ref, $dbh_tnmc, 'MovieNights', $condition);
+}
+
+###################################################################
+sub get_next_night{
+	my ($date, $junk) = @_;
+	my ($sql, $sth, $return);
+
+	if (!$date){
+		$sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d')";
+		$sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+		$sth->execute;
+		($date) = $sth->fetchrow_array();
+	}
+
+	$sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= '$date' LIMIT 1";
+	$sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+	$sth->execute;
+	($return) = $sth->fetchrow_array();
+	
+	return $return;
+}
+
+###################################################################
+sub get_next_nightID{
+	my ($junk) = @_;
+	my ($sql, $sth, $return);
+
+	$sql = "SELECT nightID FROM MovieNights WHERE date >= DAVE_FORMAT(NOW(), %Y%m%d') ORDER BY nightID LIMIT 1";
+	$sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+	$sth->execute;
+	($return) = $sth->fetchrow_array();
+
+	return $return;
 }
 
 ###################################################################
@@ -284,6 +385,130 @@ sub get_movie{
 
 	$condition = "(movieID = '$movieID' OR title = '$movieID')";
 	&db_get_row($movie_ref, $dbh_tnmc, 'Movies', $condition);
+}
+
+##########################################################
+sub get_movie_extended{
+
+	my ($movieID, $movie, $userID, $junk) = @_;
+
+	### Get basic info.
+       	&get_movie($movieID, $movie);
+
+
+	my $thisTues = &get_next_night();
+	my $nextTues = &get_next_night($thisTues);
+	
+	my ($sql, $sth, @row);
+
+	$sql = "SELECT p.userID, p.username, v.type,
+                       DAYOFYEAR(p.birthdate) - DAYOFYEAR($thisTues),
+                       a.movieDefault, a.movie$thisTues, a.movie$nextTues
+                 FROM           MovieVotes as v
+                      LEFT JOIN Personal as p USING (userID)
+                      LEFT JOIN MovieAttendance as a USING (userID)
+		WHERE v.movieID = '$movieID'
+		ORDER BY p.username ASC";
+
+	$sth = $dbh_tnmc->prepare($sql);
+	$sth->execute();
+
+	my ($VuserID, $Vperson, $Vtype, $Ubday, $Udefault, $Uthis, $Unext);
+
+	# find out who voted for the movie...
+	while (@row = $sth->fetchrow_array()){
+
+
+		$VuserID = $row[0];
+		$Vperson = $row[1];
+		$Vtype = $row[2];
+		$Ubday = $row[3];
+		$Udefault = $row[4];
+		$Uthis = $row[5];
+		$Unext = $row[6];
+
+		if ( ($Vperson eq 'demo')
+		   && ($userID != 38)){
+			#
+			# Do nothing
+			#
+		}
+			
+		elsif (	($Uthis eq 'no')
+			|| ($Uthis eq '' and $Udefault eq 'no')	){
+
+			if (	($Unext eq 'no')
+				|| ($Unext eq '' and $Udefault eq 'no')	){
+
+				if ($Vtype >= 1){
+					$movie->{votesHTML} .= "<font color='cccccc'>$Vperson</font> ";
+					$movie->{votesText} .= "[$Vperson] ";
+					$movie->{votesForLost} ++;
+				}
+			}
+			elsif ($Vtype == 1){
+				$movie->{votesHTML} .= "<font color='888888'>$Vperson</font> ";
+				$movie->{votesText} .= "[$Vperson] ";
+				$movie->{votesForAway} ++;
+			}
+			elsif ($Vtype == 2){
+				$movie->{votesHTML} .= "<font color='888888'><b>$Vperson</b></font> ";
+				$movie->{votesText} .= "[$Vperson!] ";
+				$movie->{votesFaveAway} ++;
+			}
+		}
+		elsif ($Vtype == 2){
+		    if ($Ubday ne '' && $Ubday <= 3 && $Ubday >= -3){
+			$movie->{votesHTML} .= "<b><font style='background-color: #ff88ff'>&nbsp;$Vperson&nbsp;</font></b> ";
+			$movie->{votesText} .= "***${Vperson}*** ";
+			$movie->{votesFaveBday} ++;
+			
+		    }else{
+			$movie->{votesHTML} .= "<b>$Vperson</b> ";
+			$movie->{votesText} .= "${Vperson}! ";
+			$movie->{votesFave} ++;
+		    }
+		}
+		elsif ($Vtype == 1){
+			$movie->{votesHTML} .= "$Vperson ";
+			$movie->{votesText} .= "${Vperson} ";
+			$movie->{votesFor} ++;
+		}
+		elsif ($Vtype == -1){
+			$movie->{votesHTML} .= "<font color='ff2222'>$Vperson</font> ";
+			$movie->{votesText} .= "(${Vperson}) ";
+			$movie->{votesAgainst} ++;
+		}
+
+	}
+	$sth->finish();
+
+
+	### Do the rank stuff
+	$movie->{order} += 1.0 *  $movie->{votesFor};
+	$movie->{order} += 1.5 *  $movie->{votesFave};
+	$movie->{order} += 10  *  $movie->{votesFaveBday};
+	$movie->{order} -= 0.5 *  $movie->{votesAgainst};
+	$movie->{order} -= 0.4 *  $movie->{votesForAway};
+	$movie->{order} -= 0.8 *  $movie->{votesFaveAway};
+
+	# encourage movies with good ratings!
+	my $rating = $movie->{rating};
+	if ($rating != 0){
+		$rating -= 2.5;
+		if ($rating >= 1){
+			$movie->{order} ++;
+			$movie->{order} *=     1 + ( $rating / 5 );
+		}else{
+			$movie->{order} +=        $rating;
+		}
+	}
+
+	### stoopid f---ed up rounding math.
+	$movie->{rank} = $movie->{order};
+	if ($movie->{rank} > 0)	{	$movie->{rank} += 0.5; }
+	$movie->{rank} = int($movie->{rank});
+
 }
 
 ###################################################################
@@ -347,221 +572,7 @@ sub list_votes_by_movie{
         return $return;
 }
 
-###################################################################
-# sub show_current_tally_email{
-#
-#        my ($movieID, %movie, @movies, @votes, $vote, $num_votes, $userID, %user, @junk);
-#
-#        print "\nnew releases:\n============\n";
-#        list_movies(\@movies, "WHERE status = 'just released'", '');
-#
-#        foreach $movieID (@movies){
-#                get_movie($movieID, \%movie);
-#                $num_votes = list_votes_by_movie(\@votes, $movieID);
-#                print "$movie{title} \n $movie{description}\n\n";
-#        }
-#
-#        print "\nnow showing:\n============\n";
-#        list_movies(\@movies, "WHERE status = 'showing' OR status = 'just released'", '');
-#
-#        @movies = sort  {       list_votes_by_movie(\@junk, $b)
-#                        <=>     list_votes_by_movie(\@junk, $a)}
-#                        @movies ;
-#        foreach $movieID (@movies){
-#                get_movie($movieID, \%movie);
-#                $num_votes = list_votes_by_movie(\@votes, $movieID);
-#                print "$num_votes  $movie{title} \t{ ";
-#                foreach $userID (@votes){
-#                        &get_user($userID, \%user); 
-#                        $vote = &get_vote($movieID, $userID);
-#                        if ($vote > 0){         print "$user{username} ";       }                       
-#                        if ($vote < 0){         print "!$user{username} ";      }
-#                }
-#                print "}\n";
-#        }
-#
-#        print "\ncoming soon:\n============\n";
-#        list_movies(\@movies, "WHERE status = 'coming soon'", '');
-#        @movies = sort  {       list_votes_by_movie(\@junk, $b)
-#                        <=>     list_votes_by_movie(\@junk, $a)}
-#                        @movies ;
-#        foreach $movieID (@movies){
-#                get_movie($movieID, \%movie);
-#                $num_votes = list_votes_by_movie(\@votes, $movieID);
-#                print "$num_votes  $movie{title}\n        { ";
-#                foreach $userID (@votes){
-#                        &get_user($userID, \%user);
-#                        $vote = &get_vote($movieID, $userID);
-#                        if ($vote > 0){         print "$user{username} ";       }
-#                        if ($vote < 0){         print "!$user{username} ";      }
-#                }
-#                print "}\n";
-#        }
-#
-# }
-#
-####################################################################
-# sub get_vote_stats{
-#        my ($stats_ref, $movieID, $junk) = @_;
-#        my (@row, $sql, $sth, $return, $vote, $userID, %user);
-#
-#        %$stats_ref = {};
-#        $return = '0';
-#
-#        $sql = "SELECT userID, type from MovieVotes where movieID = '$movieID'";
-#        $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-#        $sth->execute;
-#        while (@row = $sth->fetchrow_array()){
-#                ($userID, $vote, $junk) = @row;
-#                &get_user($userID, \%user);
-#
-#                if ($user{status} eq 'inactive'){
-#                        next;
-#                }
-#                elsif ($user{status} eq 'active'){
-#                        $stats_ref->{$vote} += 1;
-#                }
-#        
-#                elsif ($user{status} eq 'away') {       
-#                        if ($vote > 0){
-#                                $stats_ref->{'away'} += 1;
-#                        }
-#                }
-#        }
-#        $sth->finish;
-#
-#        return $return;
-# }
-#
-####################################################################
-# sub show_current_tally{
-#        my ($userID, $junk) = @_;
-#        my ($movieID, %movie, @movies, @movies_temp, %user, @votes, $num_votes, %vote_status_word, $vote, @junk, %vote_stats);
-#
-#        if ($userID){
-#                print qq
-#                {
-#                        <form action="update_votes.cgi" method="post">
-#                };
-#        }
-#        print qq
-#        {
-#                <input type="hidden" name="userID" value="$userID">
-#                <table border="0" cellpadding="0" cellspacing="2">
-#        };
-#
-#        @movies = ();
-#
-#        &list_movies(\@movies_temp, "WHERE status='just released'", '');
-#        @movies = (@movies, @movies_temp);
-#
-#        &list_movies(\@movies_temp, "WHERE status='showing'", '');
-#        @movies = (@movies, @movies_temp);
-#        @movies = sort  {       list_votes_by_movie(\@junk, $b)
-#                        <=>     list_votes_by_movie(\@junk, $a)}
-#                        @movies ;
-#
-#
-#        if ($userID)
-#        {        print qq
-#                {       <tr valign="top">
-#                        <td align="center"> <b>N</td>
-#                        <td align="center"> <b>?</td>
-#                        <td align="center"> <b>Y</td>
-#
-#                        <td>&nbsp&nbsp</td>
-#                };
-#        }
-#
-#        print qq
-#        {       <td><b> # </td>
-#
-#                <td>&nbsp&nbsp</td>
-#
-#                <td><b>Movie</td>
-#                <td>&nbsp&nbsp&nbsp</td>
-#                <td><b>Votes</td>
-#                </tr>
-#        };
-#
-#        my $max_votes = 0;
-#
-#        foreach $movieID (@movies)
-#        {
-#                get_movie($movieID, \%movie);
-#
-#                $num_votes = list_votes_by_movie(\@votes, $movieID, \%vote_stats);
-#                if ($movie{'status'} eq "just released")
-#                {       $movie{'title'} = "<B>$movie{'title'}</B>";
-#                }
-#
-#                ### stoopid f---ed up rounding math.
-#                if ($num_votes > 0) { $num_votes += 0.5; }
-#                $num_votes = int($num_votes);
-#                %vote_status_word = ();
-#                $vote = &get_vote($movieID, $userID);
-#                $vote_status_word{$vote} = "CHECKED";
-#
-#                if ($userID)
-#                {       print qq{
-#                                <tr valign="top">
-#                                <td valign="top"><input type="radio" name="v$movieID" value="-1" $vote_status_word{'-1'}></td>
-#                                <td valign="top"><input type="radio" name="v$movieID" value="0" $vote_status_word{'0'}></td>
-#                                <td valign="top"><input type="radio" name="v$movieID" value="1" $vote_status_word{'1'}></td>
-#                                <td></td>
-#                        };
-#                }
-#                print qq
-#                {
-#                        <td valign="top" nowrap>$num_votes</td>
-#                                <td></td>
-#                                <td nowrap valign="top"><a href="
-#                                        javascript:window.open(
-#                                                'movie_view.cgi?movieID=$movieID',
-#                                                'ViewMovie',
-#                                                'noresizable,height=500,width=550');
-#                                                index.cgi
-#                                        ">$movie{title}</a></td>
-#
-#                                <td valign="top"></td>
-#                                <td valign="top">
-#                };
-#
-#                        foreach $userID (@votes){
-#                                &get_user($userID, \%user);
-#                                $vote = &get_vote($movieID, $userID);
-#                                ### output control:
-#                                if ($user{'status'} eq 'inactive'){
-#                                        next;
-#                                }
-#        
-#                                ### username / vote-type
-#                                if ($vote > 0){
-#                                        print "$user{username} ";
-#                                }
-#                                elsif ($vote < 0){
-#                                        print "!$user{username} ";
-#                                }
-#                        }
-#
-#                print qq{
-#                                </td>
-#                        </tr>
-#                };
-#        }
-#
-#        print qq{
-#                </table>
-#                <P>
-#        };
-#        if ($USERID){
-#                print qq{
-#                        <input type="image" border=0 src="template/update_votes_submit.gif" alt="Update Votes">
-#                        </form>
-#                };
-#        }
-# }
-#
+
 ###################################################################
 sub get_vote{
         my ($movieID, $userID, $junk) = @_;

@@ -20,7 +20,7 @@ require 'MOVIES.pl';
 	$cgih = new CGI;
 	$movieID = $cgih->param('movieID');
 	
-	&show_movie($movieID);
+	&show_movie_extended($movieID);
 	
 	&footer("movieView");
 
@@ -76,3 +76,47 @@ sub show_movie
 	}
 }
 	
+##################################################################
+sub show_movie_extended
+{
+	my ($movieID, $junk) = @_;	
+	my (@cols, $movie, %movie, $key);
+	
+	if ($movieID)
+	{ 
+	 	@cols = &db_get_cols_list($dbh_tnmc, 'Movies');
+        	&get_movie_extended($movieID, \%movie);
+
+		print qq 
+		{
+			<table>
+		};
+	
+		foreach $key (sort(keys(%movie))){
+			next if ($key eq 'votesText');
+			next if ($key eq 'movieID');
+			next if ($key eq 'mybcID');
+
+			print qq{	
+				<tr valign=top><td><B>$key</B></td>
+				    <td>$movie{$key}</td>
+				</tr>
+			};
+        	}
+
+		if ($movie{'mybcID'})
+		{	$mybcID = $movie{'mybcID'};
+			print qq 
+			{	<tr><td><b><a href="
+				javascript:window.open(
+					'http://www2.mybc.com/aroundtown/movies/playing/movies/$mybcID.html',
+				        'ViewMYBC'); index.cgi">myBC Info</a>
+			};
+		}
+		print qq
+		{
+			</table>
+		}; 
+	}
+}
+

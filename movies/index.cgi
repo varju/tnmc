@@ -9,6 +9,8 @@ use lib '/usr/local/apache/tnmc/';
 use tnmc;
 require 'MOVIES.pl';
 
+
+
 	#############
 	### Main logic
 
@@ -28,6 +30,41 @@ require 'MOVIES.pl';
 	&show_movieMenu();
 	&show_movies();
 #	&show_add_movie_form();
+
+
+
+	#############
+	### Main logic
+
+	&get_user($USERID, \%REAL_USER);
+#
+#	if (  ($REAL_USER{groupAdmin})
+#	   && ($tnmc_cgi->param('effectiveUserID')) ){
+#		$effectiveUserID = $tnmc_cgi->param('effectiveUserID');
+#	}else{
+#		$effectiveUserID = $USERID;
+#	}
+#	&get_user($effectiveUserID, \%USER);
+
+#	&show_movieMenu();
+#	&show_movies();
+#	&show_add_movie_form();
+
+
+
+
+#	$current_movie =  &get_general_config("movie_current_movie");
+#	if ($current_movie){
+#	        &show_current_movie();
+#        }
+#	else{
+#		if ($USERID){
+#			&show_heading('Attendance - When can you go to the movies?');
+#			&list_my_attendance($USERID);
+#		};
+#		&show_movies();
+#	}
+
 
 	&footer();
 	&db_disconnect();
@@ -71,6 +108,7 @@ sub show_movies
 		};
 	}
 
+	&list_my_attendance($effectiveUserID);
 	&show_heading ("Detailed Votes");
 
 	##################################################################
@@ -81,9 +119,9 @@ sub show_movies
 		<tr  bgcolor="ffffff">
 			<td><b>Edit</b></td>
 			<td align="center"><b>N &nbsp;&nbsp; ? &nbsp;&nbsp; Y</b></td>
-			<td align="center">&nbsp;&nbsp;&nbsp;<b>!</b></td>
-			<td align="center">&nbsp;&nbsp;&nbsp;<b>+</b></td>
-			<td align="center">&nbsp;&nbsp;&nbsp;<b>-</b></td>
+			<td align="right">&nbsp;&nbsp;<b>!</b></td>
+			<td align="right">&nbsp;&nbsp;<b>+</b></td>
+			<td align="right">&nbsp;&nbsp;<b>-</b></td>
 			<td>&nbsp;&nbsp;</td>
 			<td><b>Title</b></td>
 			<td>&nbsp;&nbsp;</td>
@@ -100,7 +138,7 @@ sub show_movies
 
 	########################
 	# show_movie_list( "WHERE (m.status = 'showing' OR m.status = 'just released')");
-	show_movie_list( "WHERE (m.statusShowing AND NOT (m.statusSeen OR 0))");
+	show_movie_list( "WHERE (statusShowing AND NOT (statusSeen OR 0))");
 
 	print qq{	<tr>
 			<td colspan="11" bgcolor="cccccc" align="right">
@@ -109,7 +147,7 @@ sub show_movies
 
 	########################
 	# show_movie_list( "WHERE m.status = 'coming soon'");
-	show_movie_list( "WHERE (m.statusNew AND NOT (m.statusShowing OR 0))");
+	show_movie_list( "WHERE (statusNew AND NOT (statusShowing OR 0))");
 
 
 	print qq{\n	</table><p>\n};
@@ -125,37 +163,10 @@ sub show_movies
 	print qq{
 		<font face="verdana">
 		<b>Favorite Movie:</b><br>
-		<select name="favoriteMovie">
-		<option value="0">none
-		<option value="0">
 	};
-
-	$sql = "SELECT movieID
-	         FROM MovieVotes
-	        WHERE userID = '$effectiveUserID' AND type = '2'";
-	$sth = $dbh_tnmc->prepare($sql);
-	$sth->execute;
-	($favoriteMovie) = $sth->fetchrow_array();
-
-	$sql = "SELECT movieID, title
-	         FROM Movies
-	        WHERE statusShowing = '1' AND statusSeen != '1'
-	        ORDER BY title";
-
-	$sth = $dbh_tnmc->prepare($sql);
-	$sth->execute;
-
-	while (@row = $sth->fetchrow_array()){
-	        if ($favoriteMovie == $row[0]){         $faveSel = 'selected';}
-	        else{                                   $faveSel = '';}
-	        print qq{               <option value="$row[0]" $faveSel>$row[1]\n};
-	}
-
-        $sth->finish;
-
+	&show_favorite_movie_select($effectiveUserID);
 	print qq{
-		</select><br>
-		</font>
+		<br></font>
 	};
 
 	########################
@@ -177,123 +188,26 @@ sub show_movies
 }
 
 
-
 ##########################################################
 sub show_movie_list{
 
 	($whereClause, $junk) = @_;
 
-	@userList = ();
-	%userList = ();
-	list_users(\@userList);
-	foreach (@userList){
-		$userList{$_} = {};
-		get_attendance($_, $userList{$_});
+	my (@movies, $anon, $movieID, $movieInfo);
+	my ($boldNew, %vote_status_word);
+
+	&list_movies(\@list, $whereClause, 'ORDER BY title');
+	foreach $movieID (@list){
+		$anon = {}; 	### create an anonymous hash.
+		&get_movie_extended($movieID, $anon);
+		$movieInfo{$movieID} = $anon;
 	}
-	@movieDates = reverse(sort(keys(%{$userList{1}})));
-	while ( 1 == 1){
-		$thisTues = pop(@movieDates);
-		if ($thisTues =~ /^movie\d+$/){ last;}
-	}
-	$nextTues = pop(@movieDates);
+	
+#        @list = sort  {       $movieInfo{$b}->{order}
+#                        <=>     $movieInfo{$a}->{order}}
+#                        @list ;
 
-
-	$sql = "SELECT m.movieID, m.title, m.type, m.rating, m.statusShowing, m.statusNew,
-		       p.userID, p.username, v.type
-                 FROM           Movies as m 
-                      LEFT JOIN MovieVotes as v USING (movieID)
-                      LEFT JOIN Personal as p USING (userID)
-		$whereClause
-		ORDER BY m.title ASC, m.movieID ASC, p.username ASC";
-
-	$sth = $dbh_tnmc->prepare($sql);
-	$sth->execute();
-
-	# Here's what this loop tries to do:
-	#
-	# start of with an entry in @row, and movieID = 0.
-	# while (there's an entry to process) {
-	# 	save the current entry into movie variables,
-	#	get the next row,
-	#		if the movie id is the same as the current row, then increment some counters, andget the next row again
-	#	print out the movie entry to the screen
-	# the end.
-	#
-
-	@row = $sth->fetchrow_array();
-	$movieID = 0;
-
-	while ( $row[0] ){
-
-		# set up the variables for this movie...
-		# here's how the data comes in:
-		#
-		#   0          1        2       3         4                5            6           7       8
-		# m.movieID, m.title, m.type, m.rating, m.statusShowing, m.statusNew, p.userID, p.username, v.type
-
-		$movieID = $row[0];
-		$title = $row[1];
-		$type = $row[2];
-		$rating = $row[3];
-		$statusShowing = $row[4];
-		$statusNew = $row[5];
-		$votes = '';
-		$votesFor = '';
-		$votesForFave = '';
-		$votesAgainst = '';
-
-		# find out who voted for the movie...
-		while ($row[0] == $movieID){
-
-			$Vperson = $row[7];
-			$Vtype = $row[8];
-			$VuserID = $row[6];
-
-			if ( ($Vperson eq 'demo')
-			   && ($effectiveUserID != 38)){
-				#
-				# Do nothing
-				#
-			}
-			
-			elsif (	($userList{$VuserID}->{$thisTues} eq 'no')
-				|| ($userList{$VuserID}->{$thisTues} eq '' and
-				$userList{$VuserID}->{movieDefault} eq 'no')	){
-
-				if (	($userList{$VuserID}->{$nextTues} eq 'no')
-					|| ($userList{$VuserID}->{$nextTues} eq '' and
-					$userList{$VuserID}->{movieDefault} eq 'no')	){
-
-					if ($Vtype >= 1){
-						$votes .= "<font color='cccccc'>$Vperson</font> ";
-					}
-				}
-				elsif ($Vtype == 1){
-					$votes .= "<font color='888888'>$Vperson</font> ";
-					$votesAgainst ++;
-				}
-				elsif ($Vtype == 2){
-					$votes .= "<font color='888888'><b>$Vperson</b></font> ";
-					$votesAgainst += 2;
-				}
-			}
-			elsif ($Vtype == 2){
-				$votes .= "<b>$Vperson</b> ";
-				$votesFor ++;
-				$votesForFave ++;
-			}
-			elsif ($Vtype == 1){
-				$votes .= "$Vperson ";
-				$votesFor ++;
-			}
-			elsif ($Vtype == -1){
-				$votes .= "<font color='ff2222'>$Vperson</font> ";
-				$votesAgainst ++;
-			}
-
-			@row = $sth->fetchrow_array();
-		}
-
+	foreach $movieID (@list){
 
                 %vote_status_word = ();
                 $vote = &get_vote($movieID, $effectiveUserID);
@@ -303,13 +217,13 @@ sub show_movie_list{
 			<tr valign="top">
 				<td><a href="movie_edit.cgi?movieID=$movieID"><font color="cccccc">$movieID</a></td>
 				<td valign="top" nowrap><input type="radio" name="v$movieID" value="-1" $vote_status_word{'-1'}><input type="radio" name="v$movieID" value="0" $vote_status_word{'0'}><input type="radio" name="v$movieID" value="1" $vote_status_word{'1'} $vote_status_word{'2'}></td>
-				<td align="right">$votesForFave</td>
-				<td align="right">$votesFor</td>
-				<td align="right">$votesAgainst</td>
+				<td align="right">$movieInfo{$movieID}->{votesFave}</td>
+				<td align="right">$movieInfo{$movieID}->{votesFor}</td>
+				<td align="right">$movieInfo{$movieID}->{votesAgainst}</td>
 				<td></td>
 				<td valign="top">
 		};
-		if ($statusShowing && $statusNew) { print qq{					<b>}; }
+		if ( ($movieInfo{$movieID}->{statusShowing}) &&($movieInfo{$movieID}->{statusNew}) ){ print qq{<b>}; }
 		print qq{
 					<a href="
 					javascript:window.open(
@@ -317,71 +231,16 @@ sub show_movie_list{
 						'ViewMovie',
 						'resizable,height=350,width=450');
 						index.cgi
-					">$title</a></td>
+					">$movieInfo{$movieID}->{title}</a></td>
 				<td></td>
-				<td>$type</td>
+				<td>$movieInfo{$movieID}->{type}</td>
 				<td></td>
-				<td>$votes</td>
+				<td>$movieInfo{$movieID}->{votesHTML}</td>
 
 			</tr>
 		};
+
 	}
-	$sth->finish();
-
-
-}
-
-
-
-##########################################################
-sub show_add_movie_form
-{
-
-	print qq{
-                <form action="movie_edit_submit.cgi" method="post">
-                <input type="hidden" name="movieID" value="0">
-	};
-	&show_heading ("add a new movie");
-	
-        print qq{
-                <table border="0">
-                <tr valign=top>
-                        <td colspan="4"><b>Title</b><br>
-                
-                        <input type="text" size="41" name="title" value=""></td>
-                </tr>
-        
-                <tr valign=top>
-                        <td><b>Type</b><br>
-                        <input type="text" size="12" name="type" value=""></td>
-
-                        <td><b>Rating</b><br>
-                        <input type="text" size="3" name="rating" value=""></td>
-
-                        <td><b>MyBC ID</b><br>
-                        <input type="text" size="6" name="mybcID" value=""></td>
-
-                        <td><b>Status</b><br><b>
-			<input type="checkbox" name="statusNew" value="1" checked>New
-			<input type="checkbox" name="statusShowing" value="1">Showing
-			<input type="hidden" name="statusSeen" value="0">
-                        </td>  
-
-
-                </tr> 
-        
-                <tr valign=top>
-                        <td colspan="4"><b>Description</b><br>
-                        <textarea cols="40" rows="4" wrap="virtual" name="description"></textarea></td>
-                </tr>
-        
-                       
-                </table>
-		<input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
-                </form> 
-        };                      
-                                
-
 }
 
 
