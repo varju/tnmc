@@ -44,6 +44,8 @@ sub search_get_piclist_from_nav{
         $pics = &search_do_date_span($nav, \%results);
     }elsif ($mode eq 'my_unreleased'){
         $pics = &search_do_my_unreleased($nav, \%results);
+    }elsif ($mode eq 'untitled'){
+        $pics = &search_do_untitled($nav, \%results);
     }elsif ($mode eq 'text'){
         $pics = &search_do_text($nav, \%results);
     }elsif ($mode eq 'test'){
@@ -141,6 +143,29 @@ sub search_do_my_unreleased{
              ORDER BY timestamp, picID";
     my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute($USERID);
+    
+    while (my @row = $sth->fetchrow_array()){
+        push @pics, $row[0];
+    }
+    
+    return \@pics;
+}
+
+sub search_do_untitled{
+    my ($nav, $results) = @_;
+    my @pics;
+    my $dbh = &tnmc::db::db_connect();
+    
+    my $sql_accessible = &search_get_accessible_condition();
+    my $USERID = $tnmc::security::auth::USERID;
+    
+    # grab the dates where we have something that we're allowed to look at.
+    my $sql = "SELECT picID FROM Pics
+             WHERE $sql_accessible
+               AND ((title = '')  OR ( title IS NULL))
+             ORDER BY timestamp, picID";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
     
     while (my @row = $sth->fetchrow_array()){
         push @pics, $row[0];

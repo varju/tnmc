@@ -28,6 +28,7 @@ sub show_search_index{
     &show_search_form_text();
     &show_search_form_date_span();
     &show_search_form_my_unreleased();
+    &show_search_form_untitled();
 }
 
 sub show_search_form_text{
@@ -110,3 +111,23 @@ sub show_search_form_my_unreleased{
 
 
 
+sub show_search_form_untitled{
+    
+    my $url = "/pics/search_thumb.cgi";
+    
+    &show_heading("search for untitled pics");
+    
+    print qq{
+        <table>
+        <tr><td>
+          <form method="get" action="$url">
+          <p>
+          <input type="hidden" name="search" value="untitled">
+          <input type="submit" value="Search">
+          </form>
+        </td></tr>
+        </table>
+        
+    };
+    
+}
