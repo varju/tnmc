@@ -12,12 +12,15 @@ use lib '/tnmc/';
 use tnmc::security::auth;
 use tnmc::template;
 use tnmc::movies::night;
+use tnmc::cgi;
 
 {
     #############
     ### Main logic
     
     &header();
+    
+    my $tnmc_cgi = &tnmc::cgi::get_cgih();
     
     my %night;	
     my $nightID = $tnmc_cgi->param('nightID');

@@ -12,6 +12,7 @@ use tnmc::broadcast;
 use tnmc::security::auth;
 use tnmc::general_config;
 use tnmc::db;
+use tnmc::cgi;
 
 {
     #############
@@ -25,7 +26,8 @@ use tnmc::db;
     $sth->execute();
     my ($time) = $sth->fetchrow_array();
     $sth->finish();
-
+    
+    my $tnmc_cgi = &tnmc::cgi::get_cgih();
     my $newSuggestion  =  $tnmc_cgi->param('suggestion');
     my $oldSuggestions =  &get_general_config("suggestions");
 

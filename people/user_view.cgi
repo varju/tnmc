@@ -19,6 +19,7 @@ use tnmc::user;
 &header();
 
 &show_heading("user detail");
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my $userID = $tnmc_cgi->param('userID');
 

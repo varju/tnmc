@@ -8,6 +8,7 @@ use strict;
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
+use tnmc::cgi;
 
 use tnmc::mail::data;
 use tnmc::mail::parse;
@@ -19,6 +20,7 @@ use tnmc::mail::prefs::data;
 
 db_connect();
 header();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 if ($USERID) {
     show_heading('mail');

@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::config;
 use tnmc::db;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -22,6 +23,7 @@ db_connect();
 my $cookie = &tnmc::security::auth::logout();
 
 my $location = '/';
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 print $tnmc_cgi->redirect(
                           -uri=>$location,
                           -cookie=>$cookie);

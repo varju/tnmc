@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::movies::attend;
+use tnmc::cgi;
 
 {
     #############
@@ -19,6 +20,7 @@ use tnmc::movies::attend;
     &db_connect();
     
     &tnmc::security::auth::authenticate();
+    my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
     my %attendance = {};
     # get each field

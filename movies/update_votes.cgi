@@ -12,6 +12,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::movies::vote;
 use tnmc::template;
+use tnmc::cgi;
 
 {
     #############
@@ -21,6 +22,7 @@ use tnmc::template;
     
     &tnmc::security::auth::authenticate();
 
+    my $tnmc_cgi = &tnmc::cgi::get_cgih();
     my $userID = $tnmc_cgi->param('userID');
     my @params =  $tnmc_cgi->param();
     

@@ -13,6 +13,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -22,6 +23,7 @@ db_connect();
     
 my %user;
 my @cols = &db_get_cols_list('Personal');
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 foreach my $key (@cols){
     if ($tnmc_cgi->param($key)){

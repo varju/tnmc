@@ -12,12 +12,14 @@ use tnmc::config;
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::general_config;
+use tnmc::cgi;
 
 #############
 ### Main logic
 
 &db_connect();
 &tnmc::security::auth::authenticate();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my @params = $tnmc_cgi->param();
 

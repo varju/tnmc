@@ -5,6 +5,7 @@ use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::db;
+use tnmc::cgi;
 
 db_connect();
 &tnmc::security::auth::authenticate();
@@ -37,6 +38,8 @@ foreach my $key (@INC) {
 
 ### CGI form data
 print "\n<p><b><font color=\"0000ff\">CGI.pm Form Data:</font></b><br>\n";
+
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my @names = $tnmc_cgi->param();
 print @names;

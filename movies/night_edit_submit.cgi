@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::movies::night;
+use tnmc::cgi;
 
 {
     #############
@@ -20,7 +21,8 @@ use tnmc::movies::night;
 
     
     &tnmc::security::auth::authenticate();
-
+    my $tnmc_cgi = &tnmc::cgi::get_cgih();
+    
     my @cols = &db_get_cols_list('MovieNights');
 
     my %night;

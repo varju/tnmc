@@ -14,6 +14,7 @@ use tnmc::db;
 use tnmc::log;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -23,6 +24,7 @@ db_connect();
 
 
 my (%user, %old_user);
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my $userID = $tnmc_cgi->param('userID');
 my $password = $tnmc_cgi->param('password');

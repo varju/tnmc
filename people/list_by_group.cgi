@@ -18,6 +18,7 @@ use tnmc::user;
 
 &db_connect();
 &header();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my $group = $tnmc_cgi->param('group');
 my $cutoff = $tnmc_cgi->param('cutoff');

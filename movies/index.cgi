@@ -13,6 +13,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
+use tnmc::cgi;
 use tnmc::template;
 use tnmc::movies::attend;
 use tnmc::movies::movie;
@@ -24,6 +25,7 @@ use tnmc::movies::vote;
 
 &db_connect();
 &header();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 ## Global Variable ( bad scott! )
 my $sortOrder = $tnmc_cgi->param('sortOrder');
