@@ -5,30 +5,33 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/tnmc';
-use tnmc;
 
-    #############
-    ### Main logic
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
 
-    &db_connect();
-    my $cgih = new CGI;
-    my $group = $cgih->param(group);
-    my $cutoff = $cgih->param(cutoff);
-    my $limit = $cgih->param(limit);
+#############
+### Main logic
 
-    my @users;
-    &list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');
+&header();
 
-    &header();
-    
-    &show_heading ("$group People (min: $cutoff)");
-    &show_user_listing(@users);
+&db_connect();
 
-    &footer();
+my $group = $tnmc_cgi->param('group');
+my $cutoff = $tnmc_cgi->param('cutoff');
+my $limit = $tnmc_cgi->param('limit');
+
+my @users;
+&list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');
+
+&show_heading ("$group People (min: $cutoff)");
+&show_user_listing(@users);
+
+&footer();
+
 
 ##########################################################
 sub show_user_listing{
