@@ -14,6 +14,9 @@ use tnmc::config;
 #############
 ### Main logic
 
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+my $thisyear = $year + 1900;
+
 &tnmc::template::header();
 
 &tnmc::template::show_heading("site info");
@@ -93,7 +96,7 @@ print qq{
 
 
             <pre>
-Copyright (C) 1999-2000  Scott Thompson, Jeff Steinbok and the rest of TNMC
+Copyright (C) 1999-$thisyear  Scott Thompson, Jeff Steinbok and the rest of TNMC
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
