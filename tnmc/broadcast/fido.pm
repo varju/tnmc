@@ -7,6 +7,7 @@ use HTTP::Request::Common qw(POST);
 
 use tnmc::cookie;
 use tnmc::user;
+use tnmc::broadcast::util;
 
 #
 # module configuration

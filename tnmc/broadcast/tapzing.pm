@@ -4,6 +4,7 @@ use strict;
 
 use tnmc::cookie;
 use tnmc::user;
+use tnmc::broadcast::util;
 
 #
 # module configuration
