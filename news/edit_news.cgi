@@ -3,6 +3,7 @@
 use CGI;
 
 use lib '/tnmc';
+use strict;
 
 use tnmc::cookie;
 use tnmc::db;
