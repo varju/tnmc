@@ -12,6 +12,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use CGI;
 
 #############
 ### Main logic
@@ -20,7 +21,7 @@ use tnmc::user;
 &db_connect();
 
 &show_heading('<a id="personal">Personal</a>');
-&show_edit_users_list();
+&show_basic_users_list();
 
 &db_disconnect();
 &footer();
@@ -30,60 +31,46 @@ use tnmc::user;
 ##########################################################
 
 #########################################
-sub show_edit_users_list{
+sub show_basic_users_list{
     my (@users, %user, $userID, $key);
 
-    &list_users(\@users, '', 'ORDER BY username');
-    get_user($users[0], \%user);
+    my $cgih = new CGI;
+    my $order = $cgih->param('order') || 'username';
+
+    &list_users(\@users, '', "ORDER BY $order");
 
     print qq{
-                <table cellspacing="3" cellpadding="0" border="0">
-        <tr>    <td></td>
+        <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+            <th><a href="index.cgi?order=userID">userID</a></td>
+            <th>&nbsp;&nbsp;</td>
+            <th><a href="index.cgi?order=username">username</a></td>
+            <th>&nbsp;&nbsp;</td>
+            <th><a href="index.cgi?order=fullname">fullname</a></td>
+            <th>&nbsp;&nbsp;</td>
+            <th>&nbsp;&nbsp;</td>
+        </tr>
     };
 
-    foreach $key (keys %user){
-        print "<td><b>$key</b></td>";
-    }
-    print qq{</tr>\n};
-
-
-        foreach $userID (@users){
-                get_user($userID, \%user);
+    foreach $userID (@users){
+        get_user($userID, \%user);
         print qq{
             <tr>
+                <td nowrap>$user{userID}</td>
+                <td></td>
+                <td nowrap>$user{username}</td>
+                <td></td>
+                <td nowrap>$user{fullname}</td>
+                <td></td>
                 <td nowrap>
                 <a href="user_edit.cgi?userID=$userID">[Edit]</a> 
                 <a href="user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
-        };
-        foreach $key (keys %user){
-            next unless defined $user{$key};
-
-            print "<td>$user{$key}</td>";
-        }
-        print qq{</tr>\n};
-        }
-
-    print qq{
-        <tr>
-        <form method="post" action="user_edit_submit.cgi">
-        <td><input type="submit" value="Add:"></td>
-    };
-
-    foreach $key (keys %user){
-        next unless defined $user{$key};
-
-        my $len = length($user{$key}) + 1;
-        print qq{
-            <td><input type="text" name="$key" size="$len"></td>
+            </tr>
         };
     }
- 
     print qq{
-        </form>
-        </tr>
+        </table>
     };
-        print qq{
-                </table>
-        };
+
 }
