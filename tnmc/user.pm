@@ -95,9 +95,11 @@ sub list_users{
 }
 
 sub get_user_list {
+    my ($where_clause) = @_;
+
     my %results;
 
-    my $sql = "SELECT userID,username from Personal";
+    my $sql = "SELECT userID,username from Personal $where_clause";
     my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     while (my @row = $sth->fetchrow_array()){

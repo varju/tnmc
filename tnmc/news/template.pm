@@ -75,7 +75,7 @@ sub news_print {
 sub news_edit {
     my ($newsId,$userId,$date,$value) = @_;
 
-    my $userlist = get_user_list();
+    my $userlist = get_user_list("WHERE groupAdmin='1'");
 
     print qq{
 <form action="edit_news_submit.cgi" method="post">
