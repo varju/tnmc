@@ -14,6 +14,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
+use tnmc::mybc;
 
 {
     #############
@@ -26,77 +27,16 @@ use tnmc::movies::movie;
     print "***********************************************************\n";
     print "****                 Get The Movie List                ****\n";
     print "***********************************************************\n";
-    print "\n";
+    print "\n\n";
     
-    ######################
-    print "Searching through Directory Listing\n";
+    my %list = mybc_get_movie_list();
     
-    my $URL = "http://www2.mybc.com/aroundtown/movies/playing/movies/";
-    
-    ### Get a User agent
-    my $ua = new LWP::UserAgent;
-    $ua->agent("tnmcWebAgent/01 " . $ua->agent);
-    
-    ### Make the Request
-    my $req = new HTTP::Request GET => $URL;
-    my $res = $ua->request($req);
-    
-    my $directory = $res->content;
-    my @directory = split("\n", $directory);
-    
-    my %list;
-    foreach my $line (@directory){
-        #print "    $line\n";
-        if ($line =~ /^<A HREF=\"(\d+).html\"/i) {
-            #        print "$1\n";
-            $list{$1} = '';
-        }
-    }
-    ######################
-    print "Searching through Drop-down menu\n";
-    
-    ### Make the Request
-    $URL = "http://www2.mybc.com/movies/";
-    $req = new HTTP::Request GET => $URL;
-    $res = $ua->request($req);
-    
-    my $list = $res->content;
-    $list =~ s/.*\n\<SELECT name\=\"movieid\"\>\n//s;
-    $list =~ s/\n\<\/SELECT\>\n.*//s;
-    
-    my @list = split("\n", $list);
-    
-    foreach my $item (@list){
-        $item =~ /.+\"(\d+)\"\>(.*)$/;
-        $list{$1} = $2;
-    }
-    
-    #    foreach $mybcID (sort(keys(%list))){
-    #        print "$mybcID    $list{$mybcID}\n";
-    #    }
-    
-    my $i = 0;
-    foreach (keys(%list)){
-        $i++;
-    }    
-    print "\n" . $i . " movies found online at mybc.com\n\n";
-    
+    my $i = keys %list;
+    print "$i movies found online at mybc.com\n\n";
     
     ### list of valid theatres
-    print "Ordered List of Acceptable Theatres:\n";
-    print "------------------------------------\n";
-
-    my $valid_theatres = &get_general_config("movie_valid_theatres");
-    my @valid_theatres = split(/\s/, $valid_theatres);
-    my %valid_theatres;
-    foreach (@valid_theatres){
-        $valid_theatres{$_} = 1;
-        print $_ . "\n";
-    }
-    
-    print "\n";
-    
-    
+    my %valid_theatres = mybc_get_valid_theatres();
+        
     print "***********************************************************\n";
     print "****               Retrieve the Movie Info             ****\n";
     print "***********************************************************\n";
@@ -109,66 +49,21 @@ use tnmc::movies::movie;
     my %mOurTheatres;
     
     foreach my $mID (sort(keys(%list))){
-        my $mTheatres;
-        my $mInfo;
-        
-        #################
-        ### Request the page
-
-        $URL = "http://www2.mybc.com/movies/movies/$mID.html";
-        my $req = new HTTP::Request GET => $URL;
-        $res = $ua->request($req);
-
-        my $mPage = $res->content;
-        
-        #################
-        ### Parse the page
-
-        if ($mPage =~ s/.*?movies\/images\/title2\.gif\" width\=111 height\=33 alt\=\"\" border\=\"0\"\>//s){
-
-            $mPage =~ /<FONT SIZE="3"><b>((.)*)<\/b><\/FONT>/m;
-            $mTitle{$mID} = $1;
-            $mTitle{$mID} =~ s/^(The|A)\s+(.*)$/$2, $1/;
-
-            $mStars{$mID} = 0;
-            if ($mPage =~ /<IMG SRC="\/movies\/images\/star_(.*)\.gif/m){ #"# stupid emacs
-                $mStars{$mID} = $1;
-                $mStars{$mID} =~ s/_half/.5/;
-            }
-
-            $mPage =~ s/^(.*)<P>\n//s;
-            $mPremise{$mID} = $1;
-            $mPremise{$mID} =~ s/.*?<b>PREMISE<\/b>\n<BR>//s;
-
-            $mPage =~ s/.*\n<B><I>\@ THESE LOCATIONS<\/I><\/B>\://si;
-            $mPage =~ /<FONT FACE\=\"Verdana,Arial\" SIZE\=\"1\">(.*)<\/FONT>/s;
-            $mTheatres = $1;
-
-        }
-        else{
-            ### Could not parse
+        my %movieInfo = mybc_get_movie_info($mID);
+        if (!defined %movieInfo) {
             print "\n$mID (failed - parse error)";
             next;
         }
 
+        $mTitle{$mID} = $movieInfo{title};
+        $mStars{$mID} = $movieInfo{stars};
+        $mPremise{$mID} = $movieInfo{premise};
+        
         print "\n$mID    $mStars{$mID}    $mTitle{$mID}";
-
-        #################
-        ### Extract the Theatres
-
-        my @mTheatres = split('\n', $mTheatres);
-        my %mTheatres = ();
-        foreach my $mTh (@mTheatres){
-            if (!$mTh) {    next;    }
-            $mTh =~ /.*?theatres\/(.+)\.html">(.+)<\/a>/; #"# stupid emacs
-            $mTheatres{$1} = $2;
-            #print "$1 - $2\n";
-            print ".";
-        }
-
-        #################
-        ### Pick out the theatres that we like
-
+        
+        # Pick out the theatres that we like
+        my %mTheatres = %{$movieInfo{theatres}};
+        
         foreach $_ (sort(keys(%mTheatres))){
             if ($valid_theatres{$_}){
                 push (@mShowing, $mID);
@@ -187,7 +82,6 @@ use tnmc::movies::movie;
     my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
     $sth->finish();
-
 
     foreach my $mID (@mShowing){
       if ($mID){
@@ -271,4 +165,3 @@ use tnmc::movies::movie;
 
     &db_disconnect();
 }
-
