@@ -30,6 +30,7 @@ use tnmc::pics::search;
 sub show_search_index{
     &show_search_form_text();
     &show_search_form_date_span();
+    &show_search_form_my_unreleased();
 }
 
 sub show_search_form_text{
@@ -80,6 +81,27 @@ sub show_search_form_date_span{
           <input type="text" name="search_to" value="0000-00-00 00:00">
         </td>
         <td>
+          <input type="submit" value="Search">
+          </form>
+        </td></tr>
+        </table>
+        
+    };
+    
+}
+
+sub show_search_form_my_unreleased{
+    
+    my $url = "/pics/search_thumb.cgi";
+    
+    &show_heading("search for my unreleased");
+    
+    print qq{
+        <table>
+        <tr><td>
+          <form method="get" action="$url">
+          <p>
+          <input type="hidden" name="search" value="my_unreleased">
           <input type="submit" value="Search">
           </form>
         </td></tr>

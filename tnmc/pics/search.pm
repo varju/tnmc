@@ -42,6 +42,8 @@ sub search_get_piclist_from_nav{
     
     if($mode eq 'date-span'){
         $pics = &search_do_date_span($nav, \%results);
+    }elsif ($mode eq 'my_unreleased'){
+        $pics = &search_do_my_unreleased($nav, \%results);
     }elsif ($mode eq 'text'){
         $pics = &search_do_text($nav, \%results);
     }elsif ($mode eq 'test'){
@@ -60,7 +62,7 @@ sub search_do_text{
     
     my $dbh = &tnmc::db::db_connect();
     
-    my $sql_accessible = "((ownerID = '$MAIN::USERID') OR typePublic = 1)";
+    my $sql_accessible = &search_get_accessible_condition();
 
     ## assemble text sql
     my $text = $nav->{'search_text'};
@@ -101,10 +103,9 @@ sub search_do_text{
 sub search_do_date_span{
     my ($nav, $results) = @_;
     my @pics;
-    
     my $dbh = &tnmc::db::db_connect();
     
-    my $sql_accessible = "((ownerID = '$MAIN::USERID') OR typePublic = 1)";
+    my $sql_accessible = &search_get_accessible_condition();
     my $from = $nav->{'search_from'};
     my $to = $nav->{'search_to'};
     
@@ -124,6 +125,30 @@ sub search_do_date_span{
     return \@pics;
 }
 
+sub search_do_my_unreleased{
+    my ($nav, $results) = @_;
+    my @pics;
+    my $dbh = &tnmc::db::db_connect();
+    
+    my $sql_accessible = &search_get_accessible_condition();
+    my $USERID = $tnmc::security::auth::USERID;
+
+    # grab the dates where we have something that we're allowed to look at.
+    my $sql = "SELECT picID FROM Pics
+             WHERE $sql_accessible
+               AND (ownerID = ?)
+               AND ( (typePublic != 1)  )
+             ORDER BY timestamp, picID";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute($USERID);
+    
+    while (my @row = $sth->fetchrow_array()){
+        push @pics, $row[0];
+    }
+    
+    return \@pics;
+}
+
 sub search_do_test{
     my ($nav) = @_;
     my @pics;
@@ -133,4 +158,10 @@ sub search_do_test{
     return \@pics;
 }
 
+sub search_get_accessible_condition{
+    my $USERID = $tnmc::security::auth::USERID;
+    return "((ownerID = '$USERID') OR typePublic = 1)";
+}
+
 return 1;
+
