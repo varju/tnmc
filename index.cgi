@@ -11,7 +11,7 @@ use strict;
 use DBI;
 use CGI;
 
-use lib '/usr/local/apache/tnmc/';
+use lib '/usr/local/apache/tnmc';
 use tnmc;
 
 

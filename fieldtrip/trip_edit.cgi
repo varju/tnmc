@@ -4,7 +4,7 @@
 #       Scott Thompson - (june/2000)
 ##################################################################
 
-use lib '/usr/local/apache/tnmc/';
+use lib '/usr/local/apache/tnmc';
 use tnmc;
 require 'fieldtrip/FIELDTRIP.pl';
 

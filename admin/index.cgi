@@ -9,7 +9,7 @@
 use DBI;
 use CGI;
 
-use lib '/usr/local/apache/tnmc/';
+use lib '/usr/local/apache/tnmc';
 use tnmc;
 
 require 'basic_testing_tools.pl';

@@ -9,7 +9,7 @@ use LWP::UserAgent;
 # use HTTP::Request::Form;
 use HTTP::Request::Common qw(POST);
 
-use lib '/usr/local/apache/tnmc/';
+use lib '/usr/local/apache/tnmc';
 use tnmc;
 require 'movies/MOVIES.pl';
 

@@ -5,7 +5,7 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
+use lib '/usr/local/apache/tnmc';
 use tnmc;
 require 'movies/MOVIES.pl';
 
