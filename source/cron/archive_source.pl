@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
+use strict;
+
 use POSIX qw(strftime);
+use File::Copy;
 
 my $base = "/tnmc";
 my $cvs = "/var/db/tnmc-cvs";
@@ -21,6 +24,7 @@ if (-e "source/tnmc.tar.gz")
 {
     unlink("source/tnmc.tar.gz");
 }
-rename("/tmp/$tmp/tnmc.tar.gz","source/tnmc.tar.gz");
+
+copy("/tmp/$tmp/tnmc.tar.gz", "$base/source/tnmc.tar.gz");
 
 system("rm -rf /tmp/$tmp");
