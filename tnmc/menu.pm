@@ -167,7 +167,7 @@ sub new_nav_menu{
             
         }
     
-        &show_menu_item( 0, "", "", "<hr noshade size='1'>");
+        &show_menu_item( 0, "br", "", "<hr noshade size='1'>");
     }
     
     &show_menu_item( 0, "/user/my_prefs.cgi", "Preferences", "");
