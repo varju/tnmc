@@ -28,7 +28,6 @@ use tnmc::movies::night;
     # send the mail
     
     my $to_email = $tnmc_email;
-    $to_email = 'scottt@interchange.ubc.ca';
     
     my $sql = "SELECT DATE_FORMAT(NOW(), 'W M D, Y')";
     my $sth = $dbh_tnmc->prepare($sql);
