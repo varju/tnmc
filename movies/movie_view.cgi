@@ -63,7 +63,7 @@ sub show_movie_extended
         if ($movie{'mybcID'})
         {    $mybcID = $movie{'mybcID'};
             print qq 
-            {    <tr><td><b><a href="http://www2.mybc.com/movies/movies/$mybcID.html" target="mybc">myBC Info</a>
+            {    <tr><td><b><a href="http://www.mytelus.com/movies/mdetails.do?movieID=$mybcID" target="mybc">myBC Info</a>
             };
         }
         if ($movie{'imdbID'})
