@@ -67,7 +67,7 @@ sub show_security_users_list{
             $num_hits += $session{'hits'};
             if ($last_online < $session{'lastOnline'}){
                 $last_online = $session{'lastOnline'};
-                $host = $session{'host'};
+                $host = ($session{'host'}) ? $session{'host'} : $session{'ip'};
             }
         }
         $last_online = &tnmc::util::date::format_date('numeric', $last_online);

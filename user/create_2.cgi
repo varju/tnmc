@@ -32,13 +32,13 @@ foreach my $key (keys %$user){
 }
 
 # some defaults
-$user{groupMovies} = '1';
-$user{groupPics} = '1';
+$user->{groupMovies} = '1';
+$user->{groupPics} = '1';
 
 # for safetey's sake
-$user{groupDev} = '0';
-$user{groupAdmin} = '0';
-$user{userID} = 0;
+$user->{groupDev} = '0';
+$user->{groupAdmin} = '0';
+$user->{userID} = 0;
 
 # add the user
 my $userID = &tnmc::user::add_user($user);
@@ -48,12 +48,12 @@ my $userID = &tnmc::user::add_user($user);
 print qq{
         <form method="post" action="user/login.cgi">
         <input type="hidden" name="userID" value="$userID">
-        <input type="hidden" name="password" value="$user{password}">
+        <input type="hidden" name="password" value="$user->{password}">
         <input type="hidden" name="location" value="user/my_prefs.cgi">
 
         <b>Account created</b>
         <p>
-        <b>$user{username}  - $user{fullname}</b>
+        <b>$user->{username}  - $user->{fullname}</b>
         <p>
         <input type="submit" value="Continue">
         </form>
