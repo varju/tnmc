@@ -204,7 +204,8 @@ sub new_nav_login{
                         <input type="image" border=0 src="/template/go_submit.gif" alt="Go"><br>
                         </form>
             <p>
-	    <b><a href="/user/entry_page.cgi">Visitors, New Users and Enhanced login</a></b>
+	    <b><a href="/user/entry_page.cgi">Entry Page:<br>
+                <li>Visitors<li>New Users<li>Enhanced Login<li>Lost Passwords</a></b>
 	    <p>
             Hello there!<br>
             <br>

@@ -49,6 +49,8 @@ if (($password ne $user{'password'})
         <b>Oopsie-daisy!</b>
         <p>
         You entered the wrong password.
+        <p>
+        If you've forgotten it, you can have your <a href="/user/entry_page.cgi">password emailed to you</a>.
     };
     &footer();
 
