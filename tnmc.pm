@@ -5,6 +5,7 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 package tnmc;
+
 require 5.004;
 use strict;
 use DBI;
@@ -13,51 +14,48 @@ use CGI;
 use tnmc::cookie;
 use tnmc::db;
 
-BEGIN
-{
-    use Exporter ();
-    
-    use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
-                $HOMEPAGE);
-    
-    @ISA = qw(Exporter);
-    
-    @EXPORT_OK = qw(
-                    );
-    
-    @EXPORT = qw(
-                 &header
-                 &footer
-                 &show_heading
-                 &get_cookie
-                 &get_general_config
-                 &set_general_config
-                 &get_user
-                 &set_user
-                 &del_user
-                 &list_users
-                 &show_bulletins
+use Exporter ();
 
-                 %user
+use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
+            $HOMEPAGE);
 
-                 get_cookie 
-                 $tnmc_cgi
-                 %tnmc_cookie_in
-                 $USERID 
-                 $LOGGED_IN 
-                 $USERID_LAST_KNOWN 
-                 %USERID
+@ISA = qw(Exporter);
 
-                 db_connect 
-                 db_disconnect 
-                 db_get_cols_list
-                 db_get_row
-                 db_set_row
-                 $dbh_tnmc
-                 );
+@EXPORT_OK = qw(
+                );
 
-    %EXPORT_TAGS = ( );
-}
+@EXPORT = qw(
+             &header
+             &footer
+             &show_heading
+             &get_cookie
+             &get_general_config
+             &set_general_config
+             &get_user
+             &set_user
+             &del_user
+             &list_users
+             &show_bulletins
+
+             %user
+
+             get_cookie 
+             $tnmc_cgi
+             %tnmc_cookie_in
+             $USERID 
+             $LOGGED_IN 
+             $USERID_LAST_KNOWN 
+             %USERID
+
+             db_connect 
+             db_disconnect 
+             db_get_cols_list
+             db_get_row
+             db_set_row
+             $dbh_tnmc
+             );
+
+%EXPORT_TAGS = ( );
 
 ##########################################################
 #### Sub Procedures:
