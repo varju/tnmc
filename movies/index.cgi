@@ -28,13 +28,13 @@ use tnmc::movies::vote;
     &db_connect();
     &header();
 
-        ## Global Variable ( bad scott! )
+    ## Global Variable ( bad scott! )
     my $sortOrder = $tnmc_cgi->param('sortOrder');
-        if (!$sortOrder){
-            $sortOrder = 'rank';
-        }
+    if (!$sortOrder){
+        $sortOrder = 'order';
+    }
 
-        my (%REAL_USER, $effectiveUserID, %USER);
+    my (%REAL_USER, $effectiveUserID, %USER);
 
     &get_user($USERID, \%REAL_USER);
 
