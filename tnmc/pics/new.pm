@@ -447,7 +447,7 @@ sub show_piclist{
          ($listType ne 'thumbnail') ){
         $listType = 'grid';
     }
-    my $limit ||= 20;
+    $limit ||= 20;
     if ($listColumns < 1){     ## automatic columns
         $listColumns = 1;
         $listColumns = 5 if ($listType eq 'grid');
