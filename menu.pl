@@ -27,15 +27,13 @@ sub new_nav_menu{
 		&show_menu_item( 1, "/people/list_all.cgi", "Everybody", "");
 		&show_menu_item( 1, "/people/list_by_group.cgi?group=Movies&cutoff=10", "Movie&nbsp;Junkies", "");
             }
+            &show_menu_item( 0, "", "", "");
         }
-	&show_menu_item( 0, "", "", "");
 	
 	if ($user{groupMovies} >= 1){
-	    if (&show_menu_item( 0, "/movies/", "Movies", "") || $HOMEPAGE){
-		&show_menu_item( 1, "/movies/index.cgi?sortOrder=order", "Ordered", "");
-		&show_menu_item( 1, "/movies/index.cgi?sortOrder=title", "Alphabetical", "");
-		&show_menu_item( 1, "/movies/list_showing_movies.cgi", "All&nbsp;Showing", "");
+            if (&show_menu_item( 0, "/movies/", "Movies", "")){
 		&show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
+		&show_menu_item( 1, "/movies/list_showing_movies.cgi", "All&nbsp;Showing", "");
 		&show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
 		&show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
 		&show_menu_item( 1, "/movies/help.cgi", "Info", "");
@@ -83,8 +81,10 @@ sub new_nav_menu{
 		&show_menu_item( 0, "", "", "");
 	}
 	if ($user{groupDev}){
-		if (&show_menu_item( 0, "/development/", "Development", "") || ( $HOMEPAGE && $USERID == 1)){
+		if (&show_menu_item( 0, "/development/", "Development", "")){
+			&show_menu_item( 1, "/development/todo_list.cgi", "To&nbsp;do&nbsp;List", "");
 			&show_menu_item( 1, "/development/suggestions.cgi", "Suggestions", "");
+			&show_menu_item( 1, "/development/env.cgi", "Enviroment", "");
 			&show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
 		}elsif ($USERID == 1){
 			&show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
