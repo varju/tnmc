@@ -48,6 +48,8 @@ sub search_get_piclist_from_nav{
         $pics = &search_do_untitled($nav, \%results);
     }elsif ($mode eq 'text'){
         $pics = &search_do_text($nav, \%results);
+    }elsif ($mode eq 'user'){
+        $pics = &search_do_user($nav, \%results);
     }elsif ($mode eq 'test'){
         $pics = &search_do_test($nav. \%results);
     }
@@ -180,6 +182,30 @@ sub search_do_test{
     my @pics;
     
     @pics = (1234, 2345, 3455);
+    
+    return \@pics;
+}
+
+
+sub search_do_user{
+    my ($nav, $results) = @_;
+    my @pics;
+    my $dbh = &tnmc::db::db_connect();
+
+    my $sql_accessible = &search_get_accessible_condition();
+    my $USERID = $tnmc::security::auth::USERID;
+
+    # grab the dates where we have something that we're allowed to look at.
+    my $sql = "SELECT picID FROM Pics
+             WHERE $sql_accessible
+               AND (ownerID = ?)
+             ORDER BY timestamp, picID";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute($nav->{'userID'});
+    
+    while (my @row = $sth->fetchrow_array()){
+        push @pics, $row[0];
+    }
     
     return \@pics;
 }

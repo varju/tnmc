@@ -29,6 +29,7 @@ sub show_search_index{
     &show_search_form_date_span();
     &show_search_form_my_unreleased();
     &show_search_form_untitled();
+    &show_search_form_user();
 }
 
 sub show_search_form_text{
@@ -130,4 +131,39 @@ sub show_search_form_untitled{
         
     };
     
+}
+
+
+sub show_search_form_user{
+    
+    require tnmc::user;
+    
+    my $url = "/pics/search_thumb.cgi";
+
+    &show_heading("search by user");
+
+    print qq{
+        <table>
+        <tr><td>
+          <form method="get" action="$url">
+          <input type="hidden" name="search" value="user">
+          <select name="userID">
+    };
+    
+    my $userlist = &tnmc::user::get_user_list("WHERE groupMovies >= '1'");
+    foreach my $username (sort keys %$userlist){
+        print "<option value=\"$userlist->{$username}\">$username\n";
+    }
+    
+    print qq{
+          </select>
+        </td>
+        <td>
+          <input type="submit" value="Search">
+          </form>
+        </td></tr>
+        </table>
+
+        };
+
 }
