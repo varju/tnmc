@@ -1,29 +1,17 @@
 package tnmc::pics::pic;
 
 use strict;
+use AutoLoader 'AUTOLOAD';
+
+use tnmc::config;
+use tnmc::db;
 
 #
 # module configuration
 #
-BEGIN{
-    use tnmc::db;
-    require tnmc::config;
-    
-    require Exporter;
-    require AutoLoader;
-    use vars qw(@ISA @EXPORT @EXPORT_OK $pic_data_dir);
-    
-    @ISA = qw(Exporter AutoLoader);
-    
-    @EXPORT = qw(
-                 set_pic del_pic get_pic
-                 get_pic_url list_pics
-                 
-                 update_cache update_cache_pub save_pic get_file_info
-                 );
-    
-    @EXPORT_OK = qw();
-    
+BEGIN
+{
+    use vars qw($pic_data_dir);
     $pic_data_dir = $tnmc::config::tnmc_basepath . '/pics/data/';
 }
 

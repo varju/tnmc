@@ -4,21 +4,11 @@ use strict;
 
 use tnmc::security::auth;
 use tnmc::user;
-
 use tnmc::news::util;
 
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(news_print_quick news_print news_edit);
-
-@EXPORT_OK = qw();
 
 #
 # module vars
@@ -29,7 +19,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 
 sub news_print_quick {
-    my $news_ref = get_quick_news();
+    my $news_ref = &tnmc::news::util::get_quick_news();
     news_print($news_ref, 2, 0, 0);
 }
 

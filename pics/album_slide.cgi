@@ -20,13 +20,13 @@ use strict;
 
 &tnmc::security::auth::authenticate();
 
-my $nav = &get_nav;
-my $piclist = &album_get_piclist_from_nav($nav);
+my $nav = &tnmc::pics::new::get_nav();
+my $piclist = &tnmc::pics::new::album_get_piclist_from_nav($nav);
 
 &tnmc::template::html_black::header();
-&show_album_slide_header($nav, $piclist);
+&tnmc::pics::new::show_album_slide_header($nav, $piclist);
 
-&show_slide($nav, $piclist);
+&tnmc::pics::new::show_slide($nav, $piclist);
 
 &tnmc::template::html_black::footer();
 

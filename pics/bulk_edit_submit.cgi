@@ -44,7 +44,7 @@ sub do_bulk_edit{
         
         if(! defined $PICS{$picID}){
             my %pic;
-            &get_pic($picID, \%pic);
+            &tnmc::pics::pic::get_pic($picID, \%pic);
             $PICS{$picID} = \%pic;
         }
         $PICS{$picID}->{$field} = &tnmc::cgi::param($param);
@@ -110,7 +110,7 @@ sub do_bulk_edit{
     
     ## save all the pics to the db
     foreach $picID (keys(%PICS)){
-        &set_pic( %{$PICS{$picID}} );
+        &tnmc::pics::pic::set_pic( %{$PICS{$picID}} );
         &tnmc::pics::pic::update_cache_pub($picID);
     }
     

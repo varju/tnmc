@@ -27,7 +27,7 @@ use strict;
 
 my $albumID = &tnmc::cgi::param('albumID');
 
-if (&auth_access_album_edit($albumID, undef)){
+if (&tnmc::pics::new::auth_access_album_edit($albumID, undef)){
     &show_album_edit_form($albumID);
 }
 else{
@@ -44,7 +44,7 @@ else{
 sub show_album_edit_form{
     my ($albumID) = @_;
     my %album;	
-    &get_album($albumID, \%album);
+    &tnmc::pics::album::get_album($albumID, \%album);
     
     &tnmc::template::show_heading("album edit");
     print qq {
@@ -87,10 +87,10 @@ sub show_album_edit_form{
             <td><select name="albumCoverPic">
     };
     my @pics;
-    &list_links_for_album(\@pics, $albumID);
+    &tnmc::pics::link::list_links_for_album(\@pics, $albumID);
     foreach my $picID (@pics){
         my %pic;
-        &get_pic($picID, \%pic, $picID);
+        &tnmc::pics::pic::get_pic($picID, \%pic, $picID);
         print qq{<option $sel{$picID} value="$picID">$picID - $pic{title}</option>\n};
     }
     print qq{

@@ -28,12 +28,12 @@ srand;
 
 print &greeting($USERID{'fullname'});
 
-news_print_quick();
-show_movies();
+&tnmc::news::template::news_print_quick();
+&tnmc::templates::movies::show_movies();
 
 &footer();
 
-show_user_homepage();
+&tnmc::templates::user::show_user_homepage();
 
 &db_disconnect();
 

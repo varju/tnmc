@@ -2,23 +2,11 @@ package tnmc::templates::movies;
 
 use strict;
 
+use tnmc::security::auth;
+
 #
 # module configuration
 #
-
-BEGIN{
-    use tnmc::security::auth;
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    
-    @EXPORT = qw(show_movies);
-    
-    @EXPORT_OK = qw();
-    
-}
 
 #
 # module routines

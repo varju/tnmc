@@ -36,7 +36,7 @@ sub do_add_album{
     }
     
     ## save the album
-    &set_album(%album);
+    &tnmc::pics::album::set_album(%album);
     
     my $dbh = &tnmc::db::db_connect();
 
@@ -61,21 +61,16 @@ sub do_add_album{
     ## if the user wants the album pre-filled
     if (&tnmc::cgi::param('optionFill')){
         my @PICS;
-        &list_pics(\@PICS,
+        &tnmc::pics::pic::list_pics(\@PICS,
                    "WHERE timestamp >= '$album{albumDateStart}' 
                       AND timestamp <= '$album{albumDateEnd}'
                       AND ((ownerID = '$USERID') OR typePublic >= 1)"
                    , "");
         foreach $picID (@PICS){
-            &add_link($picID, $albumID);
+            &tnmc::pics::link::add_link($picID, $albumID);
         }
     }
     
     ## send the user to album-view
     print "Location: album_view.cgi?albumID=$albumID\n\n";
 }
-
-
-
-
-

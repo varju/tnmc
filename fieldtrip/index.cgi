@@ -52,8 +52,7 @@ sub show_trip{
     $view_link = qq{ - <a href="fieldtrip/trip_view.cgi?tripID=$tripID"><font color="ffffff">view</font></a>};
     
     &tnmc::template::show_heading($trip{title} . $view_link . $edit_link . $del_link . $survey_link);
-    
-    
+
     $sql = qq{SELECT COUNT(*), SUM(interest) FROM FieldtripSurvey WHERE (tripID = '$tripID') AND (interest >= '1')};
     my $dbh = &tnmc::db::db_connect();
     $sth = $dbh->prepare($sql);

@@ -2,20 +2,12 @@ package tnmc::movies::movie;
 
 use strict;
 
+use tnmc::db;
+use tnmc::security::auth;
+
 #
 # module configuration
 #
-BEGIN{
-    use tnmc::db;
-    use tnmc::security::auth;
-    
-    require Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    @EXPORT = qw(set_movie get_movie get_movie_extended get_movie_extended2 del_movie);
-    @EXPORT_OK = qw();
-}
 
 #
 # module routines

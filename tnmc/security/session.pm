@@ -1,21 +1,12 @@
 package tnmc::security::session;
 
 use strict;
+
 use tnmc::db;
 
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK
-            );
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw();
-
-@EXPORT_OK = qw();
 
 #
 # module vars

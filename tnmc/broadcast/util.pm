@@ -6,15 +6,6 @@ use strict;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(count_words phone_get_areacode phone_get_localnum);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #

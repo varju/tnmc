@@ -2,31 +2,18 @@ package tnmc::pics::show;
 
 use strict;
 
+use AutoLoader 'AUTOLOAD';
+
+use tnmc::db;
+use tnmc::pics::pic;
+
 #
 # module configuration
 #
-BEGIN {
-    
-    use tnmc::db;
-    use tnmc::pics::pic;
-    
-    require Exporter;
-    require AutoLoader;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter AutoLoader);
-    
-    @EXPORT = qw(
-                 show_pic_listing show_album_info show_album_listing
-                 );
-    
-    @EXPORT_OK = qw();
-}
 
 #
 # module routines
 #
-
 
 #
 # autoloaded module routines
@@ -53,7 +40,7 @@ sub show_pic_listing{
     my $i = 0;
     foreach my $picID (@pics){
         $i++;
-        &get_pic($picID, \%pic);
+        &tnmc::pics::pic::get_pic($picID, \%pic);
         
         $pic{title} = '(untitled)' if (!$pic{title});
         if (!$pic{typePublic}){
@@ -193,11 +180,11 @@ sub show_album_info{
 
     if (!$album{albumCoverPic}){
         my @pics;
-        &list_links_for_album(\@pics, $albumID);
+        &tnmc::pics::link::list_links_for_album(\@pics, $albumID);
         $album{albumCoverPic} = @pics[0];
     }
     
-    my $pic_img = &get_pic_url($album{albumCoverPic}, ['mode'=>'thumb']);
+    my $pic_img = &tnmc::pics::pic::get_pic_url($album{albumCoverPic}, ['mode'=>'thumb']);
     
     print qq{
         <table>

@@ -2,20 +2,11 @@ package tnmc::movies::attendance;
 
 use strict;
 
+use tnmc::db;
+
 #
 # module configuration
 #
-BEGIN {
-    use tnmc::db;
-    
-    require Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    @EXPORT = qw(set_attendance get_attendance get_user_attendance_hash get_night_attendance_hash);
-    @EXPORT_OK = qw();
-    
-}
 
 #
 # module routines
@@ -66,28 +57,6 @@ sub get_attendance{
     }
 }
 
-sub get_user_attendance_hash{
-    my ($userID) = @_;
-    
-    my %hash;
-    
-    # make sure we have a handle
-    my $dbh = &tnmc::db::db_connect();
-    
-    # fetch from the db
-    my $sql = "SELECT nightID, type from MovieNightAttendance WHERE userID = ?";
-    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute($userID);
-    
-    while (my @row = $sth->fetchrow_array()){
-        $hash{$row[0]} = $row[1];
-    }
-    $sth->finish;
-    
-    # return the data
-    return \%hash;
-}
-
 sub get_night_attendance_hash{
     my ($nightID) = @_;
     
@@ -100,7 +69,8 @@ sub get_night_attendance_hash{
     my ($sql, $sth);
     
     ### look for a parent faction
-    my %night; &tnmc::movies::night::get_night($nightID, \%night);
+    my %night;
+    &tnmc::movies::night::get_night($nightID, \%night);
     
     ### first, get the defaults
     if ($night{'factionID'}){
@@ -148,7 +118,8 @@ sub show_my_attendance_chooser{
     
     # pre-load night/faction info
     foreach my $nightID (@all_nights){
-        my %night; &tnmc::movies::night::get_night($nightID, \%night);
+        my %night;
+        &tnmc::movies::night::get_night($nightID, \%night);
         $nights{$nightID} = \%night;
         my $factionID = $night{'factionID'};
         $factions{$factionID} = &tnmc::movies::faction::get_faction($factionID) if (! defined  $factions{$factionID});

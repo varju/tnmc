@@ -7,13 +7,6 @@ use Mail::Sendmail;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(message_send);
-@EXPORT_OK = qw();
-
 #
 # module vars
 #

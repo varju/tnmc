@@ -2,21 +2,11 @@ package tnmc::movies::night;
 
 use strict;
 
+use tnmc::db;
+
 #
 # module configuration
 #
-BEGIN {
-    
-    use tnmc::db;
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    @EXPORT = qw(set_night get_night get_next_night list_nights list_future_nights list_active_nights);
-    @EXPORT_OK = qw();
-    
-}
 
 #
 # module routines

@@ -82,7 +82,7 @@ sub send_password_to_user{
           'Subject' => "[TNMC] Forgot your password?",
           'Body' => "\nHi $user{'username'},\n\nYour password for tnmc is \"$user{'password'}\".\n\n",
           );
-    &message_send(\%message);
+    &tnmc::mail::send::message_send(\%message);
 }
 
 ##########################################################

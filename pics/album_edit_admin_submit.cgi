@@ -25,7 +25,7 @@ use tnmc::pics::album;
     foreach my $key (@cols){
      	$album{$key} = &tnmc::cgi::param($key);
     }
-    &set_album(%album);
+    &tnmc::pics::album::set_album(%album);
     
     print "Location: $ENV{HTTP_REFERER}\n\n";
 }

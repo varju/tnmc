@@ -15,6 +15,6 @@ use tnmc::news::util;
 
 my $newsid = &tnmc::cgi::param('newsId');
 
-del_news_item($newsid);
+&tnmc::news::util::del_news_item($newsid);
 
 print "Location: /news/\n\n";

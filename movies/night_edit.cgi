@@ -38,7 +38,7 @@ sub show_night_edit_form{
     my ($nightID) = @_;
     
     my %night;
-    &get_night($nightID, \%night);
+    &tnmc::movies::night::get_night($nightID, \%night);
     
     # movieID select list
     my @movies = &tnmc::movies::night::list_cache_movieIDs($nightID);
@@ -69,7 +69,7 @@ sub show_night_edit_form{
     
     foreach my $movieID (@movies){
         my %movie;
-        &get_movie($movieID, \%movie);
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{
                 <option value="$movie{'movieID'}" $movieID_sel{$movieID} >$movie{'title'}
         };

@@ -24,7 +24,7 @@ if ($USERID) {
     $news{expires} = 0;
     $news{value} = "";
 
-    news_edit(\%news);
+    &tnmc::news::template::news_edit(\%news);
 }
     
 &tnmc::template::footer();

@@ -12,22 +12,21 @@ use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::night;
 
-
 #############
 ### Main logic
 
 &tnmc::template::header();
 
-my $next = &get_next_night();
+my $next = &tnmc::movies::night::get_next_night();
 
 my %next;
-&get_night($next, \%next);
+&tnmc::movies::night::get_night($next, \%next);
 print qq{Next? <a href="movies/night_edit_admin.cgi?nightID=$next{nightID}">$next{date}</a>};
 
 print "<hr>";
 
 my @nights;
-list_nights(\@nights, "", "ORDER BY date DESC");
+&tnmc::movies::night::list_nights(\@nights, "", "ORDER BY date DESC");
 
 print qq{
     <table>
@@ -41,7 +40,7 @@ print qq{
 
 foreach my $nightID (@nights){
     my %night;
-    &tnmc::movies::night::get_night ($nightID, \%night);
+    &tnmc::movies::night::get_night($nightID, \%night);
     print qq{
         <tr>
         <td> $nightID

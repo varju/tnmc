@@ -19,10 +19,9 @@ use tnmc::pics::new;
 
 my $picID = &tnmc::cgi::param(picID);
 my %pic;
+&tnmc::pics::pic::get_pic($picID, \%pic);
 
-&get_pic($picID, \%pic);
-
-if ($picID && &auth_access_pic_edit($picID, \%pic)){
+if ($picID && &tnmc::pics::new::auth_access_pic_edit($picID, \%pic)){
     
     $pic{typePublic} = &tnmc::cgi::param(typePublic);
     $pic{title} = &tnmc::cgi::param(title);
@@ -34,7 +33,7 @@ if ($picID && &auth_access_pic_edit($picID, \%pic)){
     $pic{timestamp} = &tnmc::cgi::param(timestamp);
     $pic{ownerID} = &tnmc::cgi::param(ownerID);
     
-    &save_pic(%pic);
+    &tnmc::pics::pic::save_pic(%pic);
 }
 $destination = &tnmc::cgi::param(destination) || $ENV{HTTP_REFERER};
 

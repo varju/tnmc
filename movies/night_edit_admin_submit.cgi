@@ -25,6 +25,6 @@ foreach my $key (@cols){
     $night{$key} = &tnmc::cgi::param($key);
 }
 
-&set_night(%night);
+&tnmc::movies::night::set_night(%night);
 
 print "Location: index.cgi\n\n";

@@ -6,19 +6,9 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
 
-
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(set_album del_album get_album list_albums);
-
-@EXPORT_OK = qw();
 
 #
 # module vars
@@ -27,7 +17,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 # module routines
 #
-
 
 sub set_album{
     my (%album, $junk) = @_;

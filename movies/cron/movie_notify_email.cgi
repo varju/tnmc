@@ -21,7 +21,7 @@ use tnmc::movies::faction;
     
     my $dbh = &tnmc::db::db_connect();
 
-    my @nights = &list_active_nights();
+    my @nights = &tnmc::movies::night::list_active_nights();
 
     # If there is no current movie, don't do anything.
     exit if (! scalar(@nights));

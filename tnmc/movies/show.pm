@@ -2,17 +2,11 @@ package tnmc::movies::show;
 
 use strict;
 
+use AutoLoader 'AUTOLOAD';
+
 #
 # module configuration
 #
-
-BEGIN
-{
-    require AutoLoader;
-    use vars qw(@ISA);
-    
-    @ISA = qw(AutoLoader);
-}
 
 1;
 
@@ -56,7 +50,8 @@ sub show_special_movie_select{
     my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
     
     foreach my $movieID (@movie_list){
-        my %movie; &tnmc::movies::movie::get_movie($movieID, \%movie);
+        my %movie;
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
         
         my $faveSel = ($current_vote == $movieID)? 'selected' : '';
         print qq{               <option value="$movieID" $faveSel>$movie{'title'}\n};
@@ -71,7 +66,7 @@ sub show_current_nights{
     
     use tnmc::movies::night;
     
-    my @nights = &list_active_nights();
+    my @nights = &tnmc::movies::night::list_active_nights();
     foreach my $nightID (@nights){
         &show_night($nightID);
     }
@@ -87,9 +82,8 @@ sub show_night{
     use tnmc::movies::night;
     
     my %night;
-    &get_night($nightID, \%night);
-    
-    
+    &tnmc::movies::night::get_night($nightID, \%night);
+
     my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
     my (%movie);
     
@@ -103,7 +97,7 @@ sub show_night{
     $night{'winnerBlurb'} =~ s/\n/<br>/g;
     
     my %movie;
-    &get_movie($night{'movieID'}, \%movie);
+    &tnmc::movies::movie::get_movie($night{'movieID'}, \%movie);
     
     print qq{
         <TABLE CELLSPACING=0 CELLPADDING=0 width="100">

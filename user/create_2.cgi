@@ -42,7 +42,7 @@ $sth->execute;
 ($userID) = $sth->fetchrow_array();
 $sth->finish;
 
-sms_admin_notify("New User Created: $userID - $user{username} - $user{fullname} - $user{email} - $userID}");
+&tnmc::broadcast::sms_admin_notify("New User Created: $userID - $user{username} - $user{fullname} - $user{email} - $userID}");
     
 &tnmc::template::header();
 

@@ -23,24 +23,23 @@ use tnmc::pics::new;
 my %pic;
 my $picID = &tnmc::cgi::param('picID');
 
-&get_pic($picID, \%pic);
+&tnmc::pics::pic::get_pic($picID, \%pic);
 
 # show the user a scaled down pic
-my $pic_img = &get_pic_url($picID, ['mode'=>'big']);
+my $pic_img = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'big']);
 print qq{  <img width="320" src="$pic_img">\n};
 
 # give admin users a link
 print qq{  <br><a href="pics/pic_edit_admin.cgi?picID=$picID">Admin</a>\n} if ($USERID{groupPics} >= 100);
 
 # Give the owner an edit section:
-if (&auth_access_pic_edit($picID, \%pic)){
-    
+if (&tnmc::pics::new::auth_access_pic_edit($picID, \%pic)){
     &show_pic_edit_form();
 }
 else{
     print "You don't have permission to edit thie pic";
 }
-if (&auth_access_pic_view($picID, \%pic)){
+if (&tnmc::pics::new::auth_access_pic_view($picID, \%pic)){
     # show the exif info
     &tnmc::template::show_heading("Exif info");
     my $exif = &tnmc::pics::pic::get_exif($picID);
@@ -63,8 +62,7 @@ sub show_pic_edit_form{
     my ($pic) = @_;
 
     my %pic;
-
-    &get_pic($picID, \%pic);
+    &tnmc::pics::pic::get_pic($picID, \%pic);
     
     my %typePublic;
     $typePublic{$pic{typePublic}} = 'selected';

@@ -22,10 +22,8 @@ use strict;
 
 &tnmc::security::auth::authenticate();
 
-
-my $nav = &get_nav;
-my $piclist = &search_get_piclist_from_nav($nav);
-
+my $nav = &tnmc::pics::new::get_nav();
+my $piclist = &tnmc::pics::new::search_get_piclist_from_nav($nav);
 
 &tnmc::template::html_black::header();
 &show_search_slide_header($nav, $piclist);
@@ -43,7 +41,7 @@ sub show_search_slide_header{
     my ($nav, $piclist) = @_;
     
     my $listLimit = 20;
-    my $index = &array_get_index($piclist, $nav->{'picID'});
+    my $index = &tnmc::pics::new::array_get_index($piclist, $nav->{'picID'});
     my $listStart = int($index / $listLimit) * $listLimit;
     
     my %nav = %$nav;
@@ -53,7 +51,7 @@ sub show_search_slide_header{
     }
     $nav{'listStart'} = $listStart;
     $nav{'listLimit'} = $listLimit;
-    my $nav_url = &make_nav_url(\%nav);
+    my $nav_url = &tnmc::pics::new::make_nav_url(\%nav);
     my $search_url = "$nav->{_nav_select}_thumb.cgi?$nav_url";
     
     ## album navigation stuff

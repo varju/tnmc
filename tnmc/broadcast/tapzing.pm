@@ -10,15 +10,6 @@ use tnmc::broadcast::util;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(sms_send_tapzing);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #
@@ -36,8 +27,8 @@ sub sms_send_tapzing{
     }
 
     ### get the areacode, if they have one.
-    my $areacode = phone_get_areacode($phone);
-    $phone = phone_get_localnum($phone);
+    my $areacode = &tnmc::broadcast::util::phone_get_areacode($phone);
+    $phone = &tnmc::broadcast::util::phone_get_localnum($phone);
    
     ### Build the argument string.
     $msg =~ s/\s/ /;     # Can't put cr's in the subject line

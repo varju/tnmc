@@ -101,7 +101,7 @@ use tnmc::imdb;
         if ($movieID){
             
             my %dbMovie;
-            &get_movie($movieID, \%dbMovie);
+            &tnmc::movies::movie::get_movie($movieID, \%dbMovie);
 
             $dbMovie{imdbID} = $mID;
 #            $dbMovie{statusShowing} = '1';
@@ -112,7 +112,7 @@ use tnmc::imdb;
                 $dbMovie{description} = $mPremise{$mID};
             }
             #print %dbMovie;
-            &set_movie(%dbMovie);
+            &tnmc::movies::movie::set_movie(%dbMovie);
 
             next;
         }
@@ -134,7 +134,7 @@ use tnmc::imdb;
         $newMovie{date} = '0000-00-00';
         $newMovie{type} = '';
         
-        &set_movie(%newMovie);
+        &tnmc::movies::movie::set_movie(%newMovie);
         
         print "   ..New Movie\n";
         

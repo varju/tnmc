@@ -31,7 +31,7 @@ foreach my $key (@params){
           'nightID' => $nightID,
           'type' => &tnmc::cgi::param($key)
           );
-    &set_attendance(\%attendance);
+    &tnmc::movies::attendance::set_attendance(\%attendance);
 }
 
 # get the default

@@ -18,7 +18,7 @@ use tnnc::pics::pic;
 $picID = &tnmc::cgi::param('picID');	
 
 if ($picID){
-    &del_pic($picID);
+    &tnmc::pics::pic::del_pic($picID);
 }
 
 print "Location: index.cgi\n\n";

@@ -2,21 +2,11 @@ package tnmc::movies::theatres;
 
 use strict;
 
+use tnmc::db;
+
 #
 # module configuration
 #
-BEGIN {
-    
-    use tnmc::db;
-    
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter);
-    @EXPORT = qw();
-    @EXPORT_OK = qw();
-    
-}
 
 #
 # module routines

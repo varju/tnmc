@@ -52,7 +52,7 @@ sub show_admin_movie_list{
 
 
         foreach $movieID (@movies){
-                &get_movie($movieID, \%movie);
+                &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{
             <tr>
                 <td nowrap>

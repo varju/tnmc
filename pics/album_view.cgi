@@ -23,7 +23,7 @@ use tnmc::pics::new;
 
 &tnmc::template::header();
 
-my $nav = &get_nav();
+my $nav = &tnmc::pics::new::get_nav();
 
 &show_album_view($nav);
 
@@ -38,7 +38,7 @@ sub show_album_view{
     
     ## get some info
     my %album;
-    &get_album($nav->{'albumID'}, \%album);
+    &tnmc::pics::album::get_album($nav->{'albumID'}, \%album);
     &tnmc::user::get_user($album{albumOwnerID}, \%owner);
     
     ## heading
@@ -71,7 +71,7 @@ sub show_album_view{
     };
     
     ## Admin options 
-    if (&auth_access_album_edit($albumID, \%album)){
+    if (&tnmc::pics::new::auth_access_album_edit($albumID, \%album)){
         print  qq{
             [ <a href="pics/album_edit.cgi?albumID=$albumID">Edit</a>
             - <a href="pics/album_edit_admin.cgi?albumID=$albumID">Admin</a>

@@ -45,11 +45,11 @@ sub show_showing_movie_list{
 
     my $year = '';
         foreach $movieID (@movies){
-        my %movie = ();
-                &get_movie_extended2($movieID, \%movie);
+        my %movie;
+	&tnmc::movies::movie::get_movie_extended2($movieID, \%movie);
         
         my $my_vote = '';
-        if (&get_vote($movieID, $USERID) >= 1){
+        if (&tnmc::movies::vote::get_vote($movieID, $USERID) >= 1){
             $my_vote = "<b>";
         }
         my $seen_colour = '';

@@ -13,15 +13,6 @@ use tnmc::broadcast::util;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(sms_send_fido sms_send_fido_tap_zing);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #
@@ -39,8 +30,8 @@ sub sms_send_fido{
     }
     
     ### get the areacode, if they have one.
-    my $areacode = phone_get_areacode($phone);
-    $phone = phone_get_localnum($phone);
+    my $areacode = &tnmc::broadcast::util::phone_get_areacode($phone);
+    $phone = &tnmc::broadcast::util::phone_get_localnum($phone);
 
     ### Build the argument string.
     my $SEND = substr($msg, 0, 160);
@@ -76,8 +67,8 @@ sub sms_send_fido_microcell{
     }
     
     ### get the areacode, if they have one.
-    my $areacode = phone_get_areacode($phone);
-    $phone = phone_get_localnum($phone);
+    my $areacode = &tnmc::broadcast::util::phone_get_areacode($phone);
+    $phone = &tnmc::broadcast::util::phone_get_localnum($phone);
 
     ### Build the argument string.
     my $SEND = substr($msg, 0, 160);
@@ -110,8 +101,8 @@ sub sms_send_fido_tap_zing {
     }
     
     ### get the areacode, if they have one.
-    my $areacode = phone_get_areacode($phone);
-    $phone = phone_get_localnum($phone);
+    my $areacode = &tnmc::broadcast::util::phone_get_areacode($phone);
+    $phone = &tnmc::broadcast::util::phone_get_localnum($phone);
 
     ### Build the request
     my $SEND = substr($msg, 0, 160);

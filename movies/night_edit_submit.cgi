@@ -23,14 +23,14 @@ my $nightID = &tnmc::cgi::param('nightID');
 ## update the night with submitted vals.
 if ($nightID){
     my %night;
-    &get_night($nightID, \%night);
+    &tnmc::movies::night::get_night($nightID, \%night);
     
     foreach my $key (keys %night){
         my $val =  &tnmc::cgi::param($key);
         $night{$key} = $val if(defined $val);
     }
     
-    &set_night(%night);
+    &tnmc::movies::night::set_night(%night);
 }
 
 my $location = &tnmc::cgi::param('LOCATION') || "/movies/";

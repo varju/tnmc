@@ -33,7 +33,7 @@ sub print_movie_edit_admin_form{
     
     my %movie;
     my @cols = &tnmc::db::db_get_cols_list('Movies');
-    &get_movie($movieID, \%movie);
+    &tnmc::movies::movie::get_movie($movieID, \%movie);
     
     print qq 
     {    <form action="movies/movie_edit_submit.cgi" method="post">

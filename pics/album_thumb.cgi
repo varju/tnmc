@@ -16,19 +16,18 @@ use tnmc::pics::new;
 
 &tnmc::template::header();
 
-my $nav = &get_nav;
+my $nav = &tnmc::pics::new::get_nav();
 my $albumID = $nav->{'albumID'};
-my $piclist = &album_get_piclist_from_nav($nav);
+my $piclist = &tnmc::pics::new::album_get_piclist_from_nav($nav);
 
 # show album info
-&show_album_thumb_header($albumID, $nav);
+&tnmc::pics::new::show_album_thumb_header($albumID, $nav);
 
 # show thumbs
-&show_thumbs($piclist, $nav);
+&tnmc::pics::new::show_thumbs($piclist, $nav);
 
 &tnmc::template::footer();
 
 #
 # subs
 #
-

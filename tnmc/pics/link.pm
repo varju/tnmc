@@ -10,16 +10,6 @@ use tnmc::user;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(add_link del_link get_link list_links 
-             list_links_for_album list_links_for_date);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #

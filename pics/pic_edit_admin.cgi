@@ -24,7 +24,7 @@ use tnmc::pics::show;
 
 $picID = &tnmc::cgi::param('picID');
 %pic;	
-&get_pic($picID, \%pic);
+&tnmc::pics::pic::get_pic($picID, \%pic);
 
 print qq {
     <form action="pics/pic_edit_admin_submit.cgi" method="post">

@@ -35,7 +35,8 @@ BEGIN
 ### msg: basic access
 sub get_msg{
     my ($ID) = @_;
-    
+
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT * from MessageMsg WHERE msgID = ?";
     my $sth = $dbh->prepare($sql);
     $sth->execute($ID);
@@ -54,6 +55,7 @@ sub set_msg{
     my @var_list = map {$hash->{$_}} @key_list;
     
     # save to the db
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "REPLACE INTO MessageMsg ($key_list) VALUES($ref_list)";
     my $sth = $dbh->do($sql, undef, @var_list);
     
@@ -66,6 +68,7 @@ sub set_msg{
 sub get_conv{
     my ($ID) = @_;
     
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT * from MessageConv WHERE convID = ?";
     my $sth = $dbh->do($sql, undef, $ID);
     my $hash = $sth->fetchrow_hashref();
@@ -83,6 +86,7 @@ sub set_conv{
     my @var_list = map {$hash->{$_}} @key_list;
     
     # save to the db
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "REPLACE INTO MessageConv ($key_list) VALUES($ref_list)";
     my $sth = $dbh->do($sql, undef, @var_list);
     $sth->finish;
@@ -95,6 +99,7 @@ sub conv_get_msg_list{
     
     my @list;
     
+    my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT msgID from MessageMsg
                 WHERE convID = ? 
                   AND (date_posted > date_sub(NOW(), INTERVAL 4320 MINUTE))

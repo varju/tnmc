@@ -40,11 +40,11 @@ sub serve_picture{
     my ($mode, $picID) = @_;
 
     my %pic;
-    &get_pic($picID, \%pic);
+    &tnmc::pics::pic::get_pic($picID, \%pic);
     $picfile = "$basePicDir$pic{filename}";
     
     ## Access control
-    if (! &auth_access_pic_view($picID, \%pic) ){
+    if (! &tnmc::pics::new::auth_access_pic_view($picID, \%pic) ){
         errorExit( "access not allowed!");
     }
     ## Does pic exist?
@@ -58,8 +58,8 @@ sub serve_picture{
         ## re-cache it if neccessary
         my $cache_file = "$basePicDir/cache/$mode/$picID";
         if ($force || ! -f "$cache_file"){
-            &update_cache($pic{picID});
-            &update_cache_pub($pic{picID});
+            &tnmc::pics::pic::update_cache($pic{picID});
+            &tnmc::pics::pic::update_cache_pub($pic{picID});
         }
         &serve_file($cache_file);
     }

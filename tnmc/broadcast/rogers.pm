@@ -14,15 +14,6 @@ use tnmc::broadcast::util;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(sms_send_rogers);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #
@@ -42,8 +33,8 @@ sub sms_send_rogers
     }
 
     ### get the areacode, if they have one.
-    my $areacode = phone_get_areacode($phone);
-    $phone = phone_get_localnum($phone);
+    my $areacode = &tnmc::broadcast::util::phone_get_areacode($phone);
+    $phone = &tnmc::broadcast::util::phone_get_localnum($phone);
 
     ### Build the argument string.
     my $URL = "http://216.129.53.44:8080/cgi-bin/send_sm_rogers.new";

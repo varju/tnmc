@@ -27,20 +27,20 @@ if (!$albumID){
     print "Error: Invalid form data\n";
     &tnmc::template::footer();
 }
-elsif(!&auth_access_album_edit($albumID, undef)){
+elsif(!&tnmc::pics::new::auth_access_album_edit($albumID, undef)){
     &tnmc::template::header();
     print "Error: Invalid user permissions\n";
     &tnmc::template::footer();
 }
 else{
-    &get_album($albumID, \%album);
+    &tnmc::pics::album::get_album($albumID, \%album);
     foreach my $key (keys %album){
      	my $val = &tnmc::cgi::param($key);
         if (defined $val){
             $album{$key} = $val;
         }
     }
-    &set_album(%album);
+    &tnmc::pics::album::set_album(%album);
     
     print "Location: /pics/album_view.cgi?albumID=$albumID\n\n";
     

@@ -4,24 +4,9 @@ use strict;
 
 use tnmc::db;
 
-
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(
-             search_get_piclist_from_nav
-             
-             );
-
-
-
-@EXPORT_OK = qw();
 
 #
 # module vars
@@ -30,7 +15,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 # module routines
 #
-
 
 sub search_get_piclist_from_nav{
     my ($nav) = @_;

@@ -18,7 +18,7 @@ use tnmc::cgi;
 my $movieID = &tnmc::cgi::param('movieID');    
 
 if ($movieID) {
-    &del_movie($movieID);
+    &tnmc::movies::movie::del_movie($movieID);
 }
 
 print "Location: index.cgi\n\n";

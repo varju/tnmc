@@ -21,9 +21,9 @@ use tnmc::movies::night;
     
     &tnmc::db::db_connect();
     
-    my @nights = &list_future_nights();
+    my @nights = &tnmc::movies::night::list_future_nights();
     my %next_night;
-    &get_night($nights[0], \%next_night);
+    &tnmc::movies::night::get_night($nights[0], \%next_night);
     
     my $next_tuesday = $next_night{'date'};
     my $vote_blurb = $next_night{'voteBlurb'};
@@ -86,7 +86,7 @@ sub print_email_movielist{
         &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND statusNew AND NOT (statusSeen OR 0)", 'ORDER BY Title');
 
         foreach $movieID (@movies){
-                get_movie($movieID, \%movie);
+                &tnmc::movies::movie::get_movie($movieID, \%movie);
                 $movie{description} =~ s/\s+/ /g;    # kill extra spaces and <cr>s
                 $movie{description} =~ s/^ //g;        # kill leading whitespace
                 print RELEASES "        $movie{title} \n$movie{description}\n\n";
@@ -102,7 +102,7 @@ sub print_email_movielist{
         my %movieInfo;
         foreach $movieID (@movies){
                 my $anon = {};     ### create an anonymous hash.
-                &get_movie_extended2($movieID, $anon);
+                &tnmc::movies::movie::get_movie_extended2($movieID, $anon);
                 $movieInfo{$movieID} = $anon;
         }
 
@@ -138,7 +138,7 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID
         &tnmc::movies::show::list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))", '');
         foreach $movieID (@movies){
                 my $anon = {};     ### create an anonymous hash.
-                &get_movie_extended2($movieID, $anon);
+                &tnmc::movies::movie::get_movie_extended2($movieID, $anon);
                 $movieInfo{$movieID} = $anon;
         }
 

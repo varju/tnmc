@@ -20,7 +20,7 @@ my $cgih = new CGI;
 
 &db_connect();
 
-&wml_header();
+&tnmc::template::wml::wml_header();
 
 my $movieID = $cgih->param('movieID');
 
@@ -40,14 +40,8 @@ my $movie_card = qq{
     <a href="$fido_url">iFido info</a>
     </p>
 };
-&show_card("movie_$movieID", $movie{'title'}, $movie_card);
+&tnmc::template::wml::show_card("movie_$movieID", $movie{'title'}, $movie_card);
 
-
-&wml_footer();
+&tnmc::template::wml::wml_footer();
 
 &db_disconnect();
-
-
-
-
-

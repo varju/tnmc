@@ -18,24 +18,6 @@ use tnmc::pics::link;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(
-             album_get_piclist_from_nav get_nav show_thumbs 
-
-             auth_access_album_edit auth_access_album_view auth_access_pic_edit auth_access_pic_view
-             
-             show_album_thumb_header show_album_nav_menu_basic show_album_nav_menu_full show_piclist
-             
-             show_album_slide_header show_slide array_get_index show_slide_nav_menu_basic show_slide_thumbnails show_slide_pic make_nav_url
-             );
-
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #
@@ -184,7 +166,7 @@ sub _has_access_pic{
     # get the info if we have to.
     if (! defined $pic){
         %$pic = ();
-        &get_pic($picID, $pic);
+        &tnmc::pics::pic::get_pic($picID, $pic);
     }
     if (! defined $userID){
         $userID = $user->{userID};
@@ -501,10 +483,10 @@ sub show_piclist{
         
         
         ## get pic info
-        &get_pic($picID, \%pic);
+        &tnmc::pics::pic::get_pic($picID, \%pic);
         
         my $slide_url = "$nav{_nav_select}_slide.cgi?picID=$picID&$nav_query";
-        my $img_url = &get_pic_url($picID, ['mode'=>$listSize]);
+        my $img_url = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>$listSize]);
         my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
         my $pic_src = $img_src;
         my $can_edit = ( ($pic{'typePublic'}) ||
@@ -815,7 +797,7 @@ sub show_slide_nav_menu_basic{
     print qq{    <select name="picID" onchange="form.submit()"> \n};
     foreach my $otherPicID (@$piclist){
         my %otherPic;
-        &get_pic($otherPicID, \%otherPic);
+        &tnmc::pics::pic::get_pic($otherPicID, \%otherPic);
         print qq{<option $sel{$i} value="$otherPicID">};
         printf("%4i - %s\n", $i + 1, $otherPic{title});
         $i++;
@@ -913,9 +895,9 @@ sub show_slide_thumbnails{
         
         my $target_picID = @{$piclist}[$i];
         my %target_pic;
-        &get_pic($target_picID, \%target_pic);
+        &tnmc::pics::pic::get_pic($target_picID, \%target_pic);
         my $url = "$nav->{_nav_select}_slide.cgi?picID=$target_picID&$nav_url";
-        my $image = get_pic_url($target_picID, ['mode'=>'thumb']);
+        my $image = &tnmc::pics::pic::get_pic_url($target_picID, ['mode'=>'thumb']);
         
         print "<td>";
         printf("%i - %18.18s<br>", $i + 1, $target_pic{'title'});
@@ -935,7 +917,7 @@ sub show_slide_pic{
     my $scale = $nav->{'scale'};
     
     my %pic;
-    &get_pic($picID, \%pic);
+    &tnmc::pics::pic::get_pic($picID, \%pic);
     
     my %owner;
     &tnmc::user::get_user($pic{ownerID}, \%owner);
@@ -977,7 +959,7 @@ sub show_slide_pic{
     
     my $WIDTH = $pic{width} * $scale;
     my $HEIGHT = $pic{height} * $scale;
-#    my $img_src = &get_pic_url($picID, ['mode'=>'full']);
+#    my $img_src = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'full']);
     my $img_src = "/pics/serve_pic.cgi?picID=$picID";
     
     ## print it all out

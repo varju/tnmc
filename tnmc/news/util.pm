@@ -9,15 +9,6 @@ use tnmc::general_config;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(get_quick_news get_todays_news get_news set_news_item get_news_item del_news_item news_default_expiry);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #
@@ -126,7 +117,7 @@ sub set_news_item {
     }
 
     if (!$expires) {
-        $expires = news_default_expiry($date);
+        $expires = &news_default_expiry($date);
     }
 
     $sql = "INSERT INTO News (newsID, userID, value, date, expires) 

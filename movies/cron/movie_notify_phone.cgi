@@ -22,18 +22,19 @@ use tnmc::movies::faction;
 
     &tnmc::db::db_connect();
     
-    my @nights = &list_active_nights();
+    my @nights = &tnmc::movies::night::list_active_nights();
     
     # If there is no current movie, don't do anything.
     exit if (! scalar(@nights));
     
     foreach my $nightID (@nights){
         
-        my %night; &get_night($nightID, \%night);
+        my %night;
+	&tnmc::movies::night::get_night($nightID, \%night);
         
         ### Put the message together
         my %movie;
-        &get_movie($night{'movieID'}, \%movie);
+        &tnmc::movies::movie::get_movie($night{'movieID'}, \%movie);
         
         my $message = " $movie{'title'} ---------------- Meet at $night{'meetingPlace'} \@ $night{'meetingTime'}\. ---------------- $night{'theatre'} \@ $night{'showtime'}\.";
         
@@ -42,7 +43,7 @@ use tnmc::movies::faction;
         
         ### Broadcast the message
         print "$nightID ---" , join(" ", @users), "\n";
-        &smsBroadcast(\@users, $message);
+        &tnmc::broadcast::smsBroadcast(\@users, $message);
     }
     
     &tnmc::db::db_disconnect();
@@ -52,6 +53,3 @@ use tnmc::movies::faction;
 ##########################################################
 #### The end.
 ##########################################################
-
-
-

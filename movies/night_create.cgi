@@ -113,7 +113,7 @@ sub show_night_create_form{
     };
     
     foreach my $movieID (@movies){
-        &get_movie($movieID, \%movie);
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{
                 <option value="$movie{'movieID'}" $movieID_sel{$movieID} >$movie{'title'}
         };

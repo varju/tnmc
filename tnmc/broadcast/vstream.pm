@@ -12,15 +12,6 @@ use tnmc::user;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(sms_send_vstream);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #

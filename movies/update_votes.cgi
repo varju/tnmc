@@ -59,7 +59,7 @@ sub do_update_votes{
     ### do the processing.
     foreach $_ (@params){
         if (! s/^v//) { next; }
-        &set_vote($_, $userID, &tnmc::cgi::param("v$_"));
+        &tnmc::movies::vote::set_vote($_, $userID, &tnmc::cgi::param("v$_"));
     }
     
     ### Special votes
@@ -74,7 +74,10 @@ sub do_update_votes{
             $sth->finish();
             
             ### Set new Special Vote.
-            if ($movieID){ &set_vote($movieID, $userID, $vote_type);}
+            if ($movieID)
+	    {
+		&tnmc::movies::vote::set_vote($movieID, $userID, $vote_type);
+	    }
         }
     }
     

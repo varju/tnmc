@@ -22,7 +22,7 @@ my @cols = &tnmc::db::db_get_cols_list('Movies');
 foreach my $key (@cols){
     $movie{$key} = &tnmc::cgi::param($key);
 }
-&set_movie(%movie);
+&tnmc::movies::movie::set_movie(%movie);
 
 print "Location: index.cgi\n\n";
 

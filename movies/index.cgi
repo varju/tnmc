@@ -249,7 +249,7 @@ sub show_movie_list_enhanced {
     
     foreach my $movieID (@list){
         my $anon = {};     ### create an anonymous hash.
-        &get_movie_extended2($movieID, $anon, $nightID);
+        &tnmc::movies::movie::get_movie_extended2($movieID, $anon, $nightID);
         $movieInfo{$movieID} = $anon;
     }
     if ($sortOrder){
@@ -269,7 +269,7 @@ sub show_movie_list_enhanced {
     
     foreach my $movieID (@list){
         
-        my $vote = &get_vote($movieID, $effectiveUserID);
+        my $vote = &tnmc::movies::vote::get_vote($movieID, $effectiveUserID);
         
         my %vote_status_word;
         $vote_status_word{$vote} = "CHECKED";

@@ -39,7 +39,7 @@ sub do_broadcast{
         }
     }
     
-    &smsBroadcast(\@userList, $message);
+    &tnmc::broadcast::smsBroadcast(\@userList, $message);
     
     my $numRec = $#userList + 1;
     print qq{

@@ -2,21 +2,11 @@ package tnmc::broadcast;
 
 use strict;
 
+use AutoLoader 'AUTOLOAD';
+
 #
 # module configuration
 #
-BEGIN{
-    
-    require Exporter;
-    require AutoLoader;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
-    
-    @ISA = qw(Exporter AutoLoader);
-    
-    @EXPORT = qw(smsBroadcast smsShout sms_admin_notify);
-    
-    @EXPORT_OK = qw();
-}
 
 1;
 
@@ -80,28 +70,28 @@ sub smsShout{
     if (($user{phoneTextMail} eq 'Fido' || $user{phoneTextMail} eq 'all')
         && $user{phoneFido})
     {
-        sms_send_fido($user{phoneFido}, $msg);
+        &tnmc::broadcast::fido::sms_send_fido($user{phoneFido}, $msg);
     }
 
     ### Telus
     if (($user{phoneTextMail} eq 'Telus' || $user{phoneTextMail} eq 'all')
         && $user{phoneTelus})
     {
-        sms_send_tapzing($user{phoneTelus}, $msg);
+        &tnmc::broadcast::tapzing::sms_send_tapzing($user{phoneTelus}, $msg);
     }
 
     ### Rogers
     if (($user{phoneTextMail} eq 'Rogers' || $user{phoneTextMail} eq 'all')
         && $user{phoneRogers})
     {
-        sms_send_rogers($user{phoneRogers}, $msg);
+        &tnmc::broadcast::rogers::sms_send_rogers($user{phoneRogers}, $msg);
     }
 
     ### Vstream
     if (($user{phoneTextMail} eq 'Vstream' || $user{phoneTextMail} eq 'all')
         && $user{phoneVstream})
     {
-        sms_send_vstream($user{phoneVstream}, $msg);
+        &tnmc::broadcast::vstream::sms_send_vstream($user{phoneVstream}, $msg);
     }
 }
 

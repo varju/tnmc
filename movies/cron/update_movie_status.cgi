@@ -34,19 +34,19 @@ $sth->finish;
 # (1) Set this week's movie to "seen"
 #
 
-my @nights = list_active_nights();
+my @nights = &tnmc::movies::night::list_active_nights();
 
 foreach my $nightID (@nights){
     
     my %night;
-    &get_night($nightID, \%night);
+    &tnmc::movies::night::get_night($nightID, \%night);
     
     my $movieID = $night{'movieID'};
     my %movie;
-    &get_movie($movieID, \%movie);
+    &tnmc::movies::movie::get_movie($movieID, \%movie);
     $movie{'statusSeen'} = "1";
     $movie{'date'} = $timestamp;
-    &set_movie(%movie);
+    &tnmc::movies::movie::set_movie(%movie);
     
 }
 
@@ -93,7 +93,7 @@ foreach my $factionID (@factions){
             print "$i_date\n";
             
             # next if the night already exists
-            next if list_nights([], "WHERE factionID = $factionID AND date LIKE '$i_date%'", "");
+            next if &tnmc::movies::night::list_nights([], "WHERE factionID = $factionID AND date LIKE '$i_date%'", "");
             
             # add the night
             my %night = (
@@ -102,7 +102,7 @@ foreach my $factionID (@factions){
                          godID => $faction->{'godID'},
                          valid_theatres => $faction->{'theatres'},
                          date => "$i_date 23:00:00");
-            set_night(%night);
+            &tnmc::movies::night::set_night(%night);
             print "add $i_date\n";
         }
     }
@@ -110,10 +110,3 @@ foreach my $factionID (@factions){
 
 # the end.
 &tnmc::db::db_disconnect();
-
-
-
-
-
-
-

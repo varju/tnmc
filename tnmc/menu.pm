@@ -2,28 +2,19 @@ package tnmc::menu;
 
 use strict;
 
+use AutoLoader 'AUTOLOAD';
+
+use tnmc::config;
+use tnmc::security::auth;
+use tnmc::util::date;
+
 #
 # module configuration
 #
 
-BEGIN
-{
-    use tnmc::config;
-    use tnmc::security::auth;
-    require tnmc::util::date;
-
-    require AutoLoader;
-    use vars qw(@ISA);
-
-    @ISA = qw(AutoLoader);
-}
-
-1;
-
 #
 # module routines
 #
-
 
 sub show_menu_item{
     my ($indent, $url, $name, $text) = @_;

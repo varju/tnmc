@@ -8,15 +8,6 @@ use tnmc::security::auth;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(show_user_homepage);
-
-@EXPORT_OK = qw();
-
 #
 # module vars
 #
@@ -25,7 +16,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 # module routines
 #
 
-sub show_user_homepage {
+sub show_user_homepage
+{
     ############################
     ### Do the date stuff.
     open (DATE, "/bin/date |");

@@ -20,6 +20,6 @@ $news{value} = &tnmc::cgi::param('value');
 $news{date} = &tnmc::cgi::param('date');
 $news{expires} = &tnmc::cgi::param('expires');
 
-set_news_item(\%news);
+&tnmc::news::util::set_news_item(\%news);
 
 print "Location: /news/\n\n";

@@ -25,7 +25,7 @@ use tnmc::pics::link;
 	$albumID = &tnmc::cgi::param('albumID');
 	$CONFIRM = &tnmc::cgi::param('CONFIRM');
 	
-       	&get_album($albumID, \%album);
+       	&tnmc::pics::album::get_album($albumID, \%album);
 
         if (!$albumID){
             ### Bad albumID
@@ -73,7 +73,7 @@ use tnmc::pics::link;
                 $sth = $dbh->prepare($sql);
                 $sth->execute();
 
-                &del_album($albumID);
+                &tnmc::pics::album::del_album($albumID);
 
                 print qq{
                     <p>

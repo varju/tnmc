@@ -15,10 +15,7 @@ use tnmc::movies::movie;
 #############
 ### Main logic
 
-&db_connect();
-
-&wml_header();
-
+&tnmc::template::wml::wml_header();
 
 ## movie menu
 
@@ -31,7 +28,7 @@ my $movie_menu =
         </p>
         };
 
-# &show_card("menu", "TNMC Movies", $movie_menu);
+# &tnmc::template::wml::show_card("menu", "TNMC Movies", $movie_menu);
 
 
 ## movie listing
@@ -49,10 +46,6 @@ my $movie_list =
         $list_wml
         </p>
         };
-&show_card("list", "TNMC Movie list", $movie_list);
+&tnmc::template::wml::show_card("list", "TNMC Movie list", $movie_list);
 
-
-&wml_footer();
-
-&db_disconnect();
-
+&tnmc::template::wml::wml_footer();

@@ -17,8 +17,8 @@ use tnmc::news::util;
 if ($USERID) {
     &tnmc::template::show_heading("news");
 
-    my $news_ref = get_news();
-    news_print($news_ref,0,1,1);
+    my $news_ref = &tnmc::news::util::get_news();
+    &tnmc::news::template::news_print($news_ref,0,1,1);
 }
     
 &tnmc::template::footer();

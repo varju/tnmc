@@ -16,15 +16,15 @@ use tnmc::pics::search;
 
 &tnmc::template::header();
 
-my $nav = &get_nav;
+my $nav = &tnmc::pics::new::get_nav();
 my $albumID = $nav->{'albumID'};
-my $piclist = &search_get_piclist_from_nav($nav);
+my $piclist = &tnmc::pics::search::search_get_piclist_from_nav($nav);
 
 # show album info
 &show_search_thumb_header($nav, $piclist);
 
 # show thumbs
-&show_thumbs($piclist, $nav);
+&tnmc::pics::new::show_thumbs($piclist, $nav);
 
 &tnmc::template::footer();
 

@@ -32,7 +32,7 @@ my $albumID = &tnmc::cgi::param('albumID');
 sub show_album_edit_admin_form{
     my ($albumID) = @_;
     my %album;	
-    &get_album($albumID, \%album);
+    &tnmc::pics::album::get_album($albumID, \%album);
     
     print qq {
         

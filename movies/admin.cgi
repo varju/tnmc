@@ -35,10 +35,10 @@ sub show_admin_page{
         
         ## List of Future Nights
         &tnmc::template::show_heading ("upcoming movie nights");
-        my @NIGHTS = &list_future_nights();
+        my @NIGHTS = &tnmc::movies::night::list_future_nights();
         foreach my $nightID (@NIGHTS){
             my %night;
-            &get_night ($nightID, \%night);
+            &tnmc::movies::night::get_night($nightID, \%night);
             print qq{
                 <a href="movies/night_edit.cgi?nightID=$nightID">$night{date}</a>
                 ($nightID)<br>

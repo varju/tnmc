@@ -46,7 +46,7 @@ sub show_movie_vote_comparison{
         print qq{<tr><td></td>};
         foreach $movieID (@movies){
             my %movie;
-            &get_movie($movieID, \%movie);
+            &tnmc::movies::movie::get_movie($movieID, \%movie);
             print "<th> $movie{$field} </td>";
         }
         print "</tr>";
@@ -63,7 +63,7 @@ sub show_movie_vote_comparison{
 
         my $vote_count = 0;
         foreach $movieID (@movies){
-            my $vote = &get_vote($movieID, $userID);
+            my $vote = &tnmc::movies::vote::get_vote($movieID, $userID);
             $vote_count ++ if ($vote != 0);
         }
         next if (!$vote_count);
@@ -73,7 +73,7 @@ sub show_movie_vote_comparison{
         };
 
         foreach $movieID (@movies){
-            my $vote = &get_vote($movieID, $userID);
+            my $vote = &tnmc::movies::vote::get_vote($movieID, $userID);
             if (($vote_count < scalar(@movies)) && ($vote > 0)){
                 print qq{<td align="center"><b>$vote</b></td>};
                 $movie_vote_count{$movieID} ++;
@@ -88,7 +88,7 @@ sub show_movie_vote_comparison{
     print qq{<tr><td></td>};
     foreach $movieID (@movies){
         my %movie;
-        &get_movie($movieID, \%movie);
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{<td align="center"><hr> $movie_vote_count{$movieID} </td>};
     }
     print "</td></table>";

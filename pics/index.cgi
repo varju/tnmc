@@ -73,13 +73,13 @@ sub list_recent_albums{
     
     my (@albums1, @albums2);
     
-    &list_albums
+    &tnmc::pics::album::list_albums
         ( \@albums1, 
           "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
           "ORDER BY albumDateStart DESC, albumTitle LIMIT 7"
           );
     
-    &list_albums
+    &tnmc::pics::album::list_albums
         ( \@albums2, 
           "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
           "ORDER BY albumID DESC LIMIT 7"

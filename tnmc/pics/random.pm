@@ -26,9 +26,9 @@ sub show_random_pic{
     my $picID = &get_random_pic($seed, $offset);
     
     my %pic;
-    &get_pic($picID, \%pic);
+    &tnmc::pics::pic::get_pic($picID, \%pic);
     
-    my $pic_img = &get_pic_url($picID, ['mode'=>'thumb']);
+    my $pic_img = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'thumb']);
     $pic{description} &&= " ($pic{description})";
     my $date = $pic{timestamp};
     $date =~ s/\s.*//;

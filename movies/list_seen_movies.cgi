@@ -54,7 +54,7 @@ sub show_seen_movie_list{
 
     my $year = '';
     foreach $movieID (@movies){
-        &get_movie($movieID, \%movie);
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
         
         $movie{date} =~ /^(....)/; # grab the year
         if ($year ne $1){

@@ -38,7 +38,7 @@ use tnmc::cgi;
 
     &tnmc::general_config::set_general_config('suggestions', $SUGG);
 
-    sms_admin_notify("IDEA: $newSuggestion");
+    &tnmc::broadcast::sms_admin_notify("IDEA: $newSuggestion");
 
     &tnmc::db::db_disconnect();
 

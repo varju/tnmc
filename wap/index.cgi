@@ -9,15 +9,13 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::template::wml;
-use tnmc::db;
-
 
 #############
 ### Main logic
 
 #&db_connect();
 
-&wml_header();
+&tnmc::template::wml::wml_header();
 
 ## menu
 my $splash_menu =
@@ -30,7 +28,7 @@ my $splash_menu =
         </p>
         };
 
-&show_card("menu", "TNMC Splash", $splash_menu);
+&tnmc::template::wml::show_card("menu", "TNMC Splash", $splash_menu);
 
 ## sites
 my $sites_card =
@@ -41,10 +39,6 @@ my $sites_card =
         </p>
         };
 
-&show_card("sites", "Other Sites", $sites_card);
+&tnmc::template::wml::show_card("sites", "Other Sites", $sites_card);
 
-
-&wml_footer();
-
-#&db_disconnect();
-
+&tnmc::template::wml::wml_footer();

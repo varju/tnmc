@@ -10,13 +10,6 @@ use tnmc::db;
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(wml_header wml_footer show_card);
-@EXPORT_OK = qw();
-
 #
 # module vars
 #

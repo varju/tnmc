@@ -1,38 +1,14 @@
 package tnmc::db;
-#
-# Database Access Methods:
-#    db_connect()
-#    db_disconnect()
-#    db_get_cols_list (table)
-#    db_set_row (hash_ref, dbh, table, primary_key)
-#    db_get_row (hash_ref, dbh, table, where)
-#
-
 
 use strict;
+use vars qw($dbh_tnmc);
+
+use DBI;
+use AutoLoader 'AUTOLOAD';
 
 #
 # module configuration
 #
-
-BEGIN
-{
-    #
-    # note: there is a second BEGIN (and an associated END) below that
-    # aotomatically connect and disconnect to the db.
-    #
-    
-    use DBI;
-    use AutoLoader;
-    use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc $dbh);
-    
-    @ISA = qw(Exporter AutoLoader);
-
-    @EXPORT = qw($dbh);
-
-    @EXPORT_OK = ();
-}
 
 #
 # module routines
@@ -55,7 +31,6 @@ sub db_connect{
     # say hello.
     $dbh_tnmc = DBI->connect("DBI:mysql:$database:$host", $user, $password)
         or die "Can't connect: $dbh_tnmc->errstr\n";
-    $dbh = $dbh_tnmc;
     
     return $dbh_tnmc;
 }
@@ -68,10 +43,13 @@ sub db_disconnect{
 # module conf - automatically connect and disconnect to the db 
 #
 
-BEGIN {
+BEGIN
+{
     db_connect();
 }
-END {
+
+END
+{
     db_disconnect();
 }
 

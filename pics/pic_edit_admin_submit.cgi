@@ -24,7 +24,7 @@ foreach $key (@cols){
     $pic{$key} = &tnmc::cgi::param($key);
 }
 
-&set_pic(%pic);
+&tnmc::pics::pic::set_pic(%pic);
 
 print "Location: pic_edit.cgi?picID=$pic{picID}\n\n";
 

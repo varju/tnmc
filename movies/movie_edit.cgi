@@ -32,7 +32,7 @@ sub show_movie_edit_form{
     my ($movieID) = @_;
 
     my %movie;    
-    &get_movie($movieID, \%movie);
+    &tnmc::movies::movie::get_movie($movieID, \%movie);
     
     my ($checkboxSeen, $checkboxNotSeen);
     if ($movie{statusSeen}){

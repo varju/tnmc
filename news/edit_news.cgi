@@ -19,8 +19,8 @@ if ($USERID) {
     
     my $newsId = &tnmc::cgi::param('newsId');
 
-    my $news_ref = get_news_item($newsId);
-    news_edit($news_ref);
+    my $news_ref = &tnmc::news::util::get_news_item($newsId);
+    &tnmc::news::template::news_edit($news_ref);
 }
     
 &tnmc::template::footer();
