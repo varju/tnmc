@@ -10,7 +10,6 @@ package tnmc::db;
 
 
 use strict;
-use DBI;
 
 #
 # module configuration
@@ -22,6 +21,7 @@ BEGIN{
     # aotomatically connect and disconnect to the db.
     #
     
+    use DBI;
     use AutoLoader;
     use Exporter;
     use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc $dbh);
