@@ -49,7 +49,6 @@ require 'MOVIES.pl';
         if ($rating != 0){
                 $rating -= 2.5;
                 if ($rating >= 1){
-                        $movie->{order} ++;
                         $movie->{order} *=     1 + ( $rating / 5 );
                 }else{
                         $movie->{order} +=        $rating;
