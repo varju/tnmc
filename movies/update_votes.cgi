@@ -78,7 +78,7 @@ use tnmc::cgi;
         $sth->finish();
         
         ### Set new SuperFave.
-        if ($favoriteMovie){ &set_vote($favoriteMovie, $userID, '3');}
+        if ($superfavoriteMovie){ &set_vote($superfavoriteMovie, $userID, '3');}
     }
     
     print "Location: $ENV{HTTP_REFERER}\n\n";
