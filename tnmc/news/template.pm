@@ -73,7 +73,12 @@ sub news_print {
 }
 
 sub news_edit {
-    my ($newsId,$userId,$date,$value) = @_;
+    my ($news_ref) = @_;
+
+    my $newsId = $$news_ref{newsId};
+    my $userId = $$news_ref{userId};
+    my $date = $$news_ref{date};
+    my $value = $$news_ref{value};
 
     my $userlist = get_user_list("WHERE groupAdmin='1'");
 

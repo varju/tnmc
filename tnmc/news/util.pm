@@ -69,8 +69,13 @@ sub get_news {
 }
 
 sub set_news_item {
-    my ($newsId, $userId, $value, $date) = @_;
+    my ($news_ref) = @_;
     my ($sql, $sth);
+
+    my $newsId = $$news_ref{newsId};
+    my $userId = $$news_ref{userId};
+    my $value = $$news_ref{value};
+    my $date = $$news_ref{date};
 
     if ($newsId) {
         $sql = "DELETE FROM News WHERE newsID=?";

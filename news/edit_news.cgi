@@ -24,11 +24,7 @@ if ($USERID) {
     my $newsId = $tnmc_cgi->param('newsId');
 
     my $news_ref = get_news_item($newsId);
-    my $userId = $$news_ref{userId};
-    my $value = $$news_ref{value};
-    my $date = $$news_ref{date};
-
-    news_edit($newsId,$userId,$date,$value);
+    news_edit($news_ref);
 }
     
 footer();

@@ -17,12 +17,13 @@ use tnmc::news::util;
 db_connect();
 cookie_get();
 
-my $newsId = $tnmc_cgi->param('newsId');
-my $userId = $tnmc_cgi->param('userId');
-my $value = $tnmc_cgi->param('value');
-my $date = $tnmc_cgi->param('date');
+my %news;
+$news{newsId} = $tnmc_cgi->param('newsId');
+$news{userId} = $tnmc_cgi->param('userId');
+$news{value} = $tnmc_cgi->param('value');
+$news{date} = $tnmc_cgi->param('date');
 
-set_news_item($newsId,$userId,$value,$date);
+set_news_item(\%news);
 
 db_disconnect();
 
