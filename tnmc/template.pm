@@ -1,16 +1,30 @@
-##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca
-##################################################################
-### Opening Stuff. Modules and all that. nothin' much interesting.
+package tnmc::template;
 
-require 5.004;
 use strict;
-use DBI;
-use CGI;
 
 use tnmc::config;
+use tnmc::cookie;
+use tnmc::db;
 
-###################################################################
+#
+# module configuration
+#
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+
+@ISA = qw(Exporter);
+@EXPORT = qw(header footer show_heading);
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
+
 sub header{
 
 	&db_connect();
@@ -117,10 +131,10 @@ SIZE="-2">
 	if (!$pageID)
 	{
 		if ($LOGGED_IN)
-		{ 	&new_nav_menu();
+		{ 	main::new_nav_menu();
 		}
 		else
-		{	&new_nav_login();
+		{	main::new_nav_login();
 		}
 	}
 	else
@@ -189,5 +203,4 @@ bgcolor="448800" width="100%">
 	};
 }
 
-#Make Perl happy
-return 1;
+1;
