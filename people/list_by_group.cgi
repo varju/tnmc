@@ -14,24 +14,27 @@ use tnmc;
 	#############
 	### Main logic
 
-	@users;
-	%user;
-	
+	&db_connect();
+	my $cgih = new CGI;
+	my $group = $cgih->param(group);
+	my $cutoff = $cgih->param(cutoff);
+	my $limit = $cgih->param(limit);
+
+	my @users;
+	&list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');
 
 	&header();
 	
-	&show_heading ("TNMC People");
-	
-	&show_users();
+	&show_heading ("$group People (min: $cutoff)");
+	&show_user_listing(@users);
 
 	&footer();
 
 ##########################################################
-sub show_users()
-{
-	my (@users, $userID, %user);
+sub show_user_listing{
+	my (@users) = @_;
 
-	&list_users(\@users, "WHERE groupDead != '1'", 'ORDER BY username');
+	my ($userID, %user);
 
 	print qq
 	{	<table border="0" cellpadding="0" cellspacing="5">

@@ -1,5 +1,3 @@
-#!/usr/bin/perl
-
 ##################################################################
 #       Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
@@ -21,9 +19,17 @@ require 'MOVIES.pl';
 	($next_tuesday_string) = $sth->fetchrow_array();
 	$sth->finish();
 
-	&show_heading ("Movie for $next_tuesday_string");
+	my $movies_heading = qq{
+		Movie for $next_tuesday_string
+	};
+	&show_heading ($movies_heading);
 	if (!&show_current_movie()){
-		&show_movies($USERID);
+	
+		if ($USERID && $user{groupMovies}){
+			&show_movies($USERID);
+		}else{
+			&show_movies();
+		}
 	}
 
 
@@ -33,28 +39,45 @@ require 'MOVIES.pl';
 sub show_movies
 {
 	my ($effectiveUserID) = @_;
-
+	
 	if ($effectiveUserID){
 		&list_my_attendance($effectiveUserID);
 		
 		print qq{
 			<table cellpadding="0" cellspacing="0" border="0">
-	                        <tr><th colspan="11" height="14">
+	                        <tr><th>&nbsp;N / ? / Y</th>
+	                            <th>&nbsp;&nbsp;#</th>
+				    <th colspan="3" height="14">
 	                                <form action="/movies/update_votes.cgi" method="post">
 	                                <input type="hidden" name="userID" value="$effectiveUserID">
-	                                &nbsp;now showing</th></tr>
+	                                &nbsp;now showing</th>
+				    </tr>
 		};
-		show_movie_list($effectiveUserID, "WHERE (statusShowing AND NOT (statusSeen OR 0))");
-		print qq{\n	</table><p>\n};
-		
+		show_movie_list($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+
+		print qq{
+	                        <tr><td></td>
+	                            <td></td>
+				    <td colspan="3">
+
+					<a href="/movies/index.cgi?sortOrder=order">
+					More movies....</a><br>
+					</td>
+				    </tr>
+
+			</table><p>
+		};
+
 		print qq{
 			<font face="verdana">
 			<b>Favorite Movie:</b><br>
+
 		};
+
 		&show_favorite_movie_select($effectiveUserID);
 
 		print qq{
-			<br></font>
+			<br>
 			<input type="image" border="0" src="/template/update_votes_submit.gif" alt="Update Votes">
 			</form>
 		};
@@ -62,7 +85,7 @@ sub show_movies
 	}else{
 		print qq{
 			<table cellpadding="0" cellspacing="0" border="0">
-	                        <tr><th colspan="11" height="14">
+	                        <tr><th colspan="4" height="14">
 	                                &nbsp;now showing</th></tr>
 		};
 		show_movie_list($effectiveUserID, "WHERE (statusShowing AND NOT (statusSeen OR 0))");
@@ -78,7 +101,7 @@ sub show_movie_list{
 	
 	my (@movies, $anon, $movieID, %movieInfo);
 	my ($boldNew, %vote_status_word, $vote, @list);
-
+	
 	&list_movies(\@list, $whereClause, 'ORDER BY title');
 	foreach $movieID (@list){
 		$anon = {}; 	### create an anonymous hash.
@@ -90,8 +113,17 @@ sub show_movie_list{
                         <=>     $movieInfo{$a}->{order}}
                         @list ;
 
+	# my $cutoff = sqrt ($movieInfo{$list[0]}->{rank});
+	my $cutoff = 0.5 * $movieInfo{$list[0]}->{rank};
+	my $min_listing_size = 5;
 	foreach $movieID (@list){
 
+		$min_listing_size -= 1;
+		if (( $movieInfo{$movieID}->{rank} < $cutoff)
+		   && ! $movieInfo{$movieID}->{statusNew}
+		   && ($min_listing_size < 0)){
+			next;
+		}
                 %vote_status_word = ();
                 $vote = &get_vote($movieID, $effectiveUserID);
                 $vote_status_word{$vote} = "CHECKED";

@@ -44,9 +44,16 @@ require 'movies/MOVIES.pl';
 
 	#
 	# (2) Set last week's new releases to just "showing"
+	#     Set last week's banned movies to normal
 	#
 
 	$sql = "UPDATE Movies SET statusNew = '0' WHERE statusShowing = '1'";
+	$sth = $dbh_tnmc->prepare($sql);
+	$sth->execute();
+	$sth->finish;
+
+	
+	$sql = "UPDATE Movies SET statusBanned = '0'";
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
 	$sth->finish;

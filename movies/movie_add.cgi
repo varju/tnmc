@@ -50,11 +50,13 @@ sub show_add_movie_form
                         <input type="text" size="6" name="mybcID" value=""></td>
 
                         <td><b>Status</b><br><b>
-			<input type="checkbox" name="statusNew" value="1" checked>New
-			<input type="checkbox" name="statusShowing" value="1">Showing
-			<input type="hidden" name="statusSeen" value="0">
+				<input type="radio" name="statusNew" value="1" checked>Y
+				<input type="radio" name="statusNew" value="0" >N &nbsp; <b>New</b><br>
+				<input type="radio" name="statusShowing" value="1" >Y
+				<input type="radio" name="statusShowing" value="0" checked>N &nbsp; <b>Showing</b><br>
+                                <input type="hidden" name="statusSeen" value="0">
+                                <input type="hidden" name="statusBanned" value="0">
                         </td>  
-
 
                 </tr> 
         

@@ -32,7 +32,7 @@ require 'broadcast/BROADCAST.pl';
 	&get_movie($current_movie, \%movie);
 	$current_movie_name = $movie{'title'};
 
-	$message = "TNMC: $current_movie_name ---------------- Meet at $current_meeting_place \@ $current_meeting_time\. ---------------- $current_cinema \@ $current_showtime\.";
+	$message = " $current_movie_name ---------------- Meet at $current_meeting_place \@ $current_meeting_time\. ---------------- $current_cinema \@ $current_showtime\.";
 
 	### User List of people who want movie notification
         &list_users(\@users, "WHERE movieNotify = '1'", 'ORDER BY username');

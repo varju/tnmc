@@ -15,10 +15,7 @@ require 'MOVIES.pl';
 	&header();
 	&db_connect();
 
-		&show_movieMenu();
-		print "<br>";
-
-                &show_seen_movie_list();
+	&show_seen_movie_list();
 
 	&db_disconnect();
 	&footer();

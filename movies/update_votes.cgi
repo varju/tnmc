@@ -23,11 +23,23 @@ require 'MOVIES.pl';
 		$favoriteMovie = $cgih->param('favoriteMovie');
 
 
-		### cont the number of positive/negative/neutral votes.
+		### count the number of positive/negative/neutral votes.
 		foreach $_ (@params){
 			if (! /^v/) { next; }
 			$type = $cgih->param($_);
 			$vote_count{$type} += 1;
+		}
+
+		### alex doesn't get to have negative votes anymore.
+		if ($userID == 5 && $vote_count{'-1'}){
+			&header();
+			print qq{
+				<p><b>Hey shnookums...</b>
+				<p>You don't even <i>get</i> to have negative votes anymore... :P
+				<p>Why don't ya go back and try to be a little more positive next time 'round.
+			};
+			&footer();
+			exit(1);
 		}
 
 		### grumpy people who make too many negative votes get denied.
@@ -37,6 +49,18 @@ require 'MOVIES.pl';
 				<p><b>Hey silly...</b>
 				<p>What's the point in having $vote_count{-1} anti-votes
 				and only $vote_count{1} real votes?
+				<p>Why don't ya go back and try to be a little more positive next time 'round.
+			};
+			&footer();
+			exit(1);
+		}
+
+		### heck, let's not even let alex have neutral votes
+		if ($userID == 5 && $vote_count{'0'}){
+			&header();
+			print qq{
+				<p><b>Hey shnookums...</b>
+				<p>You can't even have neutral votes. (You have to vote for everything. :)
 				<p>Why don't ya go back and try to be a little more positive next time 'round.
 			};
 			&footer();

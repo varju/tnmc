@@ -103,19 +103,17 @@ sub show_movies
 		<table cellpadding="0" cellspacing="0" border="0">
 		<tr  bgcolor="ffffff">
 			<td><b>Edit</b></td>
-			<td align="center"><b>N &nbsp;&nbsp; ? &nbsp;&nbsp; Y</b></td>
+			<td align="center"><b>&nbsp;N&nbsp;&nbsp;?&nbsp;&nbsp;Y&nbsp;</b></td>
 			<td align="right">&nbsp;&nbsp;<b>#</b></td>
 			<td align="right">&nbsp;&nbsp;<b>+</b></td>
 			<td align="right">&nbsp;&nbsp;<b>-</b></td>
 			<td>&nbsp;&nbsp;</td>
 			<td><b>Title</b></td>
 			<td>&nbsp;&nbsp;</td>
-			<td><b>Type</b></td>
-			<td>&nbsp;&nbsp;</td>
 			<td><b>Votes</b></td>
 			</tr>
 		<tr>
-			<td colspan="11" bgcolor="cccccc" align="right">
+			<td colspan="9" bgcolor="cccccc" align="right">
 				<form action="/movies/update_votes.cgi" method="post">
 				<input type="hidden" name="userID" value="$effectiveUserID">
 				<font color="888888"><b>now showing </td></tr>
@@ -123,10 +121,10 @@ sub show_movies
 
 	########################
 	# show_movie_list( "WHERE (m.status = 'showing' OR m.status = 'just released')");
-	show_movie_list( "WHERE (statusShowing AND NOT (statusSeen OR 0))");
+	show_movie_list( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
 
 	print qq{	<tr>
-			<td colspan="11" bgcolor="cccccc" align="right">
+			<td colspan="9" bgcolor="cccccc" align="right">
 			<font color="888888"><b>coming soon </td></tr>
 	};
 
@@ -221,8 +219,6 @@ sub show_movie_list{
 						'resizable,height=350,width=450');
 						index.cgi
 					">$movieInfo{$movieID}->{title}</a></td>
-				<td></td>
-				<td>$movieInfo{$movieID}->{type}</td>
 				<td></td>
 				<td>$movieInfo{$movieID}->{votesHTML}</td>
 

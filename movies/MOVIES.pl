@@ -32,7 +32,8 @@ sub show_favorite_movie_select{
 
 	$sql = "SELECT movieID, title
 	         FROM Movies
-	        WHERE statusShowing = '1' AND statusSeen != '1'
+	        WHERE statusShowing = '1' AND statusSeen != '1' AND statusBanned != 1
+		
 	        ORDER BY title";
 
 	$sth = $dbh_tnmc->prepare($sql);

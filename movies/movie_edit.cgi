@@ -41,6 +41,12 @@ require 'MOVIES.pl';
 		$checkboxNotNew = 'CHECKED';
 	}
 
+	if ($movie{statusBanned}){
+		$checkboxBanned = 'CHECKED';
+	}else{
+		$checkboxNotBanned = 'CHECKED';
+	}
+
 	print qq{
 		<form action="movie_edit_submit.cgi" method="post">
 		<input type="hidden" name="movieID" value="$movieID">
@@ -75,6 +81,8 @@ require 'MOVIES.pl';
 				<input type="radio" name="statusShowing" value="0" $checkboxNotShowing>N &nbsp; <b>Showing</b><br>
 				<input type="radio" name="statusSeen" value="1" $checkboxSeen>Y
 				<input type="radio" name="statusSeen" value="0" $checkboxNotSeen>N &nbsp <b>Seen</b><br>
+				<input type="radio" name="statusBanned" value="1" $checkboxBanned>Y
+				<input type="radio" name="statusBanned" value="0" $checkboxNotBanned>N &nbsp <b>Banned</b><br>
 			</td>
 		</tr>
 

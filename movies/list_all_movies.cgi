@@ -15,11 +15,8 @@ require 'MOVIES.pl';
 	&header();
 	&db_connect();
 
-		&show_movieMenu();
-		print "<br>";
-
-		&show_heading('List all Movies');
-                &show_admin_movie_list();
+	&show_heading('List all Movies');
+	&show_admin_movie_list();
 
 	&db_disconnect();
 	&footer();

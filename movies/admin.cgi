@@ -26,7 +26,8 @@ require 'MOVIES.pl';
 
 		&get_user($userID, \%user);
 	  
-       		&list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
+       		&list_movies(\@movies, "WHERE movieID = 68 OR statusShowing AND NOT
+(statusSeen OR 0)", 'ORDER BY title');
 
 		$current_movie =  &get_general_config("movie_current_movie");
 		$current_cinema = &get_general_config("movie_current_cinema"); 
