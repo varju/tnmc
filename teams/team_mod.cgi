@@ -35,8 +35,6 @@ my %form_conf =  ## config for edit/create
      "sport" => {"type" => "select",
 		 "options" => \@sport_options },
      "description" => {"type" => "textarea"},
-     "EventURL" => {"type" => "text"},
-     "DateExpires" => {"type" => "text"},
      );
 
 my $script_name = "teams/team_mod.cgi";
@@ -126,7 +124,7 @@ sub show_list_teams{
 
 sub action_add{
     
-    # setup new event
+    # setup new 
     my $hash = &tnmc::teams::team::new_team();
     
     $hash->{captainID} = $tnmc::security::auth::USERID;

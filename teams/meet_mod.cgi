@@ -69,7 +69,7 @@ sub action_add{
 
     require tnmc::util::date;
     
-    # setup new event
+    # setup new
     my $hash = &tnmc::teams::meet::new_meet();
     my $teamID = &tnmc::cgi::param("teamID");
     
@@ -79,6 +79,19 @@ sub action_add{
     $hash->{minTotal} = 11;
     $hash->{minMale} = 6;
     $hash->{date} = &tnmc::util::date::now();
+    
+    # extra param: _default_attendance
+    $hash->{_default_attendance} = '';
+    $form_conf{'_default_attendance'} = {
+	"type" => "select",
+	"options" => [{"key" => "", "val" => "No Default"},
+		      {"key" => "yes", "val" => "Yes"},
+		      {"key" => "late", "val" => "Late"},
+		      {"key" => "maybe", "val" => "Maybe"},
+		      {"key" => "no", "val" => "No"},
+		      {"key" => "undef", "val" => "--"}
+		      ],
+    };
     
     # form config
     $form_conf{'.form'}->{'heading'} = "Add Meet";
@@ -101,6 +114,25 @@ sub action_add_submit{
     
     # save data
     my $ID = &tnmc::teams::meet::add_meet($hash);
+    my $teamID = $hash->{teamID};
+    
+    # extra param: _default_attendance
+    my $default_attendance = &tnmc::cgi::param("_default_attendance");
+    if ($default_attendance && $default_attendance ne ''){
+	
+	my $attendance = &tnmc::teams::attendance::new_attendance();
+	$attendance->{'meetID'} = $ID;
+	$attendance->{'type'} = $default_attendance;
+	
+	my @players = &tnmc::teams::roster::list_users_by_status($teamID, 'Player');
+	    print STDERR " u: $userID\n";
+	foreach $userID (@players){
+	    print STDERR " u: $userID\n";
+	    $attendance->{'userID'} = $userID;
+	    &tnmc::teams::attendance::set_attendance($attendance);
+	}
+	
+    }
     
     # redirect user
     print "Location: team.cgi?teamID=$hash->{teamID}\n\n";

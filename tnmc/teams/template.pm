@@ -159,7 +159,7 @@ sub show_team_schedule{
 		<td nowrap>$Meet->{totals}->{M}->{yes}-$Meet->{totals}->{M}->{not_yes}</td>
 		<td nowrap>$Meet->{totals}->{F}->{yes}-$Meet->{totals}->{F}->{not_yes}</td>
 		<td>$Meet->{players_text}</td>
-		<td nowrap>[<a href="$Meet->{action}->{roster}"><b>roster</b></a>]</td>
+		<td nowrap>[<a href="$Meet->{action}->{roster}">roster</a>]</td>
 
 	    </tr>
 	};

@@ -55,6 +55,11 @@ sub list_users{
     return &tnmc::db::link::listLinks($table, "userID", "WHERE teamID = $_[0]");
 }
 
+sub list_users_by_status{
+    # usage: &listUsers($teamID, $status);
+    return &tnmc::db::link::listLinks($table, "userID", "WHERE teamID = $_[0] AND status = '$_[1]'");
+}
+
 sub list_teams{
     # usage: &listTeams($userID);
     return &tnmc::db::link::listLinks($table, "teamID", "WHERE userID = $_[0]");

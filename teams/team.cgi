@@ -35,8 +35,8 @@ sub action_main{
     my $teamID = &tnmc::cgi::param("teamID");
     
     &tnmc::teams::template::show_team($teamID, 'teampage');
-    &tnmc::teams::template::show_team_schedule($teamID);
     &tnmc::teams::template::show_team_roster($teamID);
+    &tnmc::teams::template::show_team_schedule($teamID);
     
     &tnmc::template::footer();
 }

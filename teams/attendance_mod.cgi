@@ -54,7 +54,7 @@ sub action_player{
     my $userID = &tnmc::cgi::param("userID");
     my $team = &tnmc::teams::team::get_team($teamID);
     my $user = &tnmc::user::get_user($userID);
-    my @meets = &tnmc::teams::meet::list_meets($teamID);
+    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = '$teamID' ORDER BY date");
     
     # show the page
     &tnmc::template::header();
