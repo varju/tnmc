@@ -112,7 +112,7 @@ sub show_movie_list{
 		print qq{
 					<a href="
 					javascript:window.open(
-						'movie_view.cgi?movieID=$movieID',
+						'/movies/movie_view.cgi?movieID=$movieID',
 						'ViewMovie',
 						'resizable,height=350,width=450');
 						index.cgi
