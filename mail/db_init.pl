@@ -30,4 +30,16 @@ $dbh_tnmc->do(q{
         ADD COLUMN Sent INT
         });
 
+$dbh_tnmc->do(q{
+    ALTER TABLE Mail
+        ADD COLUMN Folder INT
+        });
+
+$dbh_tnmc->do(q{
+    CREATE TABLE MailFolder
+        (FolderId INT NOT NULL AUTO_INCREMENT,
+         Name BLOB,
+         PRIMARY KEY (FolderId))
+        });
+
 db_disconnect();
