@@ -55,7 +55,6 @@ sub new_nav_menu{
                 &show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
                 &show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
                 &show_menu_item( 1, "/movies/night_list.cgi", "Nights", "");
-                &show_menu_item( 1, "/movies/movies.cgi", "Testing", "");
             }
         }
         &show_menu_item( 0, "", "", "");
