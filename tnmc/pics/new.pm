@@ -146,7 +146,7 @@ sub _has_access_album{
     if (! defined $userID){
         $userID = $user->{userID};
     }
-    print STDERR " ($album->{albumOwnerID} == $userID) \n";
+    
     # decide if user has access
     if ($album->{albumOwnerID} == $userID){
         return 1;
