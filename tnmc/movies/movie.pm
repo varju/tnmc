@@ -88,7 +88,7 @@ sub get_movie_extended2{
     foreach my $theatreid (@theatres){
         my $theatre = &tnmc::movies::theatres::get_theatre_by_mybcid($theatreid);
         $movie->{'theatres_string'} .= " " . $theatre->{'name'};
-        $movie->{'theatres_url'} .= " <a href=\"http://www2.mybc.com/movies/theatres/$theatre->{'mybcid'}.html\">$theatre->{'name'}</a>";
+        $movie->{'theatres_url'} .= " <a href=\"http://www.mytelus.com/movies/tdetails.do?theatreID=$theatre->{'mybcid'}\">$theatre->{'name'}</a>";
     }
     
     # get the attendance list
@@ -235,7 +235,7 @@ sub get_movie_extended{
     foreach my $theatreid (@theatres){
         my $theatre = &tnmc::movies::theatres::get_theatre_by_mybcid($theatreid);
         $movie->{'theatres_string'} .= " " . $theatre->{'name'};
-        $movie->{'theatres_url'} .= " <a href=\"http://www2.mybc.com/movies/theatres/$theatre->{'mybcid'}.html\">$theatre->{'name'}</a>";
+        $movie->{'theatres_url'} .= " <a href=\"http://www.mytelus.com/movies/tdetails.do?theatreID=$theatre->{'mybcid'}\">$theatre->{'name'}</a>";
     }
         
  
