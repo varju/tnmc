@@ -25,13 +25,13 @@ use tnmc::movies::night;
     
     my @nights = &get_future_nights();
     my %next_night;
-    &get_night{$nights[0], \%next_night};
+    &get_night($nights[0], \%next_night);
     
-    my $next_tuesday = $next_night{'date'}
-    my $vote_blurb = $next_night{'voteBlurb'}
+    my $next_tuesday = $next_night{'date'};
+    my $vote_blurb = $next_night{'voteBlurb'};
     
-    $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
-    $sth = $dbh_tnmc->prepare($sql);
+    my $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
+    my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
     my ($next_tuesday_string) = $sth->fetchrow_array();
     $sth->finish();
@@ -60,7 +60,7 @@ use tnmc::movies::night;
     print SENDMAIL "Subject: $next_tuesday_string\n";
     print SENDMAIL "\n";
     
-    print SENDMAIL $vote_blurb'};
+    print SENDMAIL $vote_blurb;
     
     open(MESSAGE, "<$filename");
     while (<MESSAGE>){
