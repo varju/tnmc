@@ -194,14 +194,18 @@ if ($USERID){
     &tnmc::template::show_heading("messages");
     my %sel_witty_banter;
     $sel_witty_banter{$user{i_like_silence}} = 'checked';
-    
-    
+    my %forward_banter;
+    $forward_banter{$user{forwardWebMessages}} = 'checked';
+
     print qq{
             <table cellpadding="0" border="0" cellspacing="0">
-                                
                                 <tr><td><b>Display witty banter?</td>
                 <td><b>    <input type="radio" name="i_like_silence" value="0" $sel_witty_banter{0}>on </td>
                 <td><b>    <input type="radio" name="i_like_silence" value="1" $sel_witty_banter{1}>off
+                                </td></tr>
+                                <tr><td><b>Forward witty banter to your email?</td>
+                <td><b>    <input type="radio" name="forwardWebMessages" value="1" $forward_banter{1}>on </td>
+                <td><b>    <input type="radio" name="forwardWebMessages" value="0" $forward_banter{0}>off
                                 </td></tr>
                         </table>
                         };

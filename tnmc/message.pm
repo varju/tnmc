@@ -176,20 +176,28 @@ sub forward_external
     # don't allow anonymous posting
     return unless $$hash{sender};
 
-    my $to_email = 'alex\@varju.ca';
+    my @users;
+    my @to_addrs;
+    &tnmc::user::list_users(\@users, "WHERE groupDead != '1' && forwardWebMessages = 1");
+    foreach my $userID (@users)
+    {
+	my $recip = &tnmc::user::get_user_cache($userID);
+	push(@to_addrs, $recip->{'email'});
+    }
+    my $to_email = join(' ', @to_addrs);
+
     my $from_email = $tnmc::config::tnmc_email;
     my $subject = 'TNMC: Forwarded web message';
     my $sender = &tnmc::user::get_user_cache($hash->{sender});
+    my $body = $hash->{'body'};
 
     open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
     print SENDMAIL "From: TNMC Website <$from_email>\n";
     print SENDMAIL "Subject: $subject\n";
     print SENDMAIL "To: TNMC <$from_email>\n";
     print SENDMAIL "\n";
-
-    print SENDMAIL $sender->{username}, " says:\n\n";
+    print SENDMAIL $sender->{'username'}, " says:\n\n";
     print SENDMAIL $hash->{'body'}, "\n";
-
     close(SENDMAIL);
 }
 

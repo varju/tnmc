@@ -29,6 +29,15 @@ require tnmc::template;
 # subs
 #
 
+sub upgrade_db_03{
+
+    my $dbh = &tnmc::db::db_connect();
+    
+    $dbh->do("ALTER TABLE Personal
+      ADD forwardWebMessages int(1) NOT NULL default '0'
+    ");
+}
+
 sub upgrade_db_02{
     
     # scott - oct 2003
