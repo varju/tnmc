@@ -46,7 +46,7 @@ sub show_menu_item{
 sub new_nav_menu{
     
     ### this test should probably be elsewhere.
-    my $HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
+    my $HOMEPAGE =  ($ENV{SCRIPT_NAME} eq '/index.cgi');
     
     &show_menu_item( 0, "", "", "");
     &show_menu_item( 0, "/", "Home", "");
@@ -65,11 +65,12 @@ sub new_nav_menu{
     
     if ($USERID{groupMovies} >= 1){
         if (&show_menu_item( 0, "/movies/", "Movies", "")){
+            &show_menu_item( 1, "/movies/factions.cgi", "Factions", "");
             &show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
             &show_menu_item( 1, "/movies/list_showing_movies.cgi", "All&nbsp;Showing", "");
-            &show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
+            #&show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
             &show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
-            &show_menu_item( 1, "/movies/help.cgi", "Info", "");
+            #&show_menu_item( 1, "/movies/help.cgi", "Info", "");
             if ($USERID{groupMovies} >= 100){
                 &show_menu_item( 1, "", "", "");
                 &show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
