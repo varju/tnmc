@@ -10,7 +10,7 @@ sub format_date{
     return 'never' if !$date;
     
     # get the date 
-    $date =~ /(\d\d\d\d)-?(\d\d)-?(\d\d) ?(\d\d):?(\d\d):?(\d\d)/;
+    $date =~ /^(\d{4})-?(\d{1,2})-?(\d{1,2}) ?(\d{1,2}):?(\d{1,2}):?(\d{1,2})$/;
     my ($yyyy, $mm, $dd, $h, $m, $s, @date);
     $yyyy = $1;
     $mm = $2;
@@ -22,15 +22,15 @@ sub format_date{
     
     # do the formatting
     if ($format eq 'numeric'){
-        return sprintf("%s/%s/%s %s:%s:%s", @date);
+        return sprintf("%4.4d/%2.2d/%2.2d %2.2d:%2.2d:%2.2d", @date);
     }
     elsif ($format eq 'day_time'){
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
                    'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
-        return sprintf("%s %s, %s:%s:%s", $mon, $dd, $h, $m, $s);
+        return sprintf("%s %s, %s:%2.2d:%2.2d", $mon, $dd, $h, $m, $s);
     }
     elsif ($format eq 'full_time'){
-        return sprintf("%s:%s:%s", $h, $m, $s);
+        return sprintf("%2.2d:%2.2d:%2.2d", $h, $m, $s);
     }
     elsif ($format eq 'short_date'){
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
