@@ -9,10 +9,10 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+
 use tnmc::db;
 use tnmc::template;
-
+use tnmc::security::auth;
 use tnmc::news::template;
 use tnmc::templates::movies;
 use tnmc::templates::user;
