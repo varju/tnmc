@@ -99,19 +99,35 @@ sub list_my_attendance{
     };
 
     foreach $tuesdayDate (@movieDates){
-    print qq{
+        my $sel_default = '';
+        my $sel_yes = '';
+        my $sel_no = '';
+
+        if (!defined($attendance{"movie$tuesdayDate"})) {
+            $attendance{"movie$tuesdayDate"} = '';
+        }
+
+        if ($attendance{"movie$tuesdayDate"} eq 'yes') {
+            $sel_yes = "selected";
+        }
+        elsif ($attendance{"movie$tuesdayDate"} eq 'no') {
+            $sel_no = "selected";
+        }
+        else {
+            $sel_default = "selected";
+        }
+
+        print qq{
         <td valign="top"><font size="-1">
         <select name="movie$tuesdayDate">
-        <option value="$attendance{"movie$tuesdayDate"}">$attendance{"movie$tuesdayDate"}
-        <option value="$attendance{"movie$tuesdayDate"}">----
-        <option value="">Default
-        <option>yes
-        <option>no
+          <option value="" $sel_default>
+          <option value="">default
+          <option $sel_yes>yes
+          <option $sel_no>no
          </select>
          </td>
         <td></td>
         };
-
     }
     print qq{
     <td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></form></td>
