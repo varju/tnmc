@@ -41,6 +41,8 @@ sub show_pic_listing{
             <th>#</td>
             <th>Title</td>
             <th>Date</td>
+            <th>&nbsp;</td>
+            <th>Owner</td>
             </tr>
     };
 
@@ -60,6 +62,8 @@ sub show_pic_listing{
             <td>$i</td>
             <td><a href="pic_view.cgi?picID=$picID&albumID=$albumID&dateID=$dateID">$pic{title}</a> $pic{flags}</td>
             <td>$pic{timestamp}</td>
+            <td>&nbsp;&nbsp;</td>
+            <td>$pic{ownerID}</td>
             </tr>
         };
     }
@@ -80,10 +84,13 @@ sub show_album_listing{
     print qq{
         <table cellpadding="1" cellspacing="0" border="0" width="100%">
             <tr>
-                <td><b>&nbsp;</td>
                 <td><b>Title</td>
+                <td>&nbsp;&nbsp;</td>
                 <td><b>Date</td>
+                <td>&nbsp;&nbsp;</td>
                 <td><b>Owner</td>
+                <td>&nbsp;&nbsp;</td>
+                <td><b>Size</td>
             </tr>
     };
 
@@ -98,29 +105,37 @@ sub show_album_listing{
             $album{albumTitle} = '(Untitled)';
         }
 
-        if( $curr_date ne substr($album{albumDate}, 0, 4)){
-            $curr_date = substr($album{albumDate}, 0, 4);
+        if( $curr_date ne substr($album{albumDateStart}, 0, 4)){
+            $curr_date = substr($album{albumDateStart}, 0, 4);
             print qq{
                 <tr>
-                    <th colspan="4">&nbsp;$curr_date</th>
+                    <th colspan="7">&nbsp;$curr_date</th>
                 </tr>
             };
         }
         
-        my $sql = "SELECT DATE_FORMAT('$album{albumDate}', '%b %d')";
+        my $sql = "SELECT DATE_FORMAT('$album{albumDateStart}', '%b %d')";
         my $sth = $dbh_tnmc->prepare($sql); 
         $sth->execute();
         my ($date_string) = $sth->fetchrow_array();
+
+        $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
+        $sth = $dbh_tnmc->prepare($sql); 
+        $sth->execute();
+        my ($num_pics) = $sth->fetchrow_array();
 
         my %owner;
         &get_user($album{albumOwnerID}, \%owner);
 
         print qq{
             <tr>
-                <td>$albumID</td>
                 <td><a href="album_view.cgi?albumID=$albumID">$album{albumTitle}</a></td>
+                <td></td>
                 <td>$date_string</td>
+                <td></td>
                 <td>$owner{username}</td>
+                <td></td>
+                <td>$num_pics</td>
             </tr>
         };
         
