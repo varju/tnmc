@@ -41,7 +41,17 @@ if (&auth_access_pic_edit($picID, \%pic)){
 else{
     print "You don't have permission to edit thie pic";
 }
-        
+if (&auth_access_pic_view($picID, \%pic)){
+    # show the exif info
+    show_heading("Exif info");
+    my $exif = &tnmc::pics::pic::get_exif($picID);
+    print "<table>";
+    foreach my $key (keys %$exif){
+        print "<tr><td>$key</td> <td>$exif->{$key}</td></tr>\n";
+    }
+    print "</table>";
+    
+}
 
 &footer();
 

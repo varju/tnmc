@@ -95,10 +95,12 @@ sub serve_picture{
         
         $image = Image::Magick->new;
         $x = $image->Read($picfile);
-        # $x = $image->Sample(width=>'160', height=>'128');
-       
+#         $x = $image->Sample(width=>'160', height=>'128');
+        
+        $x = $image->Rotate(degrees=>'90');
+        
         $x = $image->Minify();
-        $x = $image->Normalize();
+#        $x = $image->Normalize();
 #        $x = $image->Gamma('green'=>0.5, 'red' => 0.8,' blue' => 4.8);  
 #        $x = $image->Equalize();
 #        print STDERR $x;

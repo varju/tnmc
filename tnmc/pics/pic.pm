@@ -7,10 +7,11 @@ use strict;
 #
 BEGIN{
     use tnmc::db;
+    require tnmc::config;
     
     require Exporter;
     require AutoLoader;
-    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    use vars qw(@ISA @EXPORT @EXPORT_OK $pic_data_dir);
     
     @ISA = qw(Exporter AutoLoader);
     
@@ -22,6 +23,8 @@ BEGIN{
                  );
     
     @EXPORT_OK = qw();
+    
+    $pic_data_dir = $tnmc::config::tnmc_basepath . '/pics/data/';
 }
 
 #
@@ -87,7 +90,12 @@ sub get_pic_url{
            ($format{mode} eq 'big') ||
            ($format{mode} eq 'full') ||
            ($format{mode} eq 'raw')){
-        $pic_url = "/pics/serve_pic.cgi?picID=$picID";
+        &get_pic($picID, \%pic);
+        if ($pic{typePublic}){
+            $pic_url = "/pics/pub/cache/full/$picID";
+        }else{
+            $pic_url = "/pics/serve_pic.cgi?picID=$picID";
+        }
     }else{
         $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
     }
@@ -113,6 +121,33 @@ sub list_pics{
 
     return scalar(@$pic_list_ref);
 }
+
+sub get_exif{
+    my ($picID) = @_;
+    
+    my %pic;
+    &get_pic($picID, \%pic);
+    my $filename = $pic_data_dir . $pic{filename};
+    
+    return &read_exif($filename);
+}
+
+sub read_exif{
+    my ($filename) = @_;
+    
+    my $jhead = $tnmc::config::tnmc_basepath . '/tnmc/pics/jhead';
+    my @result = `$jhead $filename`;
+    my %exif;
+    
+    foreach my $line (@result){
+        chomp $line;
+        my ($key, $val) = split (': ', $line, 2);
+        $key =~ s/\s+$//;
+        $exif{$key} = $val;
+    }
+    return \%exif;
+}
+
 
 1;
 
@@ -246,14 +281,23 @@ sub pic_add{
     my %pic = %$details;
     my $verbose = $conf->{'verbose'};
     
+    ## exif info
+    my $exif = &tnmc::pics::pic::read_exif($FILE);
+    
     # pic: timestamp
     if(!$pic{timestamp} ||
        $pic{timestamp} eq '0000-00-00 00:00:00' || 
        $pic{timestamp} !~ /(....)\-(..)\-(..) (..)\:(..)\:(..)/)
     {
         print ("invalid timestamp ($pic{timestamp})... ") if $verbose;
-        $pic{timestamp} = &tnmc::util::date::now();
-        print ("set to now ($pic{timestamp})\n") if $verbose;
+        if ($exif->{'Date/Time'}){
+            $pic{timestamp} = &tnmc::util::date::format_date('mysql', $exif->{'Date/Time'});
+            print ("set to exif ($pic{timestamp})\n") if $verbose;
+        }
+        else{
+            $pic{timestamp} = &tnmc::util::date::now();
+            print ("set to now ($pic{timestamp})\n") if $verbose;
+        }
     }
     
     # pic: ownerID
@@ -279,6 +323,8 @@ sub pic_add{
     $pic{picID} = 0;
     
     # pic: user info (rateContent, rateImage, title, description, typePublic)
+    $pic{typePublic} = 1 if (! defined $pic{typePublic});
+    $pic{rateContent} = 0 if (! defined $pic{rateContent});
     
     # test: pic already exists
     if (-e "data\/$pic{filename}"){
@@ -289,19 +335,29 @@ sub pic_add{
     
     # file: data/dir
     my ($pic_dir, $junk) = &tnmc::util::file::split_filepath($pic{filename});
-    print "dir: $pic_dir\n" if $verbose;
-    `mkdir -p data/$pic_dir`;
+    print "dir: $pic_data_dir $pic_dir\n" if $verbose;
+    `mkdir -p $pic_data_dir/$pic_dir`;
     
     # file: data/file
-    open (OUTFILE, ">data/$pic{filename}");
-    binmode(OUTFILE);
-    binmode($FILE);
-    my $buffer;
-    while (my $bytesread = read($FILE, $buffer, 1024)){
-        print OUTFILE $buffer;
-    }
-    close OUTFILE;
-    print "file saved ($FILE)\n" if $verbose;
+    print "from: $FILE\n";
+    &tnmc::util::file::copy($FILE, "$pic_data_dir/$pic{filename}");
+    
+#    open (OUTFILE, ">pic_data_dir/$pic{filename}");
+#    binmode(OUTFILE);
+#    binmode($FILE);
+#    my $buffer;
+#    while (my $bytesread = read($FILE, $buffer, 1024)){
+#        print OUTFILE $buffer;
+#    }
+#    close OUTFILE;
+#    print "file saved ($FILE)\n" if $verbose;
+    
+    # test: file size is nonzero
+    #my @file_status = stat "data/$pic{filename}";
+    #if(! $file_status[7]){
+    #    `rm -f data/$pic{filename}`;
+    #    &errorExit("picture upload unsucessful - no data recieved!");
+    #}
     
     # db: add entry
     print "saving to db...\n" if $verbose;

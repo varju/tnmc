@@ -26,6 +26,9 @@ use tnmc::security::auth;
 &do_upload_pic();
 &footer();
 
+#
+# subs
+#
 
 sub do_upload_pic{    
     
