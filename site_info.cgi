@@ -10,6 +10,7 @@ use CGI;
 
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
+use tnmc::config;
 
 
 	#############
@@ -28,7 +29,7 @@ use tnmc;
 
 		<TR>
 		<TD VALIGN=TOP><B>Hosting:</B></TD>
-		<TD>tnmc.dhs.org is hosted by Alex. <br>
+		<TD>$tnmc_hostname is hosted by Alex. <br>
 			It was previously on <a href="http://steinbok.lvwr.com">steinbok.lvwr.com</a> <BR>
 		</TR>
 

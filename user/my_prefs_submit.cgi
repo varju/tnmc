@@ -10,6 +10,7 @@ use CGI;
 
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
+use tnmc::config;
 
 	#############
 	### Main logic
@@ -26,5 +27,5 @@ use tnmc;
 	
 	&db_disconnect();
 
-	print "Location: http://tnmc.dhs.org/user/my_prefs.cgi\n\n";
+	print "Location: $tnmc_url/user/my_prefs.cgi\n\n";
 

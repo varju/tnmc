@@ -10,6 +10,7 @@ use CGI;
 
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
+use tnmc::config;
 
 	#############
 	### Main logic
@@ -53,12 +54,12 @@ use tnmc;
 		-value=>\%cookie_out,
 		-expires=>'+1y',
 		-path=>'/',
-		-domain=>'tnmc.dhs.org',
+		-domain=>$tnmc_hostname,
 		-secure=>'0'
 		);
 
 
-	$location = 'http://tnmc.dhs.org/index.cgi';
+	$location = $tnmc_url . '/index.cgi';
 	if (	($password ne $user{'password'}) && ($user{'password'} ne '')	){
 		&header();
 		print qq{

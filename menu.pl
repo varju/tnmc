@@ -6,6 +6,7 @@
 require 5.004;
 use strict;
 
+use tnmc::config;
 
 ###################################################################
 sub new_nav_menu{
@@ -14,7 +15,7 @@ sub new_nav_menu{
 	$HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
 
 	&show_menu_item( 0, "", "", "");
-	&show_menu_item( 0, "http://tnmc.dhs.org/", "Home", "");
+	&show_menu_item( 0, $tnmc_url, "Home", "");
 	&show_menu_item( 0, "", "", "");
 	# &show_menu_item( 0, "/announcements/", "Announcements", "");
 	# &show_menu_item( 0, "", "", "");
@@ -137,7 +138,7 @@ sub new_nav_login{
                 {       </select><br>
 			<b>Password:</b><br>
 			<input type="password" name="password" size="10"><br>
-                        <input type="image" border=0 src="http://tnmc.dhs.org/template/go_submit.gif" alt="Go"><br>
+                        <input type="image" border=0 src="$tnmc_url/template/go_submit.gif" alt="Go"><br>
                         </form>
 			<p>
 			Hello there!<br>

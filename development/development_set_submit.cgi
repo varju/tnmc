@@ -10,6 +10,7 @@ use CGI;
 
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
+use tnmc::config;
 
         #############
         ### Main logic
@@ -27,4 +28,4 @@ use tnmc;
 
         &db_disconnect();
 
-        print "Location: http://tnmc.dhs.org/development/\n\n";
+        print "Location: $tnmc_url/development/\n\n";
