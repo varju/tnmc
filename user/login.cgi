@@ -35,7 +35,7 @@ my $old_user; #  = $tnmc_cookie_in{'userID'};
 
 
 if (!$location) {
-    $location = '/';
+    $location = $tnmc_url;
 }
 
 if ( !$userID 

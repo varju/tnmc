@@ -25,11 +25,11 @@ BEGIN
     use DBI;
     use AutoLoader;
     use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc);
+    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc $dbh);
     
     @ISA = qw(Exporter AutoLoader);
 
-    @EXPORT = ();
+    @EXPORT = qw($dbh);
 
     @EXPORT_OK = ();
 }
@@ -55,6 +55,7 @@ sub db_connect{
     # say hello.
     $dbh_tnmc = DBI->connect("DBI:mysql:$database:$host", $user, $password)
         or die "Can't connect: $dbh_tnmc->errstr\n";
+    $dbh = $dbh_tnmc;
     
     return $dbh_tnmc;
 }

@@ -9,5 +9,5 @@ print "Autospliting $#modules modules...\n";
 
 foreach my $module (@modules){
     chomp $module;
-    autosplit($module, "/tnmc/auto/", 0, 1, 1);
+    autosplit($module, "/tnmc/auto", 0, 1, 1);
 }

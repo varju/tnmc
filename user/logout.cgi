@@ -22,7 +22,7 @@ use tnmc::cgi;
 &tnmc::security::auth::authenticate();
 my $cookie = &tnmc::security::auth::logout();
 
-my $location = '/';
+my $location = $tnmc_url;
 print &tnmc::cgi::redirect(
 			   -uri=>$location,
 			   -cookie=>$cookie

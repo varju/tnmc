@@ -14,7 +14,7 @@ use tnmc::security::auth;
 require tnmc::template;
 require tnmc::news::template;
 require tnmc::templates::movies;
-
+require tnmc::message;
 
 #############
 ### Main logic
@@ -25,6 +25,7 @@ print &greeting($USERID{'fullname'});
 
 &tnmc::news::template::news_print_quick();
 &tnmc::templates::movies::show_movies();
+&tnmc::message::show_conv(1);
 
 &tnmc::template::footer();
 
