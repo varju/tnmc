@@ -33,10 +33,14 @@ sub sms_send_tapzing{
     if (length($msg) == 0){
         return 0;       # nope.
     }
-    
+
+    ### get the areacode, if they have one.
+    my $areacode = phone_get_areacode($phone);
+    $phone = phone_get_localnum($phone);
+   
     ### Build the argument string.
     $msg =~ s/\s/ /;     # Can't put cr's in the subject line
-    my $to_email = '604' . $phone . '@tapzing.com';
+    my $to_email = $areacode . $phone . '@tapzing.com';
     
     open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
     print SENDMAIL "From: TNMC <scottt\@interchange.ubc.ca>\n";

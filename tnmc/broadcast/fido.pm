@@ -32,22 +32,15 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 sub sms_send_fido{
     my ($phone, $msg, $junk) = @_;
     
-    my ($areacode);
-    
     ### see if we actually want to send anything.
     if (length($msg) == 0){
         return 0;       # nope.
     }
     
     ### get the areacode, if they have one.
-    $phone =~ s/\D//g;
-    if (length($phone) == 9){
-        $phone =! s/(...)//;
-        $areacode = $1;
-    }else{
-        $areacode = '604';
-    }
-    
+    my $areacode = phone_get_areacode($phone);
+    $phone = phone_get_localnum($phone);
+
     ### Build the argument string.
     my $SEND = substr($msg, 0, 160);
     my $URL = 'http://fido.globewebs.com/cgi-fido/sms.cgi';
@@ -77,10 +70,13 @@ sub sms_send_fido_tap_zing {
         return 0;       # nope.
     }
     
+    ### get the areacode, if they have one.
+    my $areacode = phone_get_areacode($phone);
+    $phone = phone_get_localnum($phone);
+
     ### Build the request
     my $SEND = substr($msg, 0, 160);
     my $URL = "http://www.tapzing.com/WebMsg_Save.cfm";
-    my $areacode = '604';
     
     ### Get a User agent
     my $ua = new LWP::UserAgent;

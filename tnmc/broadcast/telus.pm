@@ -37,6 +37,10 @@ sub sms_send_telus {
         return 0;       # nope.
     }
     
+    ### get the areacode, if they have one.
+    my $areacode = phone_get_areacode($phone);
+    $phone = phone_get_localnum($phone);
+
     ### Build the argument string.
     my $SEND = substr($msg, 0, 150);
     my $URL  = 'http://img.bctm.com/cgi-bin/img.dll';
@@ -50,7 +54,7 @@ sub sms_send_telus {
     [ 'tr' => 'Send',
       'page_name' => 'Phnximg',
       'Name' => '',
-      'PIN' => '604'.$phone,
+      'PIN' => $areacode.$phone,
       'From' => 'TNMC',
       'ReplyTo' => '',
       'Subject' => '',

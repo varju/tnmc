@@ -39,10 +39,13 @@ sub sms_send_rogers {
         return 0;       # nope.
     }
     
+    ### get the areacode, if they have one.
+    my $areacode = phone_get_areacode($phone);
+    $phone = phone_get_localnum($phone);
+
     ### Build the argument string.
     my $URL = "http://sabre.cantelatt.com/cgi-bin/sendpcs.cgi";
     my $sender = "TNMC Site";
-    my $areacode = "604";
     
     my $prefix;
     my $suffix;
