@@ -15,7 +15,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(header footer show_heading);
+@EXPORT = qw(header footer show_heading get_font_size);
 @EXPORT_OK = qw();
 
 #
@@ -36,6 +36,8 @@ sub header{
     
     my $username = $USERID{'username'} || '';
     my $logo = 'basic.gif';
+
+    my $font_size = get_font_size();
     
     print qq{
 <HTML>
@@ -47,7 +49,7 @@ p, ul, td, th, h1,h2,h3,h4,h5,h6, font, b, i, a {
 }
 
 p, ul, td, th {
-    font-size: 8pt;
+    font-size: $font_size;
 }
 
 th {
@@ -59,7 +61,7 @@ th {
 
 .menulink {
     font-family: verdana, helvetica, arial, sans-serif;
-    font-size: 8pt;
+    font-size: $font_size;
     color: #00067F;
     text-decoration: none;
 }
@@ -168,6 +170,18 @@ sub show_heading{
       $heading_text</b></font></td></tr>
     </table>
     };
+}
+
+sub get_font_size {
+    my $font_size;
+    if ($ENV{HTTP_USER_AGENT} =~ /Mozilla.*Gecko/) {
+        $font_size = '10pt';
+    }
+    else {
+        $font_size = '8pt';
+    }
+
+    return $font_size;
 }
 
 1;
