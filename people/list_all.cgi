@@ -5,18 +5,14 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
+use strict;
+use lib '/tnmc';
 
-use lib '/tnmc/';
-use tnmc;
+use tnmc::template;
+use tnmc::user;
 
 	#############
 	### Main logic
-
-	@users;
-	%user;
-	
 
 	&header();
 	
