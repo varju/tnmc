@@ -55,21 +55,26 @@ require 'movies/MOVIES.pl';
 	# (3) Advance the MovieAttendance Dates.
 	#
 
+        $numberOfWeeksToShow = 3;
+
 	# $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
 	# $sth = $dbh_tnmc->prepare($sql);
 	# $sth->execute();
 	# ($this_tuesday) = $sth->fetchrow_array();
+
+        $span = 7 * $numberOfWeeksToShow;
 	
-	$sql = "SELECT DATE_ADD(NOW(), INTERVAL '21' DAY)";
+	$sql = "SELECT DATE_ADD(NOW(), INTERVAL '$span' DAY)";
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
 	($far_tuesday) = $sth->fetchrow_array();
-	
-	$sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d') DATE_FORMAT('$far_tuesday', '%Y%m%d')";
+
+
+	$sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d'), DATE_FORMAT('$far_tuesday', '%Y%m%d')";
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
 	($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
-	
+
 	$sql = "ALTER TABLE MovieAttendance ADD movie$newMovieDate char(20), DROP COLUMN movie$oldMovieDate";
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
@@ -82,4 +87,5 @@ require 'movies/MOVIES.pl';
 	# the end.
 
 	&db_disconnect();
+
 
