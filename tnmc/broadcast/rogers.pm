@@ -8,6 +8,8 @@ use HTTP::Request::Common qw(POST);
 use tnmc::cookie;
 use tnmc::user;
 
+use tnmc::broadcast::util;
+
 #
 # module configuration
 #
@@ -30,7 +32,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 
 sub sms_send_rogers {
-    my ($phone, $msg, $junk) = @_;
+    my ($phone, $msg) = @_;
     
     ### see if we actually want to send anything.
     if (length($msg) == 0){
@@ -64,8 +66,10 @@ sub sms_send_rogers {
       'PIN1' => $prefix,
       'PIN2' => $suffix,
       'SENDER' => $sender,
+      'emapnew--DESC--which' => "ORIG",
       'PAGETEXT1' => $SEND,
-      'emapnew--DESC--which' => "ORIG"
+      'SIZEBOX' => length($SEND),
+      'SIZEBOXW' => count_words($SEND),
       ];
 
     return $ua->request($req);
