@@ -38,7 +38,7 @@ sub show_movie_extended
     
     if ($movieID)
     { 
-        &get_movie_extended($movieID, \%movie);
+        &get_movie_extended2($movieID, \%movie);
         
         print qq 
         {

@@ -94,15 +94,22 @@ sub get_movie_extended2{
         $movie->{'theatres_string'} .= " " . $theatre->{'name'};
         $movie->{'theatres_url'} .= " <a href=\"http://www2.mybc.com/movies/theatres/$theatre->{'mybcid'}.html\">$theatre->{'name'}</a>";
     }
-        
-        
     
     # get the attendance list
-    if (!$cache_attendance{$nightID}){
-        $cache_attendance{$nightID} = &tnmc::movies::attendance::get_night_attendance_hash($nightID);
+    my $attendance;
+    if ($nightID){
+        if (!$cache_attendance{$nightID}){
+            $cache_attendance{$nightID} = &tnmc::movies::attendance::get_night_attendance_hash($nightID);
+        }
+        $attendance = $cache_attendance{$nightID};
     }
-    my $attendance = $cache_attendance{$nightID};
+    else{
+        my @all_users;
+        &tnmc::user::list_users(\@all_users);
+        $attendance = {map {($_, '1')} (@all_users)};
+    }
     my @users = grep {$attendance->{$_} && $attendance->{$_} >= -1} (keys %$attendance);
+    
     
     # get the votes 
     my $votes = &tnmc::movies::vote::get_movie_votes_hash($movieID, \@users);

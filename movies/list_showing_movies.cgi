@@ -46,7 +46,7 @@ sub show_showing_movie_list{
     my $year = '';
         foreach $movieID (@movies){
         my %movie = ();
-                &get_movie_extended($movieID, \%movie);
+                &get_movie_extended2($movieID, \%movie);
         
         my $my_vote = '';
         if (&get_vote($movieID, $USERID) >= 1){

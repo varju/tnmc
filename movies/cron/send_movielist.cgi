@@ -101,7 +101,7 @@ sub print_email_movielist{
         my %movieInfo;
         foreach $movieID (@movies){
                 my $anon = {};     ### create an anonymous hash.
-                &get_movie_extended($movieID, $anon);
+                &get_movie_extended2($movieID, $anon);
                 $movieInfo{$movieID} = $anon;
         }
 
@@ -137,7 +137,7 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID
         list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))", '');
         foreach $movieID (@movies){
                 my $anon = {};     ### create an anonymous hash.
-                &get_movie_extended($movieID, $anon);
+                &get_movie_extended2($movieID, $anon);
                 $movieInfo{$movieID} = $anon;
         }
 
