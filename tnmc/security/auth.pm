@@ -43,6 +43,26 @@ sub authenticate{
     }
     &tnmc::security::session::hit_session($sessionID);
     
+    if (!&tnmc::security::auth::approve()){
+        print "Content-type: text/html\n\n";
+        print "<h1>Access Denied</h1>\n";
+        exit ("Access Denied $USERID - $USERID{'username'}")
+    }
+}
+
+sub approve{
+    
+    my $path = $ENV{'SCRIPT_NAME'};
+    
+    if ($path =~ /^\/admin/ && !$USERID{'groupAdmin'}){
+        return 0;
+    }
+    
+    if ($path =~ /^\/development/ && !$USERID{'groupDev'}){
+        return 0;
+    }
+    
+    return 1;
 }
 
 sub get_my_sessionID{
