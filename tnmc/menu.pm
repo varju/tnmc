@@ -100,6 +100,7 @@ sub new_nav_menu{
         if (&show_menu_item( 0, "/pics/", "Pics", "")){
             &show_menu_item( 1, "/pics/album_list.cgi", "Album List", "");
             &show_menu_item( 1, "/pics/date_list.cgi", "Date List", "");
+            &show_menu_item( 1, "/pics/search_index.cgi", "Search", "");
             &show_menu_item( 0, "", "", "");
             &show_menu_item( 1, "/pics/api_upload.cgi", "Upload Pic", "");
             if ($USERID{groupPics} >= 10 ){
