@@ -13,6 +13,7 @@ use tnmc::template;
 use tnmc::pics::pic;
 use tnmc::pics::album;
 use tnmc::pics::link;
+use CGI;
 
 {
 	#############
@@ -20,8 +21,6 @@ use tnmc::pics::link;
     
 	$cgih = new CGI;
 	
-	&db_connect();
-        
         # grab the cgi info into a big 2-d hash
         my @params = $cgih->param();
         
@@ -93,6 +92,7 @@ use tnmc::pics::link;
 #            print  %{$LINKS{$key}};
 #            print "<p>";
 #        }
+#        &footer();
         
         ## save all the pics to the db
         foreach $picID (keys(%PICS)){
@@ -106,8 +106,6 @@ use tnmc::pics::link;
         
         # goodbye 
         
-        &footer();
-	&db_disconnect();
         
         my $destination = $cgih->param(destination);
 	print "Location: $destination\n\n";

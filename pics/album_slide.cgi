@@ -10,6 +10,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
+use tnmc::template::html_black;
 use tnmc::user;
 
 use tnmc::pics::new;

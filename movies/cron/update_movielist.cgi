@@ -25,7 +25,7 @@ use tnmc::mybc;
     print "Content-type: text/html\n\n<pre>\n";
     
     print "***********************************************************\n";
-    print "****                 Get The Movie List                ****\n";
+    print "****           MYBC: Get The Movie List                ****\n";
     print "***********************************************************\n";
     print "\n\n";
     
@@ -38,7 +38,7 @@ use tnmc::mybc;
     my %valid_theatres = mybc_get_valid_theatres();
         
     print "***********************************************************\n";
-    print "****               Retrieve the Movie Info             ****\n";
+    print "****        MYBC:  Retrieve the Movie Info             ****\n";
     print "***********************************************************\n";
     
     my %mShowing = ();
@@ -72,7 +72,12 @@ use tnmc::mybc;
             }
         }
     }
-
+    
+    print "***********************************************************\n";
+    print "****        IMDB:  Retrieve the Movie Info             ****\n";
+    print "***********************************************************\n";
+    
+    
     print "\n\n";
     print "***********************************************************\n";
     print "****               Update the Database                 ****\n";
@@ -121,7 +126,7 @@ use tnmc::mybc;
 
         if ($movieID){
             
-                        my %dbMovie;
+            my %dbMovie;
             &get_movie($movieID, \%dbMovie);
 
             $dbMovie{mybcID} = $mID;
@@ -132,7 +137,7 @@ use tnmc::mybc;
             if (20 > length($dbMovie{description})){
                 $dbMovie{description} = $mPremise{$mID};
             }
-            
+            #print %dbMovie;
             &set_movie(%dbMovie);
 
             next;

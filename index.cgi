@@ -9,33 +9,27 @@
 use strict;
 use lib '/tnmc';
 
-
-use tnmc::db;
-use tnmc::template;
+require tnmc::db;
 use tnmc::security::auth;
-use tnmc::news::template;
-use tnmc::templates::movies;
-use tnmc::templates::user;
+require tnmc::template;
+require tnmc::news::template;
+require tnmc::templates::movies;
 
-# set up the random number generator
-srand;
 
 #############
 ### Main logic
 
-&db_connect();
-&header();
+&tnmc::template::header();
 
 print &greeting($USERID{'fullname'});
 
-news_print_quick();
-show_movies();
+&tnmc::news::template::news_print_quick();
+&tnmc::templates::movies::show_movies();
 
-&footer();
+&tnmc::template::footer();
 
-show_user_homepage();
-
-&db_disconnect();
+require tnmc::templates::user;
+&tnmc::templates::user::show_user_homepage();
 
 
 
@@ -96,7 +90,7 @@ sub greeting
     my $out = $greeting;
     $out .= ' ' . $fullname if $fullname;
 
-    my $font_size = get_font_size();
+    my $font_size = &tnmc::template::get_font_size();
     return qq{
         <font style="font-size: $font_size;"><b>$out.</b><P>
     };

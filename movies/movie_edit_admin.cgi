@@ -12,21 +12,29 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::template;
 use tnmc::movies::movie;
+use tnmc::cgi;
 
-{
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &header();
+&header();
+
+my $cgih = &tnmc::cgi::get_cgih;
+my $movieID = $cgih->param('movieID');
+&print_movie_edit_admin_form($movieID);
+
+&footer();
+
+#
+# subs
+#
+
+sub print_movie_edit_admin_form{
+    my ($movieID) = @_;
     
-    my %movie;    
-    my $cgih = new CGI;
-    my $movieID = $cgih->param('movieID');
-    
-    &db_connect();
+    my %movie;
     my @cols = &db_get_cols_list('Movies');
     &get_movie($movieID, \%movie);
-    &db_disconnect();
     
     print qq 
     {    <form action="movie_edit_submit.cgi" method="post">
@@ -56,5 +64,4 @@ use tnmc::movies::movie;
         </form>
     }; 
 
-    &footer();
 }

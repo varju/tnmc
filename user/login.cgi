@@ -19,7 +19,6 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-db_connect();
 &tnmc::security::auth::authenticate();
 
 
@@ -40,8 +39,10 @@ if (!$location) {
     $location = '/';
 }
 
-if (($password ne $user{'password'})
-    && ($user{'password'} ne ''))
+if ( !$userID 
+     || ( ($password ne $user{'password'})
+          && ($user{'password'} ne ''))
+     )
 {
     &header();
     print qq{
@@ -50,34 +51,31 @@ if (($password ne $user{'password'})
         <p>
         You entered the wrong password.
         <p>
-        If you've forgotten it, you can have your <a href="/user/entry_page.cgi">password emailed to you</a>.
+        If you\'ve forgotten it, you can have your <a href="/user/entry_page.cgi">password emailed to you</a>.
     };
     &footer();
 
-    log_login(0,$old_user,$old_user{username},$userID,
-              $user{username},$password);
+    &tnmc::log::log_login(0,$old_user,$old_user{username},$userID,
+                          $user{username},$password);
 }
 elsif ($userID) {
     
     my $cookie = &tnmc::security::auth::login($userID);
-    
     print $tnmc_cgi->redirect(
                               -uri=>$location,
                               -cookie=>$cookie
                               );
 
-    log_login(1,$old_user,$old_user{username},$userID,
-              $user{username},$password);
+    &tnmc::log::log_login(1,$old_user,$old_user{username},$userID,
+                          $user{username},$password);
 }
 ### BUG?: what does this do?
 else {
     print $tnmc_cgi->redirect(-uri=>$location);
-
-    log_login(1,$old_user,$old_user{username},$userID,
-              $user{username},$password);
+    &tnmc::log::log_login(0,$old_user,$old_user{username},$userID,
+                          $user{username},$password);
 }
 
-db_disconnect();
 
 #### The end.
 ##########################################################

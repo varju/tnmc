@@ -9,23 +9,31 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::db;
 use tnmc::template;
 use tnmc::movies::movie;
+use tnmc::cgi;
 
-{
-    #############
-    ### Main logic
-    
-    &header();
-    
+#############
+### Main logic
+
+&header();
+
+my $cgih = &tnmc::cgi::get_cgih();
+my $movieID = $cgih->param('movieID');
+&show_movie_edit_form($movieID);
+
+&footer();
+
+
+#
+# subs
+#
+
+sub show_movie_edit_form{    
+    my ($movieID) = @_;
+
     my %movie;    
-    my $cgih = new CGI;
-    my $movieID = $cgih->param('movieID');
-    
-    &db_connect();
     &get_movie($movieID, \%movie);
-    &db_disconnect();
     
     my ($checkboxSeen, $checkboxNotSeen);
     if ($movie{statusSeen}){
@@ -105,6 +113,4 @@ use tnmc::movies::movie;
         <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
         </form>
     }; 
-    
-    &footer();
 }

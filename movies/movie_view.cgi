@@ -11,17 +11,16 @@ use lib '/tnmc';
 use tnmc::template;
 use tnmc::db;
 use tnmc::movies::movie;
-
+use tnmc::cgi;
 {
     #############
     ### Main logic
-
     &header();
 
     &show_heading("movie detail");
-
+    my $cgih = &tnmc::cgi::get_cgih();
     my %movie;    
-    my $cgih = new CGI;
+
     my $movieID = $cgih->param('movieID');
     
     &show_movie_extended($movieID);

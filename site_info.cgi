@@ -46,6 +46,11 @@ print qq
         </TR>
 
         <TR>
+        <TD VALIGN=TOP><B>Contributed Opinions:</B></TD>
+        <TD>Grant, Dave, Kate, Bel</TD>
+        </TR>
+
+        <TR>
         <TD VALIGN=TOP><B>Browsers Supported:</B></TD>
         <TD>    
             Netscape 4+ on a pc<br>

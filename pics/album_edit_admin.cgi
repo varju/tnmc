@@ -11,6 +11,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::pics::album;
+use tnmc::cgi;
 
 use strict;
 
@@ -21,8 +22,8 @@ use strict;
 &db_connect();
 &header();
 
-$cgih = new CGI;
-$albumID = $cgih->param('albumID');
+my $cgih = &tnmc::cgi::get_cgih;
+my $albumID = $cgih->param('albumID');
 &show_album_edit_admin_form($albumID);
 
 &footer();
@@ -44,7 +45,7 @@ sub show_album_edit_admin_form{
             <table>
     };
     
-    foreach $key (keys %album){
+    foreach my $key (keys %album){
         print qq{	
             <tr><td><b>$key</td>
                 <td><input type="text" name="$key" value="$album{$key}"></td>

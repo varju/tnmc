@@ -20,11 +20,9 @@ use tnmc::movies::show;
     ### Main logic
     
     &header();
-    &db_connect();
-
+    
     &show_seen_movie_list();
-
-    &db_disconnect();
+    
     &footer();
 }
 
