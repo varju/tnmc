@@ -11,7 +11,10 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 
-require 'pics/PICS.pl';
+use tnmc::pics::pic;
+use tnmc::pics::album;
+use tnmc::pics::link;
+use tnmc::pics::show;
 
 {
     #############
