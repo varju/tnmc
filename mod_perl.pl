@@ -4,7 +4,7 @@
 # use later
 
 use CGI ();
-CGI->compile(':all');
+CGI->compile(':cgi');
 
 use DBI;
 
