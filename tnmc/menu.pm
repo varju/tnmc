@@ -1,18 +1,34 @@
-##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca
-##################################################################
-### Opening Stuff. Modules and all that. nothin' much interesting.
+package tnmc::menu;
 
-require 5.004;
 use strict;
 
 use tnmc::config;
+use tnmc::cookie;
+use tnmc::db;
 
-###################################################################
+#
+# module configuration
+#
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+
+@ISA = qw(Exporter);
+@EXPORT = qw(new_nav_menu new_nav_login);
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
+
 sub new_nav_menu{
 
 	### this test should probably be elsewhere.
-	$HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
+	my $HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
 
 	&show_menu_item( 0, "", "", "");
 	&show_menu_item( 0, $tnmc_url, "Home", "");
@@ -101,7 +117,6 @@ sub new_nav_menu{
 	&show_menu_item( 0, "", "", "");
 }
 
-###################################################################
 sub new_nav_login{
 
 	my (@row, $userID, %user, $hits, $sth, $sql);
@@ -178,5 +193,4 @@ sub show_menu_item{
 	}
 }
 
-#Make Perl happy
-return 1;
+1;

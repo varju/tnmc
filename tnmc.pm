@@ -14,11 +14,11 @@ use CGI;
 use tnmc::cookie;
 use tnmc::db;
 use tnmc::template;
+use tnmc::menu;
 
 use Exporter ();
 
-use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
-            $HOMEPAGE);
+use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 
 @ISA = qw(Exporter);
 
@@ -55,6 +55,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
              header
              footer
              show_heading
+
+             new_nav_menu 
+             new_nav_login
              );
 
 %EXPORT_TAGS = ( );
@@ -63,7 +66,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
 #### Sub Procedures:
 ##########################################################
 
-require 'menu.pl';
 require 'user.pl';
 require 'general_config.pl';
 
