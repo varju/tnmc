@@ -337,6 +337,7 @@ sub show_add_movie_form
                         <td><b>Status</b><br><b>
 			<input type="checkbox" name="statusNew" value="1" checked>New
 			<input type="checkbox" name="statusShowing" value="1">Showing
+			<input type="hidden" name="statusSeen" value="0">
                         </td>  
 
 
