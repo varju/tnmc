@@ -24,7 +24,7 @@ my $userID = $tnmc_cgi->param('userID');
 if ($userID)
 { 
     my %user;    
-    my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+    my @cols = &db_get_cols_list('Personal');
     &get_user($userID, \%user);
     
     print qq 

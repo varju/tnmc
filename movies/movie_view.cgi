@@ -39,7 +39,7 @@ sub show_movie
     if ($movieID)
     { 
         &db_connect();
-         @cols = &db_get_cols_list($dbh_tnmc, 'Movies');
+         @cols = &db_get_cols_list('Movies');
             &get_movie($movieID, \%movie);
         &db_disconnect();
           
@@ -89,7 +89,7 @@ sub show_movie_extended
     
     if ($movieID)
     { 
-         @cols = &db_get_cols_list($dbh_tnmc, 'Movies');
+         @cols = &db_get_cols_list('Movies');
             &get_movie_extended($movieID, \%movie);
 
         print qq 

@@ -20,7 +20,7 @@ use tnmc::movies::night;
 
     cookie_get();
 
-    my @cols = &db_get_cols_list($dbh_tnmc, 'MovieNights');
+    my @cols = &db_get_cols_list('MovieNights');
 
     my %night;
     foreach my $key (@cols){

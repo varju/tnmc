@@ -17,7 +17,7 @@ require 'fieldtrip/FIELDTRIP.pl';
     $cgih = new CGI;
     $tripID = $cgih->param('tripID');
     
-     @cols = &db_get_cols_list($dbh_tnmc, 'Fieldtrips');
+     @cols = &db_get_cols_list('Fieldtrips');
            &get_trip($tripID, \%trip);
       
     print qq 

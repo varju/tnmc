@@ -17,7 +17,7 @@ use tnmc::template;
 &db_connect();
 &header();
 
-my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+my @cols = &db_get_cols_list('Personal');
 
 print qq{
         <form action="create_2.cgi" method="post">

@@ -24,7 +24,7 @@ use tnmc::movies::movie;
     my $movieID = $cgih->param('movieID');
     
     &db_connect();
-    my @cols = &db_get_cols_list($dbh_tnmc, 'Movies');
+    my @cols = &db_get_cols_list('Movies');
     &get_movie($movieID, \%movie);
     &db_disconnect();
     

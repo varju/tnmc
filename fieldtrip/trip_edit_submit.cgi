@@ -16,7 +16,7 @@ require 'fieldtrip/FIELDTRIP.pl';
     
     &db_connect();
 
-    @cols = &db_get_cols_list($dbh_tnmc, 'Fieldtrips');
+    @cols = &db_get_cols_list('Fieldtrips');
      foreach $key (@cols)
     {
          $trip{$key} = $cgih->param($key);

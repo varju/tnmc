@@ -26,7 +26,7 @@ require 'pics/PICS.pl';
     # print "API filename: $FILE\n";
     
     ## grab the normal image params
-    @cols = &db_get_cols_list($dbh_tnmc, 'Pics');
+    @cols = &db_get_cols_list('Pics');
     foreach $key (@cols){
         $pic{$key} = $cgih->param($key);
     }

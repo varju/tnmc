@@ -25,8 +25,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc);
 # module vars
 #
 
-#my $dbh_tnmc;
-
 #
 # module routines
 #
@@ -36,7 +34,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc);
 # Database Access Methods:
 #       db_connect()
 #       db_disconnect()
-#    db_get_cols_list (dbh, table)
+#    db_get_cols_list (table)
 #    db_set_row (hash_ref, dbh, table, primary_key)
 #    db_get_row (hash_ref, dbh, table, where)
 #
@@ -66,12 +64,12 @@ sub db_disconnect{
 }
 
 sub db_get_cols_list{
-    my ($dbh, $table, $junk) = @_;
+    my ($table) = @_;
     my (@cols, $sql, $sth);
 
     @cols = ();
     $sql = "SHOW COLUMNS FROM $table";
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     while (my @row = $sth->fetchrow_array()){
         push (@cols, $row[0]);
@@ -90,7 +88,7 @@ sub db_set_row{
         ###############
         ### Get Old Row Info
         
-        @columns = db_get_cols_list($dbh, $table);    
+        @columns = db_get_cols_list($table);    
         $cols_string = '';
         foreach $item (@columns){
             $cols_string .= ", $item";
@@ -98,7 +96,7 @@ sub db_set_row{
         
         $sql = "SELECT NOW() $cols_string FROM $table WHERE $primary_key = '$hash_ref->{$primary_key}'";
 
-        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+        $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
         $sth->execute;
         my @row = $sth->fetchrow_array();
         while ($key = pop(@columns)){
@@ -114,17 +112,17 @@ sub db_set_row{
         $db_hash{$key} = $hash_ref->{$key};
     }
     
-    @columns = db_get_cols_list($dbh, $table);
+    @columns = db_get_cols_list($table);
     $cols_string = "$primary_key";
     my $vals_string = "'$hash_ref->{$primary_key}'";
     foreach $item (@columns){
         if ($item eq $primary_key) {next;}
         $cols_string .= ", $item";
-        $vals_string .= ", " . $dbh->quote($db_hash{$item});
+        $vals_string .= ", " . $dbh_tnmc->quote($db_hash{$item});
     }
     
     $sql = "REPLACE INTO $table ($cols_string) VALUES ($vals_string)";
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     $sth->finish;
     
@@ -142,7 +140,7 @@ sub db_get_row{
     ###############
     ### Build Select Statement
 
-    @cols = db_get_cols_list($dbh, $table);
+    @cols = db_get_cols_list($table);
     foreach (@cols){
         $cols_string .= ", $_";
     }
@@ -151,7 +149,7 @@ sub db_get_row{
     ###############
     ### Get The Data
 
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     @row = $sth->fetchrow_array();
     while ($key = pop (@cols)){

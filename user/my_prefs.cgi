@@ -20,7 +20,7 @@ use tnmc::user;
 &header();
 
 if ($USERID){ 
-    my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+    my @cols = &db_get_cols_list('Personal');
 
     my %user;
     &get_user($USERID, \%user);

@@ -21,7 +21,7 @@ db_connect();
 cookie_get();
     
 my %user;
-my @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
+my @cols = &db_get_cols_list('Personal');
 
 foreach my $key (@cols){
     if ($tnmc_cgi->param($key)){

@@ -20,7 +20,7 @@ use tnmc::movies::movie;
     
     &db_connect();
 
-    my @cols = &db_get_cols_list($dbh_tnmc, 'Movies');
+    my @cols = &db_get_cols_list('Movies');
     foreach my $key (@cols)
     {
         $movie{$key} = $cgih->param($key);

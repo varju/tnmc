@@ -17,7 +17,7 @@ require 'pics/PICS.pl';
 	
 	&db_connect();
 
-	@cols = &db_get_cols_list($dbh_tnmc, 'PicAlbums');
+	@cols = &db_get_cols_list('PicAlbums');
  	foreach $key (@cols)
 	{ 	$album{$key} = $cgih->param($key);
 	}
