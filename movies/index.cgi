@@ -229,10 +229,18 @@ sub show_movie_list{
 
 		# find out who voted for the movie...
 		while ($row[0] == $movieID){
+
 			$Vperson = $row[6];
 			$Vtype = $row[7];
 			$Vstatus = $row[8];
-			if (!$Vstatus){
+
+			if ( ($Vperson eq 'demo')
+			   && ($effectiveUserID != 38)){
+				#
+				# Do nothing
+				#			
+			}				
+			elsif (!$Vstatus){
 				if ($Vtype == 1){
 					$votes .= "<font color='888888'>$Vperson</font> ";
 					$votesAgainst ++;
