@@ -5,22 +5,22 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'movies/MOVIES.pl';
 
+use tnmc::db;
+use tnmc::general_config;
+use tnmc::movies::movie;
 
 #############
 ### Main logic
 
-#my (%movie);
-%movie=();
 &db_connect();
 
-$sql = "SELECT NOW()";
-$sth = $dbh_tnmc->prepare($sql);
+my $sql = "SELECT NOW()";
+my $sth = $dbh_tnmc->prepare($sql);
 $sth->execute();
-($timestamp) = $sth->fetchrow_array();
+my ($timestamp) = $sth->fetchrow_array();
 $sth->finish;
 
 #
@@ -32,10 +32,11 @@ $sth->finish;
 # (1) Set this week's movie to "seen"
 #
 
-$movieID = &get_general_config('movie_current_movie');
+my $movieID = &get_general_config('movie_current_movie');
 
 if ($movieID)
 {
+    my %movie;
     &get_movie($movieID, \%movie);
     $movie{'statusSeen'} = "1";
     $movie{'date'} = $timestamp;
@@ -64,25 +65,25 @@ $sth->finish;
 #     Make an extra night off in the future (HACK)
 #
 
-$numberOfWeeksToShow = 3;
+my $numberOfWeeksToShow = 3;
 
 # $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
 # $sth = $dbh_tnmc->prepare($sql);
 # $sth->execute();
 # ($this_tuesday) = $sth->fetchrow_array();
 
-$span = 7 * $numberOfWeeksToShow;
+my $span = 7 * $numberOfWeeksToShow;
 
 $sql = "SELECT DATE_ADD(NOW(), INTERVAL '$span' DAY)";
 $sth = $dbh_tnmc->prepare($sql);
 $sth->execute();
-($far_tuesday) = $sth->fetchrow_array();
+my ($far_tuesday) = $sth->fetchrow_array();
 
 
 $sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d'), DATE_FORMAT('$far_tuesday', '%Y%m%d')";
 $sth = $dbh_tnmc->prepare($sql);
 $sth->execute();
-($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
+my ($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
 
 $sql = "ALTER TABLE MovieAttendance ADD movie$newMovieDate char(20), DROP COLUMN movie$oldMovieDate";
 $sth = $dbh_tnmc->prepare($sql);

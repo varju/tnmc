@@ -5,9 +5,14 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'movies/MOVIES.pl';
+
+use tnmc::config;
+use tnmc::db;
+use tnmc::general_config;
+use tnmc::movies::movie;
+use tnmc::movies::show;
 
 	#############
 	### Main logic
@@ -17,16 +22,16 @@ require 'movies/MOVIES.pl';
 #	&print_email_movielist(">-");
 
 
-	$sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-	$sth = $dbh_tnmc->prepare($sql);
+	my $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
+	my $sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
-	($next_tuesday) = $sth->fetchrow_array();
+	my ($next_tuesday) = $sth->fetchrow_array();
 	$sth->finish();
 
 	$sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
-	($next_tuesday_string) = $sth->fetchrow_array();
+	my ($next_tuesday_string) = $sth->fetchrow_array();
 	$sth->finish();
 
 	
@@ -35,7 +40,7 @@ require 'movies/MOVIES.pl';
 	# put the movielist in a temporary file
 	#
 
-	$filename = "send_movielist.txt";
+	my $filename = "send_movielist.txt";
 	open (FILE, ">$filename");
 	close(FILE);
 	&print_email_movielist(">>$filename");
@@ -44,9 +49,9 @@ require 'movies/MOVIES.pl';
 	# send the mail
 	#
 
-	$to_email = 'tnmc-list@interchange.ubc.ca';
+        my $to_email = $tnmc_email;
 	
-        $vote_blurb =  &get_general_config("movie_vote_blurb");
+        my $vote_blurb =  &get_general_config("movie_vote_blurb");
 
 	open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
 	print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
@@ -93,8 +98,10 @@ sub print_email_movielist{
 
 	# load up the movie info
         list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", '');
+
+        my %movieInfo;
         foreach $movieID (@movies){
-                $anon = {};     ### create an anonymous hash.
+                my $anon = {};     ### create an anonymous hash.
                 &get_movie_extended($movieID, $anon);
                 $movieInfo{$movieID} = $anon;
         }
@@ -130,7 +137,7 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID
 	# load up the movie info
         list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))", '');
         foreach $movieID (@movies){
-                $anon = {};     ### create an anonymous hash.
+                my $anon = {};     ### create an anonymous hash.
                 &get_movie_extended($movieID, $anon);
                 $movieInfo{$movieID} = $anon;
         }

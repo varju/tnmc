@@ -11,6 +11,7 @@ use lib '/usr/local/apache/tnmc';
 use tnmc::config;
 use tnmc::db;
 use tnmc::general_config;
+use tnmc::movies::movie;
 
 	#############
 	### Main logic
