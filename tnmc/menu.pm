@@ -44,18 +44,19 @@ sub new_nav_menu{
         }
     
     if ($USERID{groupMovies} >= 1){
-            if (&show_menu_item( 0, "/movies/", "Movies", "")){
-        &show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
-        &show_menu_item( 1, "/movies/list_showing_movies.cgi", "All&nbsp;Showing", "");
-        &show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
-        &show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
-        &show_menu_item( 1, "/movies/help.cgi", "Info", "");
-        if ($USERID{groupMovies} >= 100){
-            &show_menu_item( 1, "", "", "");
-            &show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
-            &show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
-            &show_menu_item( 1, "/movies/movies.cgi", "Testing", "");
-        }
+        if (&show_menu_item( 0, "/movies/", "Movies", "")){
+            &show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
+            &show_menu_item( 1, "/movies/list_showing_movies.cgi", "All&nbsp;Showing", "");
+            &show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
+            &show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
+            &show_menu_item( 1, "/movies/help.cgi", "Info", "");
+            if ($USERID{groupMovies} >= 100){
+                &show_menu_item( 1, "", "", "");
+                &show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
+                &show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
+                &show_menu_item( 1, "/movies/night_list.cgi", "Nights", "");
+                &show_menu_item( 1, "/movies/movies.cgi", "Testing", "");
+            }
         }
         &show_menu_item( 0, "", "", "");
     }
@@ -68,24 +69,30 @@ sub new_nav_menu{
         }
         &show_menu_item( 0, "", "", "");
     }
-
+    
     if ($USERID{groupTrusted} >= 1){
-            &show_menu_item( 0, "/broadcast/", "Broadcast", "");
-            &show_menu_item( 0, "", "", "");
-        }
-
-        if ($USERID{groupTrusted} >= 1){
-            &show_menu_item( 0, "/fieldtrip/", "FieldTrips", "");
-            &show_menu_item( 0, "", "", "");
-        }
-
+        &show_menu_item( 0, "/broadcast/", "Broadcast", "");
+        &show_menu_item( 0, "", "", "");
+    }
+    
+    if ($USERID{groupTrusted} >= 1){
+        &show_menu_item( 0, "/fieldtrip/", "FieldTrips", "");
+        &show_menu_item( 0, "", "", "");
+    }
+    
     if ($USERID{groupCabin}){
         &show_menu_item( 0, "/cabin/", "Cabin", "");
         &show_menu_item( 0, "", "", "");
     }
 
     if ($USERID{groupPics}){
-        &show_menu_item( 0, "/pics/", "Pics", "");
+        if (&show_menu_item( 0, "/pics/", "Pics", "")){
+            &show_menu_item( 1, "/pics/album_list.cgi", "Album List", "");
+            &show_menu_item( 1, "/pics/date_list.cgi", "Date List", "");
+            &show_menu_item( 0, "", "", "");
+            &show_menu_item( 1, "/pics/album_add.cgi", "Add Album", "");
+            &show_menu_item( 1, "/pics/api_upload_submit.cgi", "Upload Pic", "");
+        }
         &show_menu_item( 0, "", "", "");
     }
 
