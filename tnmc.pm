@@ -15,6 +15,7 @@ use tnmc::cookie;
 use tnmc::db;
 use tnmc::template;
 use tnmc::menu;
+use tnmc::user;
 
 use Exporter ();
 
@@ -28,10 +29,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 @EXPORT = qw(
              &get_general_config
              &set_general_config
-             &get_user
-             &set_user
-             &del_user
-             &list_users
              &show_bulletins
              &new_nav_menu
 
@@ -58,6 +55,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 
              new_nav_menu 
              new_nav_login
+
+             set_user del_user get_user list_users
              );
 
 %EXPORT_TAGS = ( );
@@ -66,7 +65,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
 #### Sub Procedures:
 ##########################################################
 
-require 'user.pl';
 require 'general_config.pl';
 
 # keepin perl happy...

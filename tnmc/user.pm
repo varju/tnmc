@@ -1,15 +1,29 @@
-##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca (nov/98)
-#	Jeff Steinbok  - steinbok@interchange.ubc.ca
-##################################################################
-### Opening Stuff. Modules and all that. nothin' much interesting.
+package tnmc::user;
 
-require 5.004;
 use strict;
-use DBI;
-use CGI;
 
-###################################################################
+use tnmc::config;
+use tnmc::db;
+
+#
+# module configuration
+#
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+
+@ISA = qw(Exporter);
+@EXPORT = qw(set_user del_user get_user list_users);
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
+
 sub set_user{
 	my (%user, $junk) = @_;
 	my ($sql, $sth, $return);
@@ -28,7 +42,6 @@ sub set_user{
 	return $return;
 }
 
-###################################################################
 sub del_user{
 	my ($userID) = @_;
 	my ($sql, $sth, $return);
@@ -43,7 +56,6 @@ sub del_user{
 	
 }
 
-###################################################################
 sub get_user{
 	my ($userID, $user_ref, $junk) = @_;
 	my ($condition);
@@ -52,7 +64,6 @@ sub get_user{
 	&db_get_row($user_ref, $dbh_tnmc, 'Personal', $condition);
 }
 
-###################################################################
 sub list_users{
 	my ($user_list_ref, $where_clause, $by_clause, $junk) = @_;
 	my (@row, $sql, $sth);
@@ -70,5 +81,4 @@ sub list_users{
 	return $#$user_list_ref;
 }
 
-# Keep perl happy
-return 1;
+1;
