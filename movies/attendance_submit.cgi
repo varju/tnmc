@@ -5,20 +5,24 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+use CGI;
+
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::db;
+use tnmc::movies::attend;
 
 	#############
 	### Main logic
 
 	&db_connect();
 
-      	  	$cgih = new CGI;
+      	  	my $cgih = new CGI;
 
-		%attendance = {};
+		my %attendance = {};
 		# get each field
-        	@params =  $cgih->param();
+        	my @params =  $cgih->param();
 		foreach $_ (@params){
 			if (! /^movie/) { next; }
 			$attendance{$_} = $cgih->param($_);
@@ -37,4 +41,3 @@ require 'MOVIES.pl';
 ##########################################################
 #### The end.
 ##########################################################
-

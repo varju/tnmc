@@ -6,21 +6,24 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+use CGI;
+
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::db;
+use tnmc::general_config;
 
 	#############
 	### Main logic
 	
-	$cgih = new CGI;
-	
 	&db_connect();
 
-	@params =  $cgih->param();
+	my $cgih = new CGI;
+	my @params =  $cgih->param();
         
 	foreach $_ (@params)
-	{	$val = $cgih->param($_);
+	{	my $val = $cgih->param($_);
 		&set_general_config($_, $val);
         }
 

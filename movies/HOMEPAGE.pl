@@ -3,8 +3,13 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/movies';
-require 'MOVIES.pl';
+use lib '/usr/local/apache/tnmc';
+
+use tnmc::movies::night;
+use tnmc::movies::show;
+use tnmc::movies::attend;
+use tnmc::movies::movie;
+use tnmc::movies::vote;
 
 	################
 	### Main Logic:

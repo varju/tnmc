@@ -5,10 +5,12 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+use strict;
 
+use lib '/usr/local/apache/tnmc';
+
+use tnmc::db;
+use tnmc::template;
 
         #############
         ### Main logic
@@ -32,7 +34,7 @@ require 'MOVIES.pl';
 
 	&show_heading("Here's now the rank gets calculated");
 
-	$moo = q{
+	my $moo = q{
         
         ### Do the rank stuff
         $movie->{order} += 1.0 *  $movie->{votesFor};

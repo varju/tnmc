@@ -5,11 +5,19 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc';
-use tnmc;
 use strict;
-require 'MOVIES.pl';
+use CGI;
 
+use lib '/usr/local/apache/tnmc';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::user;
+use tnmc::template;
+use tnmc::movies::attend;
+use tnmc::movies::movie;
+use tnmc::movies::show;
+use tnmc::movies::vote;
 
 
 	#############

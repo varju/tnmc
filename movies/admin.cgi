@@ -6,9 +6,16 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'MOVIES.pl';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::general_config;
+use tnmc::template;
+use tnmc::movies::movie;
+use tnmc::movies::show;
 
 	#############
 	### Main logic
@@ -16,31 +23,26 @@ require 'MOVIES.pl';
 	&db_connect();
 	&header();
 
-	%user;	
-	$cgih = new CGI;
+	my (@movies, $movieID, %movie, %current_movie);
 
-	my (@movies, $movieID, %movie);
-	
 	if ($USERID)
 	{ 	&show_heading ("administration");
-
-		&get_user($userID, \%user);
 	  
        		&list_movies(\@movies, "WHERE movieID = 68 OR statusShowing AND NOT
 (statusSeen OR 0)", 'ORDER BY title');
 
-		$current_movie =  &get_general_config("movie_current_movie");
-		$current_cinema = &get_general_config("movie_current_cinema"); 
-		$current_showtime = &get_general_config("movie_current_showtime");
-		$current_meeting_place = &get_general_config("movie_current_meeting_place");
-		$current_meeting_time = &get_general_config("movie_current_meeting_time");
+		my $current_movie =  &get_general_config("movie_current_movie");
+		my $current_cinema = &get_general_config("movie_current_cinema"); 
+		my $current_showtime = &get_general_config("movie_current_showtime");
+		my $current_meeting_place = &get_general_config("movie_current_meeting_place");
+		my $current_meeting_time = &get_general_config("movie_current_meeting_time");
 
-		$vote_blurb = &get_general_config("movie_vote_blurb");
-		$winner_blurb = &get_general_config("movie_winner_blurb");
+		my $vote_blurb = &get_general_config("movie_vote_blurb");
+		my $winner_blurb = &get_general_config("movie_winner_blurb");
 
-		$valid_theatres = &get_general_config("movie_valid_theatres");
-		$other_theatres = &get_general_config("movie_other_theatres");
-		$current_nightID = &get_general_config("movie_current_nightID");
+		my $valid_theatres = &get_general_config("movie_valid_theatres");
+		my $other_theatres = &get_general_config("movie_other_theatres");
+		my $current_nightID = &get_general_config("movie_current_nightID");
 
 
 		$current_movie{$current_movie} = "SELECTED";
