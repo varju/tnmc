@@ -15,25 +15,22 @@ use tnmc::db;
 #############
 ### Main logic
 
+db_connect();
+
 # retrieve the old cookie
 cookie_get();
 
 my $userID = $tnmc_cookie_in{'userID'};
-$tnmc_cookie_in{'logged-in'} = '0';
+cookie_revoke();
 
-my $cookie = $tnmc_cgi->cookie(
-                               -name=>'TNMC',
-                               -value=>\%tnmc_cookie_in,
-                               -expires=>'+1y',
-                               -path=>'/',
-                               -domain=>$tnmc_hostname,
-                               -secure=>'0'
-                               );
+my $cookie = cookie_tostring();
 
 my $location = $tnmc_url . '/index.cgi';
 print $tnmc_cgi->redirect(
                           -uri=>$location,
                           -cookie=>$cookie);
+
+db_disconnect();
 
 ##########################################################
 #### The end.

@@ -33,19 +33,8 @@ my $location = $tnmc_cgi->param('location');
 my $old_user = $tnmc_cookie_in{'userID'};
 &get_user($old_user, \%old_user);
 
-%tnmc_cookie_in = (
-                   'userID' => $userID,
-                   'logged-in' => '1'
-                   );
-
-my $tnmc_cookie = $tnmc_cgi->cookie(
-                                    -name=>'TNMC',
-                                    -value=>\%tnmc_cookie_in,
-                                    -expires=>'+1y',
-                                    -path=>'/',
-                                    -domain=>$tnmc_hostname,
-                                    -secure=>'0'
-                                    );
+cookie_set($userID);
+my $cookie = cookie_tostring();
 
 if (!$location) {
     $location = $tnmc_url . '/index.cgi';
@@ -69,7 +58,7 @@ You entered the wrong password.
 elsif ($userID) {
     print $tnmc_cgi->redirect(
                               -uri=>$location,
-                              -cookie=>$tnmc_cookie
+                              -cookie=>$cookie
                               );
 
     log_login(1,$old_user,$old_user{username},$userID,
