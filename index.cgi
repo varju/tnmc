@@ -8,11 +8,11 @@
 
 use strict;
 
-use DBI;
-use CGI;
-
 use lib '/usr/local/apache/tnmc';
-use tnmc;
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
 
 use tnmc::templates::bulletins;
 use tnmc::templates::movies;
@@ -21,23 +21,22 @@ use tnmc::templates::user;
 # set up the random number generator
 srand;
 
-	#############
-	### Main logic
+#############
+### Main logic
 
-	&db_connect();
-	&header();
+&db_connect();
+&header();
 
 print &greeting($USERID{'fullname'});
 
 show_bulletins();
-
 show_movies();
 
-	&footer();
+&footer();
 
 show_user_homepage();
 
-	&db_disconnect();
+&db_disconnect();
 
 
 
