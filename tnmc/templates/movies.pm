@@ -156,10 +156,10 @@ sub show_movie_list_home{
             next;
         }
 
-                %vote_status_word = ();
-                $vote = &get_vote($movieID, $effectiveUserID);
-                $vote_status_word{$vote} = "CHECKED";
-                
+        %vote_status_word = ('-1','', '0','', '1','', '2','');
+        $vote = &get_vote($movieID, $effectiveUserID);
+        $vote_status_word{$vote} = "CHECKED";
+        
         print qq{
             <tr valign="top">
         };

@@ -79,17 +79,25 @@ sub get_movie_extended{
 
     my ($VuserID, $Vperson, $Vtype, $Ubday, $Udefault, $Uthis, $Unext);
 
+    # initialize some values
+    $movie->{votesFor} = 0;
+    $movie->{votesFave} = 0;
+    $movie->{votesFaveBday} = 0;
+    $movie->{votesAgainst} = 0;
+    $movie->{votesForAway} = 0;
+    $movie->{votesFaveAway} = 0;
+    $movie->{votesForLost} = 0;
+
     # find out who voted for the movie...
     while (@row = $sth->fetchrow_array()){
 
-
-        $VuserID = $row[0];
-        $Vperson = $row[1];
-        $Vtype = $row[2];
-        $Ubday = $row[3];
-        $Udefault = $row[4];
-        $Uthis = $row[5];
-        $Unext = $row[6];
+        $VuserID = $row[0] || '';
+        $Vperson = $row[1] || '';
+        $Vtype = $row[2] || 0;
+        $Ubday = $row[3] || '';
+        $Udefault = $row[4] || '';
+        $Uthis = $row[5] || '';
+        $Unext = $row[6] || '';
 
         if ( ($USERID != 38)
                      && ($Vperson eq 'demo') ){
