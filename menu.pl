@@ -17,8 +17,6 @@ sub new_nav_menu{
 	&show_menu_item( 0, "", "", "");
 	&show_menu_item( 0, $tnmc_url, "Home", "");
 	&show_menu_item( 0, "", "", "");
-	# &show_menu_item( 0, "/announcements/", "Announcements", "");
-	# &show_menu_item( 0, "", "", "");
 
 	if ($USERID{groupTrusted} >= 1){
             if (&show_menu_item( 0, "/people/", "People", "")){

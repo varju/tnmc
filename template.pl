@@ -22,21 +22,6 @@ sub header{
 
 	my $username = $USERID{'username'};
 
-
-#	my ($now, @names);
-#	
-#	my $cgih = new CGI;
-#	print $cgih -> header();
-#
-#	open (LOG, '>> log/all.log');
-#	print LOG "$now $username	$ENV{REQUEST_URI}";
-#	@names =  $cgih->param();
-#	foreach (@names){
-#		print LOG " +$_=" . $cgih->param($_);
-#	}
-#	print LOG "\n";
-#	close (LOG);
-
 	print qq{
 
 

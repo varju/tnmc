@@ -69,20 +69,6 @@ require 'menu.pl';
 require 'user.pl';
 require 'general_config.pl';
 
-if (1 ne 1){
-	require 'broadcast/BROADCAST.pl';
-
-	&header();
-	print qq{
-		<br>$USERID<br><br><b>TNMC is temporarilly offline while we upgrade the server,
-		it should be back up shortly.
-	};
-	&footer();
-	
-	exit(1);
-}
-
-
 # keepin perl happy...
 return 1;
 
