@@ -37,12 +37,15 @@ sub new_nav_menu{
     &show_menu_item( 0, "", "", "");
 
     if ($USERID{groupTrusted} >= 1){
-            if (&show_menu_item( 0, "/people/", "People", "")){
-        &show_menu_item( 1, "/people/who.cgi", "Who's online", "");
-        &show_menu_item( 1, "/people/list_by_group.cgi?group=Movies&cutoff=10", "Movie&nbsp;Junkies", "");
-            }
-            &show_menu_item( 0, "", "", "");
-        }
+        if (&show_menu_item( 0, "/people/", "People", "")){
+            &show_menu_item( 1, "/people/who.cgi", "Who's online", "");
+            &show_menu_item( 1, "/people/list_by_group.cgi?group=Admin&cutoff=1", "Site&nbsp;Admin", "");
+            &show_menu_item( 1, "/people/list_by_group.cgi?group=Movies&cutoff=100", "Movie&nbsp;Admin", "");
+        }elsif ($HOMEPAGE){
+            &show_menu_item( 1, "/people/who.cgi", "Who's online", "");
+        }            
+        &show_menu_item( 0, "", "", "");
+    }
     
     if ($USERID{groupMovies} >= 1){
         if (&show_menu_item( 0, "/movies/", "Movies", "")){
