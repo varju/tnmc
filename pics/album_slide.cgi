@@ -15,7 +15,6 @@ use tnmc::user;
 use tnmc::pics::new;
 
 use strict;
-require 'pics/PICS.pl';
 
 
 #############

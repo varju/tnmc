@@ -181,7 +181,7 @@ sub show_album_listing{
 
         print qq{
             <tr>
-                <td><a href="album_view.cgi?albumID=$albumID">$album{albumTitle}</a></td>
+                <td><a href="album_thumb.cgi?albumID=$albumID">$album{albumTitle}</a></td>
                 <td></td>
                 <td>$date_string</td>
                 <td></td>
@@ -232,9 +232,9 @@ sub show_album_info{
     print qq{
         <table>
             <tr>
-                <td valign="top"><a href="album_view.cgi?albumID=$albumID">
+                <td valign="top"><a href="album_thumb.cgi?albumID=$albumID">
                     <img src="$pic_img" width="80" height="64" border="0"></a></td>
-                <td valign="top"><a href="album_view.cgi?albumID=$albumID">
+                <td valign="top"><a href="album_thumb.cgi?albumID=$albumID">
                     <b>$album{albumTitle}</b></a><br>
                     $album{albumDescription}<br>
                     $date_string - 

@@ -179,7 +179,7 @@ sub show_album_nav_menu_basic{
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td>
-        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="/pics/album_view.cgi">
+        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="/pics/album_thumb.cgi">
     };
     foreach my $key (keys %nav){
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
@@ -273,7 +273,7 @@ sub show_album_nav_menu_full{
     
     # 
     print qq{
-        <form method="get" action="/pics/album_view.cgi">
+        <form method="get" action="/pics/album_thumb.cgi">
     };
     foreach my $key (keys %nav){
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
@@ -572,7 +572,7 @@ sub show_album_slide_header{
     my %album;
     &get_album($albumID, \%album);
     
-    my $album_url = "album_view.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
+    my $album_url = "album_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
     
     ## album navigation stuff
     print qq{
