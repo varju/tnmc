@@ -87,7 +87,7 @@ sub mybc_get_movie_info {
         }
     }
     else {
-        return undef;
+        return ();
     }
     
     # Extract the Theatres

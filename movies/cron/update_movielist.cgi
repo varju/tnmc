@@ -50,7 +50,7 @@ use tnmc::mybc;
     
     foreach my $mID (sort(keys(%list))){
         my %movieInfo = &tnmc::mybc::mybc_get_movie_info($mID);
-        if (!defined %movieInfo) {
+        if (! %movieInfo) {
             print "\n$mID (failed - parse error)";
             next;
         }
