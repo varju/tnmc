@@ -30,11 +30,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 sub news_print_quick {
     my $news_ref = get_quick_news();
-    news_print($news_ref, 2, 0);
+    news_print($news_ref, 2, 0, 0);
 }
 
 sub news_print {
-    my ($news_ref, $max, $edit_links) = @_;
+    my ($news_ref, $max, $edit_links, $print_expiry) = @_;
 
     my $count = @$news_ref;
     if ($max == 0) {
@@ -53,7 +53,7 @@ sub news_print {
         my $expires = $$news_row{expires};
         
         print "<p>$date\n";
-        if ($expires) {
+        if ($print_expiry && $expires) {
             print " (until $expires)\n";
         }
         print "<p>$value\n";

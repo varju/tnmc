@@ -22,7 +22,7 @@ if ($USERID) {
     show_heading("news");
 
     my $news_ref = get_news();
-    news_print($news_ref,0,1);
+    news_print($news_ref,0,1,1);
 }
     
 footer();
