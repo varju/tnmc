@@ -68,6 +68,7 @@ sub list_votes_by_movie{
           FROM MovieVotes, Personal
          WHERE movieID = '$movieID'
            AND MovieVotes.userID = Personal.userID
+           AND MovieVotes.type != 0
          ORDER BY username";
         $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
         $sth->execute;
