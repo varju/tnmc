@@ -21,8 +21,14 @@ sub show_bulletins
                 };
                 return;
         }
-        else
-        {
+        elsif(!$USERID){
+	        print qq
+                {
+			<!-- no bulletins -->
+                };
+                return;
+	}
+        else{
 		# &show_heading ("bulletins");
 		print qq
                 {
