@@ -33,9 +33,9 @@ sub log_login {
         $today = $_;
     }
     close (DATE);
-    
-    my (@elements) = ($today, $ENV{REMOTE_ADDR}, $ENV{REMOTE_HOST},
-                      $oldid, $oldname, $newid, $newname, $pass);
+
+    my (@elements) = ($today, $ENV{REMOTE_ADDR}, $oldid, $oldname, 
+                      $newid, $newname, $pass);
     push(@elements,'FAILED') unless $success;
 
     my $entry = join("\t", @elements);

@@ -34,7 +34,7 @@ sub header{
     
     &cookie_get();
     
-    my $username = $USERID{'username'};
+    my $username = $USERID{'username'} || '';
     my $logo = 'basic.gif';
     
     print qq{

@@ -36,7 +36,7 @@ sub cookie_get {
     
     %tnmc_cookie_in = $tnmc_cgi->cookie('TNMC');
     
-    if ($tnmc_cookie_in{'logged-in'} eq '1'){
+    if (defined $tnmc_cookie_in{'logged-in'} && $tnmc_cookie_in{'logged-in'} eq '1'){
         $USERID = $tnmc_cookie_in{'userID'};
         get_user($USERID, \%USERID);
         $ENV{REMOTE_USER} = $USERID{username};

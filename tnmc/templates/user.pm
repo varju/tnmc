@@ -45,7 +45,7 @@ sub show_user_homepage {
         open (LOG, '>>user/log/splash.log');
         print LOG "$today\t$ENV{REMOTE_ADDR}";
         print LOG "\t$USERID";
-        print LOG "\t$USERID{username}";
+        print LOG "\t$USERID{username}" if defined $USERID{username};
         
         print LOG "\n";
         close (LOG);

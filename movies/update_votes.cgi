@@ -46,6 +46,8 @@ use tnmc::template;
     }
     
     ### grumpy people who make too many negative votes get denied.
+    $vote_count{'1'} = 0 unless defined $vote_count{'1'};
+    $vote_count{'-1'} = 0 unless defined $vote_count{'-1'};
     if ($vote_count{'1'} < $vote_count{'-1'}){
         &header();
         print qq{

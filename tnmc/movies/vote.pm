@@ -27,6 +27,7 @@ sub get_vote{
         my ($movieID, $userID, $junk) = @_;
         my ($sql, $sth, @row, $vote);
 
+        $userID = 0 unless $userID;
         $sql = "SELECT type from MovieVotes WHERE movieID = '$movieID' AND userID = '$userID'";
         $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
         $sth->execute;
