@@ -9,7 +9,7 @@ use lib '/usr/local/apache/tnmc/';
 use tnmc;
 require 'MOVIES.pl';
 
-
+{
 
 	#############
 	### Main logic
@@ -17,7 +17,11 @@ require 'MOVIES.pl';
 	&db_connect();
 	&header();
 
+        ## Global Variable ( bad scott! )
 	$sortOrder = $tnmc_cgi->param('sortOrder');
+        if (!$sortOrder){
+            $sortOrder = 'rank';
+        }
 
 	&get_user($USERID, \%REAL_USER);
 
@@ -32,77 +36,70 @@ require 'MOVIES.pl';
 	&show_movies();
 
 
-
-	#############
-	### Main logic
-
-
-#	$current_movie =  &get_general_config("movie_current_movie");
-#	if ($current_movie){
-#	        &show_current_movie();
-#        }
-#	else{
-#		if ($USERID){
-#			&show_heading('Attendance - When can you go to the movies?');
-#			&list_my_attendance($USERID);
-#		};
-#		&show_movies();
-#	}
-
-
 	&footer();
 	&db_disconnect();
 
+}
 
 ##########################################################
 sub show_movies
 {
-	if ($REAL_USER{groupAdmin}){
 
-		print qq{	
-			<table border="0" cellpading="0" cellspacing="0" width="100%"><tr valign="top">
-			<td align="right">
-				<form action="index.cgi" method="post">
-				<input type="hidden" name="sortOrder" value="$sortOrder">
-				<font face="verdana" size="-1" color="888888">
+    my %sortSel;
+    $sortSel{$sortOrder} = 'selected';
+    print qq{
+        <form action="index.cgi" method="get">
+        <table border="0" cellpading="0" cellspacing="0" ><tr valign="top">
 
-				<font face="verdana" size="-1" color="888888"><b>
-        	                modify votes for</b>
-                	        <select name="effectiveUserID" onChange="form.submit();">
-		};
+         <td>
+              <font face="verdana" size="-1" color="888888"><b>
+              sort by</b><br>
+              <select name="sortOrder" onChange="form.submit();">
+                  <option $sortSel{title} value="title">Title
+                  <option $sortSel{rank} value="rank">Rank (#)
+                  <option $sortSel{votesFor} value="votesForTotal">Votes For (+)
+                  <option $sortSel{votesAgainst} value="votesAgainst">Votes Against (-)
+                  <option $sortSel{votesAway} value="votesAway">Votes Away (grey)
+                  <option $sortSel{rating} value="rating">Rating
+                  <option $sortSel{type} value="type">Type
+                  <option $sortSel{movieID} value="movieID">Movie ID
+              </select>
+         </td>
+    };
 
-		$sql = "SELECT userID, username FROM Personal ORDER BY username";
-		$sth = $dbh_tnmc->prepare($sql);
-		$sth->execute();
+    ## let admin users modify other people's votes
+    if ($REAL_USER{groupMovies} >= 100){
+        print qq{
+                <td>
+                    <font face="verdana" size="-1" color="888888"><b>modify votes for</b><br>
+                    <select name="effectiveUserID" onChange="form.submit();">
+        };
 
-		while (@row = $sth->fetchrow_array()){
-			$userID = $row[0];
-			$username = $row[1];
-			if ($userID == $effectiveUserID) { $sel = 'selected';}
-			else			{	$sel = '';}
-			print qq{
-				<option value="$userID" $sel>$username
-			}
-		};
-	
-		print qq{ 
-				</select>
-				</td>
-				</form>
-			</tr></table>
-		};
-	}
+        $sql = "SELECT userID, username FROM Personal WHERE groupMovies >= 1  ORDER BY username";
+        $sth = $dbh_tnmc->prepare($sql);
+        $sth->execute();
 
-	&list_my_attendance($effectiveUserID);
-	&show_heading ("Detailed Votes");
+        while (($userID, $username) = $sth->fetchrow_array()){
+            my $sel = '';
+            $sel = 'selected' if ($userID == $effectiveUserID);
+            print qq{           <option value="$userID" $sel>$username \n };
+        }
+        print qq{    </select>     </td>      };
+    }
 
-	##################################################################
-	### Start of list
+    print qq{    </tr></table></form>   };
 
-	print qq{
-		<table cellpadding="0" cellspacing="0" border="0">
-		<tr  bgcolor="ffffff">
-			<td><b>Edit</b></td>
+
+    &list_my_attendance($effectiveUserID);
+    &show_heading ("Detailed Votes");
+    
+    ##################################################################
+    ### Start of list
+    
+    print qq{
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tr  bgcolor="ffffff">
+                <td><b>Edit</b></td>
 			<td align="center"><b>&nbsp;N&nbsp;&nbsp;?&nbsp;&nbsp;Y&nbsp;</b></td>
 			<td align="right">&nbsp;&nbsp;<b>#</b></td>
 			<td align="right">&nbsp;&nbsp;<b>+</b></td>
@@ -117,57 +114,57 @@ sub show_movies
 				<form action="/movies/update_votes.cgi" method="post">
 				<input type="hidden" name="userID" value="$effectiveUserID">
 				<font color="888888"><b>now showing </td></tr>
-	};
+    };
 
-	########################
-	# show_movie_list( "WHERE (m.status = 'showing' OR m.status = 'just released')");
-	show_movie_list( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+    ########################
+    # show_movie_list( "WHERE (m.status = 'showing' OR m.status = 'just released')");
+    show_movie_list( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
 
-	print qq{	<tr>
+    print qq{	<tr>
 			<td colspan="9" bgcolor="cccccc" align="right">
 			<font color="888888"><b>coming soon </td></tr>
-	};
+    };
 
-	########################
-	# show_movie_list( "WHERE m.status = 'coming soon'");
-	show_movie_list( "WHERE (statusNew AND NOT (statusShowing OR 0))");
+    ########################
+    # show_movie_list( "WHERE m.status = 'coming soon'");
+    show_movie_list( "WHERE (statusNew AND NOT (statusShowing OR 0))");
 
+    print qq{\n	</table><p>\n};
 
-	print qq{\n	</table><p>\n};
-
-
-	### End of list
-	##################################################################
+    ### End of list
+    ##################################################################
 
 
-	########################
-	### Do the Favorite Movie Stuff
-
-	print qq{
+    ########################
+    ### Do the Favorite Movie Stuff
+    
+    print qq{
 		<font face="verdana">
 		<b>Favorite Movie:</b><br>
-	};
-	&show_favorite_movie_select($effectiveUserID);
-	print qq{
+    };
+    &show_favorite_movie_select($effectiveUserID);
+    print qq{
 		<br></font>
+    };
+
+    ########################
+    ### Warn if modifying another user's votes.
+
+    if ($effectiveUserID != $USERID){
+        $useridNotice = qq{
+            <font face="arial" size="+1" color="086DA5"><i><b>
+                for $USER{username}</b></i></font>
 	};
+    }
 
-	########################
-	### Warn if modifying another user's votes.
-
-	if ($effectiveUserID != $USERID){
-		$useridNotice = qq{
-			<font face="arial" size="+1" color="086DA5"><i><b>for $USER{username}</b></i></font>
-		};
-	}
-
-	########################
-	### Show the Update Votes buton.
-
-	print qq{
-		<input type="image" border="0" src="/template/update_votes_submit.gif" alt="Update Votes">$useridNotice
+    ########################
+    ### Show the Update Votes buton.
+    
+    print qq{
+		<input type="image" border="0" src="/template/update_votes_submit.gif"
+                 alt="Update Votes">$useridNotice
 		</form>
-	};
+    };
 }
 
 

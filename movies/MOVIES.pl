@@ -361,8 +361,9 @@ sub get_movie_extended{
 		$Uthis = $row[5];
 		$Unext = $row[6];
 
-		if ( ($Vperson eq 'demo')
-		   && ($USERID != 38)){
+		if ( ($USERID != 38)
+                     && ($Vperson eq 'demo') ){
+
 			#
 			# Do nothing
 			#
@@ -425,6 +426,13 @@ sub get_movie_extended{
 	$movie->{order} -= 0.5 *  $movie->{votesAgainst};
 	$movie->{order} -= 0.4 *  $movie->{votesForAway};
 	$movie->{order} -= 0.8 *  $movie->{votesFaveAway};
+
+	$movie->{votesForTotal} = $movie->{votesFave}
+                                + $movie->{votesFor}
+                                + $movie->{votesFaveBday};
+	$movie->{votesAway} = $movie->{votesFaveAway}
+                            + $movie->{votesForAway}
+                            + $movie->{votesForLost};
 
 	# encourage movies with good ratings!
 	# my $rating = $movie->{rating};
