@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 
 use CGI;
-use strict;
 
 use lib '/tnmc';
 
