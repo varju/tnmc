@@ -184,6 +184,20 @@ if ($USERID){
             </table>
 	    };
 
+    &tnmc::template::show_heading("messages");
+    my %sel_witty_banter;
+    $sel_witty_banter{$user{i_like_silence}} = 'checked';
+    
+    
+    print qq{
+            <table cellpadding="0" border="0" cellspacing="0">
+                                
+                                <tr><td><b>Display witty banter?</td>
+                <td><b>    <input type="radio" name="i_like_silence" value="0" $sel_witty_banter{0}>on </td>
+                <td><b>    <input type="radio" name="i_like_silence" value="1" $sel_witty_banter{1}>off
+                                </td></tr>
+                        </table>
+                        };
     print qq{
             <p>
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">

@@ -25,7 +25,11 @@ print &greeting($USERID{'fullname'});
 
 &tnmc::news::template::news_print_quick();
 &tnmc::templates::movies::show_movies();
-&tnmc::message::show_conv(1);
+
+if (!$USERID{i_like_silence})
+{
+    &tnmc::message::show_conv(1);
+}
 
 &tnmc::template::footer();
 
