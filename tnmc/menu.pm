@@ -70,7 +70,7 @@ sub new_nav_menu{
         &show_menu_item( 0, "", "", "");
     }
     
-    if ( $USERID == 1 || $USERID == 5 ) {
+    if ($USERID{groupAdmin}) {
         if (&show_menu_item( 0, "/mail/", "Mail", "")) {
             &show_menu_item( 1, "/mail/compose_message.cgi", "Compose", "")
             &show_menu_item( 1, "/mail/show_prefs.cgi", "Prefs", "")

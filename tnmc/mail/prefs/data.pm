@@ -97,7 +97,11 @@ sub mail_set_all_prefs {
     $sql = "INSERT INTO MailPrefs (UserId, Pref, Value)
                  VALUES (?, ?, ?)";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-    $sth->execute($UserId, 'From', $$prefs_ref{From});
+    
+    foreach my $key (keys %$prefs_ref) {
+        $sth->execute($UserId, $key, $$prefs_ref{$key});
+    }
+
     $sth->finish();
 }
 

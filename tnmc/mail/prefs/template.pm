@@ -59,6 +59,20 @@ sub messages_print_prefs {
     print "  </td>\n";
     print "</tr>\n";
 
+    print "<tr>\n";
+    print "  <td>quote messages</td>\n";
+    print "  <td>\n";
+    print "    <select name='Quote'>\n";
+    print "      <option value='Yes'";
+    print " selected" if $$prefs_ref{Quote} eq 'Yes';
+    print ">yes\n";
+    print "      <option value='No'";
+    print " selected" if $$prefs_ref{Quote} eq 'No' || !$$prefs_ref{Quote};
+    print ">no\n";
+    print "    </select>\n";
+    print "  </td>\n";
+    print "</tr>\n";
+
     print "</table>\n";
 
     print "<input type='image' border=0 src='/template/submit.gif' alt='Submit Changes'>\n";

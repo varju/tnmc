@@ -15,7 +15,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(message_parse message_lookup_user);
+@EXPORT = qw(message_parse message_lookup_user message_quote);
 @EXPORT_OK = qw(message_parse_date message_parse_month strip_newline);
 
 #
@@ -146,6 +146,24 @@ sub strip_newline {
     my ($str) = @_;
     chomp $str;
     return $str;
+}
+
+sub message_quote {
+    my ($message_ref) = @_;
+    my @out;
+
+    my $fullname = $$message_ref{AddrFrom};
+    if ($fullname =~ /(.*)\s</) {
+        $fullname = $1;
+    }
+    push(@out,"$fullname wrote:");
+
+    my @body = split(/[\n\r]/,$$message_ref{Body});
+    foreach my $line (@body) {
+        push(@out, "> " . $line);
+    }
+
+    return join("\n",@out);
 }
 
 1;

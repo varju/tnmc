@@ -10,7 +10,9 @@ use tnmc::db;
 use tnmc::template;
 
 use tnmc::mail::data;
+use tnmc::mail::parse;
 use tnmc::mail::template;
+use tnmc::mail::prefs::data;
 
 #############
 ### Main logic
@@ -37,6 +39,11 @@ if ($USERID) {
     $message{Subject} = $$orig_message{Subject};
     if ($message{Subject} !~ /^re:/i) {
         $message{Subject} = "Re: " . $message{Subject};
+    }
+
+    my $Quote = mail_get_pref($USERID,'Quote');
+    if ($Quote eq 'Yes') {
+        $message{Body} = message_quote($orig_message);
     }
 
     message_print_compose(\%message);
