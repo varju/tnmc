@@ -48,8 +48,9 @@ sub show_random_pic{
     $pic{description} &&= " ($pic{description})";
     my $date = $pic{timestamp};
     $date =~ s/\s.*//;
+    my $pic_url = "pics/search_slide.cgi?search=date-span&search_from=$date+00%3A00&search_to=$date+23%3A59%3A59&picID=$picID";
     print qq{
-        <a href="/pics/pic_view.cgi?picID=$picID&dateID=$date"><img src="$pic_img" width="80" height="64" border="0" alt="$pic{title}$pic{description}"></a>
+        <a href="$pic_url"><img src="$pic_img" width="80" height="64" border="0" alt="$pic{title}$pic{description}"></a>
     };
     
 }
@@ -70,7 +71,7 @@ sub get_random_pic{
     my $index;
     $offset++;
     while ($offset--){
-        $index = int rand($count_pics);
+        $index = int(rand($count_pics/100)) . int(rand(100)) ;
     }
     
     $sql = "SELECT picID FROM Pics WHERE typePublic = '1' LIMIT $index, 1";
