@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
+use tnmc::movies::night;
 
 #############
 ### Main logic
@@ -62,43 +63,65 @@ $sth->finish;
 
 #
 # (3) Advance the MovieAttendance Dates.
-#     Make an extra night off in the future (HACK)
+#     Make an extra night off in the future - attendance column (HACK)
+#     Make an extra night off in the future - night row
 #
 
 my $numberOfWeeksToShow = 3;
 
-# $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-# $sth = $dbh_tnmc->prepare($sql);
-# $sth->execute();
-# ($this_tuesday) = $sth->fetchrow_array();
+if (1 == 1){
+    # $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
+    # $sth = $dbh_tnmc->prepare($sql);
+    # $sth->execute();
+    # ($this_tuesday) = $sth->fetchrow_array();
+    
+    my $span = 7 * $numberOfWeeksToShow;
+    
+    $sql = "SELECT DATE_ADD(NOW(), INTERVAL '$span' DAY)";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    my ($far_tuesday) = $sth->fetchrow_array();
+    
+    
+    $sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d'), DATE_FORMAT('$far_tuesday', '%Y%m%d')";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    my ($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
+    
+    $sql = "ALTER TABLE MovieAttendance ADD movie$newMovieDate char(20), DROP COLUMN movie$oldMovieDate";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    
+    # $sql = "UPDATE MovieAttendance SET movie$newMovieDate = 'Default'";
+    # $sth = $dbh_tnmc->prepare($sql);
+    # $sth->execute();
+}
 
-my $span = 7 * $numberOfWeeksToShow;
+foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
+    
+    # get the date for the $i-th night from now.
+    
+    $sql = "SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%Y-%m-%d' )";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute($i * 7);
+    my ($i_date) = $sth->fetchrow_array();
+    
+    print "$i_date\n";
 
-$sql = "SELECT DATE_ADD(NOW(), INTERVAL '$span' DAY)";
-$sth = $dbh_tnmc->prepare($sql);
-$sth->execute();
-my ($far_tuesday) = $sth->fetchrow_array();
+    # next if the night already exists
+    next if list_nights([], "WHERE date LIKE '$i_date%'", "");
 
-
-$sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d'), DATE_FORMAT('$far_tuesday', '%Y%m%d')";
-$sth = $dbh_tnmc->prepare($sql);
-$sth->execute();
-my ($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
-
-$sql = "ALTER TABLE MovieAttendance ADD movie$newMovieDate char(20), DROP COLUMN movie$oldMovieDate";
-$sth = $dbh_tnmc->prepare($sql);
-$sth->execute();
-
-# $sql = "UPDATE MovieAttendance SET movie$newMovieDate = 'Default'";
-# $sth = $dbh_tnmc->prepare($sql);
-# $sth->execute();
-
-# $nightID = 
-
+    # add the night
+    my %night = (
+                 nightID => 0,
+                 date => "$i_date 00:00:00");
+    set_night(%night);
+    print "add $i_date\n";
+}
 
 
 # the end.
-
+$sth->finish();
 &db_disconnect();
 
 
