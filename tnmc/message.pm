@@ -48,7 +48,10 @@ sub get_msg{
 
 sub set_msg{
     my ($hash) = @_;
-    
+
+    # don't allow anonymous posting
+    return unless $$hash{sender};
+
     my @key_list = sort( keys(%$hash) );
     my $key_list = join ( ', ', @key_list);
     my $ref_list = join ( ', ', (map {sprintf '?'} @key_list) );
@@ -146,8 +149,10 @@ sub show_conv{
 	    </tr>
 	    };
     }
-    #show add msg
-    print qq{
+
+    # show add msg
+    if ($tnmc::security::auth::USERID) {
+        print qq{
 	<tr valign="top"><td>
 	<form action="message/msg_post.cgi" method="post">
 	    <input type="hidden" name="convID" value="$convID">
@@ -160,9 +165,8 @@ sub show_conv{
 		
 	</table>
 	};
+    }
     
 }
-
-
 
 1;
