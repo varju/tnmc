@@ -183,12 +183,12 @@ sub new_nav_menu{
 		<P>
 		<a href="/broadcast/" class="menulink">Broadcast</a>
 		<p>
+		<a href="/fieldtrip/" class="menulink">Field Trips</a>
+		<p>
 	};
 
 	if ($USERID == '1'){
 		print qq{
-			<a href="/fieldtrips/" class="menulink">Field Trips</a>
-			<p>
 		};
 	}
 	if ($user{groupAdmin}){
