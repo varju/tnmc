@@ -26,15 +26,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 
 sub show_user_homepage {
-    my $today;
-
     ############################
     ### Do the date stuff.
     open (DATE, "/bin/date |");
-    while (<DATE>) {
-        chop;
-        $today = $_;
-    }
+    my $today = <DATE>;
+    chomp $today;
     close (DATE);
     
     if (!-d "user/log") {

@@ -13,12 +13,9 @@ use strict;
 sub log_login {
     my ($success, $oldid, $oldname, $newid, $newname, $pass) = @_;
 
-    my $today;
     open (DATE, "/bin/date |");
-    while (<DATE>) {
-        chop;
-        $today = $_;
-    }
+    my $today = <DATE>;
+    chomp $today;
     close (DATE);
 
     my (@elements) = ($today, $ENV{REMOTE_ADDR}, $oldid, $oldname, 
