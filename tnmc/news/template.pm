@@ -58,12 +58,12 @@ sub news_print {
         }
         print "<p>$value\n";
         print "<p>-<i>$userId</i>\n";
+        print "<br clear=\"all\">\n";
 
         if ($edit_links && $USERID{groupAdmin}) {
             print "<p><a href='edit_news.cgi?newsId=$newsId'>edit</a>\n";
             print " <a href='delete_news.cgi?newsId=$newsId'>delete</a>\n";
         }
-        
         if (++$i < $count) {
             print "<hr noshade>\n";
         }
