@@ -151,7 +151,7 @@ sub new_nav_login{
                 {       </select><br>
 			<b>Password:</b><br>
 			<input type="password" name="password" size="10"><br>
-                        <input type="image" border=0 src="$tnmc_url/template/go_submit.gif" alt="Go"><br>
+                        <input type="image" border=0 src="/template/go_submit.gif" alt="Go"><br>
                         </form>
 			<p>
 			Hello there!<br>
