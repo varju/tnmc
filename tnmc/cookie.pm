@@ -4,6 +4,7 @@ use strict;
 use CGI;
 
 use tnmc::config;
+use tnmc::user;
 
 #
 # module configuration
@@ -35,7 +36,7 @@ sub get_cookie {
     %tnmc_cookie_in = $tnmc_cgi->cookie('TNMC');
     if ($tnmc_cookie_in{'logged-in'} eq '1'){
         $USERID = $tnmc_cookie_in{'userID'};
-        main::get_user($USERID, \%USERID);
+        get_user($USERID, \%USERID);
         $ENV{REMOTE_USER} = $USERID{username};
         $LOGGED_IN = $tnmc_cookie_in{'logged-in'};
     }else{

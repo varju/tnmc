@@ -5,6 +5,7 @@ use strict;
 use tnmc::config;
 use tnmc::cookie;
 use tnmc::db;
+use tnmc::menu;
 
 #
 # module configuration
@@ -131,10 +132,10 @@ SIZE="-2">
 	if (!$pageID)
 	{
 		if ($LOGGED_IN)
-		{ 	main::new_nav_menu();
+		{ 	new_nav_menu();
 		}
 		else
-		{	main::new_nav_login();
+		{	new_nav_login();
 		}
 	}
 	else
