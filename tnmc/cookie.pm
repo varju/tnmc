@@ -40,10 +40,12 @@ sub cookie_get {
         $USERID = $tnmc_cookie_in{'userID'};
         get_user($USERID, \%USERID);
         $ENV{REMOTE_USER} = $USERID{username};
-        $LOGGED_IN = $tnmc_cookie_in{'logged-in'};
     }else{
+        $USERID = 0;
         $USERID_LAST_KNOWN = $tnmc_cookie_in{'userID'};
     }
+
+    $LOGGED_IN = $tnmc_cookie_in{'logged-in'};
 }
 
 sub cookie_set {
