@@ -21,32 +21,17 @@ use tnmc;
 	%user;	
 	$cgih = new CGI;
 
-	my (@movies, $movieID, %movie);
-	
-	if ($USERID)
-	{ 	&show_heading ("dev job list");
 
-		&get_user($userID, \%user);
-	  
-		$devBlurb =  &get_general_config("devBlurb");
+ 	&show_heading ("dev job list");
+	$devBlurb =  &get_general_config("devBlurb");
+	$devBlurb =~ s/\n/<br>/gs;
+	print $devBlurb;
 
-		print qq 
-                {       <form action="development_set_submit.cgi" method="post">
-                        <table>
-        
-                        <tr>
-                        <td><textarea cols=40 rows=30 wrap=virtual name="devBlurb">$devBlurb</textarea></td>
-                        </tr>
+ 	&show_heading ("suggestion box");
+	$suggBlurb =  &get_general_config("suggestions");
+	$suggBlurb =~ s/\n/<br>/gs;
+	print $suggBlurb;
 
-			</table>
-
-			<p>
-                        <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
-
-			</form>
-		}; 
-	}
-	
 
 	&footer();
 
