@@ -1,15 +1,29 @@
-##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca (nov/98)
-#       Jeff Steinbok  - steinbok@interchange.ubc.ca
-##################################################################
-### Opening Stuff. Modules and all that. nothin' much interesting.
+package tnmc::general_config;
 
-require 5.004;
 use strict;
 use DBI;
-use CGI;
 
-###################################################################
+use tnmc::db;
+
+#
+# module configuration
+#
+
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+
+@ISA = qw(Exporter);
+@EXPORT = qw(get_general_config set_general_config);
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
+
 sub get_general_config{
         my ($name, $value_ref, $junk) = @_;
         my ($sql, $sth, @row);
@@ -23,7 +37,6 @@ sub get_general_config{
         return $$value_ref;
 }
 
-###################################################################
 sub set_general_config{
         my ($name, $value, $junk) = @_;
         my ($sql, $sth, @row);
@@ -39,7 +52,4 @@ sub set_general_config{
         $sth->finish;
 }
 
-
-
-# keepin perl happy...
-return 1;
+1;
