@@ -36,6 +36,7 @@ sub header{
     
     my $username = $USERID{'username'} || '';
     my $logo = 'basic.gif';
+    my $colour_bg = $USERID{'colour_bg'} || '#99ff00';
 
     my $font_size = get_font_size();
     
@@ -70,7 +71,7 @@ th {
 <TITLE>TNMC Online</TITLE>
 </HEAD>
 
-<BODY BGCOLOR="#99ff00">
+<BODY BGCOLOR="$colour_bg">
 <center>
 
 <TABLE BORDER="0" CELLPADDING=0 CELLSPACING=0 background="">

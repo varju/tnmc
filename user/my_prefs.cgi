@@ -189,6 +189,17 @@ if ($USERID){
                         </table>
                         };
 
+    &show_heading("colours");
+    my $sel_colour_bg = $user{colour_bg} || '#99ff00';
+    print qq{
+            <table cellpadding="0" border="0" cellspacing="0">
+            <tr>
+              <td><b>Background colour&nbsp;</td>
+              <td><input type="text" name="colour_bg" value="$sel_colour_bg" size="7" maxlength="7"></td>
+            </tr>
+            </table>
+	    };
+
     print qq{
             <p>
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
