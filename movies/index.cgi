@@ -210,6 +210,8 @@ sub show_movie_list{
 		$movieInfo{$movieID} = $anon;
 	}
 	if ($sortOrder){
+	    ## Hack: if we say 'rank', we really mean 'order' (more granularity)
+	    $sortOrder = 'order' if ($sortOrder eq 'rank');
             @list = sort  {
                 (   ($movieInfo{$b}->{$sortOrder}
                      <=>     $movieInfo{$a}->{$sortOrder})
