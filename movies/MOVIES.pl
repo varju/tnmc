@@ -11,7 +11,6 @@ use CGI;
 require 'db_access.pl';
 
 
-
 ##########################################################
 sub show_movieMenu
 {
@@ -29,6 +28,24 @@ sub show_movieMenu
 
 			&#149;
 
+		<a href="attendance.cgi">
+		<font face="verdana" size="-1" color="888888"><b>
+		Attendance</b></font></a>
+
+			&#149;
+
+		<a href="list_seen_movies.cgi">
+		<font face="verdana" size="-1" color="888888"><b>
+		Seen</b></font></a>
+
+			&#149;
+
+		<a href="movie_add.cgi">
+		<font face="verdana" size="-1" color="888888"><b>
+		Add a Movie</b></font></a>
+
+			&#149;
+
 		<a href="help.cgi">
 		<font face="verdana" size="-1" color="888888"><b>
 		Information</b></font></a>
@@ -37,7 +54,7 @@ sub show_movieMenu
 	if ($USER{groupAdmin}){
 		print qq{
 
-			&#149;
+			<br>
 
 			<a href="list_all_movies.cgi">
 			<font face="verdana" size="-1" color="888888"><b>
@@ -48,12 +65,104 @@ sub show_movieMenu
 			<a href="admin.cgi">
 			<font face="verdana" size="-1" color="888888"><b>
 			Admin</b></font></a>
+
+			&#149;
+			
+			<a href="movies.cgi">
+			<font face="verdana" size="-1" color="888888"><b>
+			Testing</b></font></a>
+
 		};
 	}
 	print qq{
 		</b></font><br>
 	};
 
+}
+
+
+
+##########################################################
+sub list_my_attendance{
+
+	my ($userID) = @_;
+    
+    # Get User's attendance
+    my %attendance;
+    &get_attendance($userID, \%attendance);
+
+    # Get the list of dates
+    my @movieDates;
+    foreach (keys %attendance){
+	if (!/^movie(\d+)/) {next;}
+	push (@movieDates, $1);
+    }
+    @movieDates = sort(@movieDates);
+
+    # print some opening crap
+    print qq{
+	};
+
+    print qq{
+	<table border=0 cellpadding=1 cellspacing=0 width="100%">
+	    <tr bgcolor="cccccc">
+		<td norwrap>
+		<form action="/movies/attendance_submit.cgi" method="post">
+		<input type="hidden" name="userID" value="$userID">&nbsp;&nbsp;
+		</td>
+        <td align="center"><b>Default</td>
+		<td>&nbsp;&nbsp;</td>
+    };
+
+    my $tuesdayDate;
+    foreach $tuesdayDate (@movieDates){
+	my $sql = "SELECT DATE_FORMAT('$tuesdayDate', '%b %D')";
+	my $sth = $dbh_tnmc->prepare($sql);
+	$sth->execute();
+        my @row = $sth->fetchrow_array();
+	
+	print qq{
+	    <td align="center"><font color="888888"><b>$row[0]&nbsp;</td>
+		<td>&nbsp;&nbsp;</td>
+	};
+    }
+    print qq{
+		<td>&nbsp;&nbsp;</td>
+		<td>&nbsp;&nbsp;</td>
+	</tr>
+	<tr>
+		<td></td>
+	        <td valign="top"><b>
+		    <select name="movieDefault">
+			<option value="$attendance{movieDefault}">$attendance{movieDefault}
+			<option value="$attendance{movieDefault}">----
+			<option>yes
+			<option>no
+		    </select>
+		    </td>
+		<td></td>
+    };
+
+    foreach $tuesdayDate (@movieDates){
+	print qq{
+	    <td valign="top">
+	    <select name="movie$tuesdayDate">
+		<option value="$attendance{"movie$tuesdayDate"}">$attendance{"movie$tuesdayDate"}
+		<option value="$attendance{"movie$tuesdayDate"}">----
+		<option value="">Default
+		<option>yes
+		<option>no
+	     </select>
+		 </td>
+		<td></td>
+		};
+
+    }
+    print qq{
+	<td valign="top"><b><input type="submit" value="Update"></form></td>
+	</tr>
+	</table>
+    };
 }
 
 
@@ -130,6 +239,23 @@ sub show_current_movie
                         </TABLE>
                         <P>
                 };
+}
+
+###################################################################
+sub set_attendance{
+	my (%attendance, $junk) = @_;
+	my ($sql, $sth, $return);
+	
+	&db_set_row(\%attendance, $dbh_tnmc, 'MovieAttendance', 'userID');
+}
+
+###################################################################
+sub get_attendance{
+	my ($userID, $attendance_ref, $junk) = @_;
+	my ($condition);
+
+	$condition = "userID = '$userID'";
+	&db_get_row($attendance_ref, $dbh_tnmc, 'MovieAttendance', $condition);
 }
 
 ###################################################################

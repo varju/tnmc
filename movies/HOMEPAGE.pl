@@ -19,6 +19,10 @@ require 'MOVIES.pl';
 	        &show_current_movie();
         }
 	else{
+		if ($USERID){
+			&show_heading('Attendance - When can you go to the movies?');
+			&list_my_attendance($USERID);
+		};
 		&show_movies();
 	}
 
@@ -121,8 +125,24 @@ sub show_movie_list{
 
 	($whereClause, $junk) = @_;
 
+                
+        @userList = ();
+        %userList = ();
+        list_users(\@userList);
+        foreach (@userList){
+                $userList{$_} = {};
+                get_attendance($_, $userList{$_});
+        }
+        @movieDates = reverse(sort(keys(%{$userList{1}})));
+        while ( 1 == 1){
+                $thisTues = pop(@movieDates);
+                if ($thisTues =~ /^movie\d+$/){ last;}
+        }
+        $nextTues = pop(@movieDates);
+
+
 	$sql = "SELECT m.movieID, m.title, m.statusNew,
-		       p.username, v.type, p.movieAttendance
+		       p.userID, p.username, v.type
                  FROM           Movies as m 
                       LEFT JOIN MovieVotes as v USING (movieID)
                       LEFT JOIN Personal as p USING (userID)
@@ -137,8 +157,8 @@ sub show_movie_list{
 
 	while ( $row[0] ){
 
-		#   0          1        2            3           4       5
-		# m.movieID, m.title, m.statusNew, p.username, v.type, p.movieAttendance
+		#   0          1        2            3         4           5
+		# m.movieID, m.title, m.statusNew, p.userID, p.username, v.type
 
 		$movieID = $row[0];
 
@@ -150,29 +170,40 @@ sub show_movie_list{
 
 		# find out who voted for the movie...
 		while ($row[0] == $movieID){
-			$Vperson = $row[3];
-			$Vtype = $row[4];
-			$Vstatus = $row[5];
+			$Vperson = $row[4];
+			$Vtype = $row[5];
+			$VuserID = $row[3];
 
                        if ( ($Vperson eq 'demo')
-                           && ($USERID != 38)){        
+                           && ($USERID != 38)){
                                 # 
                                 # Do nothing
                                 #
                         }
-                        elsif (!$Vstatus){
-				if ($Vtype == 1){
-					$votes{$movieID} .= "<font color='888888'>$Vperson</font> ";
-					$votesAgainst{$movieID} ++;
-				}
-				if ($Vtype == 2){
-					$votes{$movieID} .= "<font color='888888'><b>$Vperson</b></font> ";
-					$votesAgainst{$movieID} += 2;
-				}
-			}
+                        elsif ( ($userList{$VuserID}->{$thisTues} eq 'no')
+                                || ($userList{$VuserID}->{$thisTues} eq '' and
+                                $userList{$VuserID}->{movieDefault} eq 'no')    ){
+
+                                if (    ($userList{$VuserID}->{$nextTues} eq 'no')
+                                        || ($userList{$VuserID}->{$nextTues} eq '' and
+                                        $userList{$VuserID}->{movieDefault} eq 'no')    ){
+                      
+                                        if ($Vtype >= 1){
+                                                $votes{$movieID} .= "<font color='cccccc'>$Vperson</font> ";
+                                        }
+                                }
+                                elsif ($Vtype == 1){
+                                        $votes{$movieID} .= "<font color='888888'>$Vperson</font> ";
+                                        $votesAgainst{$movieID} ++;
+                                }
+                                elsif ($Vtype == 2){
+                                        $votes{$movieID} .= "<font color='888888'><b>$Vperson</b></font> ";
+                                        $votesAgainst{$movieID} += 2; 
+                                }
+                        }
 			elsif ($Vtype == 2){
 				$votes{$movieID} .= "<b>$Vperson</b> ";
-				$votesFor{$movieID} += 2;
+				$votesFor{$movieID} += 1.5;
 			}
 			elsif ($Vtype == 1){
 				$votes{$movieID} .= "$Vperson ";
@@ -222,8 +253,7 @@ sub show_movie_list{
 					'ViewMovie',
 					'resizable,height=500,width=550');
 					index.cgi
-					">$title{$movieID}
-				</a>&nbsp;&nbsp;</td>
+					">$title{$movieID}</a>&nbsp;&nbsp;</td>
 				<td>$votes{$movieID}</td>
 			</tr>
 		};

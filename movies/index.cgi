@@ -27,7 +27,7 @@ require 'MOVIES.pl';
 
 	&show_movieMenu();
 	&show_movies();
-	&show_add_movie_form();
+#	&show_add_movie_form();
 
 	&footer();
 	&db_disconnect();
@@ -183,8 +183,23 @@ sub show_movie_list{
 
 	($whereClause, $junk) = @_;
 
+	@userList = ();
+	%userList = ();
+	list_users(\@userList);
+	foreach (@userList){
+		$userList{$_} = {};
+		get_attendance($_, $userList{$_});
+	}
+	@movieDates = reverse(sort(keys(%{$userList{1}})));
+	while ( 1 == 1){
+		$thisTues = pop(@movieDates);
+		if ($thisTues =~ /^movie\d+$/){ last;}
+	}
+	$nextTues = pop(@movieDates);
+
+
 	$sql = "SELECT m.movieID, m.title, m.type, m.rating, m.statusShowing, m.statusNew,
-		       p.username, v.type, p.movieAttendance
+		       p.userID, p.username, v.type
                  FROM           Movies as m 
                       LEFT JOIN MovieVotes as v USING (movieID)
                       LEFT JOIN Personal as p USING (userID)
@@ -214,7 +229,7 @@ sub show_movie_list{
 		# here's how the data comes in:
 		#
 		#   0          1        2       3         4                5            6           7       8
-		# m.movieID, m.title, m.type, m.rating, m.statusShowing, m.statusNew, p.username, v.type, p.movieAttendance
+		# m.movieID, m.title, m.type, m.rating, m.statusShowing, m.statusNew, p.userID, p.username, v.type
 
 		$movieID = $row[0];
 		$title = $row[1];
@@ -230,22 +245,34 @@ sub show_movie_list{
 		# find out who voted for the movie...
 		while ($row[0] == $movieID){
 
-			$Vperson = $row[6];
-			$Vtype = $row[7];
-			$Vstatus = $row[8];
+			$Vperson = $row[7];
+			$Vtype = $row[8];
+			$VuserID = $row[6];
 
 			if ( ($Vperson eq 'demo')
 			   && ($effectiveUserID != 38)){
 				#
 				# Do nothing
-				#			
-			}				
-			elsif (!$Vstatus){
-				if ($Vtype == 1){
+				#
+			}
+			
+			elsif (	($userList{$VuserID}->{$thisTues} eq 'no')
+				|| ($userList{$VuserID}->{$thisTues} eq '' and
+				$userList{$VuserID}->{movieDefault} eq 'no')	){
+
+				if (	($userList{$VuserID}->{$nextTues} eq 'no')
+					|| ($userList{$VuserID}->{$nextTues} eq '' and
+					$userList{$VuserID}->{movieDefault} eq 'no')	){
+
+					if ($Vtype >= 1){
+						$votes .= "<font color='cccccc'>$Vperson</font> ";
+					}
+				}
+				elsif ($Vtype == 1){
 					$votes .= "<font color='888888'>$Vperson</font> ";
 					$votesAgainst ++;
 				}
-				if ($Vtype == 2){
+				elsif ($Vtype == 2){
 					$votes .= "<font color='888888'><b>$Vperson</b></font> ";
 					$votesAgainst += 2;
 				}
