@@ -5,6 +5,7 @@ use strict;
 use tnmc::config;
 use tnmc::cookie;
 use tnmc::db;
+use tnmc::user;
 
 #
 # module configuration
@@ -124,14 +125,21 @@ sub new_nav_login{
                 print qq
                 {
             <form action="/user/login.cgi" method="post">
-                <br><b>Login:</b><br>
+                <br><b>Fast Login:</b><br>
                         <!-- <select onChange="form.submit();" name="userID"> -->
             <select name="userID">
                         <option value="0">Pick a user...
                         <option value="0">---------------
                 };
 
-                $sql = "SELECT userID, username FROM Personal WHERE groupDead != '1' ORDER BY username";
+		if ($USERID_LAST_KNOWN){
+			&get_user($USERID_LAST_KNOWN, \%user);
+			if (!$user{username} && $user{fullname}){
+				print qq{<option value="$USERID_LAST_KNOWN" selected>$user{fullname}\n};
+			}
+		}
+
+                $sql = "SELECT userID, username FROM Personal WHERE groupDead != '1' && username != '' ORDER BY username";
                 $sth = $dbh_tnmc->prepare($sql);
                 $sth->execute();
                 
@@ -154,6 +162,8 @@ sub new_nav_login{
                         <input type="image" border=0 src="/template/go_submit.gif" alt="Go"><br>
                         </form>
             <p>
+	    <b><a href="/user/entry_page.cgi">All other logins</a></b>
+	    <p>
             Hello there!<br>
             <br>
             Welcome to TNMC<I>Online</I>, <BR>a perl web-app and<BR>
