@@ -1,7 +1,6 @@
 package tnmc::security::session;
 
 use strict;
-use CGI;
 use tnmc::db;
 
 #

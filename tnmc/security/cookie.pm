@@ -1,8 +1,8 @@
 package tnmc::security::cookie;
 
 use strict;
-use CGI;
 use tnmc::security::auth;
+use tnmc::cgi;
 
 #
 # module configuration
@@ -28,36 +28,24 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 
 # takes sessionID, userID (or looks them up), creates a tnmc-style cookie, returns the string to send to the browser.
 sub create_cookie{
-    my ($sessionID, $userID, $logged_in) = @_;
+    my ($sessionID) = @_;
     
-    # to-do: deal with CGI better
-    my $tnmc_cgi = new CGI;
+    my $cgih = &tnmc::cgi::get_cgih();
     
     if (! defined $sessionID){
         $sessionID = &security::auth::get_my_sessionID();
     }
     
-    if (! defined $userID){
-        $userID = &security::auth::get_my_userID();
-    }
-
-    if (! defined $logged_in){
-        $logged_in = &security::auth::is_open;
-    }
-    
-    my %cookie = (
-                  'userID' => $userID,
-                  'sessionID' => $sessionID,
-                  'logged-in' => $logged_in,
+    my %cookie = ('sessionID' => $sessionID,
                   );
     
-    my $cookie_string = $tnmc_cgi->cookie(
-                                          -name    => 'TNMC',
-                                          -value   => \%cookie,
-                                          -expires => '+1y',
-                                          -path    => '/',
-                                          -secure  => '0'
-                                          );
+    my $cookie_string = $cgih->cookie(
+                                      -name    => 'TNMC',
+                                      -value   => \%cookie,
+                                      -expires => '+1y',
+                                      -path    => '/',
+                                      -secure  => '0'
+                                      );
     
     return $cookie_string;
 }
@@ -66,10 +54,9 @@ sub create_cookie{
 sub parse_cookie{
     my %cookie;
     
-    # to-do: deal with CGI better;
-    my $tnmc_cgi = new CGI;
+    my $cgih = &tnmc::cgi::get_cgih();
     
-    %cookie = $tnmc_cgi->cookie('TNMC');
+    %cookie = $cgih->cookie('TNMC');
     
     return \%cookie;
 }

@@ -1,10 +1,11 @@
 package tnmc::security::auth;
 
 use strict;
-use CGI;
 use tnmc::security::cookie;
 use tnmc::security::session;
 use tnmc::user;
+use tnmc::util::ip;
+use tnmc::cgi;
 
 #
 # module configuration
@@ -12,11 +13,11 @@ use tnmc::user;
 
 use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK
-            $USERID $LOGGED_IN $USERID_LAST_KNOWN %USERID $tnmc_cgi);
+            $USERID $LOGGED_IN $USERID_LAST_KNOWN %USERID);
 
 @ISA = qw(Exporter);
 
-@EXPORT = qw($USERID $LOGGED_IN $USERID_LAST_KNOWN %USERID $tnmc_cgi);
+@EXPORT = qw($USERID $LOGGED_IN $USERID_LAST_KNOWN %USERID);
 
 @EXPORT_OK = qw();
 
@@ -32,9 +33,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 
 sub authenticate{
     
-    ### HACK: this should be elsewhere. it's in here to make upgrading from cookie.pm easier.
-    $tnmc_cgi = new CGI;
-    
     my $sessionID = &get_my_sessionID();
     $USERID = &get_my_userID();
     $USERID_LAST_KNOWN = &get_my_userID();
@@ -43,8 +41,8 @@ sub authenticate{
     if ($USERID){
         &tnmc::user::get_user($USERID, \%USERID);
     }
-    
     &tnmc::security::session::hit_session($sessionID);
+    
 }
 
 sub get_my_sessionID{
@@ -66,25 +64,16 @@ sub generate_sessionID{
 
 sub get_my_userID{
     
-    ## old style
-    my $cookie = &tnmc::security::cookie::parse_cookie();
-    if ($cookie->{'logged-in'} eq 1){
-        return $cookie->{'userID'};
+    my $sessionID = get_my_sessionID();
+    my %session;
+    &tnmc::security::session::get_session($sessionID, \%session);
+    
+    if ($session{'open'}){
+        return $session{'userID'};
     }
     else{
         return 0;
     }
-    
-    ## new style
-#    my $sessionID = get_my_sessionID();
-#    my $session = &tnmc::security::session::get_session($sessionID);
-#    
-#    if ($session->{'open'}){
-#        return $session->{'userID'};
-#    }
-#    else{
-#        return 0;
-#    }
 }
 
 sub get_last_userID{
@@ -94,16 +83,11 @@ sub get_last_userID{
 
 sub is_open{
 
-    ## old style
-    my $cookie = &tnmc::security::cookie::parse_cookie();
-    return $cookie->{'logged-in'};
+    my $sessionID = get_my_sessionID();
+    my %session;
+    &tnmc::security::session::get_session($sessionID, \%session);
 
-    ## new style
-#    my $sessionID = get_my_sessionID();
-#    my $session;
-#    &tnmc::security::session::get_session($sessionID, $session);
-#
-#    return $session->{'open'};
+    return $session{'open'};
 }
 
 sub login{
@@ -112,20 +96,23 @@ sub login{
     # get a fresh sessionid
     my $sessionID = &generate_sessionID();
     
+    # get the hostname
+    my $hostname = &tnmc::util::ip::get_hostname($ENV{'REMOTE_ADDR'});
+    
     # save the session to the db
     my %session = ('sessionID' => $sessionID,
                    'userID' => $userID,
                    'firstOnline' => undef(),
                    'lastOnline' => undef(),
                    'IP' => $ENV{'REMOTE_ADDR'},
-                   'host' => '',
+                   'host' => $hostname,
                    'hits' => 0,
                    'open' => 1,
                    );
     &tnmc::security::session::set_session(\%session);
     
     # send the cookie
-    my $cookie_string = &tnmc::security::cookie::create_cookie($sessionID, $userID, 1);
+    my $cookie_string = &tnmc::security::cookie::create_cookie($sessionID);
     return $cookie_string;
     
 }
@@ -139,7 +126,7 @@ sub logout{
     &tnmc::security::session::revoke_session($sessionID);
     
     # send the cookie
-    my $cookie_string = &tnmc::security::cookie::create_cookie($userID, $sessionID, 0);
+    my $cookie_string = &tnmc::security::cookie::create_cookie($sessionID);
     return $cookie_string;
     
 }
