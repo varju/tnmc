@@ -37,6 +37,10 @@ sub show_user_homepage {
     }
     close (DATE);
     
+    if (!-d "user/log") {
+        mkdir("user/log",0755);
+    }
+
     if ($USERID != 1){
         open (LOG, '>>user/log/splash.log');
         print LOG "$today\t$ENV{REMOTE_ADDR}";
