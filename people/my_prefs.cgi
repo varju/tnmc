@@ -25,11 +25,20 @@ use tnmc;
 
 	 	@cols = &db_get_cols_list($dbh_tnmc, 'Personal');
 		&get_user($USERID, \%user);
-	  	
+
 		print qq{
 			<form action="my_prefs_submit.cgi" method="post">
 			<input type="hidden" name="userID" value="$USERID">
 		};
+
+		### Let's not let the demo user change their prefs.
+	  	if ($user{username} eq 'demo'){
+			print qq{
+				</form>
+				<form method="post">
+			};
+		}
+
 		foreach $key (@cols){
 			if ($key =~ /^group/){
 				print qq{
@@ -73,7 +82,8 @@ use tnmc;
 		}else{
 			print qq{
                                 <tr><td><b>birthdate</td>
-                                    <td>$user{birthdate}</td>
+                                    <td><input type="hidden" name="birthdate" value="$user{birthdate}">
+                                        $user{birthdate}</td>
                                 </tr>
 			};
 		}
