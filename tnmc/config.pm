@@ -7,10 +7,10 @@ use strict;
 #
 
 use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK $tnmc_hostname $tnmc_url $tnmc_email $tnmc_domain $tnmc_maildomain $tnmc_debug_mode);
+use vars qw(@ISA @EXPORT @EXPORT_OK $tnmc_hostname $tnmc_url $tnmc_email $tnmc_domain $tnmc_maildomain $tnmc_basepath $tnmc_debug_mode);
 
 @ISA = qw(Exporter);
-@EXPORT = qw($tnmc_hostname $tnmc_url $tnmc_email $tnmc_domain $tnmc_maildomain $tnmc_debug_mode);
+@EXPORT = qw($tnmc_hostname $tnmc_url $tnmc_email $tnmc_domain $tnmc_maildomain $tnmc_basepath $tnmc_debug_mode);
 @EXPORT_OK = qw();
 
 #
@@ -22,6 +22,7 @@ $tnmc_domain = '.tnmc.ca';
 $tnmc_url = "http://$tnmc_hostname";
 $tnmc_email = 'tnmc-list@interchange.ubc.ca';
 $tnmc_maildomain = 'tnmc.ca';
+$tnmc_basepath = '/tnmc';
 $tnmc_debug_mode = 0;
 
 1;
