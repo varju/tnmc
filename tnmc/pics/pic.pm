@@ -191,7 +191,7 @@ sub update_cache_pub{
     
     my $cache_dir = "/tnmc/pics/data/cache/";
     my $pub_dir = "/tnmc/pics/pub/cache/";
-    my @modes = ('thumb');
+    my @modes = ('thumb', 'full');
     
     # clear existing cached pic
     foreach my $mode (@modes){
@@ -200,7 +200,7 @@ sub update_cache_pub{
     
     if ($pic{'typePublic'}){
         foreach my $mode (@modes){
-            &tnmc::util::file::copy
+            &tnmc::util::file::softlink
                 ( "$cache_dir$mode\/$picID",
                   "$pub_dir$mode\/$picID"
                   );
