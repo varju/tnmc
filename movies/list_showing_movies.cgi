@@ -15,7 +15,7 @@ require 'MOVIES.pl';
 	&header();
 	&db_connect();
 
-	&show_seen_movie_list();
+	&show_showing_movie_list();
 
 	&db_disconnect();
 	&footer();
@@ -25,7 +25,7 @@ require 'MOVIES.pl';
 ##########################################################
 
 #########################################
-sub show_seen_movie_list{
+sub show_showing_movie_list{
 	my (@movies, %movie, $movieID, $key);
 
 	&list_movies(\@movies, "WHERE statusShowing = '1'", 'ORDER BY title');
