@@ -8,8 +8,9 @@ sub format_date{
     my ($format, $date) = @_;
     
     return 'never' if !$date;
-
-    $date =~ /(....)(..)(..)(..)(..)(..)/;
+    
+    # get the date 
+    $date =~ /(....)-?(..)-?(..) ?(..):?(..):?(..)/;
     my ($yyyy, $mm, $dd, $h, $m, $s, @date);
     $yyyy = $1;
     $mm = $2;
@@ -18,11 +19,16 @@ sub format_date{
     $m = $5;
     $s = $6;
     @date = ($1, $2, $3, $4, $5, $6);
+    
+    # do the formatting
     if ($format eq 'numeric'){
         return sprintf("%s/%s/%s %s:%s:%s", @date);
-        
     }
-    
+    elsif ($format eq 'short_date'){
+        my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+                   'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
+        return  "$mon $dd, $yyyy";
+    }
 }
 
 return 1;
