@@ -25,10 +25,12 @@ use tnmc;
 	}
 	
 	require 'bulletins/HOMEPAGE.pl';
-
+	
 	require 'movies/HOMEPAGE.pl';
 
 	&footer();
+
+	require 'user/HOMEPAGE.pl';
 	&db_disconnect();
 
 

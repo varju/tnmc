@@ -71,19 +71,19 @@ use tnmc;
 		<TD>
 	};
 
-	open (LINES, 'cat /usr/local/apache/logs/access_log.tnmc | grep -v gif | grep -v ^199.60.1.27 | grep -v ^24.113.3.42 | wc -l |');
-	$proper_requests = <LINES>;
-	close (LINES);
-
-	open (LINES, 'cat /usr/local/apache/logs/access_log.tnmc | grep -v ^199.60.1.27 | grep -v ^24.113.3.42 | wc -l |');
-	$total_files = <LINES>;
-	close (LINES);
-
-	open (LINES, 'cat /usr/local/apache/logs/access_log.tnmc | grep -v gif | wc -l |');
-	$total_cgi = <LINES>;
-	close (LINES);
-
-	open (LINES, 'cd /usr/local/apache/tnmc && cat *.pl *.cgi | wc -l |');
+#	open (LINES, 'cat /usr/local/apache/logs/access_log.tnmc | grep -v gif | grep -v ^199.60.1.27 | grep -v ^24.113.3.42 | wc -l |');
+#	$proper_requests = <LINES>;
+#	close (LINES);
+#
+#	open (LINES, 'cat /usr/local/apache/logs/access_log.tnmc | grep -v ^199.60.1.27 | grep -v ^24.113.3.42 | wc -l |');
+#	$total_files = <LINES>;
+#	close (LINES);
+#
+#	open (LINES, 'cat /usr/local/apache/logs/access_log.tnmc | grep -v gif | wc -l |');
+#	$total_cgi = <LINES>;
+#	close (LINES);
+#
+	open (LINES, 'cd /usr/local/apache/tnmc && cat *.pm *.pl *.cgi */*.pl */*.cgi */*/*.cgi| wc -l |');
 	$lines_of_code = <LINES>;
 	close (LINES);
 
@@ -92,9 +92,11 @@ use tnmc;
         $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
         
 	print qq{
-			$lines_of_code lines of perl code<br>
-                        $proper_requests cgi requests<br>
+			over $lines_of_code lines of perl code!<br>
+                        <!-- 
+			$proper_requests cgi requests<br>
 			$total_files files served<br>
+			-->
 			</TD>
 		</TR>
 

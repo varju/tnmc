@@ -16,7 +16,7 @@ BEGIN
 
         use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
 		$dbh_tnmc
-		$USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
+		$USERID %USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
 
         @ISA = qw(Exporter);
 
@@ -41,6 +41,7 @@ BEGIN
                         $dbh_tnmc
 
 			$USERID
+			%USERID
 			$LOGGED_IN
 			$tnmc_cgi
 
@@ -61,6 +62,8 @@ sub get_cookie{
 	%tnmc_cookie_in = $tnmc_cgi->cookie('TNMC');
 	if ($tnmc_cookie_in{'logged-in'} eq '1'){
 		$USERID = $tnmc_cookie_in{'userID'};
+	        &get_user($USERID, \%USERID);
+                $ENV{REMOTE_USER} = $USERID{username};
 		$LOGGED_IN = $tnmc_cookie_in{'logged-in'};
 	}
 }
@@ -72,6 +75,7 @@ sub get_cookie{
 
 require 'db_access.pl';
 require 'template.pl';
+require 'menu.pl';
 require 'user.pl';
 require 'general_config.pl';
 
@@ -91,3 +95,7 @@ if (1 ne 1){
 
 # keepin perl happy...
 return 1;
+
+
+
+
