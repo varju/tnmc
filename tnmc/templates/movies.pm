@@ -1,43 +1,63 @@
-##################################################################
-#       Scott Thompson - scottt@interchange.ubc.ca
-##################################################################
-### Opening Stuff. Modules and all that. nothin' much interesting.
+package tnmc::templates::movies;
 
-use lib '/usr/local/apache/tnmc';
+use strict;
 
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::user;
+use tnmc::template;
 use tnmc::movies::night;
 use tnmc::movies::show;
 use tnmc::movies::attend;
 use tnmc::movies::movie;
 use tnmc::movies::vote;
 
-	################
-	### Main Logic:
-	&db_connect();
+#
+# module configuration
+#
 
-	my ($next_tuesday, $next_tuesday_string, $sql, $sth);
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
 
-	$next_tuesday = &get_next_night();
-	$sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
-	$sth = $dbh_tnmc->prepare($sql);
-	$sth->execute();
-	($next_tuesday_string) = $sth->fetchrow_array();
-	$sth->finish();
+@ISA = qw(Exporter);
 
-	my $movies_heading = qq{
-		Movie for $next_tuesday_string
+@EXPORT = qw(show_movies);
+
+@EXPORT_OK = qw();
+
+#
+# module vars
+#
+
+#
+# module routines
+#
+
+sub show_movies {
+    &db_connect();
+
+    my ($next_tuesday, $next_tuesday_string, $sql, $sth);
+
+    $next_tuesday = &get_next_night();
+    $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    ($next_tuesday_string) = $sth->fetchrow_array();
+    $sth->finish();
+
+    my $movies_heading = qq{
+        Movie for $next_tuesday_string
 	};
-	&show_heading ($movies_heading);
-	if (!&show_current_movie()){
+    &show_heading ($movies_heading);
+    if (!&show_current_movie()){
 	
-		if ($USERID && $USERID{groupMovies}){
-			&show_movies_home($USERID);
-		}else{
-			&show_movies_home();
-		}
-	}
-
-
+        if ($USERID && $USERID{groupMovies}){
+            &show_movies_home($USERID);
+        }else{
+            &show_movies_home();
+        }
+    }
+}
 
 
 ##########################################################
@@ -170,10 +190,4 @@ sub show_movie_list_home{
 	}
 }
 
-return 1;
-
-##########################################################
-#### The end.
-##########################################################
-
-
+1;

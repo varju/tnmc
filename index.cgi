@@ -15,6 +15,7 @@ use lib '/usr/local/apache/tnmc';
 use tnmc;
 
 use tnmc::templates::bulletins;
+use tnmc::templates::movies;
 
 	#############
 	### Main logic
@@ -25,8 +26,8 @@ use tnmc::templates::bulletins;
 print &greeting($USERID{'fullname'});
 
 show_bulletins();
-	
-	require 'movies/HOMEPAGE.pl';
+
+show_movies();
 
 	&footer();
 
