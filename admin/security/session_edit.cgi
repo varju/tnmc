@@ -20,8 +20,7 @@ use tnmc::cgi;
 &db_connect();
 &header();
 
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
-my $sessionID = $tnmc_cgi->param('sessionID');
+my $sessionID = &tnmc::cgi::param('sessionID');
 
 &show_session_admin_edit_form($sessionID);
 

@@ -19,9 +19,8 @@ use tnmc::cgi;
 
 &db_connect();
 &header();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my $userID = $tnmc_cgi->param('userID');
+my $userID = &tnmc::cgi::param('userID');
 
 if ($userID)
 { 

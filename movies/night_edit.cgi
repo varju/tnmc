@@ -24,9 +24,7 @@ use tnmc::user;
 
 &header();
 
-my $cgih = &tnmc::cgi::get_cgih();
-
-my $nightID = $cgih->param('nightID');
+my $nightID = &tnmc::cgi::param('nightID');
 
 &show_night_edit_form($nightID);
 

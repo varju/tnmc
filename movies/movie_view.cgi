@@ -19,9 +19,8 @@ use tnmc::cgi;
 &header();
 
 &show_heading("movie detail");
-my $cgih = &tnmc::cgi::get_cgih();
 
-my $movieID = $cgih->param('movieID');
+my $movieID = &tnmc::cgi::param('movieID');
 
 &show_movie_extended($movieID);
 

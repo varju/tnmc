@@ -12,7 +12,6 @@ use tnmc::db;
 use tnmc::template;
 use tnmc::user;
 use tnmc::util::date;
-use CGI;
 
 #############
 ### Main logic

@@ -21,10 +21,8 @@ use tnmc::db;
     
     &header();
     
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-    
     my %hash;	
-    my $ID = $tnmc_cgi->param('theatreID');
+    my $ID = &tnmc::cgi::param('theatreID');
     
     my $hash = &tnmc::movies::theatres::get_theatre($ID);
     

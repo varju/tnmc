@@ -26,11 +26,8 @@ $basePicDir = "data/";
 
 &tnmc::security::auth::authenticate();
 
-
-$cgih = &tnmc::cgi::get_cgih();
-
-my $picID = $cgih->param(picID);
-my $mode = $cgih->param(mode);
+my $picID = &tnmc::cgi::param(picID);
+my $mode = &tnmc::cgi::param(mode);
 
 &serve_picture($mode, $picID);
 

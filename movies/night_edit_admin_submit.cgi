@@ -17,13 +17,12 @@ use tnmc::cgi;
 ### Main logic
 
 &tnmc::security::auth::authenticate();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('MovieNights');
 
 my %night;
 foreach my $key (@cols){
-    $night{$key} = $tnmc_cgi->param($key);
+    $night{$key} = &tnmc::cgi::param($key);
 }
 
 &set_night(%night);

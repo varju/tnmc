@@ -16,13 +16,12 @@ use tnmc::cgi;
 ### Main logic
 
 &tnmc::security::auth::authenticate();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 # get the userid 
-my $userID = $tnmc_cgi->param('userID');
+my $userID = &tnmc::cgi::param('userID');
 
 # get each field
-my @params =  $tnmc_cgi->param();
+my @params =  &tnmc::cgi::param();
 
 foreach my $key (@params){
     next unless $key =~ /^night_(.*)$/;
@@ -30,13 +29,13 @@ foreach my $key (@params){
     my %attendance = 
         ( 'userID' => $userID,
           'nightID' => $nightID,
-          'type' => $tnmc_cgi->param($key)
+          'type' => &tnmc::cgi::param($key)
           );
     &set_attendance(\%attendance);
 }
 
 # get the default
-my $default = $tnmc_cgi->param('movieAttendDefault');
+my $default = &tnmc::cgi::param('movieAttendDefault');
 
 print "Location: $ENV{HTTP_REFERER}\n\n";
 

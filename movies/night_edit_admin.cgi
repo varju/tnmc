@@ -20,10 +20,8 @@ use tnmc::cgi;
     
     &header();
     
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-    
     my %night;	
-    my $nightID = $tnmc_cgi->param('nightID');
+    my $nightID = &tnmc::cgi::param('nightID');
 	
     &get_night($nightID, \%night);
     

@@ -39,10 +39,8 @@ sub show_movies {
     my $movies_heading = "Movies";
     &tnmc::template::show_heading ($movies_heading);
     
-    my $cgih = &tnmc::cgi::get_cgih();
-    
     my @nights = &tnmc::movies::night::list_future_nights();
-    my $nightID = $cgih->param('nightID') || $nights[0];
+    my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
     
     if ($USERID && $USERID{groupMovies}){
         

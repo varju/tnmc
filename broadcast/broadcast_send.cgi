@@ -28,9 +28,8 @@ use tnmc::cgi;
 
 sub do_broadcast{
     
-    my $cgih = &tnmc::cgi::get_cgih();
-    my $message = $cgih->param('message');
-    my @params =  $cgih->param();
+    my $message = &tnmc::cgi::param('message');
+    my @params =  &tnmc::cgi::param();
     
     my @userList = ();
     

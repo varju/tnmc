@@ -18,8 +18,7 @@ use tnmc::cgi;
 
 &header();
 
-my $cgih = &tnmc::cgi::get_cgih();
-my $movieID = $cgih->param('movieID');
+my $movieID = &tnmc::cgi::param('movieID');
 &show_movie_edit_form($movieID);
 
 &footer();

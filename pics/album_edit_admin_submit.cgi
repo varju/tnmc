@@ -19,12 +19,11 @@ use tnmc::pics::album;
     #############
     ### Main logic
     
-    my $cgih = &tnmc::cgi::get_cgih();
     my %album;
     
     my @cols = &db_get_cols_list('PicAlbums');
     foreach my $key (@cols){
-     	$album{$key} = $cgih->param($key);
+     	$album{$key} = &tnmc::cgi::param($key);
     }
     &set_album(%album);
     

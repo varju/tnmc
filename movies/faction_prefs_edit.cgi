@@ -19,10 +19,8 @@ use tnmc::cgi;
     
     &header();
     
-    my $cgih = &tnmc::cgi::get_cgih();
-    
-    my $factionID = $cgih->param('factionID');
-    my $userID = $cgih->param('userID');
+    my $factionID = &tnmc::cgi::param('factionID');
+    my $userID = &tnmc::cgi::param('userID');
     
     my $faction = &tnmc::movies::faction::get_faction($factionID);
     my $user = &tnmc::user::get_user_cache($userID);

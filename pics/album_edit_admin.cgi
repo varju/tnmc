@@ -20,8 +20,7 @@ use strict;
 
 &header();
 
-my $cgih = &tnmc::cgi::get_cgih;
-my $albumID = $cgih->param('albumID');
+my $albumID = &tnmc::cgi::param('albumID');
 &show_album_edit_admin_form($albumID);
 
 &footer();

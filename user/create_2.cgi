@@ -23,11 +23,10 @@ db_connect();
     
 my %user;
 my @cols = &db_get_cols_list('Personal');
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 foreach my $key (@cols){
-    if ($tnmc_cgi->param($key)){
-        $user{$key} = $tnmc_cgi->param($key);
+    if (&tnmc::cgi::param($key)){
+        $user{$key} = &tnmc::cgi::param($key);
     }else{
         $user{$key} = '';
     }

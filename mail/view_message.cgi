@@ -18,9 +18,7 @@ header();
 if ($USERID) {
     show_heading('mail');
 
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-
-    my $Id = $tnmc_cgi->param('Id');
+    my $Id = &tnmc::cgi::param('Id');
     my $message_ref = get_message($USERID,$Id);
     message_print($message_ref);
 }

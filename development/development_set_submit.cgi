@@ -19,12 +19,11 @@ use tnmc::cgi;
 
 &db_connect();
 &tnmc::security::auth::authenticate();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my @params = $tnmc_cgi->param();
+my @params = &tnmc::cgi::param();
 
 foreach my $key (@params) {
-    my $val = $tnmc_cgi->param($key);
+    my $val = &tnmc::cgi::param($key);
     &set_general_config($key, $val);
 }
 

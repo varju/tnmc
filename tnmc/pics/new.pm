@@ -83,11 +83,10 @@ sub album_get_piclist_from_nav{
 }
 
 sub get_nav{
-    my $cgih = &tnmc::cgi::get_cgih();
     
     my %nav;
-    foreach my $key ($cgih->param()){
-        $nav{$key} = $cgih->param($key);
+    foreach my $key (&tnmc::cgi::param()){
+        $nav{$key} = &tnmc::cgi::param($key);
     }
     
     ## KLUDGE: figure out what we're looking at

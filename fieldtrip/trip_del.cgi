@@ -10,6 +10,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
+use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
@@ -21,9 +22,8 @@ require 'fieldtrip/FIELDTRIP.pl';
 	&header();
 
 	%trip;	
-	$cgih = new CGI;
-	$tripID = $cgih->param('tripID');
-	$CONFIRM = $cgih->param('CONFIRM');
+	$tripID = &tnmc::cgi::param('tripID');
+	$CONFIRM = &tnmc::cgi::param('CONFIRM');
 	
        	&get_trip($tripID, \%trip);
 

@@ -17,13 +17,11 @@ use tnmc::pics::pic;
 #############
 ### Main logic
     
-$cgih = &tnmc::cgi::get_cgih();
-
 my %pic;
 
 my @cols = &db_get_cols_list('Pics');
 foreach $key (@cols){
-    $pic{$key} = $cgih->param($key);
+    $pic{$key} = &tnmc::cgi::param($key);
 }
 
 &set_pic(%pic);

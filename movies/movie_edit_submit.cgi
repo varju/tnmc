@@ -16,12 +16,11 @@ use tnmc::cgi;
 ### Main logic
 
 my %movie;
-my $cgih = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('Movies');
 
 foreach my $key (@cols){
-    $movie{$key} = $cgih->param($key);
+    $movie{$key} = &tnmc::cgi::param($key);
 }
 &set_movie(%movie);
 

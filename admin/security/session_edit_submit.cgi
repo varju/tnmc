@@ -19,13 +19,12 @@ use tnmc::cgi;
 &db_connect();
 
 &tnmc::security::auth::authenticate();
-my $cgih = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('SessionInfo');
 
 my %session;
 foreach my $key (@cols) {
-    $session{$key} = $cgih->param($key);
+    $session{$key} = &tnmc::cgi::param($key);
 }
 &tnmc::security::session::set_session(\%session);
 

@@ -10,6 +10,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
@@ -19,8 +20,7 @@ require 'fieldtrip/FIELDTRIP.pl';
     &header();
 
     %trip;
-    $cgih = new CGI;
-    $tripID = $cgih->param('tripID');
+    $tripID = &tnmc::cgi::param('tripID');
     
      @cols = &db_get_cols_list('Fieldtrips');
            &get_trip($tripID, \%trip);

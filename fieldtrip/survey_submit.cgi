@@ -11,18 +11,17 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
     #############
     ### Main logic
     
-    $cgih = new CGI;
-    
     &db_connect();
     
-    $tripID = $cgih->param('tripID');
-    $userID = $cgih->param('userID');
+    $tripID = &tnmc::cgi::param('tripID');
+    $userID = &tnmc::cgi::param('userID');
     
     my %survey;
     &get_tripSurvey($tripID, $userID, \%survey);
@@ -31,7 +30,7 @@ require 'fieldtrip/FIELDTRIP.pl';
     
     @cols = &db_get_cols_list('FieldtripSurvey');
     foreach $key (@cols){
-         $survey{$key} = $cgih->param($key) if (defined $cgih->param($key));
+         $survey{$key} = &tnmc::cgi::param($key) if (defined &tnmc::cgi::param($key));
     }
 
     &set_tripSurvey(%survey);

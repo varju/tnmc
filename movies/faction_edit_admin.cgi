@@ -20,9 +20,7 @@ use tnmc::db;
     
     &header();
     
-    my $cgih = &tnmc::cgi::get_cgih();
-    
-    my $factionID = $cgih->param('factionID');
+    my $factionID = &tnmc::cgi::param('factionID');
     
     my $faction = &tnmc::movies::faction::get_faction($factionID);
     my @cols = &tnmc::db::db_get_cols_list("MovieFactions");

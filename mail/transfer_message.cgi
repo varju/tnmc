@@ -9,10 +9,8 @@ use tnmc::mail::parse;
 use tnmc::mail::data;
 
 
-my $cgih = &tnmc::cgi::get_cgih();
-
-my $raw = $cgih->param('raw');
-my $auth = $cgih->param('auth');
+my $raw = &tnmc::cgi::param('raw');
+my $auth = &tnmc::cgi::param('auth');
 
 print "Content-type: text/html\n\n";
 

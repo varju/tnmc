@@ -26,20 +26,18 @@ use tnmc::movies::night;
 
 
 &header();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
-
 
 ## Variables
-my $sortOrder = $tnmc_cgi->param('sortOrder') || 'order';
+my $sortOrder = &tnmc::cgi::param('sortOrder') || 'order';
 
 my $e_userID = $USERID;
 
-if (($USERID{groupMovies} >= 100) && ($tnmc_cgi->param('effectiveUserID')) ){
-    $e_userID = $tnmc_cgi->param('effectiveUserID');
+if (($USERID{groupMovies} >= 100) && (&tnmc::cgi::param('effectiveUserID')) ){
+    $e_userID = &tnmc::cgi::param('effectiveUserID');
 }
 
 my @nights = &tnmc::movies::night::list_future_nights();
-my $nightID =  $tnmc_cgi ->param('nightID') || $nights[0];
+my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
 
 &show_local_nav($sortOrder, $e_userID, $USERID, $nightID);
 &show_heading ("Factions &amp; Attendance");

@@ -36,38 +36,36 @@ foreach my $key (@INC) {
     print "$key<br>";
 }
 
-### CGI form data
-print "\n<p><b><font color=\"0000ff\">CGI.pm Form Data:</font></b><br>\n";
+### form data
+print "\n<p><b><font color=\"0000ff\">Form Data:</font></b><br>\n";
 
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
-
-my @names = $tnmc_cgi->param();
+my @names = &tnmc::cgi::param();
 print @names;
 
 print "<p> ";
 foreach my $name (@names){
-    my $value = $tnmc_cgi->param($name);
+    my $value = &tnmc::cgi::param($name);
     print "<b>$name</b> : $value<br>";
 }
 
-print "\n<p><b><font color=\"0000ff\">CGI.pm Query Data:</font></b><br>\n";
+print "\n<p><b><font color=\"0000ff\">Query Data:</font></b><br>\n";
 
-my @names = $tnmc_cgi->url_param();
+my @names = &tnmc::cgi::url_param();
 print @names;
 
 print "<p> ";
 foreach my $name (@names){
-    my $value = $tnmc_cgi->url_param($name);
+    my $value = &tnmc::cgi::url_param($name);
     print "<b>$name</b> : $value<br>";
 }
 
 ### Cookies
 print "\n<p><b><font color=\"0000ff\">Cookies:</font></b><br>\n";
 
-my @cookies = $tnmc_cgi->cookie();
+my @cookies = &tnmc::cgi::cookie();
 foreach my $cookie (@cookies){
     print "<b><u>$cookie</u></b><br>";
-    my %cookie = $tnmc_cgi->cookie($cookie);
+    my %cookie = &tnmc::cgi::cookie($cookie);
     print %cookie;
     print "<br>\n";
     foreach my $var (sort keys %cookie){

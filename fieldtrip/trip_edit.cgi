@@ -10,6 +10,7 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
@@ -18,8 +19,7 @@ require 'fieldtrip/FIELDTRIP.pl';
 
 &header();
 
-$cgih = new CGI;
-$tripID = $cgih->param('tripID');
+$tripID = &tnmc::cgi::param('tripID');
 
 show_edit_form($tripID);
 

@@ -13,10 +13,9 @@ use tnmc::mail::data;
 ### Main logic
 
 &tnmc::security::auth::authenticate();
-my $cgih = &tnmc::cgi::get_cgih();
 
 if ($USERID) {
-    my $Id = $cgih->param('Id');
+    my $Id = &tnmc::cgi::param('Id');
     delete_message($USERID,$Id);
 }
     

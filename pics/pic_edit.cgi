@@ -21,8 +21,7 @@ use tnmc::pics::new;
 &header();
 
 my %pic;
-my $cgih = &tnmc::cgi::get_cgih();
-my $picID = $cgih->param('picID');
+my $picID = &tnmc::cgi::param('picID');
 
 &get_pic($picID, \%pic);
 

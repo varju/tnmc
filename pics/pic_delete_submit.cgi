@@ -15,8 +15,7 @@ use tnnc::pics::pic;
 #############
 ### Main logic
 
-$cgih = &tnmc::cgi::get_cgih;
-$picID = $cgih->param('picID');	
+$picID = &tnmc::cgi::param('picID');	
 
 if ($picID){
     &del_pic($picID);

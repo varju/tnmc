@@ -25,8 +25,7 @@ srand;
 &db_connect();
 &header();
 
-my $cgih = &tnmc::cgi::get_cgih();
-my $userID = $cgih->param('userID');
+my $userID = &tnmc::cgi::param('userID');
 &show_forgot_password($userID);
 
 

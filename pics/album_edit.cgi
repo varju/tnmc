@@ -25,8 +25,7 @@ use strict;
 
 &header();
 
-my $cgih = &tnmc::cgi::get_cgih;
-my $albumID = $cgih->param('albumID');
+my $albumID = &tnmc::cgi::param('albumID');
 
 if (&auth_access_album_edit($albumID, undef)){
     &show_album_edit_form($albumID);

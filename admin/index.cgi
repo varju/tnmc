@@ -35,8 +35,7 @@ use tnmc::cgi;
 sub show_basic_users_list{
     my (@users, %user, $userID, $key);
 
-    my $cgih = &tnmc::cgi::get_cgih();
-    my $order = $cgih->param('order') || 'username';
+    my $order = &tnmc::cgi::param('order') || 'username';
 
     &list_users(\@users, '', "ORDER BY $order");
 

@@ -6,11 +6,11 @@
 
 use lib '/tnmc';
 
-
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
@@ -19,10 +19,8 @@ require 'fieldtrip/FIELDTRIP.pl';
 
 &header();
 
-$cgih = new CGI;
-
-$tripID = $cgih->param('tripID');
-$userID = $cgih->param('userID');
+$tripID = &tnmc::cgi::param('tripID');
+$userID = &tnmc::cgi::param('userID');
 if (!$userID){$userID = $USERID;}    
 
 &show_survey_form($tripID, $userID);

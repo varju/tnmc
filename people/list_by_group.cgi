@@ -16,11 +16,10 @@ use tnmc::user;
 ### Main logic
 
 &header();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my $group = $tnmc_cgi->param('group');
-my $cutoff = $tnmc_cgi->param('cutoff');
-my $limit = $tnmc_cgi->param('limit');
+my $group = &tnmc::cgi::param('group');
+my $cutoff = &tnmc::cgi::param('cutoff');
+my $limit = &tnmc::cgi::param('limit');
 
 my @users;
 &list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');

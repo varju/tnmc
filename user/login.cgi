@@ -23,11 +23,10 @@ use tnmc::cgi;
 
 
 my (%user, %old_user);
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my $userID = $tnmc_cgi->param('userID');
-my $password = $tnmc_cgi->param('password');
-my $location = $tnmc_cgi->param('location');
+my $userID = &tnmc::cgi::param('userID');
+my $password = &tnmc::cgi::param('password');
+my $location = &tnmc::cgi::param('location');
 &get_user($userID, \%user);
 
 ### BUG: the old-user stuff doesn't work right now!
@@ -61,17 +60,17 @@ if ( !$userID
 elsif ($userID) {
     
     my $cookie = &tnmc::security::auth::login($userID);
-    print $tnmc_cgi->redirect(
-                              -uri=>$location,
-                              -cookie=>$cookie
-                              );
+    print &tnmc::cgi::redirect(
+			       -uri=>$location,
+			       -cookie=>$cookie
+			       );
 
     &tnmc::log::log_login(1,$old_user,$old_user{username},$userID,
                           $user{username},$password);
 }
 ### BUG?: what does this do?
 else {
-    print $tnmc_cgi->redirect(-uri=>$location);
+    print &tnmc::cgi::redirect(-uri=>$location);
     &tnmc::log::log_login(0,$old_user,$old_user{username},$userID,
                           $user{username},$password);
 }

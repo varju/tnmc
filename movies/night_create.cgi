@@ -24,9 +24,7 @@ use tnmc::user;
 
 &header();
 
-my $cgih = &tnmc::cgi::get_cgih();
-
-my $factionID = $cgih->param('factionID');
+my $factionID = &tnmc::cgi::param('factionID');
 
 &show_night_create_form($factionID);
 

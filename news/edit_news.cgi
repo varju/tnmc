@@ -17,9 +17,7 @@ header();
 if ($USERID) {
     show_heading("edit news entry");
     
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-
-    my $newsId = $tnmc_cgi->param('newsId');
+    my $newsId = &tnmc::cgi::param('newsId');
 
     my $news_ref = get_news_item($newsId);
     news_edit($news_ref);

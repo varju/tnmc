@@ -22,21 +22,19 @@ sub create_cookie{
     require tnmc::cgi;
     require tnmc::security::auth;
     
-    my $cgih = &tnmc::cgi::get_cgih();
-    
     $sessionID ||= &tnmc::security::auth::get_my_sessionID();
     
     my %cookie = ('sessionID' => $sessionID,
                   );
     
-    my $cookie_string = $cgih->cookie(
-                                      -name    => 'TNMC',
-                                      -value   => \%cookie,
-                                      -expires => '+1y',
-                                      -path    => '/',
-                                      -secure  => '0'
-                                      );
-    
+    my $cookie_string = &tnmc::cgi::cookie(
+					   -name    => 'TNMC',
+					   -value   => \%cookie,
+					   -expires => '+1y',
+					   -path    => '/',
+					   -secure  => '0'
+					   );
+
     return $cookie_string;
 }
 

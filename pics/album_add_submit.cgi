@@ -30,10 +30,9 @@ sub do_add_album{
     my %album;
     
     ## get the cgi info
-    $cgih = &tnmc::cgi::get_cgih();
     @cols = &db_get_cols_list('PicAlbums');
     foreach $key (@cols){
-        $album{$key} = $cgih->param($key);
+        $album{$key} = &tnmc::cgi::param($key);
     }
     
     ## save the album
@@ -58,7 +57,7 @@ sub do_add_album{
     }
     
     ## if the user wants the album pre-filled
-    if ($cgih->param('optionFill')){
+    if (&tnmc::cgi::param('optionFill')){
         my @PICS;
         &list_pics(\@PICS,
                    "WHERE timestamp >= '$album{albumDateStart}' 

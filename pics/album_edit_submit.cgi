@@ -19,9 +19,8 @@ use tnmc::pics::new;
 #############
 ### Main logic
 
-my $cgih = &tnmc::cgi::get_cgih();
 my %album;
-my $albumID = $cgih->param('albumID');
+my $albumID = &tnmc::cgi::param('albumID');
 
 if (!$albumID){
     &header();
@@ -36,7 +35,7 @@ elsif(!&auth_access_album_edit($albumID, undef)){
 else{
     &get_album($albumID, \%album);
     foreach my $key (keys %album){
-     	my $val = $cgih->param($key);
+     	my $val = &tnmc::cgi::param($key);
         if (defined $val){
             $album{$key} = $val;
         }

@@ -22,9 +22,8 @@ use tnmc::pics::link;
 	&header();
 
 	%album;	
-	$cgih = &tnmc::cgi::get_cgih();
-	$albumID = $cgih->param('albumID');
-	$CONFIRM = $cgih->param('CONFIRM');
+	$albumID = &tnmc::cgi::param('albumID');
+	$CONFIRM = &tnmc::cgi::param('CONFIRM');
 	
        	&get_album($albumID, \%album);
 

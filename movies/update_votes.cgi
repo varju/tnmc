@@ -29,16 +29,15 @@ use tnmc::cgi;
 
 sub do_update_votes{
 
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-    my $userID = $tnmc_cgi->param('userID');
-    my @params =  $tnmc_cgi->param();
+    my $userID = &tnmc::cgi::param('userID');
+    my @params =  &tnmc::cgi::param();
     
     my %vote_count = ();
     
     ### count the number of positive/negative/neutral votes.
     foreach $_ (@params){
         if (! /^v/) { next; }
-        my $type = $tnmc_cgi->param($_);
+        my $type = &tnmc::cgi::param($_);
         $vote_count{$type} += 1;
     }
     
@@ -60,12 +59,12 @@ sub do_update_votes{
     ### do the processing.
     foreach $_ (@params){
         if (! s/^v//) { next; }
-        &set_vote($_, $userID, $tnmc_cgi->param("v$_"));
+        &set_vote($_, $userID, &tnmc::cgi::param("v$_"));
     }
     
     ### Special votes
     foreach my $vote_type ('2', '3', '4'){
-        my $movieID =  $tnmc_cgi->param("SpecialVote_$vote_type");
+        my $movieID =  &tnmc::cgi::param("SpecialVote_$vote_type");
         if (defined ($movieID)){
             ### Kill old Special vote.
             my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '$vote_type' AND userID = '$userID'";

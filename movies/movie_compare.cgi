@@ -21,13 +21,12 @@ use tnmc::cgi;
 
 &show_heading("compare movies");
 
-my $cgih = &tnmc::cgi::get_cgih();
-my $movieID = $cgih->param('movieID');
+my $movieID = &tnmc::cgi::param('movieID');
 my @movies;
 
-foreach my $key ($cgih->param()){
+foreach my $key (&tnmc::cgi::param()){
     if ($key =~ /movie/i){
-        push (@movies, $cgih->param($key));
+        push (@movies, &tnmc::cgi::param($key));
     }
 }
 

@@ -23,10 +23,10 @@ db_connect();
 my $cookie = &tnmc::security::auth::logout();
 
 my $location = '/';
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
-print $tnmc_cgi->redirect(
-                          -uri=>$location,
-                          -cookie=>$cookie);
+print &tnmc::cgi::redirect(
+			   -uri=>$location,
+			   -cookie=>$cookie
+			   );
 
 db_disconnect();
 

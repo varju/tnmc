@@ -25,16 +25,15 @@ use tnmc::pics::link;
 #
 
 sub do_bulk_edit{
-    $cgih = &tnmc::cgi::get_cgih();
-    
+
     &header();
     
     &show_heading("Bulk edit - save changes");
-    my $destination = $cgih->param(destination);
+    my $destination = &tnmc::cgi::param(destination);
     print "<p><a href=\"$destination\">continue</a><br><br>\n\n";
     
     # grab the cgi info into a big 2-d hash
-    my @params = $cgih->param();
+    my @params = &tnmc::cgi::param();
     
     ## do all the pic changes
     my %PICS;
@@ -48,7 +47,7 @@ sub do_bulk_edit{
             &get_pic($picID, \%pic);
             $PICS{$picID} = \%pic;
         }
-        $PICS{$picID}->{$field} = $cgih->param($param);
+        $PICS{$picID}->{$field} = &tnmc::cgi::param($param);
     }
     
     ## do all the link changes and deletions
@@ -57,7 +56,7 @@ sub do_bulk_edit{
         next unless($param =~ /^LINK(\d+)_(.*)$/);
         my $linkID = $1;
         my $field = $2;
-        my $value = $cgih->param($param);
+        my $value = &tnmc::cgi::param($param);
         
         ## 'delete-link'
         if (!$value && $linkID){
@@ -78,7 +77,7 @@ sub do_bulk_edit{
         next unless($param =~ /^NEWLINK(\d+)_(.*)$/);
         my $picID = $1;
         my $field = $2;
-        my $value = $cgih->param($param);
+        my $value = &tnmc::cgi::param($param);
         
         ## unused 'new-link'
         if (!$value){

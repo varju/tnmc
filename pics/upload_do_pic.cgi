@@ -32,19 +32,17 @@ use tnmc::security::auth;
 
 sub do_upload_pic{    
     
-    my $cgih = &tnmc::cgi::get_cgih();
-    
     print "<pre>\n";
     
     ## grab the special upload params
-    my $filename = $cgih->param("UPLOAD_FILENAME");
+    my $filename = &tnmc::cgi::param("UPLOAD_FILENAME");
     my $FILE = $filename;
     print "UPLOAD filename: $FILE \n";
     
     ## grab the normal image params
     my %pic;
     foreach my $key (&db_get_cols_list('Pics')){
-        $pic{$key} = $cgih->param($key);
+        $pic{$key} = &tnmc::cgi::param($key);
     }
     
     # non-overridable info

@@ -17,13 +17,12 @@ use tnmc::cgi;
 ### Main logic
 
 &tnmc::security::auth::authenticate();
-my $cgih = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('MovieFactionPrefs');
 
 my %prefs;
 foreach my $key (@cols){
-    $prefs{$key} = $cgih->param($key);
+    $prefs{$key} = &tnmc::cgi::param($key);
 }
 
 &tnmc::movies::faction::save_faction_prefs(\%prefs);

@@ -7,25 +7,23 @@
 
 use lib '/tnmc';
 
-
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
     #############
     ### Main logic
     
-    $cgih = new CGI;
-    
     &db_connect();
 
     @cols = &db_get_cols_list('Fieldtrips');
      foreach $key (@cols)
     {
-         $trip{$key} = $cgih->param($key);
+         $trip{$key} = &tnmc::cgi::param($key);
     }
     &set_trip(%trip);
     

@@ -20,9 +20,8 @@ use tnmc::cgi;
 
 &header();
 &db_connect();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my $groupID = $tnmc_cgi->param('groupID');
+my $groupID = &tnmc::cgi::param('groupID');
 &show_group_selector($groupID);
 &show_edit_group($groupID);
 

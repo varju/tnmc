@@ -17,13 +17,12 @@ use tnmc::cgi;
 ### Main logic
 
 &tnmc::security::auth::authenticate();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('MovieTheatres');
 
 my %hash;
 foreach my $key (@cols){
-    $hash{$key} = $tnmc_cgi->param($key);
+    $hash{$key} = &tnmc::cgi::param($key);
 }
 
 &tnmc::movies::theatres::set_theatre(\%hash);

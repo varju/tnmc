@@ -27,8 +27,7 @@ use tnmc::cgi;
     my ($time) = $sth->fetchrow_array();
     $sth->finish();
     
-    my $tnmc_cgi = &tnmc::cgi::get_cgih();
-    my $newSuggestion  =  $tnmc_cgi->param('suggestion');
+    my $newSuggestion  =  &tnmc::cgi::param('suggestion');
     my $oldSuggestions =  &get_general_config("suggestions");
 
     my $SUGG = 

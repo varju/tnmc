@@ -6,26 +6,55 @@ use strict;
 # module configuration
 #
 
-BEGIN {
-    use vars qw($cgih);
-}
+my $cgih;
 
 #
 # module routines
 #
 
-sub get_cgih{
-    
-    # reuse handle if possible
-    if (defined $cgih){
-        return $cgih;
+sub init
+{
+    if (!defined $cgih)
+    {
+	require CGI;
+	$cgih = new CGI;
     }
-    
-    require CGI;
-    
-    $cgih = new CGI;
-    return $cgih;
 }
 
+sub param
+{
+    my (@args) = @_;
+
+    &init();
+
+    return &CGI::param(@args);
+}
+
+sub cookie
+{
+    my (@args) = @_;
+
+    &init();
+
+    return &CGI::cookie(@args);
+}
+
+sub redirect
+{
+    my (@args) = @_;
+
+    &init();
+
+    return &CGI::redirect(@args);
+}
+
+sub url_param
+{
+    my (@args) = @_;
+
+    &init();
+
+    return &CGI::url_param(@args);
+}
 
 1;

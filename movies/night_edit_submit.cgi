@@ -17,9 +17,8 @@ use tnmc::cgi;
 ### Main logic
 
 &tnmc::security::auth::authenticate();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my $nightID = $tnmc_cgi->param('nightID');
+my $nightID = &tnmc::cgi::param('nightID');
 
 ## update the night with submitted vals.
 if ($nightID){
@@ -27,12 +26,12 @@ if ($nightID){
     &get_night($nightID, \%night);
     
     foreach my $key (keys %night){
-        my $val =  $tnmc_cgi->param($key);
+        my $val =  &tnmc::cgi::param($key);
         $night{$key} = $val if(defined $val);
     }
     
     &set_night(%night);
 }
 
-my $location = $tnmc_cgi->param('LOCATION') || "/movies/";
+my $location = &tnmc::cgi::param('LOCATION') || "/movies/";
 print "Location: $location\n\n";

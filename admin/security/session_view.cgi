@@ -23,9 +23,8 @@ use tnmc::cgi;
 &db_connect();
 
 &show_heading('Security - View Sessions');
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my $userID = $tnmc_cgi->param('userID');
+my $userID = &tnmc::cgi::param('userID');
 my @sessions;
 &tnmc::security::session::list_sessions_for_user($userID, \@sessions);
 @sessions = reverse @sessions;

@@ -16,12 +16,11 @@ use tnmc::mail::prefs::data;
 ### Main logic
 
 header();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 if ($USERID) {
     show_heading('mail');
 
-    my $Id = $tnmc_cgi->param('Id');
+    my $Id = &tnmc::cgi::param('Id');
 
     my $orig_message = get_message($USERID,$Id);
 

@@ -18,13 +18,12 @@ use tnmc::cgi;
 
 &db_connect();
 &tnmc::security::auth::authenticate();
-my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('Personal');
 
 my %user;
 foreach my $key (@cols) {
-    $user{$key} = $tnmc_cgi->param($key);
+    $user{$key} = &tnmc::cgi::param($key);
 }
 &set_user(%user);
 
