@@ -20,8 +20,6 @@ use tnmc::movies::night;
     ### Main logic
     
     &db_connect();
-#    print "Content-type: text/html\n\n<pre>";
-#    &print_email_movielist(">-");
     
     my @nights = &get_future_nights();
     my %next_night;
