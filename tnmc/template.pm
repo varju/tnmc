@@ -32,7 +32,7 @@ sub header{
     # header and title
     print "Content-type: text/html\n\n";
     
-    &get_cookie();
+    &cookie_get();
     
     my $username = $USERID{'username'};
     

@@ -17,7 +17,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 
 @ISA = qw(Exporter);
 
-@EXPORT = qw(get_cookie $tnmc_cgi %tnmc_cookie_in $USERID 
+@EXPORT = qw(cookie_get $tnmc_cgi %tnmc_cookie_in $USERID 
              $LOGGED_IN $USERID_LAST_KNOWN %USERID);
 
 @EXPORT_OK = qw();
@@ -30,7 +30,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 # module routines
 #
 
-sub get_cookie {
+sub cookie_get {
     $tnmc_cgi = new CGI;
     
     %tnmc_cookie_in = $tnmc_cgi->cookie('TNMC');

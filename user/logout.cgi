@@ -16,7 +16,7 @@ use tnmc::db;
 ### Main logic
 
 # retrieve the old cookie
-get_cookie();
+cookie_get();
 
 my $userID = $tnmc_cookie_in{'userID'};
 $tnmc_cookie_in{'logged-in'} = '0';

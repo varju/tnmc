@@ -21,7 +21,7 @@ use tnmc::user;
 
 db_connect();
 
-get_cookie();
+cookie_get();
 
 my (%user, %old_user);
 

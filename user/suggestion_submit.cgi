@@ -19,7 +19,7 @@ use tnmc::broadcast;
 	$cgih = new CGI;
 	
 	&db_connect();
-	&get_cookie();
+	&cookie_get();
 
 	$sql = "SELECT NOW()";
 	$sth = $dbh_tnmc->prepare($sql);

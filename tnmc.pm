@@ -30,7 +30,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
              %user
 
-             get_cookie 
+             cookie_get 
              $tnmc_cgi
              %tnmc_cookie_in
              $USERID 
