@@ -7,6 +7,7 @@
 
 use lib '/tnmc';
 
+use tnmc::security::auth;
 use tnmc::template;
 use tnmc::user;
 
@@ -70,51 +71,14 @@ sub show_album_view{
     };
     
     ## Admin options 
-    if ($album{albumOwnerID} == $USERID || $USERID == 1){
+    if ($album{albumOwnerID} == $USERID){
         print  qq{
             [ <a href="album_edit.cgi?albumID=$albumID">Edit</a>
             - <a href="album_edit_admin.cgi?albumID=$albumID">Admin</a>
             - <a href="album_del.cgi?albumID=$albumID">Del</a> ]
             <p>
         };
-    }
-    
-
-    if ($album{albumOwnerID} == $USERID){
         
-        print qq{
-            <hr noshade size="2"><p>
-            <b>Album Admin Options</a><br>
-        };
-        
-        if ( (!$album{albumTypePublic}) && ($USERID == $album{albumOwnerID})){
-            print qq{<p>
-                <form method="post" action="pic_edit_list_submit.cgi">
-                <input type="hidden" name="destination" value="$ENV{REQUEST_URI}">
-            };
-                
-            my @pics;
-            &list_links_for_album(\@pics, $albumID);
-            foreach my $picID (@pics){
-                print qq{<input type="hidden" name="PIC${picID}_typePublic" value="1">\n};
-            }
-            
-            print qq{
-                <input type="submit" value="Release All Pics">
-                </form>
-            };
-        }
-            
-        print qq{
-            <p>
-            <form action="link_add.cgi" method="post">
-            <b>Add PicID:</b>
-            <input type="hidden" name="albumID" value="$albumID">
-            <input type="text" name="picID">
-            <input type="submit" value="Add">
-            </form>
-        };
-
     }
 
 }
