@@ -38,7 +38,7 @@ sub new_nav_menu{
 
     if ($USERID{groupTrusted} >= 1){
             if (&show_menu_item( 0, "/people/", "People", "")){
-        &show_menu_item( 1, "/people/list_all.cgi", "Everybody", "");
+        &show_menu_item( 1, "/people/who.cgi", "Who's online", "");
         &show_menu_item( 1, "/people/list_by_group.cgi?group=Movies&cutoff=10", "Movie&nbsp;Junkies", "");
             }
             &show_menu_item( 0, "", "", "");
@@ -104,11 +104,11 @@ sub new_nav_menu{
             }
         }
         &show_menu_item( 0, "", "", "");
-
+        
     }
     
     ## Random-Pic
-    if ($USERID{groupPics}){
+    if ($USERID{groupPics} && ! $USERID{'I_am_a_misanthrope'}){
         &show_random_pic(); 
         &show_menu_item( 0, "", "", "");
         &show_menu_item( 0, "", "", "");
@@ -116,37 +116,38 @@ sub new_nav_menu{
     else{
         &show_menu_item( 0, "", "", "<hr noshade size='1'>");
     }
-
-    
-    if ($USERID{groupAdmin}){
-        if (&show_menu_item( 0, "/admin/", "Admin", "")){
-            &show_menu_item( 1, "/admin/user_list.cgi", "All users", "");
-            &show_menu_item( 1, "/admin/groups.cgi", "Groups", "");
-            &show_menu_item( 1, "/admin/user_edit.cgi?userID=0", "Add User", "");
-        }
-        &show_menu_item( 0, "", "", "");
-    }
-    if ( $USERID == 1 || $USERID == 5 ){
-        if (&show_menu_item( 0, "/user/log/", "Log", "") || $HOMEPAGE){
-            &show_menu_item( 1, "/user/log/login.log", "Login", "");
-            &show_menu_item( 1, "/user/log/splash.log", "Splash", "");
-        }
-        &show_menu_item( 0, "", "", "");
-    }
-    if ($USERID{groupDev}){
-        if (&show_menu_item( 0, "/development/", "Development", "")){
-            &show_menu_item( 1, "/development/todo_list.cgi", "To&nbsp;do&nbsp;List", "");
-            &show_menu_item( 1, "/development/suggestions.cgi", "Suggestions", "");
-            &show_menu_item( 1, "/development/env.cgi", "Enviroment", "");
-            &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
-        }elsif ($USERID == 1){
-            &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
-        }
-        &show_menu_item( 0, "", "", "");
-        
-    }
     
     if ($USERID{groupDev} || $USERID{groupAdmin}){
+    
+        if ($USERID{groupAdmin}){
+            if (&show_menu_item( 0, "/admin/", "Admin", "")){
+                &show_menu_item( 1, "/admin/user_list.cgi", "All users", "");
+                &show_menu_item( 1, "/admin/groups.cgi", "Groups", "");
+                &show_menu_item( 1, "/admin/user_edit.cgi?userID=0", "Add User", "");
+                &show_menu_item( 1, "/admin/security/", "Security", "");
+            }
+            &show_menu_item( 0, "", "", "");
+        }
+        if ( $USERID == 1 || $USERID == 5 ){
+            if (&show_menu_item( 0, "/user/log/", "Log", "") || $HOMEPAGE){
+                &show_menu_item( 1, "/user/log/login.log", "Login", "");
+                &show_menu_item( 1, "/user/log/splash.log", "Splash", "");
+            }
+            &show_menu_item( 0, "", "", "");
+        }
+        if ($USERID{groupDev}){
+            if (&show_menu_item( 0, "/development/", "Development", "")){
+                &show_menu_item( 1, "/development/todo_list.cgi", "To&nbsp;do&nbsp;List", "");
+                &show_menu_item( 1, "/development/suggestions.cgi", "Suggestions", "");
+                &show_menu_item( 1, "/development/env.cgi", "Enviroment", "");
+                &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
+            }elsif ($USERID == 1){
+                &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
+            }
+            &show_menu_item( 0, "", "", "");
+            
+        }
+    
         &show_menu_item( 0, "", "", "<hr noshade size='1'>");
     }
     
