@@ -21,13 +21,6 @@ require 'fieldtrip/FIELDTRIP.pl';
 
 	$tripID = '1';
 
-#	&get_tripSurvey($tripID, $USERID, \%survey);
-#	&show_hash(%survey);
-
-#	&get_trip($tripID, \%trip);
-#	$trip{title} = 'Long Beach 2000';
-#	&set_trip(%trip);
-
 	&show_trip($tripID);
 
 	&footer();
@@ -40,10 +33,7 @@ sub show_trip{
 	my (%trip);
 	&get_trip($tripID, \%trip);
 
-	### Edit link
-#	if ($USERID == 1){
-		$edit_link = qq{ - <a href="trip_edit.cgi?tripID=$tripID"><font color="ffffff">edit</font></a>};
-#	}
+        $edit_link = qq{ - <a href="trip_edit.cgi?tripID=$tripID"><font color="ffffff">edit</font></a>};
 
 	### survey link
 	if ($USERID){
@@ -158,7 +148,6 @@ sub show_trip{
 
 		if    ($survey{driving} == 2){	print qq{<td>*</td>};}
 		elsif ($survey{driving} == 1){	print qq{<td>+</td>};}
-		# elsif (!$survey{driving}){	print qq{<td>?</td>};}
 		else  			{	print qq{<td></td>};}
 		print qq{
 				<td nowrap>($row[3] - $row[4])</td>
@@ -172,21 +161,3 @@ sub show_trip{
 	print qq{	</table>};
 
 }
-
-
-#######################################
-sub show_hash{
-	my (%hash) = @_;
-	
-	&show_heading($hash{title});
-
-	print qq{	<table border="0" cellpadding="1" cellspacing="0">};
-	foreach (keys(%hash)){
-		print qq{
-			<tr><td valign="top"><b>$_</b></td><td>$hash{$_}</td></tr>
-		};
-	}
-	print qq{	</table>};
-}
-
-
