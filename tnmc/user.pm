@@ -13,7 +13,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(set_user del_user get_user list_users);
+@EXPORT = qw(set_user del_user get_user get_user_extended list_users);
 @EXPORT_OK = qw();
 
 #
@@ -59,8 +59,21 @@ sub get_user{
     my ($userID, $user_ref, $junk) = @_;
     my ($condition);
 
-    $condition = "(userID = '$userID' OR username = '$userID')";
+    $condition = "userID = '$userID'";
     &db_get_row($user_ref, $dbh_tnmc, 'Personal', $condition);
+}
+
+sub get_user_extended{
+    my ($userID, $user_ref, $junk) = @_;
+    my ($condition);
+
+    $condition = "userID = '$userID'";
+    &db_get_row($user_ref, $dbh_tnmc, 'Personal', $condition);
+
+    if (!$user_ref->{username}){
+        $user_ref->{username} = $user_ref->{fullname};
+	$user_ref->{username} =~ s/\W+//g;
+    }
 }
 
 sub list_users{

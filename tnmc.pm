@@ -52,7 +52,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
              new_nav_menu 
              new_nav_login
 
-             set_user del_user get_user list_users
+             set_user del_user get_user get_user_extended list_users
 
              get_general_config set_general_config
              );
