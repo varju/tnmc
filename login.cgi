@@ -13,6 +13,7 @@ use lib '/usr/local/apache/tnmc';
 use tnmc::config;
 use tnmc::cookie;
 use tnmc::template;
+use tnmc::log;
 
 #############
 ### Main logic
@@ -27,21 +28,6 @@ my %user;
 my $old_user = $tnmc_cookie_in{'userID'};
 my %old_user;
 &get_user($old_user, \%old_user);
-
-############################
-### Do the date stuff.
-my $today;
-open (DATE, "/bin/date |");
-while (<DATE>) {
-    chop;
-    $today = $_;
-}
-close (DATE);
-
-open (LOG, '>>log/login.log');
-print LOG "$today\t$ENV{REMOTE_ADDR}\t$ENV{REMOTE_HOST}";
-print LOG "\t$old_user\t$old_user{username}\t->\t$userID";
-print LOG "\t$user{username}\tpass: $password";
 
 %tnmc_cookie_in = (
                    'userID' => $userID,
@@ -69,20 +55,25 @@ if (($password ne $user{'password'})
 You entered the wrong password.
     };
     &footer();
-    print LOG "\tFAILED";
+
+    log_login(0,$old_user,$old_user{username},$userID,
+              $user{username},$password);
 }
 elsif ($userID) {
     print $tnmc_cgi->redirect(
                               -uri=>$location,
                               -cookie=>$tnmc_cookie
                               );
-}
-else{
-    print $tnmc_cgi->redirect(-uri=>$location);
-}
 
-print LOG "\n";
-close (LOG);
+    log_login(1,$old_user,$old_user{username},$userID,
+              $user{username},$password);
+}
+else {
+    print $tnmc_cgi->redirect(-uri=>$location);
+
+    log_login(1,$old_user,$old_user{username},$userID,
+              $user{username},$password);
+}
 
 ##########################################################
 #### The end.
