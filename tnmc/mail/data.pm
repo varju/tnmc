@@ -3,6 +3,7 @@ package tnmc::mail::data;
 use strict;
 
 use tnmc::db;
+use tnmc::user;
 
 #
 # module configuration
@@ -12,7 +13,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(message_store get_message_list get_message delete_message);
+@EXPORT = qw(message_store get_message_list get_message delete_message mail_get_email_address);
 @EXPORT_OK = qw();
 
 #
@@ -119,6 +120,19 @@ sub delete_message {
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($Id,$UserId);
     $sth->finish();
+}
+
+sub mail_get_email_address {
+    my ($UserId) = @_;
+
+    my %user;
+    get_user($UserId,\%user);
+
+    my $fullname = $user{fullname};
+    my $addr = $user{email};
+
+    my $email = $fullname . " <" . $addr . ">";
+    return $email;
 }
 
 1;

@@ -117,6 +117,38 @@ sub mail_format_from {
 
 sub message_print_compose {
     my ($message_ref) = @_;
+
+    print <<EOT;
+<form method=post action="send_message.cgi">
+<input type=hidden name="AddrFrom" value="$$message_ref{AddrFrom}">
+
+<table>
+<tr>
+  <td><b>to</b></td>
+  <td>
+    <input type=text size=30 name="AddrTo" value="$$message_ref{AddrTo}"
+  </td>
+</tr>
+
+<tr>
+  <td><b>subject</b></td>
+  <td>
+    <input type=text size=30 name="Subject" value="$$message_ref{Subject}"
+  </td>
+</tr>
+
+<tr>
+  <td colspan=2>
+    <textarea cols=75 rows=25 wrap=soft name="Body">$$message_ref{Body}</textarea>
+  </td>
+</tr>
+</table>
+
+<input type=submit value="Send">
+
+</form>
+EOT
+
 }
 
 1;
