@@ -5,32 +5,35 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'movies/MOVIES.pl';
+
+use tnmc::config;
+use tnmc::db;
+use tnmc::general_config;
 
 	#############
 	### Main logic
 
 	&db_connect();
 
-	$winner_blurb = &get_general_config("movie_winner_blurb");
-	$current_movie =  &get_general_config("movie_current_movie");
-        $current_cinema = &get_general_config("movie_current_cinema");
-        $current_showtime = &get_general_config("movie_current_showtime");
-        $current_meeting_place = &get_general_config("movie_current_meeting_place");
-        $current_meeting_time = &get_general_config("movie_current_meeting_time");
+	my $winner_blurb = &get_general_config("movie_winner_blurb");
+	my $current_movie =  &get_general_config("movie_current_movie");
+        my $current_cinema = &get_general_config("movie_current_cinema");
+        my $current_showtime = &get_general_config("movie_current_showtime");
+        my $current_meeting_place = &get_general_config("movie_current_meeting_place");
+        my $current_meeting_time = &get_general_config("movie_current_meeting_time");
         
-        $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-        $sth = $dbh_tnmc->prepare($sql);
+        my $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
+        my $sth = $dbh_tnmc->prepare($sql);
         $sth->execute();
-        ($next_tuesday) = $sth->fetchrow_array();
+        my ($next_tuesday) = $sth->fetchrow_array();
         $sth->finish();
         
         $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
         $sth = $dbh_tnmc->prepare($sql);
         $sth->execute();
-        ($next_tuesday_string) = $sth->fetchrow_array();
+        my ($next_tuesday_string) = $sth->fetchrow_array();
         $sth->finish();
   
 
@@ -41,12 +44,12 @@ require 'movies/MOVIES.pl';
 	}
 
 
+        my %movie;
 	&get_movie($current_movie, \%movie);
-	$current_movie_name = $movie{'title'};
+	my $current_movie_name = $movie{'title'};
 
         
-        $to_email = 'tnmc-list@interchange.ubc.ca';
-	#        $to_email = 'tnmc';
+        my $to_email = $tnmc_email;
 
         open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
         print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
