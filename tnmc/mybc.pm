@@ -17,25 +17,29 @@ BEGIN
 # module routines
 #
 
-sub mybc_get_movie_list {
+sub mybc_get_movie_list
+{
     my %results;
-    
-    my $URL = "http://www2.mybc.com/movies/";
+
+    my $URL = "http://www.mytelus.com/movies/releases.do";
     my $req = new HTTP::Request GET => $URL;
     my $ua = new LWP::UserAgent;
     my $res = $ua->request($req);
-    
+
     my $text = $res->content;
-    $text =~ s/.*\n\<SELECT name\=\"movieid\"\>\s//si;
-    $text =~ s/\n\<\/SELECT\>\s.*//si;
-    
-    my @list = split("\n", $text);
-    
-    foreach my $item (@list){
-        $item =~ /.+\"([\da]+)\"\>(.*)$/;
-        next unless $1;
-        next unless $2;
-        $results{$1} = $2;
+    if ($text =~ m|<select name="movieID">(.*)</select>|si)
+    {
+	my $movies = $1;
+	my @list = split("\n", $movies);
+
+	foreach my $item (@list)
+	{
+	    if ($item =~ m|<option value="(\w+)">(.*)$|)
+	    {
+		next unless $1 && $2;
+		$results{$1} = $2;
+	    }
+	}
     }
 
     return %results;
