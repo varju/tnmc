@@ -79,7 +79,7 @@ sub show_night_create_form{
     my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT DATE_ADD(CURDATE(), INTERVAL ? DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%a, %b %D')";
     my $sth = $dbh->prepare($sql);
-    for (my $i = 0; $i <= 31; $i++){
+    for (my $i = 0; $i <= 45; $i++){
         $sth->execute($i, $i);
         my ($val, $text) = $sth->fetchrow_array();
         print "<option value='$val 23:00:00'>$text\n";

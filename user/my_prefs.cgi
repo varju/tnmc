@@ -158,22 +158,6 @@ if ($USERID){
 
             };
     
-    &show_heading("movies");
-    
-    $sel_movie_notify{$user{movieNotify}} = 'checked';
-    
-    
-    print qq{
-            <table cellpadding="0" border="0" cellspacing="0">
-                                
-                                <tr><td><b>Movie notification?</td>
-                <td><b>    <input type="radio" name="movieNotify" value="1" $sel_movie_notify{1}>on </td>
-                <td><b>    <input type="radio" name="movieNotify" value="0" $sel_movie_notify{0}>off
-                                </td></tr>
-                        </table>
-                        <br>
-                        };
-
     &show_heading("pics");
     my %sel_random_pic;
     $sel_random_pic{$user{I_am_a_misanthrope}} = 'checked';

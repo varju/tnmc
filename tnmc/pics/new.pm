@@ -977,7 +977,8 @@ sub show_slide_pic{
     
     my $WIDTH = $pic{width} * $scale;
     my $HEIGHT = $pic{height} * $scale;
-    my $img_src = &get_pic_url($picID, ['mode'=>'full']);
+#    my $img_src = &get_pic_url($picID, ['mode'=>'full']);
+    my $img_src = "/pics/serve_pic.cgi?picID=$picID";
     
     ## print it all out
     print qq{
