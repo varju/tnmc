@@ -90,11 +90,17 @@ sub list_nights{
 }
 
 sub list_future_nights{
+    my ($factionID) = @_;
     my (@row, $sql, $sth);
     
     my @night_list = ();
     
-    $sql = "SELECT nightID from MovieNights WHERE date >= NOW() ORDER BY date, nightID";
+    if (defined $factionID){
+        $sql = "SELECT nightID from MovieNights WHERE date >= NOW() AND factionID = $factionID ORDER BY date, nightID";
+    }
+    else{
+        $sql = "SELECT nightID from MovieNights WHERE date >= NOW() ORDER BY date, nightID";
+    }
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
@@ -175,5 +181,58 @@ sub show_moviegod_links{
     }
 }
 
+sub update_cache_movieIDs{
+    my ($nightID) = @_;
+    
+    require tnmc::movies::show;
+    require tnmc::movies::night;
+    require tnmc::util::date;
+    
+    ## load the night
+    my %night;
+    &tnmc::movies::night::get_night($nightID, \%night);
+    
+    return if ($night{date} > &tnmc::util::date::now()); # don't touch old nights.
+    ## get all movies
+    my @movies;
+    &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing", 'ORDER BY title');
+    
+    ## TODO: limit the get all movies to only those that are in valid theatres.
+    
+    ## prune the ones that have been seen
+    @movies = grep {! &is_movie_seen_by_faction($night{'factionID'}, $_)} @movies;
+    
+    ### save cache to db
+    my $cache_movieIDs_string = join (" ", @movies);
+    $night{'cache_movieIDs'} = $cache_movieIDs_string;
+    &tnmc::movies::night::set_night(%night);
+    
+    return \%night;
+}
+
+sub is_movie_seen_by_faction{
+    my ($factionID, $movieID) = @_;
+    
+    my $dbh = &tnmc::db::db_connect();
+    
+    my $sql = "SELECT nightID from MovieNights
+                WHERE factionID = ?
+                  AND movieID = ?
+                  AND date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)";
+    my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($factionID, $movieID);
+    my @row = $sth->fetchrow_array();
+    $sth->finish;
+    
+    return $row[0];
+}
+
+sub list_cache_movieIDs{
+    my ($nightID) = @_;
+    my %night;
+    &get_night($nightID, \%night);
+    my @movie_list = split (" ", $night{'cache_movieIDs'});
+    return @movie_list;
+}
 
 1;

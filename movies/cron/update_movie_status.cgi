@@ -12,6 +12,7 @@ use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
 use tnmc::movies::night;
+use tnmc::movies::faction;
 
 #############
 ### Main logic
@@ -106,31 +107,41 @@ if (1 == 1){
     # $sth->finish();
 }
 
-# nights
-foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
+### Factions
+my @factions = &tnmc::movies::faction::list_factions();
+foreach my $factionID (@factions){
     
-    # get the date for the $i-th night from now.
+    my $faction = &tnmc::movies::faction::get_faction($factionID);
     
-    $sql = "SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%Y-%m-%d' )";
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute($i * 7);
-    my ($i_date) = $sth->fetchrow_array();
-    $sth->finish();
-
-    print "$i_date\n";
-
-    # next if the night already exists
-    next if list_nights([], "WHERE date LIKE '$i_date%'", "");
-
-    # add the night
-    my %night = (
-                 nightID => 0,
-                 godID => 1,
-                 date => "$i_date 23:00:00");
-    set_night(%night);
-    print "add $i_date\n";
+    # night creation
+    if ($faction->{'night_creation'}){
+        foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
+            
+            # get the date for the $i-th night from now.
+            
+            $sql = "SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%Y-%m-%d' )";
+            $sth = $dbh_tnmc->prepare($sql);
+            $sth->execute($i * 7);
+            my ($i_date) = $sth->fetchrow_array();
+            $sth->finish();
+            
+            print "$i_date\n";
+            
+            # next if the night already exists
+            next if list_nights([], "WHERE factionID = $factionID AND date LIKE '$i_date%'", "");
+            
+            # add the night
+            my %night = (
+                         nightID => 0,
+                         factionID => $factionID,
+                         godID => $faction->{'godID'},
+                         valid_theatres => $faction->{'theatres'},
+                         date => "$i_date 23:00:00");
+            set_night(%night);
+            print "add $i_date\n";
+        }
+    }
 }
-
 
 # the end.
 &db_disconnect();

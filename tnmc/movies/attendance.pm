@@ -27,18 +27,26 @@ sub set_attendance{
     # make sure we have a handle
     my $dbh = &tnmc::db::db_connect();
     
-    my @keys = sort keys %$ref;
-    
-    my $key_list = join (',', @keys);
-    my $ref_list = join (',', (map {sprintf '?'} @keys));
-    my @var_list = map {$ref->{$_}} @keys;
-    
-    # save to the db
-    my $sql = "REPLACE INTO MovieNightAttendance ($key_list) VALUES($ref_list)";
-    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute(@var_list) or return 0;
-    
-    $sth->finish;
+    if ($ref->{'type'} != 0){
+        my @keys = sort keys %$ref;
+        
+        my $key_list = join (',', @keys);
+        my $ref_list = join (',', (map {sprintf '?'} @keys));
+        my @var_list = map {$ref->{$_}} @keys;
+        
+        # save to the db
+        my $sql = "REPLACE INTO MovieNightAttendance ($key_list) VALUES($ref_list)";
+        my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+        $sth->execute(@var_list) or return 0;
+        $sth->finish;
+    }
+    else{
+        # delete from the db
+        my $sql = "DELETE FROM MovieNightAttendance WHERE nightID = ? AND userID = ?";
+        my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+        $sth->execute($ref->{'nightID'}, $ref->{'userID'}) or return 0;
+        $sth->finish;
+    }
 }
 
 sub get_attendance{
@@ -84,15 +92,31 @@ sub get_night_attendance_hash{
     my ($nightID) = @_;
     
     use tnmc::movies::night;
+    use tnmc::movies::faction;
     
     my %hash;
     
     # make sure we have a handle
     my $dbh = &tnmc::db::db_connect();
+    my ($sql, $sth);
     
-    # fetch from the db
-    my $sql = "SELECT userID, type from MovieNightAttendance WHERE nightID = ?";
-    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    ### look for a parent faction
+    my %night; &tnmc::movies::night::get_night($nightID, \%night);
+    
+    ### first, get the defaults
+    if ($night{'factionID'}){
+        $sql = "SELECT userID, attendance from MovieFactionPrefs WHERE factionID = ?";
+        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+        $sth->execute($night{'factionID'});
+        
+        while (my @row = $sth->fetchrow_array()){
+            $hash{$row[0]} = $row[1];
+        }
+    }
+    
+    ### second, get the night attendance
+    $sql = "SELECT userID, type from MovieNightAttendance WHERE nightID = ? AND type != 0";
+    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($nightID);
     
     while (my @row = $sth->fetchrow_array()){
@@ -106,40 +130,69 @@ sub get_night_attendance_hash{
 
 
 sub show_my_attendance_chooser{
+    my ($userID, $selected_nightID) = @_;
     
-    my ($userID) = @_;
+    require tnmc::util::date;
+    require tnmc::movies::faction;
+    require tnmc::movies::night;
+    require tnmc::user;
+    
+    my $user = &tnmc::user::get_user_cache($userID);
     
     # get the list of nights
-    my @nights = &tnmc::movies::night::list_future_nights();
+    my @all_nights = &tnmc::movies::night::list_future_nights();
+    my @nights = ();
+    my %nights;
+    my %factions;
+    my %attendances;
+    my %prefss;
     
-    # Get User's attendance
-    my %attendance;
+    # pre-load night/faction info
+    foreach my $nightID (@all_nights){
+        my %night; &get_night($nightID, \%night);
+        $nights{$nightID} = \%night;
+        my $factionID = $night{'factionID'};
+        $factions{$factionID} = &tnmc::movies::faction::get_faction($factionID) if (! defined  $factions{$factionID});
+        my %attendance; &get_attendance($userID, $nightID, \%attendance);
+        $attendances{$nightID} = \%attendance;
+        $prefss{$factionID} = &tnmc::movies::faction::load_faction_prefs($factionID, $userID) if (! defined $prefss{$factionID});
+        
+        
+        if ($prefss{$factionID}->{'membership'} == 1 ||
+            ($attendance{'type'} && $attendance{'type'} != -2) || 
+            $night{'godID'} == $userID ||
+            $nightID == $selected_nightID
+            ){
+            push(@nights, $nightID);
+        }
+    }
     
     # print some opening crap
     print qq{
     <table border=0 cellpadding=1 cellspacing=0 width="100%">
-        <tr bgcolor="cccccc">
-        <td norwrap>
         <form action="/movies/night_attendance_submit.cgi" method="post">
-        <input type="hidden" name="userID" value="$userID">&nbsp;&nbsp;
-        </td>
-        <td align="center"><b>Default</td>
-        <td>&nbsp;&nbsp;</td>
+        <input type="hidden" name="userID" value="$userID">
+        <tr bgcolor="cccccc">
     };
     
+    ### Date/faction
     foreach my $nightID (@nights){
-        my %night;
-        &get_night($nightID, \%night);
-        my $sql = "SELECT DATE_FORMAT(?, '%b %D')";
-        my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute($night{'date'});
-        my ($show_date) = $sth->fetchrow_array();
-        $sth->finish();
-        
-        print qq{
-            <td align="center"><font color="888888"><b>$show_date&nbsp;</td>
-            <td>&nbsp;&nbsp;</td>
-        };
+        my $night = $nights{$nightID};
+        my $faction = $factions{$night->{'factionID'}};
+        my $date_string = &tnmc::util::date::format_date('short_month_day', $night->{date});
+        $date_string =~ s/\s/\&nbsp\;/;
+        if ($nightID == $selected_nightID){
+            print qq{
+                <td align="center" bgcolor="888888"><font color="cccccc"><b>$date_string</b></font></td>
+                <td>&nbsp;&nbsp;</td>
+            };
+        }
+        else{
+            print qq{
+                <td align="center"><a href="index.cgi?nightID=$nightID&effectiveUserID=$userID"><font color="888888"><b>$date_string</b></font></a></td>
+                <td>&nbsp;&nbsp;</td>
+            };
+        }
     }
     
     print qq{
@@ -147,33 +200,39 @@ sub show_my_attendance_chooser{
         <td>&nbsp;&nbsp;</td>
             </tr>
         <tr>
-        <td></td>
-            <td valign="top"><font size="-1">
-                <select name="movieAttendDefault">
-                <option value="$attendance{movieDefault}">$attendance{movieDefault}
-        <option value="$attendance{movieDefault}">----
-                <option>yes
-                <option>no
-                </select></font>
-                </td>
-                <td></td>
         };
     
+    my %attendance_names = (1,'yes',-1,'no',-2,'hide');
+    
+    ### Yes/No/Hide
     foreach my $nightID (@nights){
-        my %attendance;
-        &get_attendance($userID, $nightID, \%attendance);
+        my $night = $nights{$nightID};
+        my $attendance = $attendances{$nightID};
+        my $prefs = $prefss{$night->{'factionID'}};
         
-        my $sel_yes     = ($attendance{'type'} eq '1')? 'selected' : '';
-        my $sel_no      = ($attendance{'type'} eq '-1')? 'selected' : '';
-        my $sel_default = (! ($sel_yes || $sel_no))? 'selected' : '';
+        my %sel = ($attendance->{'type'} => 'selected');
         
         print qq{
-            <td valign="top"><font size="-1">
+            <td valign="top" align="center"><font size="-1">
                 <select name="night_$nightID">
-                <option value="" $sel_default>
-                <option value="">default
-                <option value="1" $sel_yes>yes
-                <option value="-1" $sel_no>no
+                <option value="1" $sel{'1'}>yes
+                <option value="-1" $sel{'-1'}>no
+                };
+        if($prefs->{'attendance'}){
+            print qq{
+                <option value="-2" $sel{'-2'}>hide
+                <option value="$attendance->{'type'}">---
+                <option value="0">default:
+                <option value="0" $sel{undef()} $sel{'0'}> ($attendance_names{$prefs->{'attendance'}})
+            };
+        }
+        else{
+            print qq{
+                <option value="0" $sel{'-2'} $sel{'0'} $sel{undef()}>hide
+            };
+            
+        }
+        print qq{
                 </select>
             </td>
             <td></td>
@@ -181,8 +240,39 @@ sub show_my_attendance_chooser{
     }
     
     print qq{
-    <td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></form></td>
-    </tr>
+        <td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></form></td>
+        </tr>
+        <tr>
+        };
+    
+    ### MovieGod / more info
+    foreach my $nightID (@nights){
+        my $night = $nights{$nightID};
+        my $faction = $factions{$night->{'factionID'}};
+        my $god = &tnmc::user::get_user_cache($night->{'godID'});
+        
+        print qq{
+            <td valign="top" align="center"><font size="-1">
+                $faction->{'name'}&nbsp(};
+        if (($userID = $night->{'godID'})
+            || ($user->{groupMovies} >= 100)
+            ){
+            print qq{<a href="/movies/night_edit.cgi?nightID=$nightID">$god->{'username'}</a>};
+        }
+        else {
+            print $god->{'username'};
+        }
+        print qq{)
+            </td>
+            <td></td>
+        };
+    }
+    
+    
+    print qq{
+        <td valign="top" align="center">
+            <a href="/movies/factions.cgi">More&nbsp;factions...</a>
+        </td>
     </table>
     };
 }

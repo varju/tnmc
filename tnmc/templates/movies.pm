@@ -31,51 +31,62 @@ sub show_movies {
     require tnmc::template;
     require tnmc::movies::show;
     require tnmc::movies::attend;
+    require tnmc::movies::attendance;
+    require tnmc::movies::faction;
+    require tnmc::movies::night;
+    require tnmc::cgi;
     
     ## heading
-    my $date = &tnmc::movies::night::get_next_night();
-    my $date_string = &tnmc::util::date::format_date('full_date', $date . '000000');
-    my $movies_heading = "Movie for $date_string";
+    my $movies_heading = "Movies";
     &tnmc::template::show_heading ($movies_heading);
     
+    my $cgih = &tnmc::cgi::get_cgih();
     
-    if (!&tnmc::movies::show::show_current_nights()){
+    my @nights = &tnmc::movies::night::list_future_nights();
+    my $nightID = $cgih->param('nightID') || $nights[0];
+    
+    if ($USERID && $USERID{groupMovies}){
         
-        if ($USERID && $USERID{groupMovies}){
-            
-            ## show moviegod links
-            use tnmc::movies::night;
-            &tnmc::movies::night::show_moviegod_links($USERID);
-            
-            ## show attendance form
-            &tnmc::movies::attend::list_my_attendance($USERID);
-            
-            ## show movies form
-            &show_movies_home($USERID);
-            
-        }else{
-            ## show basic movielist
-            &show_movies_home_anon();
+        &tnmc::movies::attendance::show_my_attendance_chooser($USERID, $nightID);
+        
+        my %night;
+        &tnmc::movies::night::get_night($nightID, \%night);
+        if ($night{movieID}){
+            &tnmc::movies::show::show_night($nightID);
         }
+        else{
+            ## show movies form
+            &show_movies_home($USERID, $nightID);
+        }
+        
+    }else{
+        ## show basic movielist
+        if (!&tnmc::movies::show::show_current_nights()){
+            &show_movies_home_anon_old($nightID);
+        }
+        
     }
 }
 
 ##########################################################
-sub show_movies_home_anon{
+sub show_movies_home_anon_old{
+    my ($nightID) = @_;
     
     print qq{
         <table cellpadding="0" cellspacing="0" border="0">
             <tr><th colspan="4" height="14">
                 &nbsp;now showing</th></tr>
     };
-    &show_movie_list_home('',  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+    my @movie_list;
+    &tnmc::movies::show::list_movies(\@movie_list, "WHERE (statusShowing)", '');
+    &show_movie_list_home_old(\@movie_list, '', $nightID);
     print qq{\n    </table><p>\n};
     
 }
 
 ##########################################################
 sub show_movies_home{
-    my ($effectiveUserID) = @_;
+    my ($effectiveUserID, $nightID) = @_;
     
     ## show movie form - headings
     print qq{
@@ -89,14 +100,15 @@ sub show_movies_home{
                 </tr>
     };
     ## show movie form - content
-    &show_movie_list_home($effectiveUserID,  "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+    my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
+    &show_movie_list_home_old(\@movie_list, $effectiveUserID, $nightID);
     
     ## show movie form - close table
     print qq{
                 <tr><td></td>
                     <td></td>
                     <td colspan="3">
-                        <a href="/movies/index.cgi?sortOrder=order">
+                        <a href="/movies/index.cgi?sortOrder=order&nightID=$nightID">
                         More movies....</a><br>
                         </td>
                         </tr>
@@ -118,8 +130,8 @@ sub show_movies_home{
 
 
 ##########################################################
-sub show_movie_list_home{
-    my ($effectiveUserID, $whereClause) = @_;
+sub show_movie_list_home_old{
+    my ($movielist_ref, $effectiveUserID, $nightID) = @_;
     
     require tnmc::movies::movie;
     require tnmc::movies::show;
@@ -128,10 +140,10 @@ sub show_movie_list_home{
     my (@movies, $anon, $movieID, %movieInfo);
     my ($boldNew, %vote_status_word, $vote, @list);
     
-    &tnmc::movies::show::list_movies(\@list, $whereClause, 'ORDER BY title');
+    my @list = @$movielist_ref;
     foreach $movieID (@list){
         $anon = {};     ### create an anonymous hash.
-        &tnmc::movies::movie::get_movie_extended($movieID, $anon);
+        &tnmc::movies::movie::get_movie_extended2($movieID, $anon, $nightID);
         $movieInfo{$movieID} = $anon;
     }
     

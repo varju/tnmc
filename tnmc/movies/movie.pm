@@ -91,9 +91,10 @@ sub get_movie_extended2{
         $cache_attendance{$nightID} = &get_night_attendance_hash($nightID);
     }
     my $attendance = $cache_attendance{$nightID};
+    my @users = grep {$attendance->{$_} && $attendance->{$_} >= -1} (keys %$attendance);
     
     # get the votes 
-    my $votes = &get_movie_votes_hash($movieID);
+    my $votes = &get_movie_votes_hash($movieID, \@users);
     
     # initialize some values
     $movie->{votesFor} = 0;

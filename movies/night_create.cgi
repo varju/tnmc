@@ -26,9 +26,9 @@ use tnmc::user;
 
 my $cgih = &tnmc::cgi::get_cgih();
 
-my $nightID = $cgih->param('nightID');
+my $factionID = $cgih->param('factionID');
 
-&show_night_edit_form($nightID);
+&show_night_create_form($factionID);
 
 &footer();
 
@@ -36,11 +36,18 @@ my $nightID = $cgih->param('nightID');
 # subs
 #
 
-sub show_night_edit_form{
-    my ($nightID) = @_;
+sub show_night_create_form{
+    my ($FACTIONID) = @_;
     
-    my %night;
-    &get_night($nightID, \%night);
+    
+    my $FACTION = &tnmc::movies::faction::get_faction($factionID);
+    
+    my $nightID = 0;
+    my %night = ('nightID' => $nightID,
+                 'factionID' => $FACTIONID,
+                 'godID' => $FACTION->{godID},
+                 'valid_theatres' => $FACTION->{'theatres'}
+                 );
     
     my (@movies, %movie);
     
@@ -57,14 +64,50 @@ sub show_night_edit_form{
     my %godID_sel = ($night{'godID'}, 'SELECTED');
     
     # show the form to the user...
-    &show_heading("Edit/Set Movie Night");
+    &show_heading("Create Movie Night");
     
     print qq{
-        <form action="night_edit_submit.cgi" method="post">
-        <input type="hidden" name="nightID" value="$nightID">
+        <form action="night_edit_admin_submit.cgi" method="post">
+        <input type="hidden" name="nightID" value="0">
         <input type="hidden" name="LOCATION" value="$ENV{HTTP_REFERER}">
         <table>
         
+            <tr>
+            <td><b>date</td>
+            <td><select name="date">
+            };
+    my $dbh = &tnmc::db::db_connect();
+    my $sql = "SELECT DATE_ADD(CURDATE(), INTERVAL ? DAY), DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%a, %b %D')";
+    my $sth = $dbh->prepare($sql);
+    for (my $i = 0; $i <= 31; $i++){
+        $sth->execute($i, $i);
+        my ($val, $text) = $sth->fetchrow_array();
+        print "<option value='$val 23:00:00'>$text\n";
+    }
+    print qq{
+                </select>
+            </td>
+            </tr>
+
+            <tr>
+            <td><b>Movie God</td>
+            <td><select name="godID">
+                <option value="0">NO CURRENT MOVIE
+            
+    };
+    
+    foreach my $username (sort keys %$users){
+        my $userID = $users->{$username};
+        print qq{
+                <option value="$userID" $godID_sel{$userID} >$username
+        };
+    }
+    
+    print qq{
+                </select>
+            </td>
+            </tr>
+
             <tr>
             <td><b>Movie</td>
             <td><select name="movieID">
@@ -99,11 +142,6 @@ sub show_night_edit_form{
             </tr>
 
             <tr>
-            <td><b>date</td>
-            <td><input type="text" name="date" value="$night{'date'}")></td>
-            </tr>
-
-            <tr>
             <td><b>Cinema</td>
             <td><input type="text" name="theatre" value="$night{'theatre'}")></td>
             </tr>
@@ -131,24 +169,6 @@ sub show_night_edit_form{
             <tr>
             <td><b>Winner Blurb</b><br>(tuesday email)</td>
             <td><textarea cols="19" rows="5" wrap="virtual" name="winnerBlurb">$night{'winnerBlurb'}</textarea></td>
-            </tr>
-            <tr>
-            <td><b>Movie God</td>
-            <td><select name="godID">
-                <option value="0">NO CURRENT MOVIE
-            
-    };
-    
-    foreach my $username (sort keys %$users){
-        my $userID = $users->{$username};
-        print qq{
-                <option value="$userID" $godID_sel{$userID} >$username
-        };
-    }
-    
-    print qq{
-                </select>
-            </td>
             </tr>
 
             </table>

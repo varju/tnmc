@@ -2,7 +2,6 @@ package tnmc::movies::show;
 
 use strict;
 
-
 #
 # module configuration
 #

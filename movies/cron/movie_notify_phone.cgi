@@ -14,6 +14,7 @@ use tnmc::broadcast;
 use tnmc::user;
 use tnmc::movies::movie;
 use tnmc::movies::night;
+use tnmc::movies::faction;
 
 {
     #############
@@ -28,8 +29,7 @@ use tnmc::movies::night;
     
     foreach my $nightID (@nights){
         
-        my %night;
-        &get_night($nightID, \%night);
+        my %night; &get_night($nightID, \%night);
         
         ### Put the message together
         my %movie;
@@ -37,11 +37,11 @@ use tnmc::movies::night;
         
         my $message = " $movie{'title'} ---------------- Meet at $night{'meetingPlace'} \@ $night{'meetingTime'}\. ---------------- $night{'theatre'} \@ $night{'showtime'}\.";
         
-        ### User List of people who want movie notification
-        my (@users);
-        &list_users(\@users, "WHERE movieNotify = '1'", 'ORDER BY username');
+        ### List of people who want movie notification for this night
+        my @users = &tnmc::movies::faction::list_faction_members($night{'factionID'}, "notify_phone = 1");
         
         ### Broadcast the message
+        print "$nightID ---" , join(" ", @users), "\n";
         &smsBroadcast(\@users, $message);
     }
     

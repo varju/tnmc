@@ -8,6 +8,7 @@ use strict;
 #
 BEGIN{
     use tnmc::db;
+    use tnmc::movies::night;
     
     use Exporter;
     use vars qw(@ISA @EXPORT @EXPORT_OK);
@@ -86,13 +87,14 @@ sub list_votes_by_movie{
 }
 
 sub get_movie_votes_hash{
-    my ($movieID) = @_;
+    my ($movieID, $userlist) = @_;
     
+    my $userlist_sql = join (',', map {'?'} (@$userlist));
     my %votes;
+    my $sql = "SELECT userID, type FROM MovieVotes WHERE movieID = ? AND userID IN ($userlist_sql)";
     
-    my $sql = "SELECT userID, type FROM MovieVotes WHERE movieID = '$movieID'";
     my $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute;
+    $sth->execute($movieID, @$userlist);
     while (my @row = $sth->fetchrow_array()){
         $votes{$row[0]} = $row[1]
     }
