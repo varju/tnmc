@@ -1,17 +1,19 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Jeff Steinbok - steinbok@interchange.ubc.ca
+#    Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
+
 use CGI;
 
 use lib '/tnmc';
-use tnmc;
+use tnmc::db;
+use tnmc::cookie;
+use tnmc::user;
 
-require 'basic_testing_tools.pl';
+
 
     #############
     ### Main logic

@@ -5,11 +5,13 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
 use lib '/tnmc';
-use tnmc;
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
+
 require 'fieldtrip/FIELDTRIP.pl';
 
 #############
