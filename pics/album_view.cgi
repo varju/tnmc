@@ -8,33 +8,67 @@
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
 use tnmc::user;
+use tnmc::cookie;
 require 'pics/PICS.pl';
 
-	#############
-	### Main logic
 
-	&db_connect();
-	&header();
+#############
+### Main logic
 
-	%album;	
-	$cgih = new CGI;
-	$albumID = $cgih->param('albumID');
-	
-        &show_album($albumID);
+&db_connect();
+&header();
 
-	&footer();
+%album;	
+$cgih = new CGI;
 
-	&db_disconnect();
+my %navInfo;
+&get_nav_info_from_url(\%navInfo);
+
+$albumID = $cgih->param('albumID');
+
+&nav_show_album($albumID, \%navInfo);
+
+&footer();
+&db_disconnect();
+
 
 
 ################################################################################
-sub show_album{
-    my ($albumID) = @_;
+sub get_nav_info_from_url{
+    my ($nav_ref) = @_;
     
+    $nav_ref->{albumID} = $tnmc_cgi->param('albumID');
+    $nav_ref->{picID} = $tnmc_cgi->param('picID');
+    $nav_ref->{listLimit} = $tnmc_cgi->param('listLimit');
+    $nav_ref->{listStart} = $tnmc_cgi->param('listStart');
+    $nav_ref->{listType} = $tnmc_cgi->param('listType');
     
-    &get_album($albumID, \%album);
+    my @pics;
+    &list_links_for_album(\@pics, $nav_ref->{albumID});
+    $nav_ref->{pics} = \@pics;
+}
+
+################################################################################
+sub nav_show_album{
+    my ($albumID, $nav) = @_;
+    
+    ## heading
+    $backLink = qq{ - <a href="album_list.cgi"><font color="ffffff">All Albums</font></a> };
+    &show_heading("View Album $backLink");
     
     ## some info about the album
+    &show_album_info_full($nav->{albumID}, $nav->{listType});
+    
+    ## list all the pictures
+    &show_piclist($nav, $nav->{listType}, $nav->{pics}, $nav->{albumID}, '');
+    
+}
+
+########################################
+sub show_album_info_full{
+    my ($albumID, $displayLevel)= @_;
+    
+    &get_album($albumID, \%album);
     
     &get_user($album{albumOwnerID}, \%owner);
     
@@ -42,44 +76,171 @@ sub show_album{
         $album{albumTitle} = '(Untitled)';
     }
     
+
+    my $admin_links;
     if ($album{albumOwnerID} == $USERID){
-        $editLink = qq{ - <a href="album_edit_admin.cgi?albumID=$albumID"><font color="ffffff">Edit</font></a> };
-        $delLink = qq{ - <a href="album_del.cgi?albumID=$albumID"><font color="ffffff">Del</font></a> };
-    }
-    $backLink = qq{ - <a href="album_list.cgi"><font color="ffffff">All Albums</font></a> };
-    
-    show_heading("View Album  $editLink $delLink $backLink");
-    
-    print qq {
-        <p>
-        <b>$album{albumTitle}</b> - $album{albumDate} - $owner{username}
-        <p>
-        $album{albumDescription}
-        <p>
-    };
-    
-    ## options for the owner
-    if ($album{albumOwnerID} == $USERID){
-        print qq{<p>
-            <form action="link_add.cgi" method="post">
-            <b>Add PicID:</b>
-                <input type="hidden" name="groupID" value="$groupID">
-                <input type="text" name="picID">
-                <input type="submit" value="Add">
-            </form>
+        $admin_links = qq{
+            - <a href="album_edit_admin.cgi?albumID=$albumID">Edit</a>
+            - <a href="album_view.cgi?albumID=$albumID&listType=admin">Admin</a>
+            - <a href="album_del.cgi?albumID=$albumID">Del</a>
         };
     }
     
-    
-    ## list all the pictures
-    
-    my @pics;
-    &list_links_for_album(\@pics, $albumID);
-    
-    &show_piclist_thumb(\@pics, $albumID, '');
+    print qq{
+        <p>
+        <b>$album{albumTitle}</b> $admin_links<br>
+        $album{albumDescription}
+        <p>
+        Date: $album{albumDateStart} - $album{albumDateEnd}<br>
+        Owner: $owner{username}
+        <p>
+    };
 
+
+    if ($displayLevel eq 'admin'){
+        ## options for the owner
+        if ($album{albumOwnerID} == $USERID){
+            print qq{<p>
+                <form action="link_add.cgi" method="post">
+                <b>Add PicID:</b>
+                <input type="hidden" name="groupID" value="$groupID">
+                <input type="text" name="picID">
+                <input type="submit" value="Add">
+                </form>
+            };
+        }
+    }
 }
 
+########################################
+sub show_piclist{
+    my ($nav, $listType, $pics_ref, $albumID, $start) = @_;
+
+    my @PICS = @$pics_ref;
+
+    my $start = $cgih->param(listStart);
+    my $limit = $cgih->param(listLimit) || 20;
+    $limitContent = $cgih->param(limitContent) || -2;
+    
+    @pics = splice (@PICS, $start, $limit);
+    
+    my %pic;
+    my $i = $start;
+
+    print qq{
+        <table cellpadding="0" cellspacing="0" border="0">
+    };
+    print qq{
+        <form method="post" action="pic_edit_list_submit.cgi">
+        <input type="hidden" name="destination" value="$ENV{REQUEST_URI}">
+        <tr><th>&nbsp;</th><th>Rating: Terrible < - > Great</th></tr>
+    };
+
+
+    for my $picID (@pics){
+
+        $i++;
+        last if ($i > $start + $limit);
+
+        &get_pic($picID, \%pic);
+
+        ## only show the good pics
+        next if ($pic{rateContent} <= $limitContent);
+
+        $pic{DISPLAYtitle} = $pic{title} || '(untitled)';
+
+        if (!$pic{typePublic}){
+            $pic{flags} .= '*';
+        }
+        if (! defined ($owners{$pic{ownerID}})){
+            my %user;
+            &get_user($pic{ownerID}, \%user);
+            $owners{$pic{ownerID}} = $user{username};
+        }
+
+        my $pic_url = "pic_view.cgi?picID=$picID&albumID=$albumID&dateID=$dateID";
+
+        my $pic_desc;
+        $pic_desc .= $pic{description} . '<br>' if ($pic{description});
+        $pic_desc .= $pic{comments} . '<br>' if ($pic{comments});
+        
+        if ($listType eq 'thumb'){
+            print qq{
+                <tr>
+                <td valign="top"><a href="$pic_url">
+                    <img src="serve_pic.cgi?mode=thumb&picID=$picID" height="128" width="160" border="0" ></a>
+                    <br><br></td>
+                <td valign="top">
+                    <a href="$pic_url"><b>$pic{DISPLAYtitle}</b></a><br>
+                    $pic_desc
+                    $pic{width} x $pic{height}<br>
+                    Content: $pic{rateContent} Image: $pic{rateImage}<br>
+                    <br>
+                    $pic{timestamp} - $owners{$pic{ownerID}} $pic{flags} $i<br>
+                </td>
+                </tr>
+            };
+        }
+        elsif($listType eq 'admin'){
+            my %sel_content;
+            my %sel_image;
+            $sel_content{int($pic{rateContent})} = 'checked';
+            $sel_image{int($pic{rateImage})} = 'checked';
+            print qq{
+                <tr>
+                <td valign="top"><a href="$pic_url">
+                    <img src="serve_pic.cgi?mode=thumb&picID=$picID" height="128" width="160" border="0" ></a></td>
+                <td valign="top">
+                    <input type="text" name="PIC${picID}_title" value="$pic{title}" size="20"><br>
+                    
+                    <textarea rows=2 columns=18 wrap="virtual"  name="PIC${picID}_description">$description</textarea><br>
+                    
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"> 
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"> 
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"> 
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1">
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2">
+                    Content<br>
+
+                    <input type="radio" name="PIC${picID}_rateImage" $sel_image{-2} value="-2"> 
+                    <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"> 
+                    <input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0"> 
+                    <input type="radio" name="PIC${picID}_rateImage" $sel_image{1} value="1"> 
+                    <input type="radio" name="PIC${picID}_rateImage" $sel_image{2} value="2">
+                    Image<br>
+                    
+                    ($pic{width} x $pic{height})<br>
+                    $pic{timestamp} - $owners{$pic{ownerID}} $pic{flags}<br>
+                </td>
+                </tr>
+            };
+        }else{
+            
+            print qq{
+                <tr>
+                <td>$i</td>
+                <td nowrap><a href="pic_view.cgi?picID=$picID&albumID=$albumID&dateID=$dateID">$pic{DISPLAYtitle}</a> $pic{flags}</td>
+                <td nowrap>$pic{timestamp}</td>
+                <td>&nbsp;&nbsp;</td>
+                <td>$owners{$pic{ownerID}}</td>
+                </tr>
+            };
+        }
+    }
+    
+    print qq{
+        </table>
+            <input type="submit">
+        </form>
+    };
+
+    $start_prev =  $start - $limit;
+    $start_next =  $start + $limit;
+    print qq{
+        <a href="album_view.cgi?albumID=$albumID&listLimit=$limit&listStart=$start_prev">prev $limit</a>
+        <a href="album_view.cgi?albumID=$albumID&listLimit=$limit&listStart=$start_next">next $limit</a>
+    };
+}
 
 ########################################
 sub show_piclist_thumb{
@@ -94,6 +255,10 @@ sub show_piclist_thumb{
 
     my %pic;
     my $i = $start;
+
+    print qq{
+        <table>
+    };
 
     for my $picID (@pics){
 
@@ -119,7 +284,6 @@ sub show_piclist_thumb{
         $pic_desc .= $pic{comments} . '<br>' if ($pic{comments});
         
         print qq{
-            <table>
             <tr>
             <td valign="top"><a href="$pic_url">
                 <img src="serve_pic.cgi?mode=thumb&picID=$picID" height="128" width="160" border="0" ></a></td>
@@ -132,9 +296,12 @@ sub show_piclist_thumb{
                 $pic{timestamp} - $owners{$pic{ownerID}} $pic{flags}<br>
             </td>
             </tr>
-            </table>
         };
     }
+
+    print qq{
+        </table>
+    };
     
     $start_prev =  $start - $limit;
     $start_next =  $start + $limit;
@@ -151,7 +318,8 @@ sub show_piclist_basic{
     my @pics = @$pics_ref;
 
     print qq{
-            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">
             <tr>
             <th>#</td>
             <th>Title</td>
