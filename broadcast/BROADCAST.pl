@@ -33,6 +33,7 @@ sub smsBroadcast{
 sub smsShout{
 	
         my ($userID, $msg, $maxPackets, $junk) = @_;
+	my (%user, $sender);
 	
 	### Do we have a user?
 	if (!$userID){ return 0;}
@@ -45,8 +46,7 @@ sub smsShout{
 
 	### Get the sender info
 	if ($USERID){
-		&get_user($USERID, \%sender);
-		$sender = uc($sender{username});
+		$sender = uc($USERID{username});
 	}else{
 		$sender = 'TNMC';
 	}
