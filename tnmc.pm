@@ -42,7 +42,9 @@ sub AUTOLOAD{
         #my $call = $2;
         my @vars = @_;
         require $req;
-        &$sub(@vars);
+#	if (defined(&{$sub})){
+	    &$sub(@vars);
+#	}
     }
 }
 

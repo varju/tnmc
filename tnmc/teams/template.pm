@@ -185,20 +185,24 @@ sub show_team_roster{
     my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date LIMIT 3");
     my @players = &tnmc::teams::roster::list_users($teamID);
     @players = sort tnmc::user::by_username @players;
-
+    
     
     print qq{
 	<table border=0 cellspacing=0 width=100%>
-	<tr>
+	<tr valign="top">
 	    <th nowrap>Name</th>
 	    <th nowrap>Phone</th>
     };
     foreach my $meetID (@meets){
-        my $meet = &tnmc::teams::meet::get_meet($meetID);
+        my $meet = &tnmc::teams::meet::get_meet_extended($meetID);
         my $game_date = &tnmc::util::date::format('short_month_day', $meet->{"date"}) ;
-        print "<th nowrap>$game_date</th>";
+        print qq{<th nowrap>$game_date<br>
+		 <font size=+1>$meet->{totals}->{M}->{yes}/$meet->{totals}->{F}->{yes}</font></th>
+	};
     }
     print "<th></th></tr>\n";
+
+
     foreach my $userID (@players){
 	
 	my $user = &tnmc::user::get_user($userID);

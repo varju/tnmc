@@ -48,6 +48,7 @@ sub action_player{
     require tnmc::user;
     require tnmc::teams::meet;
     require tnmc::teams::team;
+    require tnmc::teams::roster;
     require tnmc::util::date;
     
     # setup
@@ -55,6 +56,7 @@ sub action_player{
     my $userID = &tnmc::cgi::param("userID");
     my $team = &tnmc::teams::team::get_team($teamID);
     my $user = &tnmc::user::get_user($userID);
+    my $roster = &tnmc::teams::roster::get_roster($teamID, $userID);
     my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = '$teamID' ORDER BY date");
     
     # show the page
@@ -69,25 +71,44 @@ sub action_player{
     };
     foreach my $meetID (@meets){
 	my $attendance = &tnmc::teams::attendance::get_attendance($meetID, $userID);
-	my $meet = &tnmc::teams::meet::get_meet($meetID);
+	my $meet = &tnmc::teams::meet::get_meet_extended($meetID);
 	my $key = "type-$meetID-$userID";
 	my $type = $attendance->{type} || 'undef';
         my $date = &tnmc::util::date::format('day_time', $meet->{"date"});
+        my $lastmod = &tnmc::util::date::format('mysql', $meet->{"date"});
+	my $no_edit = ($meet->{limits}->{time}  ||
+		       ($type eq 'yes' && ( $meet->{limits}->{T}  ||
+					    $meet->{limits}->{$roster->{gender}}
+					    )
+			));
+	my $font = ($meet->{limits}->{time})? "<font color=777777>" :"";
 	print qq{
-	    <tr><td>$date</td>
-		<td>$meet->{type}</td>
-		<td>$meet->{location}</td>
-		<td><select name="$key">
+	    <tr><td>$font$date</td>
+		<td>$font$meet->{type}</td>
+		<td>$font$meet->{location}</td>
 	    };
 	
-	foreach my $option (@options){
-	    my $selected = ($option->{key} eq $type)? "selected" : "";
-	    print qq{<option $selected value="$option->{key}">$option->{val}</option>};
-        }
-	print qq{
-	    </select>
-	    </td></tr>
-	};
+	if ($no_edit){
+	    print qq{
+		<td>$font$tnmc::teams::attendance::type{$type}
+		    <input type=hidden name="$key" value="$type">
+		</td>
+	    };
+	}
+	else{
+	    print qq{  
+		<td $bgcolor><select name="$key">
+	    };
+	    foreach my $option (@options){
+		my $selected = ($option->{key} eq $type)? "selected" : "";
+		print qq{<option $selected value="$option->{key}">$option->{val}</option>};
+	    }
+	    print qq{
+		</select>
+		    <td><!-- lastmod: $lastmod -->$can_edit</td>
+		</td></tr>
+	    };
+	}
     }
     print qq{
 	</table>
@@ -98,7 +119,7 @@ sub action_player{
 }
 
 sub action_meet{
-
+    
     require tnmc::user;
     require tnmc::teams::meet;
     require tnmc::teams::team;
@@ -107,7 +128,7 @@ sub action_meet{
     
     # setup
     my $meetID = &tnmc::cgi::param("meetID");
-    my $meet = &tnmc::teams::meet::get_meet($meetID);
+    my $meet = &tnmc::teams::meet::get_meet_extended($meetID);
     my $teamID = $meet->{teamID};
     my $team = &tnmc::teams::team::get_team($teamID);
     my @players = &tnmc::teams::roster::list_users($teamID);
@@ -129,20 +150,38 @@ sub action_meet{
 	my $attendance = &tnmc::teams::attendance::get_attendance($meetID, $userID);
 	my $key = "type-$meetID-$userID";
 	my $type = $attendance->{type} || 'undef';
+	my $no_edit = ($meet->{limits}->{time}  ||
+		       ($type eq 'yes' && ( $meet->{limits}->{T}  ||
+					    $meet->{limits}->{$roster->{gender}}
+					    )
+			));
 	print qq{
 	    <tr><td>$user->{username}</td>
 		<td>$roster->{gender}</td>
 		<td>$roster->{status}</td>
-		<td><select name="$key">
 	    };
-	
-	foreach my $option (@options){
-	    my $selected = ($option->{key} eq $type)? "selected" : "";
-	    print qq{<option $selected value="$option->{key}">$option->{val}</option>};
-        }
-	print qq{
-	    </select>
-	    </td></tr>
+	if ($no_edit){
+	    print qq{
+		<td>$tnmc::teams::attendance::type{$type}
+		    <input type=hidden name="$key" value="$type">
+		</td>
+	    };
+	}
+	else{
+	    print qq{  
+		<td><select name="$key"> 
+	    };
+	    foreach my $option (@options){
+		my $selected = ($option->{key} eq $type)? "selected" : "";
+		print qq{<option $selected value="$option->{key}">$option->{val}</option>};
+	    }
+	    print qq{
+		</select>   
+		    </td>
+	    };
+	}
+        print qq{
+	    </tr>
 	};
     }
     print qq{
@@ -166,10 +205,10 @@ sub action_player_submit{
 	my ($key, $meetID, $userID) = split ("-", $param);
 	
 	next if ($key ne 'type');
-
+	
 	my $val = &tnmc::cgi::param($param);
 	my $attendance = &tnmc::teams::attendance::get_attendance($meetID, $userID);
-
+	
 	# does not exist: make a new attendance
 	if (!$attendance){
 	    $attendance = &tnmc::teams::attendance::new_attendance();
@@ -180,6 +219,7 @@ sub action_player_submit{
 	# attendance changed: save to db
 	if ($attendance->{type} ne $val){
 	    $attendance->{type} = $val;
+	    $attendance->{timestamp} = undef();
 	    &tnmc::teams::attendance::set_attendance($attendance);
 	}
 	

@@ -109,6 +109,19 @@ sub get_meet_extended{
     
     $meet->{action}->{edit} = "teams/meet_mod.cgi?ACTION=edit&meetID=$meetID";
     $meet->{action}->{roster} = "teams/attendance_mod.cgi?ACTION=meet&meetID=$meetID";
+
+    $meet->{limits}->{time} = 
+	( &tnmc::util::date::format('mysql', $meet->{date}) 
+	  lt &tnmc::util::date::now())? 1:0;
+    
+    $meet->{limits}->{F} =
+	($meet->{minFemale} && $meet->{minFemale} >= $meet->{totals}->{F}->{yes})? 1:0;
+    
+    $meet->{limits}->{M} =
+	($meet->{minMale} && $meet->{minMale} >= $meet->{totals}->{M}->{yes})? 1:0;
+    
+    $meet->{limits}->{T} =
+	($meet->{minTotal} && $meet->{minTotal} >= $meet->{totals}->{X}->{yes})? 1:0;
     
     return $meet;
 }
