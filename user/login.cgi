@@ -8,7 +8,7 @@
 use CGI;
 
 use strict;
-use lib '/usr/local/apache/tnmc';
+use lib '/tnmc';
 
 use tnmc::cookie;
 use tnmc::config;

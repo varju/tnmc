@@ -2,7 +2,7 @@
 
 use POSIX qw(strftime);
 
-my $base = "/usr/local/apache/tnmc";
+my $base = "/tnmc";
 my $cvs = "/var/db/tnmc-cvs";
 
 my $tmp = $$;

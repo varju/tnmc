@@ -9,7 +9,7 @@
 use strict;
 use CGI;
 
-use lib '/usr/local/apache/tnmc';
+use lib '/tnmc';
 
 use tnmc::db;
 use tnmc::general_config;

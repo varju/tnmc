@@ -8,7 +8,7 @@
 use DBI;
 use CGI;
 
-use lib '/usr/local/apache/tnmc';
+use lib '/tnmc';
 use tnmc;
 use tnmc::config;
 
@@ -84,11 +84,11 @@ use tnmc::config;
 #    $total_cgi = <LINES>;
 #    close (LINES);
 #
-    open (LINES, 'cd /usr/local/apache/tnmc && cat *.pm *.pl *.cgi */*.pl */*.cgi */*/*.cgi| wc -l |');
+    open (LINES, 'cd /tnmc && cat *.pm *.pl *.cgi */*.pl */*.cgi */*/*.cgi| wc -l |');
     $lines_of_code = <LINES>;
     close (LINES);
 
-        @file_status = stat("/usr/local/apache/tnmc/source/tnmc.tar.gz");
+        @file_status = stat("/tnmc/source/tnmc.tar.gz");
         use POSIX qw(strftime);
         $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
         

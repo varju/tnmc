@@ -6,7 +6,7 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-use lib '/usr/local/apache/tnmc';
+use lib '/tnmc';
 
 use tnmc::template;
 use tnmc::db;
