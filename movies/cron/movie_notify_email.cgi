@@ -48,7 +48,7 @@ require 'movies/MOVIES.pl';
         $to_email = 'tnmc-list@interchange.ubc.ca';
 	#        $to_email = 'tnmc';
 
-        open(SENDMAIL, "| /usr/lib/sendmail $to_email");
+        open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
         print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
         print SENDMAIL "To: tnnc-list <$to_email>\n";
         print SENDMAIL "Subject: $next_tuesday_string\n";
