@@ -131,7 +131,7 @@ sub show_movies
 			</tr>
 		<tr>
 			<td colspan="11" bgcolor="cccccc" align="right">
-				<form action="update_votes.cgi" method="post">
+				<form action="/movies/update_votes.cgi" method="post">
 				<input type="hidden" name="userID" value="$effectiveUserID">
 				<font color="888888"><b>now showing </td></tr>
 	};

@@ -40,7 +40,7 @@ sub show_movies
 		print qq{
 			<table cellpadding="0" cellspacing="0" border="0">
 	                        <tr><th colspan="11" height="14">
-	                                <form action="update_votes.cgi" method="post">
+	                                <form action="/movies/update_votes.cgi" method="post">
 	                                <input type="hidden" name="userID" value="$effectiveUserID">
 	                                &nbsp;now showing</th></tr>
 		};
