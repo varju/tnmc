@@ -23,11 +23,11 @@ use tnmc::user;
     &footer();
 
 ##########################################################
-sub show_users()
-{
+sub show_users(){
+
     my (@users, $userID, %user);
 
-    &list_users(\@users, "WHERE groupDead != '1' && username != ''", 'ORDER BY
+    &list_users(\@users, "WHERE groupDead != '1'", 'ORDER BY
 username');
 
     print qq
