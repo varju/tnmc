@@ -56,7 +56,7 @@ sub show_album_edit_form{
             <input type="text" name="albumTitle" value="$album{albumTitle}" size="40"><br>
             <br>
             <b>Description</b><br>
-            <textarea name="albumDescription" wrap="virtual" cols="38" rows="4">$album{albumTitle}</textarea><br>
+            <textarea name="albumDescription" wrap="virtual" cols="38" rows="4">$album{albumDescription}</textarea><br>
             <table> 
     };
     
