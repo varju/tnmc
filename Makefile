@@ -1,4 +1,4 @@
-auto/tnmc/movies/show/autosplit.ix: tnmc/movies/show.pm
+autosplit:
 	./autosplit.pl
 
 TAGS:
