@@ -34,8 +34,6 @@ sub do_update_votes{
     my @params =  $tnmc_cgi->param();
     
     my %vote_count = ();
-    my $favoriteMovie = $tnmc_cgi->param('favoriteMovie');
-    my $superfavoriteMovie = $tnmc_cgi->param('superfavoriteMovie');
     
     ### count the number of positive/negative/neutral votes.
     foreach $_ (@params){
@@ -65,27 +63,19 @@ sub do_update_votes{
         &set_vote($_, $userID, $tnmc_cgi->param("v$_"));
     }
     
-    if ($favoriteMovie ne ''){
-        ### Kill old Fave.
-        my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
-        my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        $sth->finish();
-        
-        ### Set new Fave.
-        if ($favoriteMovie){ &set_vote($favoriteMovie, $userID, '2');}
-    }
-    
-
-    if ($superfavoriteMovie ne ''){
-        ### Kill old SuperFave.
-        my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '3' AND userID = '$userID'";
-        my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        $sth->finish();
-        
-        ### Set new SuperFave.
-        if ($superfavoriteMovie){ &set_vote($superfavoriteMovie, $userID, '3');}
+    ### Special votes
+    foreach my $vote_type ('2', '3', '4'){
+        my $movieID =  $tnmc_cgi->param("SpecialVote_$vote_type");
+        if (defined ($movieID)){
+            ### Kill old Special vote.
+            my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '$vote_type' AND userID = '$userID'";
+            my $sth = $dbh_tnmc->prepare($sql);
+            $sth->execute();
+            $sth->finish();
+            
+            ### Set new Special Vote.
+            if ($movieID){ &set_vote($movieID, $userID, $vote_type);}
+        }
     }
     
     print "Location: $ENV{HTTP_REFERER}\n\n";

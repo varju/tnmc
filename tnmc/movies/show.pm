@@ -14,7 +14,7 @@ BEGIN {
     
     @ISA = qw(Exporter AutoLoader);
     
-    @EXPORT = qw(show_superfavorite_movie_select show_favorite_movie_select list_movies show_current_nights show_night);
+    @EXPORT = qw(list_movies show_current_nights show_night);
     @EXPORT_OK = qw();
 }
 
@@ -26,82 +26,44 @@ __END__
 # autoloaded module routines
 #
 
-sub show_favorite_movie_select{
-    use tnmc::db;
+sub show_special_movie_select{
+    my ($effectiveUserID, $vote_type, $nightID) = @_;
     
-    my ($effectiveUserID) = @_;
-    my ($sql, $sth, @row, $favoriteMovie, $faveSel);
-
+    use tnmc::db;
+    require tnmc::movies::night;
+    require tnmc::movies::movie;
+    
+    my %vote_types = ('-1' => 'Anti',
+                      '0' => 'Neutral',
+                      '1' => 'Normal',
+                      '2' => 'Favorite',
+                      '3' => 'Super-Favorite',
+                      '4' => 'Birthday');
+    
+    my ($sql, $sth);
+    
     print qq{
-        <select name="favoriteMovie">
+        <select name="SpecialVote_$vote_type">
         <option value="0">none
         <option value="0">
     };
-
+    
     $sql = "SELECT movieID
              FROM MovieVotes
-            WHERE userID = '$effectiveUserID' AND type = '2'";
+            WHERE userID = ? AND type = ?";
     $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute;
-    ($favoriteMovie) = $sth->fetchrow_array();
+    $sth->execute($effectiveUserID, $vote_type);
+    my ($current_vote) = $sth->fetchrow_array();
     $sth->finish();
-
-    $sql = "SELECT movieID, title
-             FROM Movies
-            WHERE statusShowing = '1' AND statusSeen != '1' AND statusBanned != 1
-        
-            ORDER BY title";
-
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute;
-
-    while (@row = $sth->fetchrow_array()){
-            if ($favoriteMovie == $row[0]){         $faveSel = 'selected';}
-            else{                                   $faveSel = '';}
-            print qq{               <option value="$row[0]" $faveSel>$row[1]\n};
-    }
-    $sth->finish;
     
-    print qq{
-        </select>
-    };
-}
-
-sub show_superfavorite_movie_select{
-    use tnmc::db;
+    my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
     
-    my ($effectiveUserID) = @_;
-    my ($sql, $sth, @row, $favoriteMovie, $faveSel);
-
-    print qq{
-        <select name="superfavoriteMovie">
-        <option value="0">none
-        <option value="0">
-    };
-
-    $sql = "SELECT movieID
-             FROM MovieVotes
-            WHERE userID = '$effectiveUserID' AND type = '3'";
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute;
-    ($favoriteMovie) = $sth->fetchrow_array();
-    $sth->finish();
-
-    $sql = "SELECT movieID, title
-             FROM Movies
-            WHERE statusShowing = '1' AND statusSeen != '1' AND statusBanned != 1
+    foreach my $movieID (@movie_list){
+        my %movie; &tnmc::movies::movie::get_movie($movieID, \%movie);
         
-            ORDER BY title";
-
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute;
-
-    while (@row = $sth->fetchrow_array()){
-            if ($favoriteMovie == $row[0]){         $faveSel = 'selected';}
-            else{                                   $faveSel = '';}
-            print qq{               <option value="$row[0]" $faveSel>$row[1]\n};
+        my $faveSel = ($current_vote == $movieID)? 'selected' : '';
+        print qq{               <option value="$movieID" $faveSel>$movie{'title'}\n};
     }
-    $sth->finish;
     
     print qq{
         </select>

@@ -33,7 +33,8 @@ BEGIN{
                  db_get_cols_list
                  db_get_row
                  db_set_row
-                 $dbh_tnmc);
+                 $dbh_tnmc
+                 $dbh);
     
     @EXPORT_OK = qw($dbh);
 

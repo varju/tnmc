@@ -167,6 +167,11 @@ use tnmc::mybc;
         
       }
     }
-
+    
+    ### update the movie caches
+    
+    require tnmc::movies::night;
+    &tnmc::movies::night::update_all_cache_movieIDs();
+    
     &db_disconnect();
 }

@@ -8,10 +8,6 @@ use strict;
 BEGIN{
     use tnmc::db;
     use tnmc::security::auth;
-    use tnmc::movies::night;
-    use tnmc::movies::attendance;
-    use tnmc::movies::vote;
-    use tnmc::user;
     
     require Exporter;
     use vars qw(@ISA @EXPORT @EXPORT_OK);
@@ -49,7 +45,7 @@ sub set_movie{
     my (%movie, $junk) = @_;
     my ($sql, $sth, $return);
     
-    &db_set_row(\%movie, $dbh_tnmc, 'Movies', 'movieID');
+    &tnmc::db::db_set_row(\%movie, $dbh_tnmc, 'Movies', 'movieID');
     
     ###############
     ### Return the Movie ID
@@ -80,26 +76,41 @@ sub get_movie{
 {
     my (%cache_attendance);
 sub get_movie_extended2{
-    
     my ($movieID, $movie, $nightID) = @_;
+    
+    require tnmc::movies::attendance;
+    require tnmc::movies::vote;
+    require tnmc::user;
     
     ### Get basic info.
     &get_movie($movieID, $movie);
     
+    ## Fudge the theatre list into something human-readable
+    require tnmc::movies::theatres;
+    my @theatres = split(/\s/, $movie->{'theatres'});
+    
+    foreach my $theatreid (@theatres){
+        my $theatre = &tnmc::movies::theatres::get_theatre_by_mybcid($theatreid);
+        $movie->{'theatres_string'} .= " " . $theatre->{'name'};
+        $movie->{'theatres_url'} .= " <a href=\"http://www2.mybc.com/movies/theatres/$theatre->{'mybcid'}.html\">$theatre->{'name'}</a>";
+    }
+        
+        
+    
     # get the attendance list
     if (!$cache_attendance{$nightID}){
-        $cache_attendance{$nightID} = &get_night_attendance_hash($nightID);
+        $cache_attendance{$nightID} = &tnmc::movies::attendance::get_night_attendance_hash($nightID);
     }
     my $attendance = $cache_attendance{$nightID};
     my @users = grep {$attendance->{$_} && $attendance->{$_} >= -1} (keys %$attendance);
     
     # get the votes 
-    my $votes = &get_movie_votes_hash($movieID, \@users);
+    my $votes = &tnmc::movies::vote::get_movie_votes_hash($movieID, \@users);
     
     # initialize some values
     $movie->{votesFor} = 0;
     $movie->{votesFave} = 0;
-    $movie->{votesSuperFave} = 0;
+    $movie->{votesSuperfave} = 0;
     $movie->{votesBday} = 0;
     $movie->{votesAgainst} = 0;
     $movie->{votesForAway} = 0;
@@ -122,7 +133,7 @@ sub get_movie_extended2{
         next if (($userID == 38) && ($USERID != 38));
         
         # get user info
-        my $user = &get_user_cache($userID);
+        my $user = &tnmc::user::get_user_cache($userID);
         
         my $username = $user->{'username'};
         my $attend = $attendance->{$userID};
@@ -159,20 +170,19 @@ sub get_movie_extended2{
                 $movie->{votesAgainst} ++;
             }
             elsif ($type == 2){
-                if ($bday){
-                    $votesHTML{$username} = "<b><font style='background-color: #ff88ff'>&nbsp;$username&nbsp;</font></b>";
-                    $votesText{$username} = "***${username}***";
-                    $movie->{votesBday} ++;
-                }else{
-                    $votesHTML{$username} = "<b>$username</b>";
-                    $votesText{$username} = "${username}!";
-                    $movie->{votesFave} ++;
-                }
+                $votesHTML{$username} = "<b>$username</b>";
+                $votesText{$username} = "${username}!";
+                $movie->{votesFave} ++;
             }
             elsif ($type == 3){
                 $votesHTML{$username} = "<b><font style='background-color: #ffff88'>&nbsp;$username&nbsp;</font></b>";
                 $votesText{$username} = "**${username}**";
-                $movie->{votesSuperFave} ++;
+                $movie->{votesSuperfave} ++;
+            }
+            elsif ($type == 4){
+                $votesHTML{$username} = "<b><font style='background-color: #ff88ff'>&nbsp;$username&nbsp;</font></b>";
+                $votesText{$username} = "***${username}***";
+                $movie->{votesBday} ++;
             }
         }
     }
@@ -206,15 +216,28 @@ sub get_movie_extended2{
 }
 
 sub get_movie_extended{
-
     my ($movieID, $movie, $userID, $junk) = @_;
-
+    
+    require tnmc::movies::night;
+    
+    
     ### Get basic info.
-           &get_movie($movieID, $movie);
+    &get_movie($movieID, $movie);
 
 
-    my $thisTues = &get_next_night();
-    my $nextTues = &get_next_night($thisTues);
+    ## Fudge the theatre list into something human-readable
+    require tnmc::movies::theatres;
+    my @theatres = split(/\s/, $movie->{'theatres'});
+    
+    foreach my $theatreid (@theatres){
+        my $theatre = &tnmc::movies::theatres::get_theatre_by_mybcid($theatreid);
+        $movie->{'theatres_string'} .= " " . $theatre->{'name'};
+        $movie->{'theatres_url'} .= " <a href=\"http://www2.mybc.com/movies/theatres/$theatre->{'mybcid'}.html\">$theatre->{'name'}</a>";
+    }
+        
+ 
+    my $thisTues = &tnmc::movies::night::get_next_night();
+    my $nextTues = &tnmc::movies::night::get_next_night($thisTues);
     
     my ($sql, $sth, @row);
 
@@ -228,9 +251,9 @@ sub get_movie_extended{
         ORDER BY p.username ASC";
 
     $sth = $dbh_tnmc->prepare($sql);
-
+    
     $sth->execute();
-
+    
     my ($VuserID, $Vperson, $Vtype, $Ubday, $Udefault, $Uthis, $Unext);
 
     # initialize some values
@@ -356,3 +379,6 @@ sub del_movie{
 
 
 1;
+
+
+

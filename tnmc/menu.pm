@@ -74,6 +74,7 @@ sub new_nav_menu{
             if ($USERID{groupMovies} >= 100){
                 &show_menu_item( 1, "", "", "");
                 &show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
+                &show_menu_item( 1, "/movies/theatre_list.cgi", "Theatres", "");
                 &show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
                 &show_menu_item( 1, "/movies/night_list.cgi", "Nights", "");
             }

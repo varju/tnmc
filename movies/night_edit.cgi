@@ -42,10 +42,8 @@ sub show_night_edit_form{
     my %night;
     &get_night($nightID, \%night);
     
-    my (@movies, %movie);
-    
     # movieID select list
-    &list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
+    my @movies = &tnmc::movies::night::list_cache_movieIDs($nightID);
     my %movieID_sel = ($night{'movieID'}, 'SELECTED');
     
     # factionID select list
@@ -72,6 +70,7 @@ sub show_night_edit_form{
     };
     
     foreach my $movieID (@movies){
+        my %movie;
         &get_movie($movieID, \%movie);
         print qq{
                 <option value="$movie{'movieID'}" $movieID_sel{$movieID} >$movie{'title'}

@@ -181,6 +181,13 @@ sub show_moviegod_links{
     }
 }
 
+sub update_all_cache_movieIDs{
+    
+    foreach my $nightID (&list_future_nights()){
+        &update_cache_movieIDs($nightID);
+    }
+}
+
 sub update_cache_movieIDs{
     my ($nightID) = @_;
     

@@ -30,7 +30,6 @@ sub show_movies {
     require tnmc::movies::night;
     require tnmc::template;
     require tnmc::movies::show;
-    require tnmc::movies::attend;
     require tnmc::movies::attendance;
     require tnmc::movies::faction;
     require tnmc::movies::night;
@@ -58,7 +57,7 @@ sub show_movies {
             ## show movies form
             &show_movies_home($USERID, $nightID);
         }
-        
+       
     }else{
         ## show basic movielist
         if (!&tnmc::movies::show::show_current_nights()){
@@ -119,7 +118,7 @@ sub show_movies_home{
             <font face="verdana">
             <b>Favorite Movie:</b><br>
     };
-    &tnmc::movies::show::show_favorite_movie_select($effectiveUserID);
+    &tnmc::movies::show::show_special_movie_select($effectiveUserID, 2, $nightID);
     print qq{
         <br>
         <input type="image" border="0" src="/template/update_votes_submit.gif" alt="Update Votes">

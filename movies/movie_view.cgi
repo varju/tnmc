@@ -51,6 +51,8 @@ sub show_movie_extended
             next if ($key eq 'movieID');
             next if ($key eq 'mybcID');
             next if ($key eq 'imdbID');
+            next if ($key eq 'theatres');
+            next if ($key eq 'theatres_string');
             
             print qq{    
                 <tr valign=top><td><B>$key</B></td>

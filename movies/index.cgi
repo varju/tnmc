@@ -24,7 +24,7 @@ use tnmc::movies::night;
 #############
 ### Main logic
 
-&db_connect();
+
 &header();
 my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
@@ -38,23 +38,24 @@ if (($USERID{groupMovies} >= 100) && ($tnmc_cgi->param('effectiveUserID')) ){
     $e_userID = $tnmc_cgi->param('effectiveUserID');
 }
 
-my @nights = &list_future_nights();
+my @nights = &tnmc::movies::night::list_future_nights();
 my $nightID =  $tnmc_cgi ->param('nightID') || $nights[0];
 
 &show_local_nav($sortOrder, $e_userID, $USERID, $nightID);
-&show_my_attendance_chooser($e_userID, $nightID);
+&show_heading ("Factions &amp; Attendance");
+&tnmc::movies::attendance::show_my_attendance_chooser($e_userID, $nightID);
 &show_movies_enhanced($sortOrder, $e_userID, $USERID, $nightID);
 
 &footer();
-&db_disconnect();
+
 
 
 ##########################################################
 sub show_local_nav{
     my ($sortOrder, $effectiveUserID, $real_userID, $nightID) = @_;
     
-    my %REAL_USER;
-    &get_user($real_userID, \%REAL_USER);
+   my %REAL_USER;
+    &tnmc::user::get_user($real_userID, \%REAL_USER);
     
     my %sortSel;
     $sortSel{$sortOrder} = 'selected';
@@ -77,7 +78,7 @@ sub show_local_nav{
                   <option  value="$sortOrder">
                   <option $sortSel{rating} value="rating">Rating
                   <option $sortSel{type} value="type">Type
-                  <option $sortSel{theatres} value="theatres">Theatres
+                  <option $sortSel{theatres_string} value="theatres_string">Theatres
               </select>
           </td>
     };
@@ -112,10 +113,10 @@ sub show_movies_enhanced{
     my ($sortOrder, $effectiveUserID, $real_userID, $nightID) = @_;
     
     my %REAL_USER;
-    &get_user($real_userID, \%REAL_USER);
+    &tnmc::user::get_user($real_userID, \%REAL_USER);
     
     my %USER;
-    &get_user($effectiveUserID, \%USER);
+    &tnmc::user::get_user($effectiveUserID, \%USER);
     
     
     # mini-hack
@@ -130,9 +131,9 @@ sub show_movies_enhanced{
     }
     
     my %night;
-    &get_night($nightID, \%night);
+    &tnmc::movies::night::get_night($nightID, \%night);
     
-    &show_heading ("Detailed Votes - $night{'date'}");
+    &show_heading ("Detailed Votes");
     
     ##################################################################
     ### Start of list
@@ -161,10 +162,7 @@ sub show_movies_enhanced{
     
     ########################
     # Now Showing
-    &tnmc::movies::night::update_cache_movieIDs($nightID);
     
-    my %night;
-    &get_night($nightID, \%night);
     my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
     &show_movie_list_enhanced( \@movie_list, $displaySortOrder, $effectiveUserID, $sortOrder, $nightID);
     
@@ -186,30 +184,40 @@ sub show_movies_enhanced{
 
 
     ########################
-    ### Do the Favorite Movie Stuff
+    ### Do the Special Vote Stuff
     
-    print qq{
-        <font face="verdana">
-        <b>Favorite Movie:</b><br>
-    };
-    &show_favorite_movie_select($effectiveUserID);
-    print qq{
-        <br></font>
-    };
+
+    my %vote_types = ('-1' => 'Anti',
+                      '0' => 'Neutral',
+                      '1' => 'Normal',
+                      '2' => 'Favorite',
+                      '3' => 'Super-Favorite',
+                      '4' => 'Birthday');
+    my @vote_types;
     
-    
-    ########################
-    ### Do the Super Favorite Movie Stuff
     if ($REAL_USER{groupMovies} >= 100){
+        @vote_types = (2, 3, 4);
+    }
+    else{
+        @vote_types = (2);
+    }
+    
+    print '<table cellpadding="0" cellspacing="0" border="0">';
+    
+    foreach my $vote_type (@vote_types){
         print qq{
-            <font face="verdana">
-            <b>Super Favorite Movie:</b><br>
+            <tr>
+                <td><b>$vote_types{$vote_type} Movie:</b></td>
+                <td>
         };
-        &show_superfavorite_movie_select($effectiveUserID);
+        &tnmc::movies::show::show_special_movie_select($effectiveUserID, $vote_type, $nightID);
         print qq{
-            <br></font>
+            </td></tr>
         };
     }
+    print "</table>\n";
+    
+    
     ########################
     ### Warn if modifying another user's votes.
     
@@ -240,7 +248,6 @@ sub show_movie_list_enhanced {
     my (@movies, $anon, $movieID, %movieInfo);
     my ($boldNew, %vote_status_word);
     
-#    &list_movies(\@list, $whereClause, 'ORDER BY title');
     foreach my $movieID (@list){
         my $anon = {};     ### create an anonymous hash.
         &get_movie_extended2($movieID, $anon, $nightID);

@@ -85,12 +85,12 @@ sub mybc_get_movie_info {
             $info{stars} =~ s/_half/.5/;
         }
         
-        if ($text =~ m|<b>PREMISE</b></font>\n<BR>(.*?)<br><br>|si) {
+        if ($text =~ m|<b>PREMISE</b></font>\s<BR>(.*?)<br><br>|si) {
             $info{premise} = $1;
             chomp $info{premise};
         }
         
-        if ($text =~ m|<B><I>@ THESE LOCATIONS</I></B>:</font><br>\n<FONT FACE="Verdana,Arial" SIZE="1">(.*?)</FONT>|si) {
+        if ($text =~ m|<B><I>@ THESE LOCATIONS</I></B>\:</font><br>\s+<font face="Verdana,Arial" size="1">\s(.*?)</font>|si) {
             $mTheatres = $1;
         }
     }

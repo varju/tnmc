@@ -12,7 +12,7 @@ BEGIN {
     use vars qw(@ISA @EXPORT @EXPORT_OK);
     
     @ISA = qw(Exporter);
-    @EXPORT = qw(set_attendance get_attendance get_user_attendance_hash get_night_attendance_hash show_my_attendance_chooser);
+    @EXPORT = qw(set_attendance get_attendance get_user_attendance_hash get_night_attendance_hash);
     @EXPORT_OK = qw();
     
 }
@@ -91,8 +91,7 @@ sub get_user_attendance_hash{
 sub get_night_attendance_hash{
     my ($nightID) = @_;
     
-    use tnmc::movies::night;
-    use tnmc::movies::faction;
+    require tnmc::movies::night;
     
     my %hash;
     
@@ -149,7 +148,7 @@ sub show_my_attendance_chooser{
     
     # pre-load night/faction info
     foreach my $nightID (@all_nights){
-        my %night; &get_night($nightID, \%night);
+        my %night; &tnmc::movies::night::get_night($nightID, \%night);
         $nights{$nightID} = \%night;
         my $factionID = $night{'factionID'};
         $factions{$factionID} = &tnmc::movies::faction::get_faction($factionID) if (! defined  $factions{$factionID});
@@ -170,8 +169,6 @@ sub show_my_attendance_chooser{
     # print some opening crap
     print qq{
     <table border=0 cellpadding=1 cellspacing=0 width="100%">
-        <form action="/movies/night_attendance_submit.cgi" method="post">
-        <input type="hidden" name="userID" value="$userID">
         <tr bgcolor="cccccc">
     };
     
@@ -196,54 +193,69 @@ sub show_my_attendance_chooser{
     }
     
     print qq{
-        <td>&nbsp;&nbsp;</td>
-        <td>&nbsp;&nbsp;</td>
-            </tr>
-        <tr>
-        };
-    
-    my %attendance_names = (1,'yes',-1,'no',-2,'hide');
+        <td>\&nbsp\;\&nbsp\;</td>
+    };
     
     ### Yes/No/Hide
-    foreach my $nightID (@nights){
-        my $night = $nights{$nightID};
-        my $attendance = $attendances{$nightID};
-        my $prefs = $prefss{$night->{'factionID'}};
-        
-        my %sel = ($attendance->{'type'} => 'selected');
+    if ($userID){
         
         print qq{
-            <td valign="top" align="center"><font size="-1">
-                <select name="night_$nightID">
-                <option value="1" $sel{'1'}>yes
-                <option value="-1" $sel{'-1'}>no
-                };
-        if($prefs->{'attendance'}){
-            print qq{
-                <option value="-2" $sel{'-2'}>hide
-                <option value="$attendance->{'type'}">---
-                <option value="0">default:
-                <option value="0" $sel{undef()} $sel{'0'}> ($attendance_names{$prefs->{'attendance'}})
-            };
-        }
-        else{
-            print qq{
-                <option value="0" $sel{'-2'} $sel{'0'} $sel{undef()}>hide
-            };
-            
-        }
-        print qq{
-                </select>
+            <td>
+            <!-- hide the form tag here so it doesn\'t strech things -->
+            <form action="/movies/night_attendance_submit.cgi" method="post">
+            <input type="hidden" name="userID" value="$userID">\&nbsp\;
             </td>
-            <td></td>
+            </tr>
+            <tr>
         };
+        
+        my %attendance_names = (1,'yes',-1,'no',-2,'hide');
+        
+        foreach my $nightID (@nights){
+            my $night = $nights{$nightID};
+            my $attendance = $attendances{$nightID};
+            my $prefs = $prefss{$night->{'factionID'}};
+            
+            my %sel = ($attendance->{'type'} => 'selected');
+            
+            print qq{
+                <td valign="top" align="center"><font size="-1">
+                    <select name="night_$nightID">
+                        <option value="1" $sel{'1'}>yes
+                            <option value="-1" $sel{'-1'}>no
+                            };
+            if($prefs->{'attendance'}){
+                print qq{
+                    <option value="-2" $sel{'-2'}>hide
+                    <option value="$attendance->{'type'}">---
+                    <option value="0">default:
+                    <option value="0" $sel{undef()} $sel{'0'}> ($attendance_names{$prefs->{'attendance'}})
+                };
+            }
+            else{
+                print qq{
+                    <option value="0" $sel{'-2'} $sel{'0'} $sel{undef()}>hide
+                    };
+                
+            }
+            print qq{
+                </select>
+                </td>
+                <td></td>
+            };
+        }
+        
+        print qq{
+            <td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></td>
+            <td></form></td>
+        };
+
     }
     
     print qq{
-        <td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></form></td>
-        </tr>
-        <tr>
-        };
+            </tr>
+            <tr>
+    };
     
     ### MovieGod / more info
     foreach my $nightID (@nights){
@@ -267,7 +279,6 @@ sub show_my_attendance_chooser{
             <td></td>
         };
     }
-    
     
     print qq{
         <td valign="top" align="center">
