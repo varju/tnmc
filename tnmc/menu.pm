@@ -20,8 +20,6 @@ BEGIN
 
 1;
 
-__END__
-
 #
 # module routines
 #
