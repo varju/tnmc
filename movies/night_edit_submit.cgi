@@ -31,5 +31,5 @@ use tnmc::movies::night;
     
     &db_disconnect();
     
-    print "Location: index.cgi\n\n";
+    print "Location: admin.cgi\n\n";
 }
