@@ -67,45 +67,10 @@ $sth->execute();
 $sth->finish;
 
 #
-# (3) Advance the MovieAttendance Dates.
-#     Make an extra night off in the future - attendance column (HACK)
-#     Make an extra night off in the future - night row
+# (3) Make an extra night off in the future - night row
 #
 
 my $numberOfWeeksToShow = 3;
-
-# attendance crud
-if (1 == 1){
-    # $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-    # $sth = $dbh_tnmc->prepare($sql);
-    # $sth->execute();
-    # ($this_tuesday) = $sth->fetchrow_array();
-    # $sth->finish();
-    
-    my $span = 7 * $numberOfWeeksToShow;
-    
-    $sql = "SELECT DATE_ADD(NOW(), INTERVAL '$span' DAY)";
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute();
-    my ($far_tuesday) = $sth->fetchrow_array();
-    $sth->finish();
-       
-    $sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d'), DATE_FORMAT('$far_tuesday', '%Y%m%d')";
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute();
-    my ($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
-    $sth->finish();
-
-    $sql = "ALTER TABLE MovieAttendance ADD movie$newMovieDate char(20), DROP COLUMN movie$oldMovieDate";
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute();
-    $sth->finish();
-    
-    # $sql = "UPDATE MovieAttendance SET movie$newMovieDate = 'Default'";
-    # $sth = $dbh_tnmc->prepare($sql);
-    # $sth->execute();
-    # $sth->finish();
-}
 
 ### Factions
 my @factions = &tnmc::movies::faction::list_factions();
@@ -145,3 +110,10 @@ foreach my $factionID (@factions){
 
 # the end.
 &db_disconnect();
+
+
+
+
+
+
+

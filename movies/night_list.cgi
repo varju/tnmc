@@ -11,7 +11,6 @@ use lib '/tnmc/';
 use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::night;
-use tnmc::movies::attend;
 
 
 #############
@@ -42,7 +41,7 @@ print qq{
 
 foreach my $nightID (@nights){
     my %night;
-    get_night ($nightID, \%night);
+    &tnmc::movies::night::get_night ($nightID, \%night);
     print qq{
         <tr>
         <td> $nightID

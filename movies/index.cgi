@@ -15,7 +15,6 @@ use tnmc::db;
 use tnmc::user;
 use tnmc::cgi;
 use tnmc::template;
-use tnmc::movies::attend;
 use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::vote;
