@@ -35,6 +35,7 @@ sub header{
     &cookie_get();
     
     my $username = $USERID{'username'};
+    my $logo = 'christmas.gif';
     
     print qq{
 <HTML>
@@ -72,7 +73,7 @@ th {
 
 <TABLE BORDER="0" CELLPADDING=0 CELLSPACING=0 background="">
 <TR>
-  <TD colspan="4" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif"><IMG width="290" height="36" SRC="/template/logo/basic.gif"></TD>
+  <TD colspan="4" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif"><IMG width="290" height="36" SRC="/template/logo/$logo"></TD>
   <TD ALIGN="left" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif"><FONT style="font-size: 20pt" COLOR="#FFFFFF" FACE="verdana" SIZE="+2">
     <B>$username</B></FONT>&nbsp;</TD>
   <TD><IMG SRC="/template/top_right.gif"></TD>
