@@ -43,5 +43,5 @@ use tnmc::cgi;
 
     &db_disconnect();
 
-    print "Location: /\n\n";
+    print "Location: /user/suggestion_add.cgi\n\n";
 }
