@@ -5,43 +5,35 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use DBI;
-use CGI;
-
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
+
+use tnmc::cookie;
 use tnmc::config;
+use tnmc::db;
 
-	#############
-	### Main logic
+#############
+### Main logic
 
-	&db_connect();
+# retrieve the old cookie
+get_cookie();
 
-	$cgih = new CGI;
+my $userID = $tnmc_cookie_in{'userID'};
+$tnmc_cookie_in{'logged-in'} = '0';
 
-        %tnmc_cookie_in = $cgih->cookie('TNMC');
-	$userID = $tnmc_cookie_in{'userID'};
+my $cookie = $tnmc_cgi->cookie(
+                               -name=>'TNMC',
+                               -value=>\%tnmc_cookie_in,
+                               -expires=>'+1y',
+                               -path=>'/',
+                               -domain=>$tnmc_hostname,
+                               -secure=>'0'
+                               );
 
-	%cookie_out = (
-		'userID' => $userID,
-		'logged-in' => '0'
-		);
-
-	$tnmc_cookie = $cgih->cookie(
-		-name=>'TNMC',
-		-value=>\%cookie_out,
-		-expires=>'+1y',
-		-path=>'/',
-		-domain=>$tnmc_hostname,
-		-secure=>'0'
-		);
-
-	$location = $tnmc_url . '/index.cgi';
-	print $cgih->redirect(
-		-uri=>$location,
-		-cookie=>$tnmc_cookie);
-
-	&db_disconnect();
+my $location = $tnmc_url . '/index.cgi';
+print $tnmc_cgi->redirect(
+                          -uri=>$location,
+                          -cookie=>$cookie);
 
 ##########################################################
 #### The end.
