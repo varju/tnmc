@@ -32,11 +32,10 @@ use tnmc::cgi;
     my $oldSuggestions =  &get_general_config("suggestions");
 
     my $SUGG = 
-          $oldSuggestions
-        . "\n"
-        . "$USERID{username} $USERID - $time \n"
+        "$USERID{username} $USERID - $time \n"
         . "====================================\n"
-        . $newSuggestion . "\n";
+        . $newSuggestion . "\n"
+        . $oldSuggestions . "\n";
 
     &set_general_config('suggestions', $SUGG);
 
