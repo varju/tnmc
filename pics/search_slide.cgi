@@ -23,12 +23,12 @@ use strict;
 &tnmc::security::auth::authenticate();
 
 my $nav = &tnmc::pics::new::get_nav();
-my $piclist = &tnmc::pics::new::search_get_piclist_from_nav($nav);
+my $piclist = &tnmc::pics::search::search_get_piclist_from_nav($nav);
 
 &tnmc::template::html_black::header();
 &show_search_slide_header($nav, $piclist);
 
-&show_slide($nav, $piclist);
+&tnmc::pics::new::show_slide($nav, $piclist);
 
 &tnmc::template::html_black::footer();
 
