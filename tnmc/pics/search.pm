@@ -140,6 +140,7 @@ sub search_do_my_unreleased{
              WHERE $sql_accessible
                AND (ownerID = ?)
                AND ( (typePublic != 1)  )
+               AND ( (typePublic != 2)  )
              ORDER BY timestamp, picID";
     my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute($USERID);
