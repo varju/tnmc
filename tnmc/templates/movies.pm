@@ -34,20 +34,24 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 #
 
 sub show_movies {
-    my ($next_tuesday, $next_tuesday_string, $sql, $sth);
-
-    $next_tuesday = &get_next_night();
-    $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
-    $sth = $dbh_tnmc->prepare($sql);
+    
+    my @nights = &list_future_nights();
+    my %night;
+    &get_night($nights[0], \%night);
+    my $next_movienight = $night{'date'};
+    
+    my $sql = "SELECT DATE_FORMAT('$next_movienight', 'W M D, Y')";
+    my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
-    ($next_tuesday_string) = $sth->fetchrow_array();
+    my ($next_movienight_string) = $sth->fetchrow_array();
     $sth->finish();
-
+    
     my $movies_heading = qq{
-        Movie for $next_tuesday_string
+        Movie for $next_movienight_string
     };
+
     &show_heading ($movies_heading);
-    if (!&show_current_movie()){
+    if (!&show_current_nights()){
     
         if ($USERID && $USERID{groupMovies}){
             &show_movies_home($USERID);

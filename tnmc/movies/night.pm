@@ -91,7 +91,7 @@ sub list_future_nights{
     
     my @night_list = ();
     
-    $sql = "SELECT nightID from MovieNights WHERE date >= NOW()";
+    $sql = "SELECT nightID from MovieNights WHERE date >= NOW() ORDER BY date, nightID";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
@@ -107,7 +107,7 @@ sub list_active_nights{
     
     my @night_list = ();
     
-    $sql = "SELECT nightID from MovieNights WHERE date >= NOW() && movieID";
+    $sql = "SELECT nightID from MovieNights WHERE date >= NOW() && movieID ORDER BY date, nightID";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     while (@row = $sth->fetchrow_array()){
