@@ -116,7 +116,7 @@ sub show_movies_home{
     print qq{
 	<table border=0 cellspacing=0 cellpadding=0><tr valign="bottom"><td>
             <font face="verdana">
-            <b>Favorite Movie:</b><br>
+            <b>Favourite Movie:</b><br>
     };
     &tnmc::movies::show::show_special_movie_select($effectiveUserID, 2, $nightID);
     print qq{

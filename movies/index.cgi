@@ -196,8 +196,8 @@ sub show_movies_enhanced{
     my %vote_types = ('-1' => 'Anti',
                       '0' => 'Neutral',
                       '1' => 'Normal',
-                      '2' => 'Favorite',
-                      '3' => 'Super-Favorite',
+                      '2' => 'Favourite',
+                      '3' => 'Super-Favourite',
                       '4' => 'Birthday');
     my @vote_types;
     
