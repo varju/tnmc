@@ -47,16 +47,18 @@ sub db_connect{
     $host = "localhost";
     $user = "tnmc";
     $password = "password";
-
+    
     if ($dbh_tnmc) {
         # since we only have one database, we can just reuse the
         # handle
-        return;
+        return $dbh_tnmc;
     }
-
+    
     # say hello.
     $dbh_tnmc = DBI->connect("DBI:mysql:$database:$host", $user, $password)
         or die "Can't connect: $dbh_tnmc->errstr\n";
+    
+    return $dbh_tnmc;
 }
 
 sub db_disconnect{
