@@ -48,6 +48,7 @@ sub get_night{
     &db_get_row($night_ref, $dbh_tnmc, 'MovieNights', $condition);
 }
 
+# BLOCK: get_next night
 {
     my $get_next_night_cache;
 sub get_next_night{
@@ -119,5 +120,60 @@ sub list_active_nights{
 
     return @night_list;
 }
+
+sub list_moviegod_nights{
+    my ($userID) = @_;
+    
+    return if (! int($userID));
+    
+    my (@row, $sql, $sth);
+    
+    my @night_list = ();
+    
+    $sql = "SELECT nightID from MovieNights
+             WHERE date >= NOW() and godID = ?
+             ORDER BY date, nightID";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($userID);
+    while (@row = $sth->fetchrow_array()){
+        push (@night_list, $row[0]);
+    }
+    $sth->finish;
+
+    return @night_list;
+}
+
+sub show_moviegod_links{
+    my ($userID) = @_;
+    
+    use tnmc::user;
+    use tnmc::util::date;
+    
+    # have to be logged in to touch
+    return if (!$userID);
+
+    # demo has no access
+    return if ($userID == 38);
+    
+    my %user;
+    &get_user($userID, \%user);
+    
+    # have to be in group movies to touch
+    return if (! $user{groupMovies});
+    
+    # get moviegod nights
+    my @nights = &list_moviegod_nights($userID);
+    
+    if (scalar @nights){
+        print "Be a Movie God:\n";
+        foreach my $nightID (@nights){
+            my %night;
+            &get_night($nightID, \%night);
+            print "<a href=\"\/movies\/night_edit.cgi?nightID=$nightID\">", &tnmc::util::date::format_date('short_date', $night{date}), "</a>\n";
+            print " - " if ($nightID ne $nights[scalar(@nights) - 1]);
+        }
+    }
+}
+
 
 1;

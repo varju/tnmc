@@ -125,6 +125,7 @@ foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
     # add the night
     my %night = (
                  nightID => 0,
+                 godID => 1,
                  date => "$i_date 23:00:00");
     set_night(%night);
     print "add $i_date\n";

@@ -20,6 +20,7 @@ use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::vote;
 use tnmc::movies::attendance;
+use tnmc::movies::night;
 
 #############
 ### Main logic
@@ -128,7 +129,7 @@ sub show_movies_enhanced
 
     print qq{    </tr></table></form>   };
 
-
+    &tnmc::movies::night::show_moviegod_links($effectiveUserID);
     &list_my_attendance($effectiveUserID);
     &show_heading ("Detailed Votes");
     

@@ -19,13 +19,20 @@ use tnmc::cgi;
 &tnmc::security::auth::authenticate();
 my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
-my @cols = &db_get_cols_list('MovieNights');
+my $nightID = $tnmc_cgi->param('nightID');
 
-my %night;
-foreach my $key (@cols){
-    $night{$key} = $tnmc_cgi->param($key);
+## update the night with submitted vals.
+if ($nightID){
+    my %night;
+    &get_night($nightID, \%night);
+    
+    foreach my $key (keys %night){
+        my $val =  $tnmc_cgi->param($key);
+        $night{$key} = $val if(defined $val);
+    }
+    
+    &set_night(%night);
 }
 
-&set_night(%night);
-
-print "Location: admin.cgi\n\n";
+my $location = $tnmc_cgi->param('LOCATION') || "/movies/";
+print "Location: $location\n\n";
