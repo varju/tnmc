@@ -69,6 +69,7 @@ sub db_set_row{
 		}
 		
 		$sql = "SELECT NOW() $cols_string FROM $table WHERE $primary_key = '$hash_ref->{$primary_key}'";
+
 		$sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
 		$sth->execute;
 		@row = $sth->fetchrow_array();

@@ -59,14 +59,26 @@ use tnmc;
                                 <tr><td><b>password</td>
                                     <td><input type="text" name="password" value="$user{password}"></td>
                                 </tr>
-                                
-                                <tr><td><b>birthdate</td>
-                                    <td><input type="text" name="birthdate" value="$user{birthdate}"></td>
-                                </tr>
 
                                 <tr><td><b>homepage</td>
                                     <td><input type="text" name="homepage" value="$user{homepage}"></td>
                                 </tr>
+                };
+		if ($user{birthdate} eq '0000-00-00'){
+			print qq{
+                                <tr><td><b>birthdate</td>
+                                    <td><input type="text" name="birthdate" value="$user{birthdate}"></td>
+                                </tr>
+			};
+		}else{
+			print qq{
+                                <tr><td><b>birthdate</td>
+                                    <td>$user{birthdate}</td>
+                                </tr>
+			};
+		}
+		print qq{
+
 			</table>
 			<p>
 		};
@@ -128,17 +140,12 @@ use tnmc;
 		
 		&show_heading("movies");
 
-		$sel_m_attendance{$user{movieAttendance}} = 'checked';
 		$sel_movie_notify{$user{movieNotify}} = 'checked';
 
 
 		print qq{
 			<table cellpadding="0" border="0" cellspacing="0">
                                 
-                                <tr><td><b>Can you make it to the movie?</td>
-				<td><b>	<input type="radio" name="movieAttendance" value="1" $sel_m_attendance{1}>yes </td>
-				<td><b>	<input type="radio" name="movieAttendance" value="0" $sel_m_attendance{0}>no
-					</td></tr>
                                 <tr><td><b>Movie notification?</td>
 				<td><b>	<input type="radio" name="movieNotify" value="1" $sel_movie_notify{1}>on </td>
 				<td><b>	<input type="radio" name="movieNotify" value="0" $sel_movie_notiry{0}>off
