@@ -2,6 +2,7 @@ package tnmc::broadcast;
 
 use strict;
 
+use tnmc::config;
 use tnmc::cookie;
 use tnmc::user;
 
