@@ -168,22 +168,29 @@ sub new_nav_login{
 ###################################################################
 sub new_nav_menu{
 
+	my (%user);
+	&get_user($USERID, \%user);
+
 	print qq{
 		<BR>
 		<a href="http://tnmc.dhs.org/index.cgi" class="menulink">Home</a>
 		<p>
 		<!--	Announcements -->
 		<p>
-		<a href="/movies/" class="menulink">Movies</a>
-		<P>
 		<a href="/people/" class="menulink">People</a>
 		<p>
+		<a href="/movies/" class="menulink">Movies</a>
+		<P>
 		<a href="/broadcast/" class="menulink">Broadcast</a>
 		<p>
 	};
 
-	my (%user);
-	&get_user($USERID, \%user);
+	if ($USERID == '1'){
+		print qq{
+			<a href="/fieldtrips/" class="menulink">Field Trips</a>
+			<p>
+		};
+	}
 	if ($user{groupAdmin}){
 		print qq{
 			<p>
@@ -197,7 +204,7 @@ sub new_nav_menu{
 	}
 	if ($user{groupDev}){
 		print qq{
-			<a href="/db_explorer/database.cgi?tnmc" class="menulink">db Explorer</a>
+			<a href="/development/db_explorer/database.cgi?tnmc" class="menulink">db Explorer</a>
 			<p>
 			<a href="/development/" class="menulink">Development</a>
 			<p>
