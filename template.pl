@@ -51,14 +51,21 @@ sub header{
 
 <style>
 
-p, ul, td, h1,h2,h3,h4,h5,h6, font, b, i, a {
+p, ul, td, th, h1,h2,h3,h4,h5,h6, font, b, i, a {
         font-family: verdana, helvetica, arial, sanas-serif;
 
 }
 
-p, ul, td {
+p, ul, td, th {
         font-size: 8pt;
 
+}
+
+th{
+	font-weight: bold;
+	background: #cccccc;
+	text-align: left;
+	color: #888888;
 }
 
 .menulink {
