@@ -12,7 +12,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(get_vote set_vote list_votes_by_movie);
+@EXPORT = qw(get_vote set_vote list_votes_by_movie get_movie_votes_hash);
 @EXPORT_OK = qw();
 
 #
@@ -83,6 +83,22 @@ sub list_votes_by_movie{
         $sth->finish;
         
         return $return;
+}
+
+sub get_movie_votes_hash{
+    my ($movieID) = @_;
+    
+    my %votes;
+    
+    my $sql = "SELECT userID, type FROM MovieVotes WHERE movieID = '$movieID'";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute;
+    while (my @row = $sth->fetchrow_array()){
+        $votes{$row[0]} = $row[1]
+    }
+    $sth->finish;
+    
+    return \%votes;
 }
 
 1;

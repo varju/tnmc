@@ -5,7 +5,9 @@ use strict;
 use tnmc::db;
 use tnmc::security::auth;
 use tnmc::movies::night;
-
+use tnmc::movies::attendance;
+use tnmc::movies::vote;
+use tnmc::user;
 #
 # module configuration
 #
@@ -14,7 +16,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(set_movie get_movie get_movie_extended del_movie);
+@EXPORT = qw(set_movie get_movie get_movie_extended get_movie_extended2 del_movie);
 @EXPORT_OK = qw();
 
 #
@@ -69,6 +71,133 @@ sub get_movie{
 
     $condition = "(movieID = '$movieID' OR title = '$movieID')";
     &db_get_row($movie_ref, $dbh_tnmc, 'Movies', $condition);
+}
+
+{
+    my (%cache_attendance);
+sub get_movie_extended2{
+    
+    my ($movieID, $movie, $nightID) = @_;
+    
+    ### Get basic info.
+    &get_movie($movieID, $movie);
+    
+    # get the attendance list
+    if (!$cache_attendance{$nightID}){
+        $cache_attendance{$nightID} = &get_night_attendance_hash($nightID);
+    }
+    my $attendance = $cache_attendance{$nightID};
+    
+    # get the votes 
+    my $votes = &get_movie_votes_hash($movieID);
+    
+    # initialize some values
+    $movie->{votesFor} = 0;
+    $movie->{votesFave} = 0;
+    $movie->{votesSuperFave} = 0;
+    $movie->{votesBday} = 0;
+    $movie->{votesAgainst} = 0;
+    $movie->{votesForAway} = 0;
+    $movie->{votesFaveAway} = 0;
+    $movie->{votesForLost} = 0;
+    $movie->{votesHTML} = '';
+    $movie->{votesText} = '';
+    my %votesHTML;
+    my %votesText;
+    
+    # analyze the votes
+    foreach my $userID (keys %$votes){
+        
+        my $type = $votes->{$userID};
+        
+        # skip empty votes
+        next if !$type;
+        
+        # skip demo user
+        next if (($userID == 38) && ($USERID != 38));
+        
+        # get user info
+        my $user = &get_user_cache($userID);
+        
+        my $username = $user->{'username'};
+        my $attend = $attendance->{$userID};
+        my $bday = 0;        # assume no birthdays
+        
+        # evaluate the vote
+        if ($attend  == -1){
+            if (!$user->{'movieAttendanceDefault'}){
+                if ($type >= 1){
+                    $votesHTML{$username} = "<font color='cccccc'>$username</font>";
+                    $votesText{$username} = "[$username] ";
+                    $movie->{votesForLost} ++;
+                }
+            }
+            elsif ($type == 1){
+                $votesHTML{$username} = "<font color='888888'>$username</font>";
+                $votesText{$username} = "[$username] ";
+                $movie->{votesForAway} ++;
+            }
+            elsif ($type >= 2){
+                $votesHTML{$username} = "<font color='888888'><b>$username</b></font>";
+                $votesText{$username} = "[$username!] ";
+                $movie->{votesFaveAway} ++;
+            }
+        }else{
+            if ($type == 1){
+                $votesHTML{$username} = $username;
+                $votesText{$username} = $username;
+                $movie->{votesFor} ++;
+            }
+            elsif ($type == -1){
+                $votesHTML{$username} = "<font color='ff2222'>$username</font>";
+                $votesText{$username} = "(${username})";
+                $movie->{votesAgainst} ++;
+            }
+            elsif ($type == 2){
+                if ($bday){
+                    $votesHTML{$username} = "<b><font style='background-color: #ff88ff'>&nbsp;$username&nbsp;</font></b>";
+                    $votesText{$username} = "***${username}***";
+                    $movie->{votesBday} ++;
+                }else{
+                    $votesHTML{$username} = "<b>$username</b>";
+                    $votesText{$username} = "${username}!";
+                    $movie->{votesFave} ++;
+                }
+            }
+            elsif ($type == 3){
+                $votesHTML{$username} = "<b><font style='background-color: #ffff88'>&nbsp;$username&nbsp;</font></b>";
+                $votesText{$username} = "**${username}**";
+                $movie->{votesSuperFave} ++;
+            }
+        }
+    }
+    
+    $movie->{'votesHTML'} = join(' ', map {$votesHTML{$_}} (sort keys %votesHTML));
+    $movie->{'votesText'} = join(' ', map {$votesText{$_}} (sort keys %votesText));
+    
+    ### Do the rank stuff
+    $movie->{order} += 1.0 *  $movie->{votesFor};
+    $movie->{order} += 1.5 *  $movie->{votesFave};
+    $movie->{order} += 5   *  $movie->{votesSuperfave};
+    $movie->{order} += 10  *  $movie->{votesBday};
+    $movie->{order} -= 0.5 *  $movie->{votesAgainst};
+    $movie->{order} -= 0.4 *  $movie->{votesForAway};
+    $movie->{order} -= 0.8 *  $movie->{votesFaveAway};
+    
+    $movie->{votesForTotal} = $movie->{votesFor}
+                            + $movie->{votesFave}
+                            + $movie->{votesSuperFave}
+                            + $movie->{votesBday};
+    $movie->{votesAway} = $movie->{votesFaveAway}
+                        + $movie->{votesForAway}
+                        + $movie->{votesForLost};
+    
+    ### stoopid f---ed up rounding math.
+    $movie->{rank} = $movie->{order};
+    if ($movie->{rank} > 0)    {    $movie->{rank} += 0.5; }
+    $movie->{rank} = int($movie->{rank});
+    
+}
 }
 
 sub get_movie_extended{

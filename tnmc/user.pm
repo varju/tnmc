@@ -13,7 +13,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(set_user del_user get_user get_user_extended list_users get_user_list);
+@EXPORT = qw(set_user del_user get_user get_user_cache get_user_extended list_users get_user_list);
 @EXPORT_OK = qw();
 
 #
@@ -61,6 +61,25 @@ sub get_user{
 
     $condition = "userID = '$userID'";
     &db_get_row($user_ref, $dbh_tnmc, 'Personal', $condition);
+}
+
+# sub get_user_cache;
+{
+    my %get_user_cache;
+    
+sub get_user_cache{
+    my ($userID, $user_ref) = @_;
+    
+    if (!$get_user_cache{$userID}){
+        my %hash;
+        &get_user($userID, \%hash);
+        $get_user_cache{$userID} = \%hash;
+    }
+    if (defined $user_ref){
+        %$user_ref = %{$get_user_cache{$userID}};
+    }
+    return $get_user_cache{$userID};
+}
 }
 
 sub get_user_extended{

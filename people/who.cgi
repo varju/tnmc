@@ -22,14 +22,13 @@ use CGI;
 &db_connect();
 
 &show_heading('Who\'s online now');
-&show_recent_users_list(30, 1);
+&show_recent_users_list(60, 1);
 
-if ($USERID{'groupAdmin'}){
-    print "<p>";
-    
-    &show_heading('last 24 hrs');
-    &show_recent_users_list(1440, undef());
-}
+print "<p>";
+
+&show_heading('last 24 hrs');
+&show_recent_users_list(1440, undef());
+
 
 &footer();
 &db_disconnect();
