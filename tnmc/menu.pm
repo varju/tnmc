@@ -70,6 +70,11 @@ sub new_nav_menu{
         &show_menu_item( 0, "", "", "");
     }
     
+    if ( $USERID == 1 || $USERID == 5 ) {
+        &show_menu_item( 0, "/mail/", "Mail", "");
+        &show_menu_item( 0, "", "", "");
+    }
+    
     if ($USERID{groupTrusted} >= 1){
         &show_menu_item( 0, "/broadcast/", "Broadcast", "");
         &show_menu_item( 0, "", "", "");
@@ -105,7 +110,7 @@ sub new_nav_menu{
         }
         &show_menu_item( 0, "", "", "");
     }
-    if ( $USERID == 1 ){
+    if ( $USERID == 1 || $USERID == 5 ){
         if (&show_menu_item( 0, "/user/log/", "Log", "") || $HOMEPAGE){
             &show_menu_item( 1, "/user/log/login.log", "Login", "");
             &show_menu_item( 1, "/user/log/splash.log", "Splash", "");
