@@ -1,0 +1,132 @@
+#!/usr/bin/perl
+
+#
+# tnmc_up.pl
+#
+# description:
+# upload pics to tnmc
+#
+# synposis:
+# grabs pics from the tnmc-que-dir, then uploads them via
+# /pics/upload_api.cgi.
+#
+# todo:
+# - command-line parameters
+# - report failed pics at end of script
+# - more intersting info during upload
+#
+
+use strict;
+
+#
+# default settings
+#
+
+my $tnmc_dir = './tnmc/';         # where the new pics to upload are found
+my %details = ('ownerID' => 0);   # your tnmc userID. scott is 1, grant is 2, jeff is 3, etc
+my %conf = ('verbose' => 1);      
+
+
+#
+# main
+#
+
+die "tnmc userID was not specified" if (!$details{'ownerID'});
+
+tnmc_upload_que();
+
+#
+# subs
+#
+
+sub tnmc_upload_que{
+    
+    # find all the pics
+    my @pic_list = &list_directory_recursive($tnmc_dir);
+    
+    # upload all the pics
+    foreach my $pic_file (@pic_list){
+	
+	my $filename = $tnmc_dir . $pic_file;
+	
+	tnmc_upload_pic($pic_file, \%details, \%conf);
+	
+    }
+    
+    # empty the que
+}
+
+sub tnmc_upload_pic{
+    my ($pic_file, $details, $conf) = @_;
+    
+    use LWP::UserAgent;
+    use HTTP::Request::Common;
+    
+    my %pic = %$details;
+    
+    # error checking
+    die "no owner specified" if !$pic{ownerID};
+    
+    # upload values
+    
+    ### Get a User agent
+    my $ua = new LWP::UserAgent;
+    my $URL = "http://tnmc.webct.com/pics/upload_do_api.cgi";
+    my @lwp_file_array = ($tnmc_dir . $pic_file, $pic_file);
+    
+    ### Make the Request
+    
+    my $req = POST $URL,
+     Content_Type =>'multipart/form-data',
+     Content => [ 'filename' => $pic{filename},
+                  'UPLOAD_FILENAME' => \@lwp_file_array,
+                  'timestamp' => $pic{timestamp},
+                  'ownerID' => $pic{ownerID},
+                ];
+
+    my $result = $ua->request($req);
+    
+    print $result->as_string;
+    
+}
+
+
+sub list_directory {
+    my ($dir) = @_;
+    
+    opendir(DIR, $dir);
+    my @files = readdir DIR;
+    closedir(DIR);
+    
+    @files = grep { ! /^\.+$/} @files;
+    @files = grep { $_ ne 'CVS'} @files;
+
+    return @files;
+}
+
+sub list_directory_recursive {
+    my ($dir, $curr) = @_;
+
+    $curr = '/' if(!$curr);
+
+    my @dirs = &list_directory($dir . $curr);
+    my @files;
+
+    foreach my $file (@dirs){
+        if(-d "$dir/$curr$file"){
+            push @files, (&list_directory_recursive($dir, "$curr$file/"));
+        }
+        else{
+            push @files, "$curr$file";
+        }
+    }
+    return @files;
+}
+
+sub split_filepath {
+    my ($filepath) = @_;
+    
+    my $index = rindex($filepath, '/') + 1;
+
+    return (substr($filepath, 0, $index), substr($filepath, $index));
+}
