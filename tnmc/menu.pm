@@ -159,6 +159,7 @@ sub new_nav_menu{
                 &show_menu_item( 1, "/development/suggestions.cgi", "Suggestions", "");
                 &show_menu_item( 1, "/development/env.cgi", "Enviroment", "");
                 &show_menu_item( 1, "/admin/errorlog.cgi", "Error Log", "");
+                &show_menu_item( 1, "/development/code_index.cgi", "View Code", "");
                 &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
             }elsif ($USERID == 1){
                 &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
