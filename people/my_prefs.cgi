@@ -119,8 +119,12 @@ use tnmc;
 				<input type="text" name="phoneRogers" value="$user{phoneRogers}" size="9"></td>
 			</tr>
 			<tr>
+			<td><b>Vstream</b><br>
+				<input type="text" name="phoneVstream" value="$user{phoneVstream}" size="9"></td>
 			<td><b>Clearnet</b><br>
 				<input type="text" name="phoneClearnet" value="$user{phoneClearnet}" size="9"></td>
+			</tr>
+			<tr>
 			<td><b>Primary number</b><br>
 				<select name="phonePrimary">
 				<option $sel_primary_phone{Home}>Home</option>
@@ -129,6 +133,7 @@ use tnmc;
 				<option $sel_primary_phone{Telus}>Telus</option>
 				<option $sel_primary_phone{Rogers}>Rogers</option>
 				<option $sel_primary_phone{Clearnet}>Clearnet</option>
+				<option $sel_primary_phone{Vstream}>Vstream</option>
 				<option $sel_primary_phone{Other}>Other</option>
 				</select>
 				</td>
@@ -140,6 +145,7 @@ use tnmc;
 				<option $sel_text_mail{Telus}>Telus</option>
 				<option $sel_text_mail{Rogers}>Rogers</option>
 				<option $sel_text_mail{Clearnet}>Clearnet</option>
+				<option $sel_text_mail{Vstream}>Vstream</option>
 				</select>
 				</td>
 			</tr>
