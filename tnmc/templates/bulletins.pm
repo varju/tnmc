@@ -1,4 +1,4 @@
-package tnmc::bulletins;
+package tnmc::templates::bulletins;
 
 use strict;
 
