@@ -8,7 +8,7 @@
 use DBI;
 use CGI;
 
-use lib '/usr/local/apache/tnmc/';
+use lib '/tnmc/';
 use tnmc;
 
 	#############
