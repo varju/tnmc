@@ -12,7 +12,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(message_store);
+@EXPORT = qw(message_store get_message_list);
 @EXPORT_OK = qw();
 
 #
@@ -36,8 +36,8 @@ sub message_store {
         $sth->finish();
     }
 
-    $sql = "INSERT INTO Mail (Id, UserId, AddrTo, AddrFrom, Date, ReplyTo, Body, Header)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Mail (Id, UserId, AddrTo, AddrFrom, Date, ReplyTo, Subject, Body, Header)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($$message_ref{'Id'},
                   $$message_ref{'UserId'},
@@ -45,10 +45,41 @@ sub message_store {
                   $$message_ref{'AddrFrom'},
                   $$message_ref{'Date'},
                   $$message_ref{'ReplyTo'},
+                  $$message_ref{'Subject'},
                   $$message_ref{'Body'},
                   $$message_ref{'Header'});
 
     $sth->finish();
+}
+
+sub get_message_list {
+    my ($UserId) = @_;
+    my ($sql, $sth);
+    my @messages;
+
+    $sql = "SELECT Id, DATE_FORMAT(Date, '%Y-%m-%d %r'), AddrTo, AddrFrom, 
+                   ReplyTo, Subject, Body, Header
+              FROM Mail WHERE UserId=?";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($UserId);
+
+    while (my @row = $sth->fetchrow_array()) {
+        my %message;
+
+        $message{Id} = shift @row;
+        $message{Date} = shift @row;
+        $message{AddrTo} = shift @row;
+        $message{AddrFrom} = shift @row;
+        $message{ReplyTo} = shift @row;
+        $message{Subject} = shift @row;
+        $message{Body} = shift @row;
+        $message{Header} = shift @row;
+
+        push(@messages,\%message);
+    }
+    $sth->finish();
+
+    return \@messages;
 }
 
 1;

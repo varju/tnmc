@@ -8,10 +8,11 @@ $sth = $dbh_tnmc->do(q{
     CREATE TABLE Mail
         (Id INT NOT NULL AUTO_INCREMENT,
          UserId INT,
+         Date TIMESTAMP,
          AddrTo BLOB,    # To is reserved in Mysql
          AddrFrom BLOB,  # From is reserved in Mysql
-         Date BLOB,
          ReplyTo BLOB,
+         Subject BLOB,
          Body BLOB,
          Header BLOB,
          PRIMARY KEY (Id))
