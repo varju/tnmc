@@ -29,7 +29,7 @@ use tnmc::movies::show;
     if ($USERID)
     {     &show_heading ("administration");
       
-          &list_movies(\@movies, "WHERE movieID = 68 OR statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
+          &list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
 
         my $current_movie =  &get_general_config("movie_current_movie");
         my $current_cinema = &get_general_config("movie_current_cinema"); 
