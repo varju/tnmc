@@ -16,6 +16,7 @@ use tnmc;
 
 use tnmc::templates::bulletins;
 use tnmc::templates::movies;
+use tnmc::templates::user;
 
 	#############
 	### Main logic
@@ -31,7 +32,8 @@ show_movies();
 
 	&footer();
 
-	require 'user/HOMEPAGE.pl';
+show_user_homepage();
+
 	&db_disconnect();
 
 
