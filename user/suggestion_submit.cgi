@@ -34,8 +34,8 @@ use tnmc::cgi;
     my $SUGG = 
         "$USERID{username} $USERID - $time \n"
         . "====================================\n"
-        . $newSuggestion . "\n"
-        . $oldSuggestions . "\n";
+        . $newSuggestion . "\n\n"
+        . $oldSuggestions;
 
     &set_general_config('suggestions', $SUGG);
 
