@@ -29,12 +29,13 @@ use tnmc::movies::night;
     foreach my $nightID (@nights){
         
         my %night;
-        &get_night{$nightID, \%night);
+        &get_night($nightID, \%night);
         
         ### Put the message together
+        my %movie;
         &get_movie($night{'movieID'}, \%movie);
         
-        my $message = " $movie{'title}' ---------------- Meet at $night{'meetingPlace'} \@ $night{'meetingTime'}\. ---------------- $night{'theatre'} \@ $night{showtime'}\.";
+        my $message = " $movie{'title'} ---------------- Meet at $night{'meetingPlace'} \@ $night{'meetingTime'}\. ---------------- $night{'theatre'} \@ $night{'showtime'}\.";
         
         ### User List of people who want movie notification
         my (@users);
