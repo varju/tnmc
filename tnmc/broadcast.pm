@@ -20,7 +20,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
 
-@EXPORT = qw(smsBroadcast smsShout);
+@EXPORT = qw(smsBroadcast smsShout sms_admin_notify);
 
 @EXPORT_OK = qw();
 
@@ -98,6 +98,14 @@ sub smsShout{
         && $user{phoneVstream})
     {
         sms_send_vstream($user{phoneVstream}, $msg);
+    }
+}
+
+sub sms_admin_notify {
+    my ($msg) = @_;
+
+    if (!$tnmc_debug_mode) {
+        smsShout(1, $msg);
     }
 }
 

@@ -41,7 +41,7 @@ $sth->execute;
 ($userID) = $sth->fetchrow_array();
 $sth->finish;
 
-smsShout (1, "New User Created: $userID - $user{username} - $user{fullname} - $user{email} - $userID}")
+sms_admin_notify("New User Created: $userID - $user{username} - $user{fullname} - $user{email} - $userID}");
     
 &header();
 

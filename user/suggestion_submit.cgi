@@ -38,7 +38,7 @@ use tnmc::db;
 
     &set_general_config('suggestions', $SUGG);
 
-    &smsShout('1', "IDEA: $newSuggestion");
+    sms_admin_notify("IDEA: $newSuggestion");
 
     &db_disconnect();
 
