@@ -36,13 +36,13 @@ print qq
         </TR>
 
         <TR>
-        <TD VALIGN=TOP><B>Implementation:</B></TD>
-        <TD>Jeff & Scott</TD>
+        <TD VALIGN=TOP><B>Implementation & Development:</B></TD>
+        <TD>Jeff, Scott & Alex</TD>
         </TR>
 
         <TR>
         <TD VALIGN=TOP><B>Contributed Code:</B></TD>
-        <TD>Alex</TD>
+        <TD>Grant</TD>
         </TR>
 
         <TR>
@@ -74,7 +74,7 @@ use POSIX qw(strftime);
 my $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
 
 print qq{
-            over 8000 lines of perl code!<br>
+            over 30,000 lines of perl code!<br>
             </TD>
         </TR>
 
