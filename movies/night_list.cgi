@@ -17,16 +17,11 @@ use tnmc::movies::night;
 
 &tnmc::template::header();
 
-my $next = &tnmc::movies::night::get_next_night();
-
-my %next;
-&tnmc::movies::night::get_night($next, \%next);
-print qq{Next? <a href="movies/night_edit_admin.cgi?nightID=$next{nightID}">$next{date}</a>};
-
-print "<hr>";
-
 my @nights;
+
 &tnmc::movies::night::list_nights(\@nights, "", "ORDER BY date DESC");
+
+&tnmc::template::show_heading("Nights");
 
 print qq{
     <table>

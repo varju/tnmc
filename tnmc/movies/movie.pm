@@ -9,6 +9,9 @@ use tnmc::security::auth;
 # module configuration
 #
 
+my $table = "Movies";
+my $key = "movieID";
+
 #
 # module routines
 #
@@ -33,40 +36,102 @@ sub list_active_movie_titles{
     return \%list;
 }
 
-
 sub set_movie{
-    my (%movie, $junk) = @_;
-    my ($sql, $sth, $return);
-    
-    my $dbh = &tnmc::db::db_connect();
-    &tnmc::db::db_set_row(\%movie, $dbh, 'Movies', 'movieID');
-    
-    ###############
-    ### Return the Movie ID
-    
-    my $dbh = &tnmc::db::db_connect();
-    $sql = "SELECT movieID FROM Movies WHERE title = " . $dbh->quote($movie{title});
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute;
-    ($return) = $sth->fetchrow_array();
-    $sth->finish;
-    
-    return $return;
+    if (scalar(@_) == 1){
+	## NEW-STYLE
+	# usage: &set_movie($movie_hash);
+	return &tnmc::db::item::replaceItem($table, $key, $_[0]);
+    }
+    else{
+	## OLD-STYLE
+	my (%movie, $junk) = @_;
+	my ($sql, $sth, $return);
+	
+	my $dbh = &tnmc::db::db_connect();
+	&tnmc::db::db_set_row(\%movie, $dbh, 'Movies', 'movieID');
+	
+	###############
+	### Return the Movie ID
+	
+	my $dbh = &tnmc::db::db_connect();
+	$sql = "SELECT movieID FROM Movies WHERE title = " . $dbh->quote($movie{title});
+	$sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+	$sth->execute;
+	($return) = $sth->fetchrow_array();
+	$sth->finish;
+	
+	return $return;
+    }
+}
+
+sub new_movie{
+    # usage: my $movie_hash = &new_movie($movieID);
+    return &tnmc::db::item::newItem($table, $key);
+}
+
+sub add_movie{
+    # usage: my $movieID = &add_movie($movie_hash);
+    return &tnmc::db::item::addItem($table, $key, $_[0]);
 }
 
 sub get_movie{
-    my ($movieID, $movie_ref, $junk) = @_;
-    my ($condition);
+    if (scalar(@_) == 1){
+	## NEW-STYLE
+	# usage: my $movie_hash = &get_movie($movieID);
+	return &tnmc::db::item::getItem($table, $key, $_[0]);
+    }
+    else{
+	## OLD-STYLE
+	
+	my ($movieID, $movie_ref, $junk) = @_;
+	my ($condition);
+	
+	my $sql = "SELECT * FROM Movies WHERE movieID = ?";
+	my $dbh = &tnmc::db::db_connect();
+	my $sth = $dbh->prepare($sql)
+	    or die "Can't prepare $sql:$dbh->errstr\n";
+	$sth->execute($movieID);
+	my $ref = $sth->fetchrow_hashref();
+	$sth->finish;
+	%$movie_ref = %$ref;
+    }
+}
+
+sub get_movie_by_filmcanid{
+    # usage: my $movie_hash = &get_movie($filmcanid);
+    return &tnmc::db::item::getItem($table, "filmcanID", $_[0]);
+}
+
+sub get_movie_by_imdbid{
+    # usage: my $movie_hash = &get_movie($filmcanid);
+    return &tnmc::db::item::getItem($table, "imdbID", $_[0]);
+}
+
+sub get_movie_by_mybcid{
+    # usage: my $movie_hash = &get_movie($mybcid);
+    return &tnmc::db::item::getItem($table, "mybcID", $_[0]);
+}
+
+sub reformat_title{
+    my ($title) = @_;
     
-    my $sql = "SELECT * FROM Movies WHERE movieID = ?";
+    $title =~ s/^(A|The|An) (.*)$/$2\, $1/i;
+    return $title;
+}
+
+sub get_movieid_by_title{
+    my ($title) = @_;
+    
     my $dbh = &tnmc::db::db_connect();
-    my $sth = $dbh->prepare($sql)
-        or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute($movieID);
-    my $ref = $sth->fetchrow_hashref();
-    $sth->finish;
-    %$movie_ref = %$ref;
+
+    my $sql = "SELECT movieID FROM Movies
+                 WHERE title = ?";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute($title);
+    my @row = $sth->fetchrow_array();
+    $sth->finish();
     
+    return $row[0];
 }
 
 {
@@ -89,6 +154,18 @@ sub get_movie_extended2{
         my $theatre = &tnmc::movies::theatres::get_theatre_by_mybcid($theatreid);
         $movie->{'theatres_string'} .= " " . $theatre->{'name'};
         $movie->{'theatres_url'} .= " <a href=\"http://www.mytelus.com/movies/tdetails.do?theatreID=$theatre->{'mybcid'}\">$theatre->{'name'}</a>";
+    }
+    
+    ## Fudge the statusNew, statusShowing fields
+    if ($nightID){
+	my @new_movies = &tnmc::movies::night::list_new_movies_for_night($nightID);
+	if (grep($_ eq $movieID, @new_movies)){
+	    $movie->{statusNew} = 1;
+	}
+	my @showing_movies = &tnmc::movies::night::list_showing_movies_for_night($nightID);
+	if (grep($_ eq $movieID, @new_movies)){
+	    $movie->{statusShowing} = 1;
+	}
     }
     
     # get the attendance list
@@ -216,156 +293,6 @@ sub get_movie_extended2{
     $movie->{rank} = int($movie->{rank});
     
 }
-}
-
-sub get_movie_extended{
-    my ($movieID, $movie, $userID, $junk) = @_;
-    
-    require tnmc::movies::night;
-    
-    
-    ### Get basic info.
-    &get_movie($movieID, $movie);
-
-
-    ## Fudge the theatre list into something human-readable
-    require tnmc::movies::theatres;
-    my @theatres = split(/\s/, $movie->{'theatres'});
-    
-    foreach my $theatreid (@theatres){
-        my $theatre = &tnmc::movies::theatres::get_theatre_by_mybcid($theatreid);
-        $movie->{'theatres_string'} .= " " . $theatre->{'name'};
-        $movie->{'theatres_url'} .= " <a href=\"http://www.mytelus.com/movies/tdetails.do?theatreID=$theatre->{'mybcid'}\">$theatre->{'name'}</a>";
-    }
-        
- 
-    my $thisTues = &tnmc::movies::night::get_next_night();
-    my $nextTues = &tnmc::movies::night::get_next_night($thisTues);
-    
-    my ($sql, $sth, @row);
-
-    $sql = "SELECT p.userID, p.username, v.type,
-                       DAYOFYEAR(p.birthdate) - DAYOFYEAR($thisTues),
-                       a.movieDefault, a.movie$thisTues, a.movie$nextTues
-                 FROM           MovieVotes as v
-                      LEFT JOIN Personal as p USING (userID)
-                      LEFT JOIN MovieAttendance as a USING (userID)
-        WHERE v.movieID = '$movieID'
-        ORDER BY p.username ASC";
-
-    my $dbh = &tnmc::db::db_connect();
-    $sth = $dbh->prepare($sql);
-    
-    $sth->execute();
-    
-    my ($VuserID, $Vperson, $Vtype, $Ubday, $Udefault, $Uthis, $Unext);
-
-    # initialize some values
-    $movie->{votesFor} = 0;
-    $movie->{votesFave} = 0;
-    $movie->{votesFaveBday} = 0;
-    $movie->{votesAgainst} = 0;
-    $movie->{votesForAway} = 0;
-    $movie->{votesFaveAway} = 0;
-    $movie->{votesForLost} = 0;
-    $movie->{votesHTML} = '';
-    $movie->{votesText} = '';
-
-    # find out who voted for the movie...
-    while (@row = $sth->fetchrow_array()){
-
-        $VuserID = $row[0] || '';
-        $Vperson = $row[1] || '';
-        $Vtype = $row[2] || 0;
-        $Ubday = $row[3];
-        $Udefault = $row[4] || '';
-        $Uthis = $row[5] || '';
-        $Unext = $row[6] || '';
-
-        if ( ($USERID != 38)
-                     && ($Vperson eq 'demo') ){
-
-            #
-            # Do nothing
-            #
-        }
-            
-        elsif (    ($Uthis eq 'no')
-            || ($Uthis eq '' and $Udefault eq 'no')    ){
-
-            if (    ($Unext eq 'no')
-                || ($Unext eq '' and $Udefault eq 'no')    ){
-
-                if ($Vtype >= 1){
-                    $movie->{votesHTML} .= "<font color='cccccc'>$Vperson</font> ";
-                    $movie->{votesText} .= "[$Vperson] ";
-                    $movie->{votesForLost} ++;
-                }
-            }
-            elsif ($Vtype == 1){
-                $movie->{votesHTML} .= "<font color='888888'>$Vperson</font> ";
-                $movie->{votesText} .= "[$Vperson] ";
-                $movie->{votesForAway} ++;
-            }
-            elsif ($Vtype == 2){
-                $movie->{votesHTML} .= "<font color='888888'><b>$Vperson</b></font> ";
-                $movie->{votesText} .= "[$Vperson!] ";
-                $movie->{votesFaveAway} ++;
-            }
-        }
-        elsif ($Vtype == 3){
-            $movie->{votesHTML} .= "<b><font style='background-color: #ffff88'>&nbsp;$Vperson&nbsp;</font></b> ";
-            $movie->{votesText} .= "**[$Vperson!** ";
-            $movie->{votesSuperfave} ++;
-        }
-        elsif ($Vtype == 2){
-            if ($Ubday ne '' && $Ubday <= 3 && $Ubday >= -3){
-            $movie->{votesHTML} .= "<b><font style='background-color: #ff88ff'>&nbsp;$Vperson&nbsp;</font></b> ";
-            $movie->{votesText} .= "***${Vperson}*** ";
-            $movie->{votesFaveBday} ++;
-            
-            }else{
-            $movie->{votesHTML} .= "<b>$Vperson</b> ";
-            $movie->{votesText} .= "${Vperson}! ";
-            $movie->{votesFave} ++;
-            }
-        }
-        elsif ($Vtype == 1){
-            $movie->{votesHTML} .= "$Vperson ";
-            $movie->{votesText} .= "${Vperson} ";
-            $movie->{votesFor} ++;
-        }
-        elsif ($Vtype == -1){
-            $movie->{votesHTML} .= "<font color='ff2222'>$Vperson</font> ";
-            $movie->{votesText} .= "(${Vperson}) ";
-            $movie->{votesAgainst} ++;
-        }
-
-    }
-    $sth->finish();
-
-
-    ### Do the rank stuff
-    $movie->{order} += 1.0 *  $movie->{votesFor};
-    $movie->{order} += 5   *  $movie->{votesSuperfave};
-    $movie->{order} += 1.5 *  $movie->{votesFave};
-    $movie->{order} += 10  *  $movie->{votesFaveBday};
-    $movie->{order} -= 0.5 *  $movie->{votesAgainst};
-    $movie->{order} -= 0.4 *  $movie->{votesForAway};
-    $movie->{order} -= 0.8 *  $movie->{votesFaveAway};
-
-    $movie->{votesForTotal} = $movie->{votesFave}
-                                + $movie->{votesFor}
-                                + $movie->{votesFaveBday};
-    $movie->{votesAway} = $movie->{votesFaveAway}
-                            + $movie->{votesForAway}
-                            + $movie->{votesForLost};
-
-    ### stoopid f---ed up rounding math.
-    $movie->{rank} = $movie->{order};
-    if ($movie->{rank} > 0)    {    $movie->{rank} += 0.5; }
-    $movie->{rank} = int($movie->{rank});
-
 }
 
 sub del_movie{

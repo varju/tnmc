@@ -165,8 +165,10 @@ sub en_meta{
 	## KLUDGE: should be escaping key and val here
 	push @META, "$key\:\:\:2$val";
     }
-    my $META = join ":::1", @META;
-    $hash->{META} = $META;
+    if (@META){
+	my $META = join ":::1", @META;
+	$hash->{META} = $META;
+    }
 
     return $hash;
 }

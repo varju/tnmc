@@ -44,9 +44,7 @@ sub get_menu{
     push @MENU, ["link",  0, "index.cgi", "Home", ""];
     push @MENU, ["space", 0, "", "", ""];
     push @MENU, ["link",  0, "people/", "People", "", 1];
-    push @MENU, ["link",  1, "people/who.cgi", "Who", ""];
-    push @MENU, ["link",  1, "people/list_by_group.cgi?group=Admin&cutoff=1", "Site&nbsp;Admin", ""];
-    push @MENU, ["link",  1, "people/list_by_group.cgi?group=Movies&cutoff=100", "Movie&nbsp;Admin", ""];
+    push @MENU, ["link",  1, "people/who.cgi", "Who's&nbsp;Online", ""];
     push @MENU, ["space", 0, "", "", ""];
     
     if ($USERID{groupMovies} >= 1){

@@ -32,27 +32,26 @@ use tnmc::movies::vote;
 #########################################
 sub show_showing_movie_list{
     my (@movies, %movie, $movieID, $key);
-
-    &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing = '1'", 'ORDER BY title');
-
-    &tnmc::template::show_heading("All Movies that are Currently Showing in Vancouver");
+    
+    my @movies = &tnmc::movies::showtimes::list_all_movies();
+    
+    &tnmc::template::show_heading("All Movies that are Currently Showing");
     print qq{
         <font color="0000ff">Blue means we\'ve seen it</font><br>
         <b>Bold means you voted for it</b><br>
         <br>
                 <table cellspacing="0" cellpadding="1" border="0" width="100%">
     };
-
-    my $year = '';
-        foreach $movieID (@movies){
+    
+    foreach $movieID (@movies){
         my %movie;
 	&tnmc::movies::movie::get_movie_extended2($movieID, \%movie);
         
-        my $my_vote = '';
+        my $my_vote;
         if (&tnmc::movies::vote::get_vote($movieID, $USERID) >= 1){
             $my_vote = "<b>";
         }
-        my $seen_colour = '';
+        my $seen_colour;
         if ($movie{statusSeen}){
             $seen_colour = '<font color="0000ff">';
         }
@@ -65,9 +64,9 @@ sub show_showing_movie_list{
                 <td nowrap>&nbsp;<a href="movies/movie_view.cgi?movieID=$movieID" target="viewmovie">v</a>
             </tr>
         };
-        }
+    }
 
     print qq{
-                </table>
-        };
+	</table>
+    };
 }

@@ -126,9 +126,7 @@ sub action_add_submit{
 	$attendance->{'type'} = $default_attendance;
 	
 	my @players = &tnmc::teams::roster::list_users_by_status($teamID, 'Player');
-	    print STDERR " u: $userID\n";
 	foreach $userID (@players){
-	    print STDERR " u: $userID\n";
 	    $attendance->{'userID'} = $userID;
 	    &tnmc::teams::attendance::set_attendance($attendance);
 	}

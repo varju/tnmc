@@ -127,7 +127,7 @@ sub get_exif{
 sub read_exif{
     my ($filename) = @_;
     
-    my $jhead = '/usr/local/bin/jhead';
+    my $jhead = $tnmc::config::tnmc_basepath . '/tnmc/pics/jhead';
     my @result = `$jhead $filename`;
     my %exif;
     

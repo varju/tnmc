@@ -8,36 +8,23 @@ use tnmc::db;
 # module configuration
 #
 
+my $table = "MovieTheatres";
+my $key = "theatreID";
+
 #
 # module routines
 #
 
 sub get_theatre{
-    my ($theatreID) = @_;
-    
-    # fetch from the db
-    my $dbh = &tnmc::db::db_connect();
-    my $sql = "SELECT * from MovieTheatres WHERE theatreID = ?";
-    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute($theatreID);
-    my $hashref = $sth->fetchrow_hashref();
-    $sth->finish;
-    
-    return $hashref;
+    # usage: my $theatre_hash = &get_theatre($theatreID);
+    return &tnmc::db::item::getItem($table, $key, $_[0]);
 }
 
 sub get_theatre_by_mybcid{
     my ($mybcid) = @_;
     
-    # fetch from the db
-    my $dbh = &tnmc::db::db_connect();
-    my $sql = "SELECT * from MovieTheatres WHERE mybcid = ?";
-    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute($mybcid);
-    my $hashref = $sth->fetchrow_hashref();
-    $sth->finish;
-    
-    return $hashref;
+    # usage: my $theatre_hash = &get_theatre($theatreID);
+    return &tnmc::db::item::getItem($table, "mybcid", $_[0]);
 }
 
 sub set_theatre{
@@ -56,6 +43,7 @@ sub set_theatre{
     
     $sth->finish;
 }
+
 sub del_theatre{
     my ($theatreid) = @_;
     
@@ -67,18 +55,10 @@ sub del_theatre{
 }
 
 sub list_theatres{
-    my @list;
+    # usage: &list_theatres("WHERE condition = true ORDER BY column")
+    my $list =  &tnmc::db::item::listItems($table, $key, $_[0]);
     
-    # fetch from the db
-    my $dbh = &tnmc::db::db_connect();
-    my $sql = "SELECT theatreID FROM MovieTheatres ORDER BY name";
-    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute() or return 0;
-    while (my @row = $sth->fetchrow_array){
-        push @list, $row[0];
-    }
-    $sth->finish;
-    return @list;
+    return @$list;
 }
 
 1;

@@ -152,6 +152,18 @@ sub load_faction_prefs{
     return $ref;
 }
 
+#
+# special subs
+#
+
+sub list_theatres_for_faction{
+    my ($factionID) = @_;
+    
+    my $faction = &tnmc::movies::faction::get_faction($factionID);
+    my @theatres = split (" ", $faction->{theatres});
+    
+    return @theatres;
+}
 
 1;
 

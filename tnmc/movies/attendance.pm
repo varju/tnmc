@@ -173,7 +173,8 @@ sub show_my_attendance_chooser{
         print qq{
             <td>
             <!-- hide the form tag here so it doesn\'t strech things -->
-            <form action="movies/night_attendance_submit.cgi" method="post">
+            <form action="movies/night_attendance_submit.cgi" method="post"
+		name="MovieAttendance" id="MovieAttendance">
             <input type="hidden" name="userID" value="$userID">\&nbsp\;
             </td>
             </tr>
@@ -191,7 +192,7 @@ sub show_my_attendance_chooser{
             
             print qq{
                 <td valign="top" align="center"><font size="-1">
-                    <select name="night_$nightID">
+                    <select name="night_$nightID" onChange="form.submit();">
                         <option value="1" $sel{'1'}>yes
                             <option value="-1" $sel{'-1'}>no
                             };
@@ -217,7 +218,6 @@ sub show_my_attendance_chooser{
         }
         
         print qq{
-            <td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></td>
             <td></form></td>
         };
 
@@ -233,11 +233,10 @@ sub show_my_attendance_chooser{
         my $night = $nights{$nightID};
         my $faction = $factions{$night->{'factionID'}};
         my $god = &tnmc::user::get_user_cache($night->{'godID'});
-        my $bg_colour = ($userID == $night->{'godID'})? "bgcolor=\"99ff00\"" : "";
         
         print qq{
-            <td valign="top" $bg_colour align="center"><font size="-1">
-                $faction->{'name'}&nbsp(};
+            <td valign="top" align="center">
+               $faction->{'name'}&nbsp(};
         if (($userID == $night->{'godID'})
             || ($user->{groupMovies} >= 100)
             ){
@@ -253,9 +252,6 @@ sub show_my_attendance_chooser{
     }
     
     print qq{
-        <td valign="top" align="center">
-            <a href="movies/factions.cgi">More&nbsp;factions...</a>
-        </td>
     </table>
     };
 }

@@ -45,24 +45,11 @@ sub mybc_get_movie_list
     return %results;
 }
 
-sub mybc_get_valid_theatres
-{
-    my %results;
-
-    my $valid_theatres = &tnmc::general_config::get_general_config("movie_valid_theatres");
-    my @valid_theatres = split(/\s/, $valid_theatres);
-    foreach my $theatre (@valid_theatres)
-    {
-        $results{$theatre} = 1;
-    }
-
-    return %results;
-}
-
 sub mybc_get_movie_info
 {
     my ($mID) = @_;
     my %info;
+    $info{mybcID} = $mID;
 
     my $ua = new LWP::UserAgent;
     my $URL = "http://www.mytelus.com/movies/mdetails.do?movieID=$mID";

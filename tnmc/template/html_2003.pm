@@ -151,8 +151,6 @@ margin-right: 0px;
 	else{
 	    document.getElementById(layer).style.display = "block";
 	}
-
-	reflow(layer);
     }
 
 

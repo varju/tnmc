@@ -20,18 +20,19 @@ sub show_movies {
     
     
     ## heading
-    my $movies_heading = "Movies";
-    &tnmc::template::show_heading ($movies_heading);
-    
-    my @nights = &tnmc::movies::night::list_future_nights();
-    my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
-    
     if ($USERID && $USERID{groupMovies}){
+	
+	my @nights = &tnmc::movies::night::list_future_nights();
+	my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
+	
+	&tnmc::template::show_heading ("Movie Attendance");
         &tnmc::movies::attendance::show_my_attendance_chooser($USERID, $nightID);
         
-        my %night;
-        &tnmc::movies::night::get_night($nightID, \%night);
-        if ($night{movieID}){
+        my $night = &tnmc::movies::night::get_night($nightID);
+	my $show_date = &tnmc::util::date::format("short_wday", $night->{date});
+	&tnmc::template::show_heading ("Movie - $show_date");
+	
+        if ($night->{movieID}){
             &tnmc::movies::show::show_night($nightID);
         }
         else{
@@ -40,10 +41,19 @@ sub show_movies {
         }
 	
     }else{
-        ## show basic movielist
-        if (!&tnmc::movies::show::show_current_nights()){
-            &show_movies_home_anon_old($nightID);
-        }
+	
+        ## show active (picked) nights
+	my @active_nights = tnmc::movies::night::list_active_nights();
+	foreach my $nightID (@active_nights){
+	    &tnmc::template::show_heading ("Movies - Upcoming Nights");
+	    &tnmc::movies::show::show_night($nightID);
+	}
+	
+	## show basic movie votes
+	my @nights = &tnmc::movies::night::list_future_nights();
+	my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
+	&tnmc::template::show_heading ("Movies - General Voting");
+	&show_movies_anon($nightID);
         
     }
     
@@ -56,7 +66,7 @@ sub show_movies {
 }
 
 ##########################################################
-sub show_movies_home_anon_old{
+sub show_movies_anon{
     my ($nightID) = @_;
     
     print qq{
@@ -64,9 +74,10 @@ sub show_movies_home_anon_old{
             <tr><th colspan="4" height="14">
                 &nbsp;now showing</th></tr>
     };
-    my @movie_list;
-    &tnmc::movies::show::list_movies(\@movie_list, "WHERE (statusShowing) AND NOT (statusSeen)", '');
-    &show_movie_list_home_old(\@movie_list, '', $nightID);
+    
+    my @movies = &tnmc::movies::showtimes::list_all_movies();
+    
+    &show_movie_list_home(\@movies, '', $nightID);
     print qq{\n    </table><p>\n};
     
 }
@@ -88,7 +99,7 @@ sub show_movies_home{
     };
     ## show movie form - content
     my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
-    &show_movie_list_home_old(\@movie_list, $effectiveUserID, $nightID);
+    &show_movie_list_home(\@movie_list, $effectiveUserID, $nightID);
     
     ## show movie form - close table
     print qq{
@@ -111,7 +122,7 @@ sub show_movies_home{
     print qq{
 	</td>
 	<td>
-        <input type="image" border="0" src="/template/update_votes_submit.gif" alt="Update Votes">
+	    <input type="image" border="0" src="/template/update_votes_submit.gif" alt="Update Votes">
 	    </td></tr>
         </form>
 	    </table>
@@ -121,12 +132,13 @@ sub show_movies_home{
 
 
 ##########################################################
-sub show_movie_list_home_old{
+sub show_movie_list_home{
     my ($movielist_ref, $effectiveUserID, $nightID) = @_;
     
     my (@movies, $anon, $movieID, %movieInfo);
-    my ($boldNew, %vote_status_word, $vote, @list);
-    
+    my (%vote_status_word, $vote, @list);
+
+    ## get movie info
     my @list = @$movielist_ref;
     foreach $movieID (@list){
         $anon = {};     ### create an anonymous hash.
@@ -134,15 +146,17 @@ sub show_movie_list_home_old{
         $movieInfo{$movieID} = $anon;
     }
     
+    ## sort movies
     @list = ( sort { $movieInfo{$b}->{order}
                      <=>     $movieInfo{$a}->{order}}
               (@list) );
     
-    # my $cutoff = sqrt ($movieInfo{$list[0]}->{rank});
+    ## prune movielist
     my $cutoff = 0.5 * $movieInfo{$list[0]}->{rank};
     my $min_listing_size = 7;
     my $max_listing_size = 15;
     my $listing_index = 0;
+    
     foreach $movieID (@list){
         
         $listing_index ++;
@@ -153,8 +167,14 @@ sub show_movie_list_home_old{
                  || ($listing_index > $max_listing_size)
               )
                    ){
-            next;
+	    next;
         }
+	push (@movies, $movieID);
+    }
+    
+    
+    ## display movielist
+    foreach $movieID (@movies){
         
         my $bold = ($movieInfo{$movieID}->{statusNew})? '<b>' : '';
         

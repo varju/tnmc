@@ -31,13 +31,41 @@ require tnmc::template;
 
 sub upgrade_db_02{
     
-    # create teams db (scott - mar 2003)
+    # scott - oct 2003
+    #
+    # add META field 
+    # change movies for filmcan 
+    #
     
     my $dbh = &tnmc::db::db_connect();
     
     $dbh->do("ALTER TABLE Personal
       ADD META text
     ");
+    
+    $dbh->do("ALTER TABLE Movies
+      ADD filmcanid char(32)
+    ");
+    
+    $dbh->do("ALTER TABLE MovieTheatres
+      ADD otherid char(32)
+    ");
+    
+    $dbh->do("ALTER TABLE MovieTheatres
+      ADD filmcanid char(32)
+    ");
+    
+    $dbh->do("CREATE TABLE MovieShowtimes (
+      movieID int NOT NULL,
+      theatreID int NOT NULL,
+      showtimes text,
+      PRIMARY KEY (movieID, theatreID)
+      )
+    ");
+    
+    $dbh->do("DROP TABLE MovieAttendance
+    ");
+
 }
 
 sub upgrade_db_01{

@@ -39,9 +39,15 @@ if (($USERID{groupMovies} >= 100) && (&tnmc::cgi::param('effectiveUserID')) ){
 my @nights = &tnmc::movies::night::list_future_nights();
 my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
 
+&tnmc::template::show_heading ("");
 &show_local_nav($sortOrder, $e_userID, $USERID, $nightID);
-&tnmc::template::show_heading ("Factions &amp; Attendance");
+
+&tnmc::template::show_heading ("Movie Attendance");
 &tnmc::movies::attendance::show_my_attendance_chooser($e_userID, $nightID);
+
+my $night = &tnmc::movies::night::get_night($nightID);
+my $show_date = &tnmc::util::date::format("short_wday", $night->{date});
+&tnmc::template::show_heading ("Detailed Votes - $show_date");
 &show_movies_enhanced($sortOrder, $e_userID, $USERID, $nightID);
 
 &tnmc::template::footer();
@@ -52,16 +58,16 @@ my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
 sub show_local_nav{
     my ($sortOrder, $effectiveUserID, $real_userID, $nightID) = @_;
     
-   my %REAL_USER;
+    my %REAL_USER;
     &tnmc::user::get_user($real_userID, \%REAL_USER);
     
     my %sortSel;
     $sortSel{$sortOrder} = 'selected';
     
     print qq{
-        <form action="movies/index.cgi" method="get">
-        <input type="hidden" name="nightID" value="$nightID">
         <table border="0" cellpading="0" cellspacing="0" ><tr valign="top">
+          <form action="movies/index.cgi" method="get">
+          <input type="hidden" name="nightID" value="$nightID">
           <td>
               <font face="verdana" size="-1" color="888888"><b>
               sort by</b><br>
@@ -132,13 +138,12 @@ sub show_movies_enhanced{
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
     
-    &tnmc::template::show_heading ("Detailed Votes");
-    
     ##################################################################
     ### Start of list
-    ### modifications by Grant 00-11-24 to add in quick buttons for sorting
     print qq{
         <table cellpadding="0" cellspacing="0" border="0">
+	  <form action="movies/update_votes.cgi" method="post">
+          <input type="hidden" name="userID" value="$effectiveUserID">
             <tr  bgcolor="ffffff">
                 <td><b>Edit</b></td>
             <td align="center"><b>&nbsp;N&nbsp;&nbsp;?&nbsp;&nbsp;Y&nbsp;</b></td>
@@ -154,16 +159,16 @@ sub show_movies_enhanced{
             </tr>
         <tr>
             <td colspan="11" bgcolor="cccccc" align="right">
-                <form action="movies/update_votes.cgi" method="post">
-                <input type="hidden" name="userID" value="$effectiveUserID">
                 <font color="888888"><b>now showing </td></tr>
     };
     
     ########################
     # Now Showing
     
-    my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
-    &show_movie_list_enhanced( \@movie_list, $displaySortOrder, $effectiveUserID, $sortOrder, $nightID);
+    my @movies = &tnmc::movies::night::list_cache_movieIDs($nightID);
+    &show_movie_list_enhanced( \@movies,
+			       $displaySortOrder, $effectiveUserID,
+			       $sortOrder, $nightID);
     
     print qq{    <tr>
             <td colspan="11" bgcolor="cccccc" align="right">
@@ -172,16 +177,18 @@ sub show_movies_enhanced{
     
     ########################
     # Coming Soon
-    &tnmc::movies::show::list_movies(\@movie_list, "WHERE (statusNew AND NOT (statusShowing OR 0))", 'ORDER BY title');
-    &show_movie_list_enhanced( \@movie_list,
-                              $displaySortOrder, $effectiveUserID, $sortOrder, $nightID);
+    
+    @movies = &tnmc::movies::night::list_comingsoon_movies_for_night($nightID);
+    &show_movie_list_enhanced( \@movies,
+			       $displaySortOrder, $effectiveUserID,
+			       $sortOrder, $nightID);
     
     print qq{\n    </table><p>\n};
     
     ### End of list
     ##################################################################
-
-
+    
+    
     ########################
     ### Do the Special Vote Stuff
     
@@ -227,7 +234,7 @@ sub show_movies_enhanced{
                 for $USER{username}</b></i></font>
         };
     }
-
+    
     ########################
     ### Show the Update Votes buton.
     
@@ -241,9 +248,9 @@ sub show_movies_enhanced{
 ##########################################################
 sub show_movie_list_enhanced {
     my ($movielist_ref, $extraField, $effectiveUserID, $sortOrder, $nightID) = @_;
-
+    
     my @list = @$movielist_ref;
-
+    
     my (@movies, $anon, $movieID, %movieInfo);
     my ($boldNew, %vote_status_word);
     
