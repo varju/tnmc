@@ -10,7 +10,6 @@ sub format{
 
 sub format_date{
     my ($format, $date) = @_;
-    
     return 'never' if !$date;
     
     # get the date 
@@ -56,7 +55,7 @@ sub format_date{
         require tnmc::db;
 	my $dbh = &tnmc::db::db_connect();
         
-        my $sql = "SELECT DATE_FORMAT(?, '%a %b %c')";
+        my $sql = "SELECT DATE_FORMAT(?, '%a %b %e')";
         my $sth = $dbh->prepare($sql);
         $sth->execute($date);
         my ($ret) = $sth->fetchrow_array();

@@ -122,7 +122,7 @@ sub _has_access_album{
     # get the info if we have to.
     if (! defined $album){
         %$album = ();
-        &get_album($albumID, $album);
+        &tnmc::pics::album::get_album($albumID, $album);
     }
     if (! defined $userID){
         $userID = $user->{userID};
@@ -198,7 +198,7 @@ sub show_album_thumb_header{
     
     # load info
     my %album;
-    &get_album($albumID, \%album);
+    &tnmc::pics::album::get_album($albumID, \%album);
     my %owner;
     &tnmc::user::get_user($album{albumOwnerID}, \%owner);
     
@@ -212,10 +212,10 @@ sub show_album_thumb_header{
     my $edit_links;
     if (&auth_access_album_edit($albumID, \%album)){
         $edit_links = qq{
-            [ <a href="album_edit.cgi?albumID=$albumID">Edit</a>
-            - <a href="album_edit_admin.cgi?albumID=$albumID">Admin</a> 
-            - <a href="album_del.cgi?albumID=$albumID">Del</a> 
-            - <a href="album_view.cgi?albumID=$albumID">View</a> ]
+            [ <a href="pics/album_edit.cgi?albumID=$albumID">Edit</a>
+            - <a href="pics/album_edit_admin.cgi?albumID=$albumID">Admin</a> 
+            - <a href="pics/album_del.cgi?albumID=$albumID">Del</a> 
+            - <a href="pics/album_view.cgi?albumID=$albumID">View</a> ]
         };
     }
     
@@ -249,7 +249,7 @@ sub show_album_nav_menu_basic{
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td>
-        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="/pics/$nav{_nav_select}_thumb.cgi">
+        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="pics/$nav{_nav_select}_thumb.cgi">
     };
     foreach my $key (keys %nav){
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
@@ -339,7 +339,7 @@ sub show_album_nav_menu_full{
     
     # 
     print qq{
-        <form method="get" action="/pics/$nav{_nav_select}_thumb.cgi">
+        <form method="get" action="pics/$nav{_nav_select}_thumb.cgi">
     };
     foreach my $key (keys %nav){
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
@@ -453,7 +453,7 @@ sub show_piclist{
     
     if($listType eq 'admin'){
         print qq{
-            <form method="post" action="bulk_edit_submit.cgi">
+            <form method="post" action="pics/bulk_edit_submit.cgi">
             <input type="hidden" name="destination" value="$ENV{REQUEST_URI}">
             <tr><th>&nbsp;</th><th>Rating: Worse < - > Better</th></tr>
         };
@@ -485,7 +485,7 @@ sub show_piclist{
         ## get pic info
         &tnmc::pics::pic::get_pic($picID, \%pic);
         
-        my $slide_url = "$nav{_nav_select}_slide.cgi?picID=$picID&$nav_query";
+        my $slide_url = "pics/$nav{_nav_select}_slide.cgi?picID=$picID&$nav_query";
         my $img_url = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>$listSize]);
         my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
         my $pic_src = $img_src;
@@ -572,7 +572,7 @@ sub show_piclist{
             ### edit/admin links
             if ($USERID eq $pic{ownerID}){
                 print qq{     
-                    &\#149;   <a href="pic_edit.cgi?picID=$picID">edit</a>
+                    &\#149;   <a href="pics/pic_edit.cgi?picID=$picID">edit</a>
                     <br>
                 };
             }
@@ -698,16 +698,16 @@ sub show_album_slide_header{
     my $listStart = int($index / $listLimit) * $listLimit;
     
     my %album;
-    &get_album($albumID, \%album);
+    &tnmc::pics::album::get_album($albumID, \%album);
     
-    my $album_url = "$nav->{_nav_select}_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
+    my $album_url = "pics/$nav->{_nav_select}_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
     
     ## album navigation stuff
     print qq{
         <b>
         <a href="/">TNMC</a> &nbsp; -> &nbsp;
-        <a href="index.cgi">Pics</a> &nbsp; -> &nbsp;
-        <a href="album_list.cgi">Albums</a> &nbsp; -> &nbsp;
+        <a href="pics/index.cgi">Pics</a> &nbsp; -> &nbsp;
+        <a href="pics/album_list.cgi">Albums</a> &nbsp; -> &nbsp;
         <a href="$album_url">$album{albumTitle}</a> &nbsp; -> &nbsp;
         Slideshow &nbsp;&nbsp;
         </b>
@@ -896,7 +896,7 @@ sub show_slide_thumbnails{
         my $target_picID = @{$piclist}[$i];
         my %target_pic;
         &tnmc::pics::pic::get_pic($target_picID, \%target_pic);
-        my $url = "$nav->{_nav_select}_slide.cgi?picID=$target_picID&$nav_url";
+        my $url = "pics/$nav->{_nav_select}_slide.cgi?picID=$target_picID&$nav_url";
         my $image = &tnmc::pics::pic::get_pic_url($target_picID, ['mode'=>'thumb']);
         
         print "<td>";
@@ -926,8 +926,8 @@ sub show_slide_pic{
     my $edit_link;
     if ( $USERID && ( ($pic{ownerID} eq $USERID) || $USERID{groupPics} >= 100) ){
         $edit_link = qq{
-            [ <a href="pic_edit.cgi?picID=$picID">Edit</a>
-            - <a href="pic_edit_admin.cgi?picID=$picID">Admin</a> ]
+            [ <a href="pics/pic_edit.cgi?picID=$picID">Edit</a>
+            - <a href="pics/pic_edit_admin.cgi?picID=$picID">Admin</a> ]
         };
     }
 
@@ -960,7 +960,7 @@ sub show_slide_pic{
     my $WIDTH = $pic{width} * $scale;
     my $HEIGHT = $pic{height} * $scale;
 #    my $img_src = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'full']);
-    my $img_src = "/pics/serve_pic.cgi?picID=$picID";
+    my $img_src = "pics/serve_pic.cgi?picID=$picID";
     
     ## print it all out
     print qq{

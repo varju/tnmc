@@ -61,7 +61,12 @@ th {
     };
     my $userline;
     if ($USERID){
-	$userline = $USERID{username};
+	$userline = qq{
+	    $USERID{username}
+	    <font size="-3">
+		[<a href="user/my_prefs.cgi"><font color="ff8800">preferences</font><a>]
+	    </font>
+	};
     }
     else{
 	require tnmc::teams::roster;
@@ -94,7 +99,7 @@ th {
 	    </td></tr>
 	    </form>
 	    </table>
-
+		
 	    
         </form>
 	};

@@ -60,7 +60,7 @@ sub show_page{
     my @albums = &list_recent_albums();
     &tnmc::pics::show::show_album_listing_info(\@albums);
     print qq{
-        <a href="album_index.cgi">More albums...</a>
+        <a href="pics/album_index.cgi">More albums...</a>
         <p>
     };
     

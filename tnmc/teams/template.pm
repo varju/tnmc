@@ -131,7 +131,7 @@ sub show_team_schedule{
     &tnmc::template::show_heading("Schedule");
     
     # get data
-    my @meets = &tnmc::teams::meet::list_meets($teamID);
+    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date");
     my @players = &tnmc::teams::roster::list_users($teamID);
     
     # start up
@@ -144,6 +144,7 @@ sub show_team_schedule{
 	    <th>M</th>
 	    <th>F</th>
 	    <th>Players</th>
+	    <th>&nbsp;</th>
 	    </tr>
     };
     
@@ -158,6 +159,8 @@ sub show_team_schedule{
 		<td nowrap>$Meet->{totals}->{M}->{yes}-$Meet->{totals}->{M}->{not_yes}</td>
 		<td nowrap>$Meet->{totals}->{F}->{yes}-$Meet->{totals}->{F}->{not_yes}</td>
 		<td>$Meet->{players_text}</td>
+		<td nowrap>[<a href="$Meet->{action}->{roster}"><b>roster</b></a>]</td>
+
 	    </tr>
 	};
 
@@ -179,7 +182,7 @@ sub show_team_roster{
     &tnmc::template::show_heading("Roster");
     
     # get data
-    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID ORDER BY date LIMIT 3");
+    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date LIMIT 3");
     my @players = &tnmc::teams::roster::list_users($teamID);
     @players = sort tnmc::user::by_username @players;
 

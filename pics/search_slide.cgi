@@ -52,7 +52,7 @@ sub show_search_slide_header{
     $nav{'listStart'} = $listStart;
     $nav{'listLimit'} = $listLimit;
     my $nav_url = &tnmc::pics::new::make_nav_url(\%nav);
-    my $search_url = "$nav->{_nav_select}_thumb.cgi?$nav_url";
+    my $search_url = "pics/$nav->{_nav_select}_thumb.cgi?$nav_url";
     
     ## album navigation stuff
     print qq{

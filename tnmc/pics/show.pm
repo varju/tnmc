@@ -104,7 +104,7 @@ sub show_album_listing{
     my $curr_date = '0';
     foreach my $albumID (@albums){
 
-        &get_album($albumID, \%album);
+        &tnmc::pics::album::get_album($albumID, \%album);
 
         if (! $album{albumTitle}){
             $album{albumTitle} = '(Untitled)';
@@ -158,7 +158,7 @@ sub show_album_info{
     use tnmc::user;
     
     my %album;
-    &get_album($albumID, \%album);
+    &tnmc::pics::album::get_album($albumID, \%album);
 
     if (! $album{albumTitle}){
         $album{albumTitle} = '(Untitled)';

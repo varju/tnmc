@@ -69,7 +69,6 @@ sub find_meets{
 
 sub get_meet_extended{
     my ($meetID) = @_;
-    
     my $meet = &tnmc::teams::meet::get_meet($meetID);
     my $teamID = $meet->{teamID};
     my @players = &tnmc::teams::roster::list_users($teamID);
@@ -109,6 +108,7 @@ sub get_meet_extended{
         + $meet->{totals}->{F}->{yes};
     
     $meet->{action}->{edit} = "teams/meet_mod.cgi?ACTION=edit&meetID=$meetID";
+    $meet->{action}->{roster} = "teams/attendance_mod.cgi?ACTION=meet&meetID=$meetID";
     
     return $meet;
 }
