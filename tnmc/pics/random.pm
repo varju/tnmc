@@ -42,7 +42,7 @@ sub show_random_pic{
 sub get_random_pic{
     my ($seed, $offset) = @_;
     
-    my $sql = "SELECT count(*) FROM Pics WHERE typePublic = '1'";
+    my $sql = "SELECT count(*) FROM Pics WHERE typePublic >= 1";
     my $sth = $dbh_tnmc->prepare($sql); 
     $sth->execute();
     my ($count_pics) = $sth->fetchrow_array();
@@ -50,18 +50,17 @@ sub get_random_pic{
     if ($seed){
         srand($seed);
     }
-    
     my $index;
     $offset++;
     while ($offset--){
-        $index = int(rand($count_pics/100)) . int(rand(100)) ;
+        $index =   int(rand(999999999)) % $count_pics ;
     }
     
-    $sql = "SELECT picID FROM Pics WHERE typePublic = '1' LIMIT $index, 1";
+    $sql = "SELECT picID FROM Pics WHERE typePublic >= 1 LIMIT $index, 1";
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
     my ($picID) = $sth->fetchrow_array();
-     
+    
     return $picID;
 }
 
