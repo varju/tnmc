@@ -31,48 +31,48 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 # module routines
 #
 
-sub sms_send_rogers {
+sub sms_send_rogers
+{
     my ($phone, $msg) = @_;
-    
+
     ### see if we actually want to send anything.
-    if (length($msg) == 0){
+    if (length($msg) == 0)
+    {
         return 0;       # nope.
     }
-    
+
     ### get the areacode, if they have one.
     my $areacode = phone_get_areacode($phone);
     $phone = phone_get_localnum($phone);
 
     ### Build the argument string.
-    my $URL = "http://sabre.cantelatt.com/cgi-bin/sendpcs.cgi";
-    my $sender = "TNMC Site";
-    
+    my $URL = "http://216.129.53.44:8080/cgi-bin/send_sm_rogers.new";
+
     my $prefix;
     my $suffix;
-    
-    if ($phone =~ /(\d\d\d)-?(\d\d\d\d)/) {
+
+    if ($phone =~ /(\d\d\d)-?(\d\d\d\d)/)
+    {
         $prefix = $1;
         $suffix = $2;
     }
-    
-    if (!$prefix || !$suffix){ return 0;}
-    
+    return 0 unless $prefix && $suffix;
+
     my $SEND = substr($msg, 0, 160);
-    
+
     ### Get a User agent
     my $agent = LWP::UserAgent->new;
     my $ua = new LWP::UserAgent;
-    
+
     ### Make the Request
     my $req = POST $URL,
-    [ 'AREA_CODE' => $areacode,
-      'PIN1' => $prefix,
-      'PIN2' => $suffix,
-      'SENDER' => $sender,
-      'emapnew--DESC--which' => "ORIG",
-      'PAGETEXT1' => $SEND,
+    [ 'area' => $areacode,
+      'num1' => $prefix,
+      'num2' => $suffix,
+      'text' => $SEND,
+      'oldtext' => $SEND,
       'SIZEBOX' => length($SEND),
-      'SIZEBOXW' => count_words($SEND),
+      'msisdn' => $areacode . $prefix . $suffix,
       ];
 
     return $ua->request($req);
