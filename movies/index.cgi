@@ -262,13 +262,8 @@ sub show_movie_list_enhanced {
         };
         if ( ($movieInfo{$movieID}->{statusShowing}) &&($movieInfo{$movieID}->{statusNew}) ){ print qq{<b>}; }
         print qq{
-                    <a href="
-                    javascript:window.open(
-                        'movie_view.cgi?movieID=$movieID',
-                        'ViewMovie',
-                        'resizable,height=350,width=450');
-                        index.cgi
-                    ">$movieInfo{$movieID}->{title}</a></td>
+                    <a href="movie_view.cgi?movieID=$movieID" target="_new">
+                        $movieInfo{$movieID}->{title}</a></td>
                 <td></td>
                 <td>$movieInfo{$movieID}->{$extraField}</td>
                 <td></td>

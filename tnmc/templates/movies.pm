@@ -172,13 +172,8 @@ sub show_movie_list_home{
         };
         if ($movieInfo{$movieID}->{statusNew}){ print qq{<b>}; }
         print qq{
-                    <a href="
-                    javascript:window.open(
-                        '/movies/movie_view.cgi?movieID=$movieID',
-                        'ViewMovie',
-                        'resizable,height=350,width=450');
-                        index.cgi
-                    ">$movieInfo{$movieID}->{title}</a></td>
+                    <a href="/movies/movie_view.cgi?movieID=$movieID" target="_new">
+                        $movieInfo{$movieID}->{title}</a></td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
                 <td>$movieInfo{$movieID}->{votesHTML}</td>
 
