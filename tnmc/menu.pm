@@ -124,7 +124,7 @@ sub new_nav_login{
 
                 print qq
                 {
-            <form action="/user/login.cgi" method="post">
+            <form action="$tnmc_url/user/login.cgi" method="post">
                 <br><b>Fast Login:</b><br>
                         <!-- <select onChange="form.submit();" name="userID"> -->
             <select name="userID">
