@@ -10,19 +10,21 @@ use strict;
 use DBI;
 use CGI;
 
+use tnmc::db;
+
 BEGIN
 {
     use Exporter ();
-
-    use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
-		$dbh_tnmc
-                $USERID_LAST_KNOWN $USERID %USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
-
+    
+    use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS 
+                $USERID_LAST_KNOWN $USERID %USERID $LOGGED_IN 
+                $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
+    
     @ISA = qw(Exporter);
-
+    
     @EXPORT_OK = qw(
                     );
-
+    
     @EXPORT = qw(
                  &header
                  &footer
@@ -36,20 +38,18 @@ BEGIN
                  &list_users
                  &show_bulletins
 
-                 &db_connect
-                 &db_disconnect
-                 $dbh_tnmc
-
                  $USERID
                  %USERID
                  $LOGGED_IN
                  $tnmc_cgi
                  %user
 
-                 &db_get_cols_list
-                 &db_get_row
-                 &db_set_row
-                 
+                 db_connect 
+                 db_disconnect 
+                 db_get_cols_list
+                 db_get_row
+                 db_set_row
+                 $dbh_tnmc
                  );
 
     %EXPORT_TAGS = ( );
@@ -76,7 +76,6 @@ sub get_cookie{
 ##########################################################
 
 
-require 'db_access.pl';
 require 'template.pl';
 require 'menu.pl';
 require 'user.pl';

@@ -9,8 +9,6 @@ use strict;
 use DBI;
 use CGI;
 
-require 'db_access.pl';
-
 ###################################################################
 sub get_general_config{
         my ($name, $value_ref, $junk) = @_;

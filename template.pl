@@ -7,7 +7,6 @@ require 5.004;
 use strict;
 use DBI;
 use CGI;
-require 'db_access.pl';
 
 use tnmc::config;
 

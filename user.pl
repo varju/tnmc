@@ -9,8 +9,6 @@ use strict;
 use DBI;
 use CGI;
 
-require 'db_access.pl';
-
 ###################################################################
 sub set_user{
 	my (%user, $junk) = @_;

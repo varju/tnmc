@@ -8,9 +8,6 @@ use strict;
 use DBI;
 use CGI;
 
-require 'db_access.pl';
-
-
 ##########################################################
 sub show_favorite_movie_select{
 
