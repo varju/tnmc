@@ -4,6 +4,8 @@ use strict;
 
 use tnmc::db;
 use tnmc::general_config;
+use tnmc::movies::movie;
+
 
 #
 # module configuration
