@@ -137,4 +137,5 @@ use tnmc::movies::show;
     }
 
     &footer();
+    db_disconnect();
 }

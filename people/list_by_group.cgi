@@ -16,9 +16,8 @@ use tnmc::user;
 #############
 ### Main logic
 
-&header();
-
 &db_connect();
+&header();
 
 my $group = $tnmc_cgi->param('group');
 my $cutoff = $tnmc_cgi->param('cutoff');
@@ -31,6 +30,7 @@ my @users;
 &show_user_listing(@users);
 
 &footer();
+db_disconnect();
 
 
 ##########################################################

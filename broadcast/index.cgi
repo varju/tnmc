@@ -76,7 +76,7 @@ my @users;
             <p>
             If you are broadcasting to a large number of people, it
             may take up to a minute to send to everybody. Please be patient and
-            don't do repeat-sends as some people may get several copies of the 
+            don\'t do repeat-sends as some people may get several copies of the 
             message.
         </td></tr>
         </table>        
@@ -87,3 +87,4 @@ my @users;
 
     &footer();
 
+    db_disconnect();

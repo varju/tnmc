@@ -58,6 +58,7 @@ use tnmc::user;
     }
 
     &footer();
+    db_disconnect();
 }
 
 

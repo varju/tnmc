@@ -19,8 +19,8 @@ use tnmc::movies::movie;
     my $cgih = new CGI;
     my $movieID = $cgih->param('movieID');    
     
-    if ($movieID)
-    {     &db_connect();
+    if ($movieID) {
+        &db_connect();
         &del_movie($movieID);
         &db_disconnect();
     }

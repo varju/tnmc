@@ -18,6 +18,8 @@ use tnmc::movies::movie;
 {
     #############
     ### Main logic
+
+    &db_connect();
     
     print "Content-type: text/html\n\n<pre>\n";
     
@@ -83,7 +85,7 @@ use tnmc::movies::movie;
     ### list of valid theatres
     print "Ordered List of Acceptable Theatres:\n";
     print "------------------------------------\n";
-    &db_connect();
+
     my $valid_theatres = &get_general_config("movie_valid_theatres");
     my @valid_theatres = split(/\s/, $valid_theatres);
     my %valid_theatres;
@@ -181,10 +183,6 @@ use tnmc::movies::movie;
     print "****               Update the Database                 ****\n";
     print "***********************************************************\n";
 
-
-
-        &db_connect();
-
     my $sql = "UPDATE Movies SET statusShowing = '0', theatres = ''";
     my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
@@ -232,10 +230,7 @@ use tnmc::movies::movie;
             $dbMovie{mybcID} = $mID;
             $dbMovie{statusShowing} = '1';
             $dbMovie{theatres} = $mOurTheatres{$mID};
-
-#            if (! $dbMovie{rating}){
-                $dbMovie{rating} = $mStars{$mID};
-#            }
+            $dbMovie{rating} = $mStars{$mID};
 
             if (20 > length($dbMovie{description})){
                 $dbMovie{description} = $mPremise{$mID};
@@ -273,7 +268,6 @@ use tnmc::movies::movie;
 
     $sth->finish();
 
-        &db_disconnect();
-
-
+    &db_disconnect();
 }
+

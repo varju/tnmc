@@ -42,8 +42,5 @@ use tnmc::template;
     print "<p>" . $suggBlurb;
     
     &footer();
+    db_disconnect();
 }
-
-
-
-

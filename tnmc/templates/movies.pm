@@ -57,6 +57,8 @@ sub show_movies {
             &show_movies_home();
         }
     }
+
+    db_disconnect();
 }
 
 

@@ -181,3 +181,4 @@ if ($USERID){
 }
 
 &footer();
+db_disconnect();

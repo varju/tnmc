@@ -12,18 +12,17 @@ use lib '/tnmc';
 use tnmc;
 require 'fieldtrip/FIELDTRIP.pl';
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &db_connect();
-    &header();
+&db_connect();
+&header();
 
+$tripID = '1';
+show_trip($tripID);
 
-    $tripID = '1';
-
-    &show_trip($tripID);
-
-    &footer();
+&footer();
+db_disconnect();
 
 
 #######################################
