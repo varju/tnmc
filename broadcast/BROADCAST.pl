@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 
 ##################################################################
-#       Scott Thompson - scottt@css.sfu.ca (nov/98)
+#       Scott Thompson - fido, tapzing, generic stuff
+#       Jeff Steinbok  - telus, vstream
+#       Alex Varju     - rogers
 ##################################################################
 
 use LWP::UserAgent;
@@ -74,6 +76,13 @@ sub smsShout{
 		
 		&sms_send_rogers($user{phoneRogers}, $msg);
 	}
+
+	### Vstream
+	if (  ( ($user{phoneTextMail} eq 'Vstream') || ($user{phoneTextMail} eq 'all') )
+	   && ($user{phoneVstream}) ){
+		
+		&sms_send_vstream($user{phoneVstream}, $msg);
+	}
 }
 
 ################################
@@ -88,7 +97,7 @@ sub sms_send_fido{
         }
 
 	### get the areacode, if they have one.
-	$phone =~ s/!\d//;
+	$phone =~ s/\D//g;
 	if (length($phone) == 9){
 		$phone =! s/(...)//;
 		$areacode = $1;
@@ -237,4 +246,42 @@ sub sms_send_rogers{
 	return $ua->request($req);
 }
 
+################################
+sub sms_send_vstream{
+
+        my ($phone, $msg, $junk) = @_;
+
+	### get the areacode, if they have one.
+	$phone =~ s/\D//g;
+	#	$phone =~ s/(...)//;
+	#	my $areacode = $1;
+
+        ### see if we actually want to send anything.
+        if (length($msg) <= $start){
+                return 0;       # nope.
+        }
+
+	### Set from to something
+	my $From = "TNMC";
+
+        ### Build the argument string.
+        my $SEND = substr($msg, 0, 160);
+	$SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg;
+        my $args = 'txtNum0='.$areacode.$phone.'&From='.$From.'&Message=' . $SEND . '&totSubscriber=1';
+
+
+        ### Get a User agent
+        my $ua = new LWP::UserAgent;
+        $ua->agent("AgentName/01 " . $ua->agent);
+
+        ### Make the Request
+        my $req = new HTTP::Request POST => 'http://www.voicestream.com/messagecenter/rtsValidate.asp';
+        $req->content_type('application/x-www-form-urlencoded');
+        $req->content($args);
+
+        return $ua->request($req);
+
+}
+
+# keep perl happy
 return 1;
