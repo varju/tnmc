@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 
 use tnmc;
+use tnmc::db;
 
-db_connect();
 
 $dbh_tnmc->do(q{
     CREATE TABLE News
@@ -18,4 +18,3 @@ $dbh_tnmc->do(q{
         ADD COLUMN expires TIMESTAMP AFTER date
         });
 
-db_disconnect();
