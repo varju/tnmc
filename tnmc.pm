@@ -18,9 +18,8 @@ use tnmc::menu;
 use tnmc::user;
 use tnmc::general_config;
 
-use Exporter ();
-
-use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
+use Exporter;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
 
