@@ -21,9 +21,9 @@ header();
 if ($USERID) {
     show_heading('mail');
 
-    my $messages_ref = get_message_list($USERID);
-
-    messages_print_list($messages_ref);
+    my $Id = $tnmc_cgi->param('Id');
+    my $message_ref = get_message($USERID,$Id);
+    message_print($message_ref);
 }
     
 footer();

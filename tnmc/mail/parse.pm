@@ -2,6 +2,9 @@ package tnmc::mail::parse;
 
 use strict;
 
+use Mail::Internet;
+use Mail::Header;
+
 use tnmc::user;
 
 #
@@ -13,7 +16,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
 @EXPORT = qw(message_parse message_lookup_user);
-@EXPORT_OK = qw(message_parse_date message_parse_month);
+@EXPORT_OK = qw(message_parse_date message_parse_month strip_newline);
 
 #
 # module vars
@@ -25,49 +28,24 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 sub message_parse {
     my ($raw) = @_;
-
     my %message;
-    my $is_header = 1;
 
-    my @body;
-    my @header;
-    my $date;
-    
     my @lines = split(/[\n\r]/,$raw);
-    foreach my $line (@lines) {
-        if ($is_header) {
-            if ($line =~ /^\s*$/) {
-                $is_header = 0;
-                next;
-            }
+    my $in_message = new Mail::Internet \@lines;
 
-            if ($line =~ /^To: (.*)/) {
-                $message{'AddrTo'} = $1;
-            }
-            elsif ($line =~ /^From: (.*)/) {
-                $message{'AddrFrom'} = $1;
-            }
-            elsif ($line =~ /^Date: (.*)/) {
-                $date = $1;
-            }
-            elsif ($line =~ /^Reply-To: (.*)/i) {
-                $message{'ReplyTo'} = $1;
-            }
-            elsif ($line =~ /^Subject: (.*)/i) {
-                $message{'Subject'} = $1;
-            }
-
-            push(@header,$line);
-        }
-        else {
-            push(@body,$line);
-        }
-    }
-
-    $message{'Body'} .= join("\n",@body);
-    $message{'Header'} .= join("\n",@header);
-
+    my $header = $in_message->head();
+    $message{'AddrTo'} = strip_newline($header->get('To'));
+    $message{'AddrFrom'} = strip_newline($header->get('From'));
+    $message{'ReplyTo'} = strip_newline($header->get('Reply-To'));
+    $message{'Subject'} = strip_newline($header->get('Subject'));
+    my $date = strip_newline($header->get('Date'));
     $message{'Date'} = message_parse_date($date);
+
+    $message{'Header'} = $header->as_string();
+
+    $in_message->tidy_body();
+    my $body_ref = $in_message->body();
+    $message{'Body'} = join("\n",@$body_ref);
 
     return \%message;
 }
@@ -162,6 +140,12 @@ sub message_parse_month {
     }
 
     return 0;
+}
+
+sub strip_newline {
+    my ($str) = @_;
+    chomp $str;
+    return $str;
 }
 
 1;

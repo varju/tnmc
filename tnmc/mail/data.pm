@@ -12,7 +12,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT = qw(message_store get_message_list);
+@EXPORT = qw(message_store get_message_list get_message);
 @EXPORT_OK = qw();
 
 #
@@ -80,6 +80,35 @@ sub get_message_list {
     $sth->finish();
 
     return \@messages;
+}
+
+sub get_message {
+    my ($UserId,$Id) = @_;
+    # note: we use the UserId for security purposes
+    
+    my ($sql, $sth);
+    my %message = undef;
+
+    $sql = "SELECT Id, DATE_FORMAT(Date, '%Y-%m-%d %r'), AddrTo, AddrFrom, 
+                   ReplyTo, Subject, Body, Header
+              FROM Mail WHERE UserId=? AND Id=?";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($UserId,$Id);
+
+    my @row = $sth->fetchrow_array();
+    if (defined @row) {
+        $message{Id} = shift @row;
+        $message{Date} = shift @row;
+        $message{AddrTo} = shift @row;
+        $message{AddrFrom} = shift @row;
+        $message{ReplyTo} = shift @row;
+        $message{Subject} = shift @row;
+        $message{Body} = shift @row;
+        $message{Header} = shift @row;
+    }
+    $sth->finish();
+
+    return \%message;
 }
 
 1;

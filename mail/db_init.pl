@@ -4,7 +4,7 @@ use tnmc;
 
 db_connect();
 
-$sth = $dbh_tnmc->do(q{
+$dbh_tnmc->do(q{
     CREATE TABLE Mail
         (Id INT NOT NULL AUTO_INCREMENT,
          UserId INT,
@@ -16,6 +16,13 @@ $sth = $dbh_tnmc->do(q{
          Body BLOB,
          Header BLOB,
          PRIMARY KEY (Id))
+        });
+
+$dbh_tnmc->do(q{
+    CREATE TABLE MailPrefs
+        (UserId INT,
+         Pref VARCHAR(20),
+         Value VARCHAR(20))
         });
 
 db_disconnect();
