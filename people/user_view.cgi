@@ -74,10 +74,8 @@ sub show_user
                 };
     }
     
-    print qq
-    {    <input type="submit" value="Submit">
+    print qq{
             </table>
-            </form>
-            };
+    };
 }
     
