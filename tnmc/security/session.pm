@@ -36,8 +36,15 @@ sub get_session{
     my $sql = "SELECT * from SessionInfo WHERE sessionID = ?";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($sessionID);
-    $session = $sth->fetchrow_hashref();
+    my $session_ref = $sth->fetchrow_hashref();
     $sth->finish;
+
+    if ($session_ref){
+        %$session = %$session_ref;
+    }
+    else{
+        $session = undef;
+    }
 }
 
 sub set_session{
@@ -100,4 +107,48 @@ sub hit_session{
     $sth->finish;
 }
 
+sub list_sessions_for_user{
+    my ($userID, $list_ref) = @_;
+    
+    # make sure we have a handle
+    my $dbh = &tnmc::db::db_connect();
+    
+    # fetch from the db
+    my $sql = "SELECT sessionID FROM SessionInfo WHERE userID = ?";
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    $sth->execute($userID) or return 0;
+    while (my @row = $sth->fetchrow_array){
+        push @$list_ref, $row[0];
+    }
+    $sth->finish;
+}
+
+sub list_recent_sessions{
+    my ($minutes, $open, $list_ref) = @_;
+    
+    # make sure we have a handle
+    my $dbh = &tnmc::db::db_connect();
+    
+    
+    # fetch from the db
+    my ($sql, $sth);
+    if (defined ($open)){
+        $sql = "SELECT sessionID FROM SessionInfo WHERE open = ? && lastOnline > DATE_SUB(NOW(), INTERVAL ? MINUTE) ORDER BY lastOnline DESC";
+        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+        $sth->execute($open, $minutes) or return 0;
+    }
+    else{
+        $sql = "SELECT sessionID FROM SessionInfo WHERE lastOnline > DATE_SUB(NOW(), INTERVAL ? MINUTE) ORDER BY lastOnline DESC";
+        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+        $sth->execute($minutes) or return 0;
+    }
+    
+    while (my @row = $sth->fetchrow_array){
+        push @$list_ref, $row[0];
+    }
+    $sth->finish;
+}
+
 1;
+
+
