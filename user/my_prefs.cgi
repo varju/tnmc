@@ -195,7 +195,7 @@ if ($USERID){
             <table cellpadding="0" border="0" cellspacing="0">
             <tr>
               <td><b>Background colour&nbsp;</td>
-              <td><input type="text" name="colour_bg" value="$sel_colour_bg" size="7" maxlength="7"></td>
+              <td><input type="text" name="colour_bg" value="$sel_colour_bg" size="7"></td>
             </tr>
             </table>
 	    };
