@@ -61,7 +61,7 @@ sub show_movieMenu
 sub show_current_movie
 {
         
-        my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time);
+        my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
         my (%movie);
         
         my $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
@@ -81,7 +81,8 @@ sub show_current_movie
         $current_showtime = get_general_config('movie_current_showtime');
         $current_meeting_place = get_general_config('movie_current_meeting_place');
         $current_meeting_time = get_general_config('movie_current_meeting_time');
-        
+        $current_winner_blurb = get_general_config('movie_winner_blurb');
+	
         if (!$current_movie)
         {
 	        print qq
@@ -95,32 +96,35 @@ sub show_current_movie
 
 	        &show_heading ("Movie for $next_tuesday_string");
 
-                print qq
-                {
-		        <TABLE CELLSPACING=0 CELLPADDING=0>
+                print qq{
+		        <TABLE CELLSPACING=0 CELLPADDING=0 width="100">
                         <TR>
-                        <TD><B>Movie: </TD>
-                        <TD>$movie{'title'}</TD>
+                        <TD colspan="2">$current_winner_blurb<p><br></TD>
+                        </TR>
+
+                        <TR>
+                        <TD nowrap><B>Movie: </TD>
+                        <TD nowrap>$movie{'title'}</TD>
                         </TR>
                         
                         <TR>
-                        <TD><B>Cinema: </TD>
-                        <TD>$current_cinema</TD>
+                        <TD nowrap><B>Cinema: </TD>
+                        <TD nowrap>$current_cinema</TD>
                         </TR>
 
                         <TR>
-                        <TD><B>Showtime: </TD>
-                        <TD>$current_showtime</TD>
+                        <TD nowrap><B>Showtime: </TD>
+                        <TD nowrap>$current_showtime</TD>
                         </TR>
 
                         <TR>
-                        <TD><B>Meeting time: </TD>
-                        <TD>$current_meeting_time</TD>
+                        <TD nowrap><B>Meeting time: </TD>
+                        <TD nowrap>$current_meeting_time</TD>
                         </TR>
 
                         <TR>
-                        <TD><B>Meeting place: </TD>
-                        <TD>$current_meeting_place</TD>
+                        <TD nowrap><B>Meeting place: </TD>
+                        <TD nowrap>$current_meeting_place</TD>
                         </TR>
 
                         </TABLE>
