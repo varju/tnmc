@@ -178,7 +178,7 @@ sub show_menu_item{
 	}
 	else{
 		print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
-		return $HOMEPAGE
+		return 0;
 	}
 }
 
@@ -188,7 +188,7 @@ sub new_nav_menu{
 	my (%user);
 	&get_user($USERID, \%user);
 
-	### this test should be elsewhere.
+	### this test should probably be elsewhere.
 	$HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq 'index.cgi');
 
 	&show_menu_item( 0, "", "", "");
@@ -200,7 +200,8 @@ sub new_nav_menu{
 	&show_menu_item( 0, "/people/", "People", "");
 	&show_menu_item( 0, "", "", "");
 
-	if (&show_menu_item( 0, "/movies/", "Movies", "")){
+	if ($user{groupMovies} >= 1){
+	    if (&show_menu_item( 0, "/movies/", "Movies", "") || $HOMEPAGE){
 		&show_menu_item( 1, "/movies/index.cgi?sortOrder=order", "Ordered", "");
 		&show_menu_item( 1, "/movies/index.cgi?sortOrder=title", "Alphabetical", "");
 		&show_menu_item( 1, "", "", "");
@@ -208,12 +209,13 @@ sub new_nav_menu{
 		&show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
 		&show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
 		&show_menu_item( 1, "/movies/help.cgi", "Info", "");
-		if ($user{groupAdmin}){
+		if ($user{groupMovies} >= 100){
 			&show_menu_item( 1, "", "", "");
 			&show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
 			&show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
 			&show_menu_item( 1, "/movies/movies.cgi", "Testing", "");
 		}
+	    }
 	}
 	&show_menu_item( 0, "", "", "");
 
@@ -221,41 +223,27 @@ sub new_nav_menu{
 	&show_menu_item( 0, "", "", "");
 
 	&show_menu_item( 0, "/fieldtrip/", "FieldTrips", "");
+	&show_menu_item( 0, "", "", "");
 
-	if ($USERID == '1'){
-		print qq{
-		};
-	}
 	if ($user{groupAdmin}){
-		print qq{
-			<p>
-			<hr noshade size="1">
-			<p>
-			<a href="/admin/" class="menulink">Admin</a>
-			<p>
-			<a href="/bulletins/" class="menulink">Bulletins</a>
-			<p>
-		};
+		&show_menu_item( 0, "", "", "<hr noshade size='1'>");
+		&show_menu_item( 0, "/admin/", "Admin", "");
+		&show_menu_item( 0, "", "", "");
+		&show_menu_item( 0, "/bulletins/", "Bulletins", "");
+		&show_menu_item( 0, "", "", "");
 	}
 	if ($user{groupDev}){
-		print qq{
-			<a href="/development/db_explorer/database.cgi?tnmc" class="menulink">db Explorer</a>
-			<p>
-			<a href="/development/" class="menulink">Development</a>
-			<p>
-		}
+		&show_menu_item( 0, "/development/", "Development", "");
+		&show_menu_item( 1, "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
+		&show_menu_item( 0, "", "", "");
 	}
-	print qq{
-		<p>
-		<hr noshade size="1">
-		<p>
-	 	<a href="/people/my_prefs.cgi" class="menulink">Preferences</a>
-		<P>
-		<a href="/logout.cgi" class="menulink">Log Out</a>
-		<p>
-		<br>
+	
+	&show_menu_item( 0, "", "", "<hr noshade size='1'>");
+	&show_menu_item( 0, "/people/my_prefs.cgi/", "Preferences", "");
+	&show_menu_item( 0, "", "", "");
+	&show_menu_item( 0, "/logout.cgi", "Log Out", "");
+	&show_menu_item( 0, "", "", "");
 
-	};
 }
 
 ###################################################################
