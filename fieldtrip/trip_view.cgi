@@ -12,35 +12,35 @@ use lib '/usr/local/apache/tnmc';
 use tnmc;
 require 'fieldtrip/FIELDTRIP.pl';
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	&db_connect();
-	&header();
+    &db_connect();
+    &header();
 
 
-	$cgih = new CGI;
-	$tripID = $cgih->param(tripID);
+    $cgih = new CGI;
+    $tripID = $cgih->param(tripID);
 
-	&show_trip_all($tripID);
+    &show_trip_all($tripID);
 
-	&footer();
+    &footer();
 
 
 #######################################
 sub show_trip_all{
-	my ($tripID) = @_;
-	
-	my (%trip);
-	&get_trip($tripID, \%trip);
+    my ($tripID) = @_;
+    
+    my (%trip);
+    &get_trip($tripID, \%trip);
 
-	&show_heading($trip{title});
-		
-	print qq{
-		<table border="0" cellpadding="1" cellspacing="0">
-		<tr><td valign="top">$trip{blurb}</td></tr>
-		</table>
-	};
+    &show_heading($trip{title});
+        
+    print qq{
+        <table border="0" cellpadding="1" cellspacing="0">
+        <tr><td valign="top">$trip{blurb}</td></tr>
+        </table>
+    };
 
 
 }

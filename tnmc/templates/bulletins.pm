@@ -34,24 +34,24 @@ sub show_bulletins
 
         if (!$bulletins)
         {
-	        print qq
+            print qq
                 {
-			<!-- no bulletins -->
+            <!-- no bulletins -->
                 };
                 return;
         }
         elsif(!$USERID){
-	        print qq
+            print qq
                 {
-			<!-- no bulletins -->
+            <!-- no bulletins -->
                 };
                 return;
-	}
+    }
         else{
-		# &show_heading ("bulletins");
-		print qq
+        # &show_heading ("bulletins");
+        print qq
                 {
-		       <TABLE border="0" cellpadding="0" cellspacing="0">
+               <TABLE border="0" cellpadding="0" cellspacing="0">
                         <TR>
                         <TD>$bulletins</TD>
                         </TR>

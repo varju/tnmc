@@ -18,23 +18,23 @@ use tnmc::template;
         &db_connect();
         &header();
 
-	&show_heading("Here's how the database bits map to the movie status:");
+    &show_heading("Here's how the database bits map to the movie status:");
 
-	print qq{
-	<pre><p>
-			seen	showing	new	
-	coming soon	0	0	1	
-	just released	0	1	1
-	showing		0	1	0
-	not showing	0	0	0
-	seen		1	-	-	
-	</pre>
-	};
+    print qq{
+    <pre><p>
+            seen    showing    new    
+    coming soon    0    0    1    
+    just released    0    1    1
+    showing        0    1    0
+    not showing    0    0    0
+    seen        1    -    -    
+    </pre>
+    };
 
 
-	&show_heading("Here's now the rank gets calculated");
+    &show_heading("Here's now the rank gets calculated");
 
-	my $moo = q{
+    my $moo = q{
         
         ### Do the rank stuff
         $movie->{order} += 1.0 *  $movie->{votesFor};
@@ -48,11 +48,11 @@ use tnmc::template;
         $movie->{rank} = $movie->{order};
         if ($movie->{rank} > 0) {       $movie->{rank} += 0.5; }
         $movie->{rank} = int($movie->{rank});
-	};
+    };
 
-	$moo =~ s/\</&lt;/g;	
-	$moo =~ s/\>/&gt;/g;	
-	print "<pre><p>$moo</pre>";
+    $moo =~ s/\</&lt;/g;    
+    $moo =~ s/\>/&gt;/g;    
+    print "<pre><p>$moo</pre>";
 
 
         &footer();

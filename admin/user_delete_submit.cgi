@@ -14,17 +14,17 @@ use tnmc;
 require 'basic_testing_tools.pl';
 
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	$cgih = new CGI;
-	$userID = $cgih->param('userID');	
-	
-	if ($userID)
-	{ 	&db_connect();
-		&del_user($userID);
-		&db_disconnect();
-	}
+    $cgih = new CGI;
+    $userID = $cgih->param('userID');    
+    
+    if ($userID)
+    {     &db_connect();
+        &del_user($userID);
+        &db_disconnect();
+    }
 
-	print "Location: index.cgi\n\n";
+    print "Location: index.cgi\n\n";
 

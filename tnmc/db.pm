@@ -36,9 +36,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc);
 # Database Access Methods:
 #       db_connect()
 #       db_disconnect()
-#	db_get_cols_list (dbh, table)
-#	db_set_row (hash_ref, dbh, table, primary_key)
-#	db_get_row (hash_ref, dbh, table, where)
+#    db_get_cols_list (dbh, table)
+#    db_set_row (hash_ref, dbh, table, primary_key)
+#    db_get_row (hash_ref, dbh, table, where)
 #
 ##################################################################
 
@@ -90,7 +90,7 @@ sub db_set_row{
         ###############
         ### Get Old Row Info
         
-        @columns = db_get_cols_list($dbh, $table);	
+        @columns = db_get_cols_list($dbh, $table);    
         $cols_string = '';
         foreach $item (@columns){
             $cols_string .= ", $item";

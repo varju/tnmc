@@ -12,17 +12,17 @@ use lib '/usr/local/apache/tnmc';
 use tnmc::db;
 use tnmc::movies::movie;
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	my $cgih = new CGI;
-	my $movieID = $cgih->param('movieID');	
-	
-	if ($movieID)
-	{ 	&db_connect();
-		&del_movie($movieID);
-		&db_disconnect();
-	}
+    my $cgih = new CGI;
+    my $movieID = $cgih->param('movieID');    
+    
+    if ($movieID)
+    {     &db_connect();
+        &del_movie($movieID);
+        &db_disconnect();
+    }
 
-	print "Location: index.cgi\n\n";
+    print "Location: index.cgi\n\n";
 

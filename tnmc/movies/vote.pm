@@ -65,10 +65,10 @@ sub list_votes_by_movie{
         $return = '0';
 
         $sql = "SELECT Personal.userID, type 
-		  FROM MovieVotes, Personal
-		 WHERE movieID = '$movieID'
-		   AND MovieVotes.userID = Personal.userID
-		 ORDER BY username";
+          FROM MovieVotes, Personal
+         WHERE movieID = '$movieID'
+           AND MovieVotes.userID = Personal.userID
+         ORDER BY username";
         $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
         $sth->execute;
         while (@row = $sth->fetchrow_array()){

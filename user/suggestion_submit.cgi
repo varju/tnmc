@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#	Jeff Steinbok - steinbok@interchange.ubc.ca
+#    Jeff Steinbok - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -13,35 +13,35 @@ use tnmc;
 use tnmc::config;
 use tnmc::broadcast;
 
-	#############
-	### Main logic
-	
-	$cgih = new CGI;
-	
-	&db_connect();
-	&cookie_get();
+    #############
+    ### Main logic
+    
+    $cgih = new CGI;
+    
+    &db_connect();
+    &cookie_get();
 
-	$sql = "SELECT NOW()";
-	$sth = $dbh_tnmc->prepare($sql);
-	$sth->execute();
-	($time) = $sth->fetchrow_array();
+    $sql = "SELECT NOW()";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
+    ($time) = $sth->fetchrow_array();
 
-	my $newSuggestion  =  $cgih->param(suggestion);
+    my $newSuggestion  =  $cgih->param(suggestion);
         
-	$oldSuggestions =  &get_general_config("suggestions");
+    $oldSuggestions =  &get_general_config("suggestions");
 
-	my $SUGG = 
-		  $oldSuggestions
-		. "\n"
-		. "$USERID{username} $USERID - $time \n"
-		. "====================================\n"
-		. $newSuggestion . "\n";
+    my $SUGG = 
+          $oldSuggestions
+        . "\n"
+        . "$USERID{username} $USERID - $time \n"
+        . "====================================\n"
+        . $newSuggestion . "\n";
 
-	&set_general_config('suggestions', $SUGG);
+    &set_general_config('suggestions', $SUGG);
 
-	&smsShout('1', "IDEA: $newSuggestion");
+    &smsShout('1', "IDEA: $newSuggestion");
 
-	&db_disconnect();
+    &db_disconnect();
 
-	print "Location: $tnmc_url/\n\n";
+    print "Location: $tnmc_url/\n\n";
 

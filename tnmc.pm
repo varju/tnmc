@@ -1,5 +1,5 @@
 ##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca (nov/98)
+#    Scott Thompson - scottt@interchange.ubc.ca (nov/98)
 #       Jeff Steinbok  - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#	Jeff Steinbok - steinbok@interchange.ubc.ca
+#    Jeff Steinbok - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -12,25 +12,25 @@ use lib '/usr/local/apache/tnmc';
 use tnmc;
 
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	&db_connect();
-	&header();
+    &db_connect();
+    &header();
 
-	%user;	
-	$cgih = new CGI;
+    %user;    
+    $cgih = new CGI;
 
-	my (@movies, $movieID, %movie);
-	
-	if ($USERID)
-	{ 	&show_heading ("set bulletins");
+    my (@movies, $movieID, %movie);
+    
+    if ($USERID)
+    {     &show_heading ("set bulletins");
 
-		&get_user($userID, \%user);
-	  
-		$bulletins =  &get_general_config("bulletins");
+        &get_user($userID, \%user);
+      
+        $bulletins =  &get_general_config("bulletins");
 
-		print qq 
+        print qq 
                 {       <form action="bulletins_set_submit.cgi" method="post">
                         <table>
         
@@ -38,15 +38,15 @@ use tnmc;
                         <td><textarea cols=40 rows=15 wrap=virtual name="bulletins">$bulletins</textarea></td>
                         </tr>
 
-			</table>
+            </table>
 
-			<p>
+            <p>
                         <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
 
-			</form>
-		}; 
-	}
-	
+            </form>
+        }; 
+    }
+    
 
-	&footer();
+    &footer();
 

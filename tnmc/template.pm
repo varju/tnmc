@@ -63,7 +63,7 @@ th {
     text-decoration: none;
 }
 </style>
-	
+    
 <TITLE>TNMC Online</TITLE>
 </HEAD>
 
@@ -136,7 +136,7 @@ sub footer{
     if (!$pageID) {
         print q{
     <a href="/site_info.cgi" style="text-decoration:none"><font color="#000000">site info</font></a>
-	};
+    };
     }
     else { 
         print "<BR>\n"; 

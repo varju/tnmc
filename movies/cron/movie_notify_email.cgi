@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca
+#    Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -13,13 +13,13 @@ use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	&db_connect();
+    &db_connect();
 
-	my $winner_blurb = &get_general_config("movie_winner_blurb");
-	my $current_movie =  &get_general_config("movie_current_movie");
+    my $winner_blurb = &get_general_config("movie_winner_blurb");
+    my $current_movie =  &get_general_config("movie_current_movie");
         my $current_cinema = &get_general_config("movie_current_cinema");
         my $current_showtime = &get_general_config("movie_current_showtime");
         my $current_meeting_place = &get_general_config("movie_current_meeting_place");
@@ -38,16 +38,16 @@ use tnmc::movies::movie;
         $sth->finish();
   
 
-	# If there is no current movie, don't do anything.
-	if (!$current_movie) 
-	{
-		exit;
-	}
+    # If there is no current movie, don't do anything.
+    if (!$current_movie) 
+    {
+        exit;
+    }
 
 
         my %movie;
-	&get_movie($current_movie, \%movie);
-	my $current_movie_name = $movie{'title'};
+    &get_movie($current_movie, \%movie);
+    my $current_movie_name = $movie{'title'};
 
         
         my $to_email = $tnmc_email;
@@ -58,19 +58,19 @@ use tnmc::movies::movie;
         print SENDMAIL "Subject: $next_tuesday_string\n";
         print SENDMAIL "\n";
         
-	print SENDMAIL "\n";
-	print SENDMAIL "$winner_blurb\n";
-	print SENDMAIL "\n";
-	print SENDMAIL "Movie:           $current_movie_name\n";
-	print SENDMAIL "Cinema:          $current_cinema\n";
-	print SENDMAIL "Showtime:        $current_showtime\n";
-	print SENDMAIL "Meeting Time:    $current_meeting_time\n";
-	print SENDMAIL "Meeting Place:   $current_meeting_place\n";
+    print SENDMAIL "\n";
+    print SENDMAIL "$winner_blurb\n";
+    print SENDMAIL "\n";
+    print SENDMAIL "Movie:           $current_movie_name\n";
+    print SENDMAIL "Cinema:          $current_cinema\n";
+    print SENDMAIL "Showtime:        $current_showtime\n";
+    print SENDMAIL "Meeting Time:    $current_meeting_time\n";
+    print SENDMAIL "Meeting Place:   $current_meeting_place\n";
 
         close SENDMAIL;
 
 
-	&db_disconnect();
+    &db_disconnect();
 
 
 ##########################################################

@@ -14,17 +14,17 @@ use tnmc::db;
 use tnmc::template;
 use tnmc::movies::attend;
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	&db_connect();
-	&header();
-	
-	&show_heading('Movie Attendance');
-	&list_my_attendance($USERID);
+    &db_connect();
+    &header();
+    
+    &show_heading('Movie Attendance');
+    &list_my_attendance($USERID);
 
-	print qq{
-		<p>
+    print qq{
+        <p>
 <b>Poem:</b>
 <p>
 If you're gone for a long time,<br>
@@ -37,12 +37,12 @@ If you're lost for just one week.<br>
 With all your friends from Chesapeake.)<br>
 Those votes of yours will just be flipped.<br>
 <br>
-		
-		
-		
-	};
+        
+        
+        
+    };
 
-	&footer();
-	&db_disconnect();
+    &footer();
+    &db_disconnect();
 
 

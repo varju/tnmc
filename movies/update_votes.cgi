@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-# 	Scott Thompson - scottt@interchange.ubc.ca
+#     Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -12,70 +12,70 @@ use tnmc::cookie;
 use tnmc::db;
 use tnmc::movies::vote;
 
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	&db_connect();
-
-
-      	  	my $cgih = new CGI;
-		my $userID = $cgih->param('userID');
-        	my @params =  $cgih->param();
-
-		my %vote_count = {};
-		my $favoriteMovie = $cgih->param('favoriteMovie');
+    &db_connect();
 
 
-		### count the number of positive/negative/neutral votes.
-		foreach $_ (@params){
-			if (! /^v/) { next; }
-			my $type = $cgih->param($_);
-			$vote_count{$type} += 1;
-		}
+                my $cgih = new CGI;
+        my $userID = $cgih->param('userID');
+            my @params =  $cgih->param();
 
-		### Tell alex M to get rid of his silly username.
-		if ($USERID{username} =~ 'bambi'){
-			&header();
-			print qq{
-				<p><b>$USERID{username}?!?</b>
-				<p>Go on and give yourself a normal username first, <i>then</i> you can vote.
-			};
-			&footer();
-			exit(1);
-		}
+        my %vote_count = {};
+        my $favoriteMovie = $cgih->param('favoriteMovie');
 
-		### grumpy people who make too many negative votes get denied.
-		if ($vote_count{'1'} < $vote_count{'-1'}){
-			&header();
-			print qq{
-				<p><b>Hey silly...</b>
-				<p>What's the point in having $vote_count{-1} anti-votes
-				and only $vote_count{1} real votes?
-				<p>Why don't ya go back and try to be a little more positive next time 'round.
-			};
-			&footer();
-			exit(1);
-		}
 
-		### do the processing.
-		foreach $_ (@params){
-			if (! s/^v//) { next; }
-			&set_vote($_, $userID, $cgih->param("v$_"));
-		}
+        ### count the number of positive/negative/neutral votes.
+        foreach $_ (@params){
+            if (! /^v/) { next; }
+            my $type = $cgih->param($_);
+            $vote_count{$type} += 1;
+        }
 
-		if ($favoriteMovie ne ''){
-			### Kill old Fave.
-			my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
-			my $sth = $dbh_tnmc->prepare($sql);
-			$sth->execute;
-			
-			### Set new Fave.
-			if ($favoriteMovie){ &set_vote($favoriteMovie, $userID, '2');}
-		}
+        ### Tell alex M to get rid of his silly username.
+        if ($USERID{username} =~ 'bambi'){
+            &header();
+            print qq{
+                <p><b>$USERID{username}?!?</b>
+                <p>Go on and give yourself a normal username first, <i>then</i> you can vote.
+            };
+            &footer();
+            exit(1);
+        }
 
-		print "Location: $ENV{HTTP_REFERER}\n\n";
-		
-	&db_disconnect();
+        ### grumpy people who make too many negative votes get denied.
+        if ($vote_count{'1'} < $vote_count{'-1'}){
+            &header();
+            print qq{
+                <p><b>Hey silly...</b>
+                <p>What's the point in having $vote_count{-1} anti-votes
+                and only $vote_count{1} real votes?
+                <p>Why don't ya go back and try to be a little more positive next time 'round.
+            };
+            &footer();
+            exit(1);
+        }
+
+        ### do the processing.
+        foreach $_ (@params){
+            if (! s/^v//) { next; }
+            &set_vote($_, $userID, $cgih->param("v$_"));
+        }
+
+        if ($favoriteMovie ne ''){
+            ### Kill old Fave.
+            my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
+            my $sth = $dbh_tnmc->prepare($sql);
+            $sth->execute;
+            
+            ### Set new Fave.
+            if ($favoriteMovie){ &set_vote($favoriteMovie, $userID, '2');}
+        }
+
+        print "Location: $ENV{HTTP_REFERER}\n\n";
+        
+    &db_disconnect();
 
 ##########################################################
 #### The end.

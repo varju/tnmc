@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 
 ##################################################################
-#	Scott Thompson - scottt@interchange.ubc.ca
-#	Jeff Steinbok  - steinbok@interchange.ubc.ca
+#    Scott Thompson - scottt@interchange.ubc.ca
+#    Jeff Steinbok  - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -68,18 +68,18 @@ sub greeting
     }
     ### Exactly 6 am.
     elsif ($hour == 6) {
-    	@greetings = ("Good morning, how's the sunrise today?");
+        @greetings = ("Good morning, how's the sunrise today?");
     }
     ### from 7 am till noon
     elsif ($hour < 12) {
-    	push(@greetings,
+        push(@greetings,
              "Good Morning", 
              "Good Morning",
              "Good Morning");
     }
     ### From noon 'till 6 pm
     elsif ($hour < 18) {
-    	push(@greetings,
+        push(@greetings,
              "Good Afternoon",
              "Good Afternoon",
              "Good Afternoon");
@@ -98,7 +98,7 @@ sub greeting
 
     return qq{
         <font style="font-size: 8pt ;"><b>$out.</b><P>
-	};
+    };
 }
 
 ##########################################################

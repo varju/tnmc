@@ -53,92 +53,92 @@ sub smsBroadcast{
 
         my ($userListRef, $msg, $maxPackets, $junk) = @_;
 
-	my ($user);
-	foreach $user (@$userListRef){
-		smsShout($user, $msg, $maxPackets, $junk);
-	}
-	
+    my ($user);
+    foreach $user (@$userListRef){
+        smsShout($user, $msg, $maxPackets, $junk);
+    }
+    
 }
 
 ################################
 sub smsShout{
-	
+    
         my ($userID, $msg, $maxPackets, $junk) = @_;
-	my (%user, $sender);
-	
-	### Do we have a user?
-	if (!$userID){ return 0;}
-	
-	### Do we have a message?
-	if ($msg eq ''){ return 0;}
-	
-	### Get the user info from the db
-	&get_user($userID, \%user);
+    my (%user, $sender);
+    
+    ### Do we have a user?
+    if (!$userID){ return 0;}
+    
+    ### Do we have a message?
+    if ($msg eq ''){ return 0;}
+    
+    ### Get the user info from the db
+    &get_user($userID, \%user);
 
-	### Get the sender info
-	if ($USERID){
-		$sender = uc($USERID{username});
-	}else{
-		$sender = 'TNMC';
-	}
-	$msg = "$sender: $msg";
-	
-	#
-	# Now we run through each provider.
-	#
-	
-	### Fido
-	if (  ( ($user{phoneTextMail} eq 'Fido') || ($user{phoneTextMail} eq 'all') )
-	   && ($user{phoneFido}) ){
+    ### Get the sender info
+    if ($USERID){
+        $sender = uc($USERID{username});
+    }else{
+        $sender = 'TNMC';
+    }
+    $msg = "$sender: $msg";
+    
+    #
+    # Now we run through each provider.
+    #
+    
+    ### Fido
+    if (  ( ($user{phoneTextMail} eq 'Fido') || ($user{phoneTextMail} eq 'all') )
+       && ($user{phoneFido}) ){
 
-		&sms_send_fido($user{phoneFido}, $msg);
-	}
+        &sms_send_fido($user{phoneFido}, $msg);
+    }
 
-	### Telus
-	if (  ( ($user{phoneTextMail} eq 'Telus') || ($user{phoneTextMail} eq 'all') )
-	   && ($user{phoneTelus}) ){
-		
-		&sms_send_tapzing($user{phoneTelus}, $msg);
-	}
+    ### Telus
+    if (  ( ($user{phoneTextMail} eq 'Telus') || ($user{phoneTextMail} eq 'all') )
+       && ($user{phoneTelus}) ){
+        
+        &sms_send_tapzing($user{phoneTelus}, $msg);
+    }
 
-	### Rogers
-	if (  ( ($user{phoneTextMail} eq 'Rogers') || ($user{phoneTextMail} eq 'all') )
-	   && ($user{phoneRogers}) ){
-		
-		&sms_send_rogers($user{phoneRogers}, $msg);
-	}
+    ### Rogers
+    if (  ( ($user{phoneTextMail} eq 'Rogers') || ($user{phoneTextMail} eq 'all') )
+       && ($user{phoneRogers}) ){
+        
+        &sms_send_rogers($user{phoneRogers}, $msg);
+    }
 
-	### Vstream
-	if (  ( ($user{phoneTextMail} eq 'Vstream') || ($user{phoneTextMail} eq 'all') )
-	   && ($user{phoneVstream}) ){
-		
-		&sms_send_vstream($user{phoneVstream}, $msg);
-	}
+    ### Vstream
+    if (  ( ($user{phoneTextMail} eq 'Vstream') || ($user{phoneTextMail} eq 'all') )
+       && ($user{phoneVstream}) ){
+        
+        &sms_send_vstream($user{phoneVstream}, $msg);
+    }
 }
 
 ################################
 sub sms_send_fido{
 
         my ($phone, $msg, $junk) = @_;
-	my ($areacode);
+    my ($areacode);
 
         ### see if we actually want to send anything.
         if (length($msg) == 0){
                 return 0;       # nope.
         }
 
-	### get the areacode, if they have one.
-	$phone =~ s/\D//g;
-	if (length($phone) == 9){
-		$phone =! s/(...)//;
-		$areacode = $1;
-	}else{
-		$areacode = '604';
-	}
+    ### get the areacode, if they have one.
+    $phone =~ s/\D//g;
+    if (length($phone) == 9){
+        $phone =! s/(...)//;
+        $areacode = $1;
+    }else{
+        $areacode = '604';
+    }
 
         ### Build the argument string.
         my $SEND = substr($msg, 0, 160);
-	# $SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg; 
+    # $SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg; 
         my $args = 'areacode=' . $areacode . '&address='.$phone.'&message=' . $SEND . '&total=' . length($SEND);
 
         ### Get a User agent
@@ -164,8 +164,8 @@ sub sms_send_fido_tap_zing{
 
         ### Build the request
         my $SEND = substr($msg, 0, 160);
-	my $URL = "http://www.tapzing.com/WebMsg_Save.cfm";
-	my $areacode = '604';
+    my $URL = "http://www.tapzing.com/WebMsg_Save.cfm";
+    my $areacode = '604';
         my $args = "service=FIDO&PhoneID=$areacode$phone&message=$SEND";
 
         ### Get a User agent
@@ -203,7 +203,7 @@ sub sms_send_telus{
         $req->content_type('application/x-www-form-urlencoded');
         $req->content($args);
 
-	print  $ua->request($req)->as_string;
+    print  $ua->request($req)->as_string;
         return $ua->request($req);
 }
 
@@ -218,8 +218,8 @@ sub sms_send_tapzing{
         }
 
         ### Build the argument string.
-	$msg =~ s/\s/ /; 	# Can't put cr's in the subject line
-	my $to_email = '604' . $phone . '@tapzing.com';
+    $msg =~ s/\s/ /;     # Can't put cr's in the subject line
+    my $to_email = '604' . $phone . '@tapzing.com';
 
         open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
         print SENDMAIL "From: TNMC <scottt\@interchange.ubc.ca>\n";
@@ -245,36 +245,36 @@ sub sms_send_rogers{
         }
 
         ### Build the argument string.
-	my $URL = "http://sabre.cantelatt.com/cgi-bin/sendpcs.cgi";
-	my $sender = "TNMC Site";
-	my $areacode = "604";
+    my $URL = "http://sabre.cantelatt.com/cgi-bin/sendpcs.cgi";
+    my $sender = "TNMC Site";
+    my $areacode = "604";
 
-	my $prefix;
-	my $suffix;
+    my $prefix;
+    my $suffix;
 
-	if ($phone =~ /(\d\d\d)-?(\d\d\d\d)/) {
-	    $prefix = $1;
-	    $suffix = $2;
-	}
-	
-	if (!$prefix || !$suffix){ return 0;}
+    if ($phone =~ /(\d\d\d)-?(\d\d\d\d)/) {
+        $prefix = $1;
+        $suffix = $2;
+    }
+    
+    if (!$prefix || !$suffix){ return 0;}
 
         my $SEND = substr($msg, 0, 160);
-	
+    
         ### Get a User agent
-	my $agent = LWP::UserAgent->new;
-	my $ua = new LWP::UserAgent;
-	
+    my $agent = LWP::UserAgent->new;
+    my $ua = new LWP::UserAgent;
+    
         ### Make the Request
-	my $req = POST $URL,
-	    [ 'AREA_CODE' => $areacode,
-	      'PIN1' => $prefix,
-	      'PIN2' => $suffix,
-	      'SENDER' => $sender,
-	      'PAGETEXT1' => $SEND,
-	      'emapnew--DESC--which' => "ORIG"
-	    ];
-	return $ua->request($req);
+    my $req = POST $URL,
+        [ 'AREA_CODE' => $areacode,
+          'PIN1' => $prefix,
+          'PIN2' => $suffix,
+          'SENDER' => $sender,
+          'PAGETEXT1' => $SEND,
+          'emapnew--DESC--which' => "ORIG"
+        ];
+    return $ua->request($req);
 }
 
 ################################
@@ -284,22 +284,22 @@ sub sms_send_vstream{
         my $areacode;
         my $start;
 
-	### get the areacode, if they have one.
-	$phone =~ s/\D//g;
-	#	$phone =~ s/(...)//;
-	#	my $areacode = $1;
+    ### get the areacode, if they have one.
+    $phone =~ s/\D//g;
+    #    $phone =~ s/(...)//;
+    #    my $areacode = $1;
 
         ### see if we actually want to send anything.
         if (length($msg) <= $start){
                 return 0;       # nope.
         }
 
-	### Set from to something
-	my $From = "TNMC";
+    ### Set from to something
+    my $From = "TNMC";
 
         ### Build the argument string.
         my $SEND = substr($msg, 0, 160);
-	$SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg;
+    $SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg;
         my $args = 'txtNum0='.$areacode.$phone.'&From='.$From.'&Message=' . $SEND . '&totSubscriber=1';
 
 
