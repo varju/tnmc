@@ -45,14 +45,10 @@ show_user_homepage();
 sub greeting
 {
 	my ($fullname) = @_;
-	my ($now, @greetings, $greeting);
+	my (@greetings, $greeting);
 
-	open (DATE, "/bin/date +%H |");
-	while (<DATE>) {
-	    chop;
-	    $now = $_;
-	}
-	close (DATE);
+        my $hour;
+        ($_,$_,$hour) = localtime(time());
 
 	### this isn't even remotely tidy; but, hey, it's just for fun!
 	{
@@ -66,26 +62,26 @@ sub greeting
 			);
 
 		### Before 6 am.
-		if ($now < 5)
+		if ($hour < 5)
 		{	@greetings = (@greetings,
 				"Top o' the morning to you",
 				"Good morning"
 				);
 		}
 		### Exactly 6 am.
-		if ($now == 6)
+		if ($hour == 6)
 		{	@greetings = (
 				"Good morning, how's the sunrise today?"
 				);
 		}
 		### from 7 am till noon
-		elsif ($now < 12)
+		elsif ($hour < 12)
 		{	@greetings = (@greetings,
 				"Good Morning", "Good Morning", "Good Morning"
 				);
 		}
 		### From noon 'till 6 pm
-		elsif ($now < 18)
+		elsif ($hour < 18)
 		{	@greetings = (@greetings,
 				"Good Afternoon", "Good Afternoon", "Good Afternoon"
 				);
