@@ -41,7 +41,7 @@ use tnmc::mybc;
     print "****               Retrieve the Movie Info             ****\n";
     print "***********************************************************\n";
     
-    my @mShowing = ();
+    my %mShowing = ();
     
     my %mTitle;
     my %mStars;
@@ -66,7 +66,7 @@ use tnmc::mybc;
         
         foreach $_ (sort(keys(%mTheatres))){
             if ($valid_theatres{$_}){
-                push (@mShowing, $mID);
+                $mShowing{$mID} = 1;
                 $mOurTheatres{$mID} = $mOurTheatres{$mID} . ' ' . $_;
                 print " $_";
             }
@@ -83,7 +83,7 @@ use tnmc::mybc;
     $sth->execute();
     $sth->finish();
 
-    foreach my $mID (@mShowing){
+    foreach my $mID (keys %mShowing) {
       if ($mID){
         printf ("(%s)    %-40.40s", $mID, $mTitle{$mID});
     
