@@ -132,4 +132,10 @@ sub logout{
     
 }
 
+BEGIN{
+    $USERID = &get_my_userID();
+    $LOGGED_IN = &is_open();
+}
+
 1;
+
