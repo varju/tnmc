@@ -136,9 +136,26 @@ sub move {
     }
 }
 
+sub softlink {
+    my ($file1, $file2) = @_;
+    
+    # check before doing anything
+    return 0 if (-e $file2);
+    return 0 if (!-e $file1);
+    
+    # make sure that the destination directory exists
+    my ($parent) = &split_filepath($file2);
+    &make_directory($parent) if (defined $parent);
+    
+    # make the softlink
+    my @retval = `ln -s $file1  $file2`;
+    
+    return -e $file2;
+}
+
 sub copytree {
     my ($dir1, $dir2) = @_;
-
+    
     my @filenames = &list_directory($dir1);
 
     &make_directory($dir2);
