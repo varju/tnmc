@@ -18,7 +18,6 @@ require 'MOVIES.pl';
 		&show_movieMenu();
 		print "<br>";
 
-		&show_heading("Movies that we've been to");
                 &show_seen_movie_list();
 
 	&db_disconnect();
@@ -34,6 +33,14 @@ sub show_seen_movie_list{
 
 	&list_movies(\@movies, "WHERE statusSeen = '1'", 'ORDER BY date DESC, title');
 	&get_movie($movie[0], \%movie);
+
+	# it occurs to me that there's a proper way to do this... oh well, too late now.
+	$i = 0;
+	foreach (@movies){
+		$i++;
+	}
+
+	&show_heading("Movies that we've been to (well, at least $i of them)");
 	
 	&get_user($USERID, \%USER);
 	if ($USER{groupAdmin}){

@@ -48,8 +48,6 @@ BEGIN
 			&db_get_row
 			&db_set_row
 			
-			&smsBroadcast
-			&smsShout
                         );
 
 	%EXPORT_TAGS = ( );
