@@ -9,7 +9,6 @@ use DBI;
 use CGI;
 require 'db_access.pl';
 
-
 ###################################################################
 sub header{
 
@@ -166,26 +165,62 @@ sub new_nav_login{
 }
 
 ###################################################################
+sub show_menu_item{
+	my ($indent, $url, $name, $text) = @_;
+	
+	my $indent_text = '';
+	while($indent--){
+		$indent_text .= '&nbsp;&nbsp;&nbsp;';
+	}
+	if ($ENV{REQUEST_URI} =~ /^\Q$url\E/){
+		print qq{\t\t$indent_text<b><a href="$url" class="menulink">$name</a>$text</b><br>\n};
+		return 1;
+	}
+	else{
+		print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
+		return $HOMEPAGE
+	}
+}
+
+###################################################################
 sub new_nav_menu{
 
 	my (%user);
 	&get_user($USERID, \%user);
 
-	print qq{
-		<BR>
-		<a href="http://tnmc.dhs.org/index.cgi" class="menulink">Home</a>
-		<p>
-		<!--	Announcements -->
-		<p>
-		<a href="/people/" class="menulink">People</a>
-		<p>
-		<a href="/movies/" class="menulink">Movies</a>
-		<P>
-		<a href="/broadcast/" class="menulink">Broadcast</a>
-		<p>
-		<a href="/fieldtrip/" class="menulink">Field Trips</a>
-		<p>
-	};
+	### this test should be elsewhere.
+	$HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq 'index.cgi');
+
+	&show_menu_item( 0, "", "", "");
+	&show_menu_item( 0, "http://tnmc.dhs.org/", "Home", "");
+	&show_menu_item( 0, "", "", "");
+	# &show_menu_item( 0, "/announcements/", "Announcements", "");
+	# &show_menu_item( 0, "", "", "");
+
+	&show_menu_item( 0, "/people/", "People", "");
+	&show_menu_item( 0, "", "", "");
+
+	if (&show_menu_item( 0, "/movies/", "Movies", "")){
+		&show_menu_item( 1, "/movies/index.cgi?sortOrder=order", "Ordered", "");
+		&show_menu_item( 1, "/movies/index.cgi?sortOrder=title", "Alphabetical", "");
+		&show_menu_item( 1, "", "", "");
+		&show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
+		&show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
+		&show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
+		&show_menu_item( 1, "/movies/help.cgi", "Info", "");
+		if ($user{groupAdmin}){
+			&show_menu_item( 1, "", "", "");
+			&show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
+			&show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
+			&show_menu_item( 1, "/movies/movies.cgi", "Testing", "");
+		}
+	}
+	&show_menu_item( 0, "", "", "");
+
+	&show_menu_item( 0, "/broadcast/", "Broadcast", "");
+	&show_menu_item( 0, "", "", "");
+
+	&show_menu_item( 0, "/fieldtrip/", "FieldTrips", "");
 
 	if ($USERID == '1'){
 		print qq{

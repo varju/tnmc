@@ -16,7 +16,7 @@ BEGIN
 
         use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
 		$dbh_tnmc
-		$USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in);
+		$USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
 
         @ISA = qw(Exporter);
 
