@@ -6,6 +6,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+
 use DBI;
 use CGI;
 
@@ -18,7 +20,7 @@ use tnmc;
 
 	&db_connect();
 	&header();
-	
+
 	if ($USERID){
 		get_user($USERID, \%user);
 		print &greeting($user{'fullname'})
