@@ -131,7 +131,7 @@ sub show_album_listing{
                 </tr>
             };
         }
-        my $date_string =  &tnmc::util::date::format_date('short_month_day', $album{albumDateStart}) . ' - ' . &tnmc::util::date::format_date('short_month_day', $album{albumDateStart});
+        my $date_string =  &tnmc::util::date::format_date('short_month_day', $album{albumDateStart}) . ' - ' . &tnmc::util::date::format_date('short_month_day', $album{albumDateEnd});
         
         my $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
         my $sth = $dbh_tnmc->prepare($sql); 
