@@ -50,23 +50,27 @@ sub sms_send_fido{
     
     ### Build the argument string.
     my $SEND = substr($msg, 0, 160);
-    my $args = 'areacode=' . $areacode . '&address='.$phone.'&message=' . $SEND . '&total=' . length($SEND);
+    my $URL = 'http://fido.globewebs.com/cgi-fido/sms.cgi';
     
     ### Get a User agent
     my $ua = new LWP::UserAgent;
     $ua->agent("AgentName/01 " . $ua->agent);
     
     ### Make the Request
-    my $req = new HTTP::Request POST => 'http://fido.globewebs.com/cgi-fido/sms.cgi';
+    my $req = POST $URL,
+    [ 'areacode' => $areacode,
+      'address' => $phone,
+      'message' => $SEND,
+      'total' => length($SEND),
+      ];
     $req->content_type('application/x-www-form-urlencoded');
-    $req->content($args);
+
     return $ua->request($req);
 }
 
 ################################
-sub sms_send_fido_tap_zing{
-    
-    my ($phone, $msg, $junk) = @_;
+sub sms_send_fido_tap_zing {
+    my ($phone, $msg) = @_;
     
     ### see if we actually want to send anything.
     if (length($msg) == 0){
@@ -77,16 +81,19 @@ sub sms_send_fido_tap_zing{
     my $SEND = substr($msg, 0, 160);
     my $URL = "http://www.tapzing.com/WebMsg_Save.cfm";
     my $areacode = '604';
-    my $args = "service=FIDO&PhoneID=$areacode$phone&message=$SEND";
     
     ### Get a User agent
     my $ua = new LWP::UserAgent;
     $ua->agent("AgentName/01 " . $ua->agent);
     
     ### Make the Request
-    my $req = new HTTP::Request POST => $URL;
+    my $req = POST $URL,
+    [ 'service' => 'FIDO',
+      'PhoneID' => $areacode . $phone,
+      'message' => $SEND,
+      ];
     $req->content_type('application/x-www-form-urlencoded');
-    $req->content($args);
+
     return $ua->request($req);
 }
 

@@ -39,18 +39,26 @@ sub sms_send_telus {
     
     ### Build the argument string.
     my $SEND = substr($msg, 0, 150);
-    my $args = 'tr=Send&page_name=Phnximg&Name=&PIN=604'.$phone.'&From=TNMC&ReplyTo=&Subject=&Message=' . $SEND . '&total=' . length($SEND);
+    my $URL  = 'http://img.bctm.com/cgi-bin/img.dll';
     
     ### Get a User agent
     my $ua = new LWP::UserAgent;
     $ua->agent("AgentName/01 " . $ua->agent);
     
     ### Make the Request
-    my $req = new HTTP::Request GET => 'http://img.bctm.com/cgi-bin/img.dll';
+    my $req = POST $URL,
+    [ 'tr' => 'Send',
+      'page_name' => 'Phnximg',
+      'Name' => '',
+      'PIN' => '604'.$phone,
+      'From' => 'TNMC',
+      'ReplyTo' => '',
+      'Subject' => '',
+      'Message' => $SEND,
+      'total' => length($SEND),
+      ];
     $req->content_type('application/x-www-form-urlencoded');
-    $req->content($args);
-    
-    print  $ua->request($req)->as_string;
+
     return $ua->request($req);
 }
 

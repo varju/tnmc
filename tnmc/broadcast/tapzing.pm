@@ -2,9 +2,6 @@ package tnmc::broadcast::tapzing;
 
 use strict;
 
-use LWP::UserAgent;
-use HTTP::Request::Common qw(POST);
-
 use tnmc::cookie;
 use tnmc::user;
 

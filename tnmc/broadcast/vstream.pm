@@ -48,17 +48,21 @@ sub sms_send_vstream{
     ### Build the argument string.
     my $SEND = substr($msg, 0, 160);
     $SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg;
-    my $args = 'txtNum0='.$areacode.$phone.'&From='.$From.'&Message=' . $SEND . '&totSubscriber=1';
+    my $URL = 'http://www.voicestream.com/messagecenter/rtsValidate.asp';
     
     ### Get a User agent
     my $ua = new LWP::UserAgent;
     $ua->agent("AgentName/01 " . $ua->agent);
     
     ### Make the Request
-    my $req = new HTTP::Request POST => 'http://www.voicestream.com/messagecenter/rtsValidate.asp';
+    my $req = POST $URL,
+    [ 'txtNum0' => $areacode.$phone,
+      'From' => $From,
+      'Message' => $SEND,
+      'totSubscriber' => '1',
+      ];
     $req->content_type('application/x-www-form-urlencoded');
-    $req->content($args);
-    
+
     return $ua->request($req);
 }
 
