@@ -85,13 +85,28 @@ sub get_nav{
     foreach my $key ($cgih->param()){
         $nav{$key} = $cgih->param($key);
     }
-    return \%nav
+    
+    ## KLUDGE: figure out what we're looking at
+    my $script = $ENV{'REQUEST_URI'};
+    $script =~ /\/([a-z]+)_([a-z]+)\.cgi/;
+    $nav{'_nav_select'} = $1;
+    $nav{'_nav_view'} = $2;
+    
+    return \%nav;
 }
 
 sub show_thumbs{
     my ($piclist, $nav) = @_;
     
     &show_heading("Pictures");
+    
+    # no pictures... bail
+    if (! scalar @$piclist){
+        print "<p>\n";
+        print "No Pictures available.<br>\n";
+        print "<p>\n";
+        return 0;
+    }
     
     ## help the user get around a bit
     &show_album_nav_menu_basic($nav, $piclist);
@@ -179,7 +194,7 @@ sub show_album_nav_menu_basic{
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td>
-        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="/pics/album_thumb.cgi">
+        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="/pics/$nav{_nav_select}_thumb.cgi">
     };
     foreach my $key (keys %nav){
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
@@ -273,7 +288,7 @@ sub show_album_nav_menu_full{
     
     # 
     print qq{
-        <form method="get" action="/pics/album_thumb.cgi">
+        <form method="get" action="/pics/$nav{_nav_select}_thumb.cgi">
     };
     foreach my $key (keys %nav){
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
@@ -439,7 +454,7 @@ sub show_piclist{
         ## get pic info
         &get_pic($picID, \%pic);
         
-        my $slide_url = "album_slide.cgi?picID=$picID&$nav_query";
+        my $slide_url = "$nav->{_nav_select}_slide.cgi?picID=$picID&$nav_query";
         my $img_url = &get_pic_url($picID, ['mode'=>$listSize]);
         my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
         my $pic_src = $img_src;
@@ -572,11 +587,12 @@ sub show_album_slide_header{
     my %album;
     &get_album($albumID, \%album);
     
-    my $album_url = "album_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
+    my $album_url = "$nav->{_nav_select}_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
     
     ## album navigation stuff
     print qq{
         <b>
+        <a href="/">TNMC</a> &nbsp; -> &nbsp;
         <a href="index.cgi">Pics</a> &nbsp; -> &nbsp;
         <a href="album_list.cgi">Albums</a> &nbsp; -> &nbsp;
         <a href="$album_url">$album{albumTitle}</a> &nbsp; -> &nbsp;
@@ -767,7 +783,7 @@ sub show_slide_thumbnails{
         my $target_picID = @{$piclist}[$i];
         my %target_pic;
         &get_pic($target_picID, \%target_pic);
-        my $url = "album_slide.cgi?picID=$target_picID&$nav_url";
+        my $url = "$nav->{_nav_select}_slide.cgi?picID=$target_picID&$nav_url";
         my $image = get_pic_url($target_picID, ['mode'=>'thumb']);
         
         print "<td>";
