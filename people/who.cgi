@@ -8,6 +8,7 @@
 use strict;
 use lib '/tnmc';
 
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
@@ -20,9 +21,15 @@ use CGI;
 &header();
 &db_connect();
 
-&show_heading('Security');
-&show_online_users_list();
+&show_heading('Who\'s online now');
+&show_recent_users_list(30, 1);
 
+if ($USERID{'groupAdmin'}){
+    print "<p>";
+    
+    &show_heading('last 24 hrs');
+    &show_recent_users_list(1440, undef());
+}
 
 &footer();
 &db_disconnect();
@@ -32,19 +39,20 @@ use CGI;
 ##########################################################
 
 #########################################
-sub show_online_users_list{
+sub show_recent_users_list{
+    my ($time, $online) = @_;
     
     my (@sessions);
-    &tnmc::security::session::list_recent_users(60, 1, \@sessions);
+    &tnmc::security::session::list_recent_sessions($time, $online, \@sessions);
     
     print qq{
         <table cellspacing="0" cellpadding="0" border="0">
         <tr>
-            <th>username</td>
+            <th>user</td>
             <th>&nbsp;&nbsp;</td>
             <th>last online</td>
             <th>&nbsp;&nbsp;</td>
-            <th>host</td>
+            <th>from</td>
         </tr>
     };
     
@@ -62,7 +70,7 @@ sub show_online_users_list{
         
         print qq{
             <tr>
-                <td nowrap><a href="/people/user_view.cgi?userID=$userID">$user{username}</a></td>
+                <td nowrap><a href="/people/user_view.cgi?userID=$userID" target="viewuser">$user{username}</a></td>
                 <td></td>
                 <td nowrap>$last_online</td>
                 <td></td>
