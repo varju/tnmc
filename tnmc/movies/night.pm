@@ -58,7 +58,9 @@ sub get_next_night{
         $date = strftime("%Y%m%d", localtime());
     }
 
-    $sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= '$date' LIMIT 1";
+    ### BUG ALERT
+
+    $sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= '$date' ORDER BY date LIMIT 1";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     ($return) = $sth->fetchrow_array();
