@@ -30,7 +30,7 @@ use tnmc::movies::faction;
     
     my $to_email = $tnmc_email;
     
-    my $sql = "SELECT DATE_FORMAT(NOW(), 'W M D, Y')";
+    my $sql = "SELECT DATE_FORMAT(NOW(), '%W %M %D, %Y')";
     my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($today_string) = $sth->fetchrow_array();
@@ -52,7 +52,7 @@ use tnmc::movies::faction;
         my %movie; &tnmc::movies::movie::get_movie($night{'movieID'}, \%movie);
         
         
-        $sql = "SELECT DATE_FORMAT('$night{'date'}', 'W M D, Y')";
+        $sql = "SELECT DATE_FORMAT('$night{'date'}', '%W %M %D, %Y')";
         $sth = $dbh->prepare($sql);
         $sth->execute();
         my $date_string = &tnmc::util::date::format_date('full_date', $night{'date'});

@@ -28,7 +28,7 @@ use tnmc::movies::night;
     my $next_tuesday = $next_night{'date'};
     my $vote_blurb = $next_night{'voteBlurb'};
     
-    my $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
+    my $sql = "SELECT DATE_FORMAT('$next_tuesday', '%W %M %D, %Y')";
     my $dbh = &tnmc::db::db_connect();
     my $sth = $dbh->prepare($sql);
     $sth->execute();

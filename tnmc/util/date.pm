@@ -49,7 +49,7 @@ sub format_date{
         require tnmc::db;
 	my $dbh = &tnmc::db::db_connect();
         
-        my $sql = "SELECT DATE_FORMAT(?, 'W M D, Y')";
+        my $sql = "SELECT DATE_FORMAT(?, '%W %M %D, %Y')";
         my $sth = $dbh->prepare($sql);
         $sth->execute($date);
         my ($ret) = $sth->fetchrow_array();

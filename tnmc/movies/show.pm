@@ -93,7 +93,7 @@ sub show_night{
     my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
     my (%movie);
     
-    my $sql = "SELECT DATE_FORMAT('$night{date}', 'W M D, Y')";
+    my $sql = "SELECT DATE_FORMAT('$night{date}', '%W %M %D, %Y')";
     my $dbh = &tnmc::db::db_connect();
     my $sth = $dbh->prepare($sql);
     $sth->execute();
