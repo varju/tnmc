@@ -5,7 +5,7 @@ use strict;
 use LWP::UserAgent;
 use HTTP::Request::Common qw(POST);
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::user;
 
 use tnmc::broadcast::util;

@@ -3,7 +3,7 @@ package tnmc::movies::movie;
 use strict;
 
 use tnmc::db;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::movies::night;
 
 #

@@ -8,7 +8,7 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
 
@@ -17,7 +17,7 @@ use tnmc::user;
 
 &db_connect();
 
-cookie_get();
+&tnmc::security::auth::authenticate();
 
 my @cols = &db_get_cols_list('Personal');
 

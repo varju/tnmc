@@ -2,7 +2,7 @@ package tnmc::templates::movies;
 
 use strict;
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
 use tnmc::template;

@@ -9,7 +9,7 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::template;

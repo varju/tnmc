@@ -6,7 +6,7 @@ use lib '/tnmc';
 use strict;
 
 use tnmc::config;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 
 use tnmc::mail::data;
@@ -16,7 +16,7 @@ use tnmc::mail::send;
 ### Main logic
 
 db_connect();
-cookie_get();
+&tnmc::security::auth::authenticate();
 
 if ($USERID) {
     my %message;

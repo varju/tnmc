@@ -10,7 +10,7 @@ use CGI;
 
 use lib '/tnmc';
 use tnmc::db;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::user;
 
 

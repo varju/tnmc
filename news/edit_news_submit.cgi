@@ -6,7 +6,7 @@ use lib '/tnmc';
 use strict;
 
 use tnmc::config;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 
 use tnmc::news::util;
@@ -15,7 +15,7 @@ use tnmc::news::util;
 ### Main logic
 
 db_connect();
-cookie_get();
+&tnmc::security::auth::authenticate();
 
 my %news;
 $news{newsId} = $tnmc_cgi->param('newsId');

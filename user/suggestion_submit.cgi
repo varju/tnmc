@@ -9,7 +9,7 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::broadcast;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::general_config;
 use tnmc::db;
 
@@ -18,7 +18,7 @@ use tnmc::db;
     ### Main logic
     
     &db_connect();
-    &cookie_get();
+    &tnmc::security::auth::authenticate();
 
     my $sql = "SELECT NOW()";
     my $sth = $dbh_tnmc->prepare($sql);

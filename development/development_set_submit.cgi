@@ -9,7 +9,7 @@ use strict;
 use lib '/tnmc';
 
 use tnmc::config;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::general_config;
 
@@ -17,7 +17,7 @@ use tnmc::general_config;
 ### Main logic
 
 &db_connect();
-cookie_get();
+&tnmc::security::auth::authenticate();
 
 my @params = $tnmc_cgi->param();
 

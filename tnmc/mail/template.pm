@@ -3,7 +3,7 @@ package tnmc::mail::template;
 use strict;
 use Mail::Address;
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::mail::prefs::data;
 

@@ -2,7 +2,7 @@ package tnmc::broadcast::tapzing;
 
 use strict;
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::user;
 use tnmc::broadcast::util;
 

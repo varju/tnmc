@@ -8,7 +8,7 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::config;
 use tnmc::db;
 
@@ -17,13 +17,9 @@ use tnmc::db;
 
 db_connect();
 
-# retrieve the old cookie
-cookie_get();
-
-my $userID = $tnmc_cookie_in{'userID'};
-cookie_revoke();
-
-my $cookie = cookie_tostring();
+# boot the user.
+&tnmc::security::auth::authenticate();
+my $cookie = &tnmc::security::auth::logout();
 
 my $location = '/';
 print $tnmc_cgi->redirect(

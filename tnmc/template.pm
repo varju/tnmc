@@ -3,9 +3,9 @@ package tnmc::template;
 use strict;
 
 use tnmc::config;
-use tnmc::cookie;
 use tnmc::db;
 use tnmc::menu;
+use tnmc::security::auth;
 
 #
 # module configuration
@@ -32,7 +32,7 @@ sub header{
     # header and title
     print "Content-type: text/html\n\n";
     
-    &cookie_get();
+    &tnmc::security::auth::authenticate();
     
     my $username = $USERID{'username'} || '';
     my $logo = 'basic.gif';

@@ -2,7 +2,7 @@ package tnmc::news::template;
 
 use strict;
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::user;
 
 use tnmc::news::util;

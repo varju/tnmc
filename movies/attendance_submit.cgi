@@ -8,7 +8,7 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::movies::attend;
 
@@ -18,7 +18,7 @@ use tnmc::movies::attend;
 
     &db_connect();
     
-    cookie_get();
+    &tnmc::security::auth::authenticate();
 
     my %attendance = {};
     # get each field

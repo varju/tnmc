@@ -8,7 +8,7 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::config;
 use tnmc::db;
 use tnmc::log;
@@ -19,8 +19,8 @@ use tnmc::user;
 ### Main logic
 
 db_connect();
+&tnmc::security::auth::authenticate();
 
-cookie_get();
 
 my (%user, %old_user);
 
@@ -29,11 +29,10 @@ my $password = $tnmc_cgi->param('password');
 my $location = $tnmc_cgi->param('location');
 &get_user($userID, \%user);
 
-my $old_user = $tnmc_cookie_in{'userID'};
-&get_user($old_user, \%old_user);
+### BUG: the old-user stuff doesn't work right now!
+my $old_user; #  = $tnmc_cookie_in{'userID'};
+#&get_user($old_user, \%old_user);
 
-cookie_set($userID);
-my $cookie = cookie_tostring();
 
 if (!$location) {
     $location = '/';
@@ -44,10 +43,10 @@ if (($password ne $user{'password'})
 {
     &header();
     print qq{
-<p>
-<b>Oopsie-daisy!</b>
-<p>
-You entered the wrong password.
+        <p>
+        <b>Oopsie-daisy!</b>
+        <p>
+        You entered the wrong password.
     };
     &footer();
 
@@ -55,6 +54,9 @@ You entered the wrong password.
               $user{username},$password);
 }
 elsif ($userID) {
+    
+    my $cookie = &tnmc::security::auth::login($userID);
+    
     print $tnmc_cgi->redirect(
                               -uri=>$location,
                               -cookie=>$cookie
@@ -63,6 +65,7 @@ elsif ($userID) {
     log_login(1,$old_user,$old_user{username},$userID,
               $user{username},$password);
 }
+### BUG?: what does this do?
 else {
     print $tnmc_cgi->redirect(-uri=>$location);
 
@@ -74,3 +77,10 @@ db_disconnect();
 
 #### The end.
 ##########################################################
+
+
+
+
+
+
+

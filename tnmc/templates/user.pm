@@ -2,7 +2,7 @@ package tnmc::templates::user;
 
 use strict;
 
-use tnmc::cookie;
+use tnmc::security::auth;
 
 #
 # module configuration

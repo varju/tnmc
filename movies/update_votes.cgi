@@ -8,7 +8,7 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::movies::vote;
 use tnmc::template;
@@ -19,7 +19,7 @@ use tnmc::template;
     
     &db_connect();
     
-    cookie_get();
+    &tnmc::security::auth::authenticate();
 
     my $userID = $tnmc_cgi->param('userID');
     my @params =  $tnmc_cgi->param();
