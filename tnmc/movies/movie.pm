@@ -116,7 +116,7 @@ sub get_movie_extended{
         $VuserID = $row[0] || '';
         $Vperson = $row[1] || '';
         $Vtype = $row[2] || 0;
-        $Ubday = $row[3] || '';
+        $Ubday = $row[3] || 0;
         $Udefault = $row[4] || '';
         $Uthis = $row[5] || '';
         $Unext = $row[6] || '';
