@@ -15,6 +15,7 @@ use tnmc::db;
 use tnmc::general_config;
 use tnmc::template;
 use tnmc::movies::movie;
+use tnmc::movies::night;
 use tnmc::movies::show;
 
     #############
@@ -28,8 +29,7 @@ use tnmc::movies::show;
     if ($USERID)
     {     &show_heading ("administration");
       
-               &list_movies(\@movies, "WHERE movieID = 68 OR statusShowing AND NOT
-(statusSeen OR 0)", 'ORDER BY title');
+          &list_movies(\@movies, "WHERE movieID = 68 OR statusShowing AND NOT (statusSeen OR 0)", 'ORDER BY title');
 
         my $current_movie =  &get_general_config("movie_current_movie");
         my $current_cinema = &get_general_config("movie_current_cinema"); 
@@ -121,7 +121,23 @@ use tnmc::movies::show;
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
         }; 
+
+        ## List of Future Nights
+        &show_heading ("future nights");
+        my @NIGHTS;
+        &list_nights(\@NIGHTS, "WHERE date >= NOW()", "");
+        foreach my $nightID (@NIGHTS){
+            my %night;
+            &get_night ($nightID, \%night);
+            print qq{
+                <a href="night_edit_admin.cgi?nightID=$nightID">$night{date}</a>
+                ($nightID)<br>
+            };
+        }
+        
+     
     }
+
     
 
     &footer();
