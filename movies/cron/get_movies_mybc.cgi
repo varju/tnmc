@@ -86,7 +86,7 @@ use tnmc::mybc;
 	    if ($movieID){
 		$movie = &tnmc::movies::movie::get_movie($movieID);
 		$movie->{mybcID} = $mID;
-#		&tnmc::movies::movie::set_movie($movie);
+		&tnmc::movies::movie::set_movie($movie);
 		print "(title $movieID)";
 	    }
 	}
@@ -104,7 +104,7 @@ use tnmc::mybc;
             if (20 > length($movie->{description})){
                 $movie->{description} = $movieInfo->{premise}
             }
-#            &tnmc::movies::movie::set_movie($movie);
+            &tnmc::movies::movie::set_movie($movie);
         }
 	
 	print "\n";
