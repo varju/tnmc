@@ -132,20 +132,20 @@ sub list_my_attendance{
 	</tr>
 	<tr>
 		<td></td>
-	        <td valign="top"><b>
+	        <td valign="top"><font size="-1">
 		    <select name="movieDefault">
 			<option value="$attendance{movieDefault}">$attendance{movieDefault}
 			<option value="$attendance{movieDefault}">----
 			<option>yes
 			<option>no
-		    </select>
+		    </select></font>
 		    </td>
 		<td></td>
     };
 
     foreach $tuesdayDate (@movieDates){
 	print qq{
-	    <td valign="top">
+	    <td valign="top"><font size="-1">
 	    <select name="movie$tuesdayDate">
 		<option value="$attendance{"movie$tuesdayDate"}">$attendance{"movie$tuesdayDate"}
 		<option value="$attendance{"movie$tuesdayDate"}">----
@@ -159,7 +159,7 @@ sub list_my_attendance{
 
     }
     print qq{
-	<td valign="top"><b><input type="submit" value="Update"></form></td>
+	<td valign="top"><font size="-1"><input type="submit" value="Set Attendance"></form></td>
 	</tr>
 	</table>
     };
