@@ -51,8 +51,6 @@ sub db_connect{
     $password = "password";
 
     if ($dbh_tnmc) {
-        print STDERR "reusing db handle\n";
-
         # since we only have one database, we can just reuse the
         # handle
         return;
