@@ -83,12 +83,6 @@ use tnmc;
 	$total_cgi = <LINES>;
 	close (LINES);
 
-	open (LINES, 'du -b /var/lib/mysql/tnmc |');
-	$bytes_of_data = <LINES>;
-	$bytes_of_data =~ s/\D//g;
-	close (LINES);
-	$bytes_of_data = 'an unknown number of ';
-
 	open (LINES, 'cd /usr/local/apache/tnmc && cat *.pl *.cgi | wc -l |');
 	$lines_of_code = <LINES>;
 	close (LINES);
@@ -99,7 +93,6 @@ use tnmc;
         
 	print qq{
 			$lines_of_code lines of perl code<br>
-			$bytes_of_data bytes of data stored<br>
                         $proper_requests cgi requests<br>
 			$total_files files served<br>
 			</TD>
