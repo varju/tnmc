@@ -7,6 +7,7 @@ use strict;
 #
 
 my $cgih;
+my $pairs;
 
 #
 # module routines
@@ -16,26 +17,34 @@ sub init
 {
     if (!defined $cgih)
     {
-	require CGI;
-	$cgih = new CGI;
+	require CGI::Lite;
+	$cgih = new CGI::Lite;
+	$cgih->set_platform('Unix');
+	$pairs = $cgih->parse_form_data();
     }
 }
 
 sub param
 {
-    my (@args) = @_;
+    my ($key) = @_;
 
     &init();
 
-    return &CGI::param(@args);
+    if (!defined $key)
+    {
+	return keys %$pairs;
+    }
+    else
+    {
+	return $$pairs{$key};
+    }
 }
 
 sub cookie
 {
     my (@args) = @_;
 
-    &init();
-
+    require CGI;
     return &CGI::cookie(@args);
 }
 
@@ -43,8 +52,7 @@ sub redirect
 {
     my (@args) = @_;
 
-    &init();
-
+    require CGI;
     return &CGI::redirect(@args);
 }
 
@@ -52,8 +60,7 @@ sub url_param
 {
     my (@args) = @_;
 
-    &init();
-
+    require CGI;
     return &CGI::url_param(@args);
 }
 
