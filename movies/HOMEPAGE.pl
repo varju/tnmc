@@ -30,7 +30,7 @@ use tnmc::movies::vote;
 	&show_heading ($movies_heading);
 	if (!&show_current_movie()){
 	
-		if ($USERID && $user{groupMovies}){
+		if ($USERID && $USERID{groupMovies}){
 			&show_movies_home($USERID);
 		}else{
 			&show_movies_home();

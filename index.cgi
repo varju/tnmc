@@ -22,11 +22,8 @@ use tnmc::templates::bulletins;
 	&db_connect();
 	&header();
 
-	if ($USERID){
-		get_user($USERID, \%user);
-		print &greeting($user{'fullname'})
-	}
-	
+print &greeting($USERID{'fullname'});
+
 show_bulletins();
 	
 	require 'movies/HOMEPAGE.pl';
