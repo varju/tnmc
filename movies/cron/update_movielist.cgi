@@ -259,6 +259,7 @@ use tnmc::movies::movie;
 		$newMovie{statusShowing} = '1';
 		$newMovie{statusNew} = '1';
 		$newMovie{statusSeen} = '0';
+		$newMovie{statusBanned} = '0';
 		$newMovie{date} = '0000-00-00';
 		$newMovie{type} = '';
 		
