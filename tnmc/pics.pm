@@ -184,9 +184,9 @@ sub show_album_info{
                 <td valign="top"><a href="album_view.cgi?albumID=$albumID">
                     <b>$album{albumTitle}</b></a><br>
                     $album{albumDescription}<br>
-                    Date: $date_string - 
-                    Owner: $owner{username} - 
-                    Pics: $num_pics<br>
+                    $date_string - 
+                     $owner{username} - 
+                    $num_pics pics<br>
                     </td>
             </tr>
         </table>

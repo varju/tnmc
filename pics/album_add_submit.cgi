@@ -5,8 +5,12 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
+use lib '/tnmc';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+
 require 'pics/PICS.pl';
 
 {

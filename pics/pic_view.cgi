@@ -5,9 +5,13 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
+use lib '/tnmc';
+
 use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+use tnmc::user;
+
 require 'pics/PICS.pl';
 
 {
@@ -23,6 +27,7 @@ require 'pics/PICS.pl';
 	$picID = $cgih->param('picID');
 	$albumID = $cgih->param('albumID');
 	$dateID = $cgih->param('dateID');
+	$mode = $cgih->param('mode');
 	
        	&get_pic($picID, \%pic);
         &get_user($pic{ownerID}, \%owner);
@@ -80,18 +85,39 @@ require 'pics/PICS.pl';
         &show_nav();
 
         ## thumbnails
-        my $span = $cgih->param('span') || 5;
+        my $span = $cgih->param('span') || 0;
         my $span = ($span > scalar(@PICS))? scalar(@PICS): $span;
         my $start = $curr_index - int(($span - 1) / 2);
         my $start = (($start + $span - 1) >= scalar(@PICS))? scalar(@PICS) - $span: $start;
         $start = 0 if $start < 0;
         &show_thumb_nav(\@PICS, $start, $start + $span - 1);
 
+	### Give the owner an edit link
+        my $edit_link;
+        if ( $USERID && ($pic{ownerID} eq $USERID) ){
+            $edit_link = qq{<a href="pic_edit.cgi?picID=$picID">Edit</a>};
+        }
+
         
         ## the big picture
-        $scale =  $cgih->param('scale') || 0.5;
-        $WIDTH = 1280 * $scale;
-        $HEIGHT = 960 * $scale;
+        $scale =  $cgih->param('scale') || 'auto';
+        if ($scale eq 'auto'){
+
+            my $min_pic_width = 500;
+            my $max_pic_width = 999;
+            if($pic{width} < $min_pic_width){
+                $scale = 1 + int ($min_pic_width / $pic{width});
+            }
+            elsif($pic{width} > $max_pic_width){
+                $scale = (1 / int ($pic{width} / $min_pic_width) );
+            }
+            else{
+                $scale = 1;
+            }
+        }
+
+        $WIDTH = $pic{width} * $scale;
+        $HEIGHT = $pic{height} * $scale;
         print qq{
             <table align="center" border="0">
                 <tr><td colspan="3"><img
@@ -100,7 +126,7 @@ require 'pics/PICS.pl';
                     ></td></tr>
                 <tr>
                     <td valign="top"><b>$pic{title}</b></td>
-                    <td valign="top"></td>
+                    <td valign="top">$edit_link</td>
                     <td align="right" valign="top">
                         $owner{username} - $fancy_timestamp<td>
                 </tr>
@@ -110,10 +136,6 @@ require 'pics/PICS.pl';
 
         };
 
-	### Give the (owner && cool people) an edit section:
-        if (($USERID && ($pic{ownerID} eq $USERID)) || ( $USERID{groupPics} >= 10)){
-            &print_edit_form();
-        }
 
 
 	&db_disconnect();
@@ -155,7 +177,7 @@ sub show_nav{
     }
 
     ## span
-    my $span = $cgih->param("span") || 5;
+    my $span = $cgih->param("span") || 0;
     %sel = ($span => 'selected');
     print qq{    <select name="span"> \n};
     print qq{    <option value="-1" $sel{-1}>No Thumbnails \n};
@@ -166,9 +188,10 @@ sub show_nav{
     print qq{    </select> \n};
 
     ## span
-    my $scale = $cgih->param("scale") || 0.5;
+    my $scale = $cgih->param("scale") || auto;
     %sel = ($scale => 'selected');
     print qq{    <select name="scale"> \n};
+    print qq{    <option value="auto" $sel{auto}>auto \n};
     print qq{    <option value="4" $sel{4}>400% \n};
     print qq{    <option value="2" $sel{2}>200% \n};
     print qq{    <option value="1" $sel{1}>100% \n};
@@ -236,66 +259,4 @@ sub make_pic_url{
     return $url;
 
 }    
-
-######################################################################
-sub print_edit_form{
-
-    my %typePublic;
-    $typePublic{$pic{typePublic}} = 'checked';
-    
-    print qq{
-
-        
-        <hr>
-
-        <form id="owner_form" name="owner_form" action="pic_edit_submit.cgi" method="post">
-        <input type="hidden" name="picID" value="$picID">
-        <input type="hidden" name="destination" value="">
-        <table>
-
-            <tr><td><b>Public</td>
-                <td><input type="radio" name="typePublic" value="1" $typePublic{1} size="40"> Yes
-                    <input type="radio" name="typePublic" value="0" $typePublic{0} size="40">No
-                    <input type="submit" value="Submit">
-                    Save and Release next: <a href="javascript:
-                        document.owner_form.typePublic[0].checked = true;
-                        document.owner_form.destination.value = '$album_next_url';
-                        document.owner_form.submit();
-                        ">Album</a> |
-                    <a href="javascript:
-                        document.owner_form.typePublic[0].checked = true;
-                        document.owner_form.destination.value = '$date_next_url';
-                        document.owner_form.submit();
-                        ">Date</a>
-                </td>
-            </tr>
-
-            <tr><td><b>Title</td>
-                <td><input type="text" name="title" value="$pic{title}" size="40"></td>
-            </tr>
-
-            <tr><td><b>Description</td>
-                <td><textarea name="description" wrap="virtual" cols="40" rows="3">$pic{description}</textarea></td>
-            </tr>
-            <tr><td><b>Comments</td>
-                <td><textarea name="comments" wrap="virtual" cols="40" rows="3">$pic{comments}</textarea></td>
-                </tr>
-	    <tr><td><b>Image Quality</td>
-                <td><input type="text" name="rateImage" value="$pic{rateImage}"> (-10 to 10, 0 is average)</td>
-                </tr>
-	    <tr><td><b>Content Quality</td>
-                <td><input type="text" name="rateContent" value="$pic{rateContent}">(-10 to 10, 0 is average)</td>
-                </tr>
-	    <tr><td><b>Timestamp</td>
-                <td><input type="text" name="timestamp" value="$pic{timestamp}" size="40"></td>
-                </tr>
-
-		</table>
-		<input type="submit" value="Submit">
-                </form>
-            };
-
-
-
-}
 

@@ -5,10 +5,13 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
-use tnmc::user;
+use lib '/tnmc';
+
 use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+
+use tnmc::user;
 require 'pics/PICS.pl';
 
 
@@ -39,12 +42,6 @@ sub get_nav_info_from_url{
     
     $nav_ref->{albumID} = $tnmc_cgi->param('albumID');
     $nav_ref->{picID} = $tnmc_cgi->param('picID');
-    $nav_ref->{listStart} = $tnmc_cgi->param('listStart') || 0;
-    $nav_ref->{listLimit} = $tnmc_cgi->param('listLimit') || 20;
-    $nav_ref->{limitContent} = $tnmc_cgi->param('limitContent') || 0;
-    $nav_ref->{listType} = $tnmc_cgi->param('listType') || $tnmc_cgi->param('list_type');
-    $nav_ref->{listSize} = $tnmc_cgi->param('listSize');
-    $nav_ref->{listColumns} = $tnmc_cgi->param('listColumns');
     
     my @pics;
     &list_links_for_album(\@pics, $nav_ref->{albumID});
@@ -53,6 +50,14 @@ sub get_nav_info_from_url{
     my %album;
     &get_album($nav_ref->{albumID}, \%album);
     $nav_ref->{album} = \%album;
+
+    $nav_ref->{listStart} = $tnmc_cgi->param('listStart') || 0;
+    $nav_ref->{listLimit} = $tnmc_cgi->param('listLimit') || 20;
+    $nav_ref->{limitContent} = $tnmc_cgi->param('limitContent') || 0;
+    $nav_ref->{listType} = $tnmc_cgi->param('listType') || $tnmc_cgi->param('list_type');
+    $nav_ref->{listSize} = $tnmc_cgi->param('listSize');
+    $nav_ref->{listColumns} = $tnmc_cgi->param('listColumns');
+
 }
 
 ################################################################################
@@ -60,11 +65,14 @@ sub nav_show_album{
     my ($albumID, $nav) = @_;
     
     ## heading
-    $backLink = qq{<a href="album_list.cgi"><font color="ffffff">All Albums</font></a> };
-    &show_heading("$backLink -> $nav->{album}->{albumTitle}");
+    my $backLink2 = qq{<a href="album_list.cgi"><font color="ffffff">Year</font></a> };
+    my $backLink1 = qq{<a href="/pics/"><font color="ffffff">Albums</font></a> };
+    &show_heading("$backLink1 -> $backLink2 -> $nav->{album}->{albumTitle} &nbsp; &nbsp; << Prev Album  &nbsp; Next Album >>");
     
     ## some info about the album
     &show_album_info_full($nav->{albumID}, $nav->{listType});
+    
+    &show_heading("Pictures");
     
     ## help the user get around a bit
     &show_album_nav_menu_basic($nav);
@@ -92,7 +100,7 @@ sub show_album_info_full{
     
 
     my $admin_links;
-    if ($album{albumOwnerID} == $USERID){
+    if ($album{albumOwnerID} == $USERID || $USERID == 1){
         $admin_links = qq{
             - <a href="album_edit_admin.cgi?albumID=$albumID">Edit</a>
             - <a href="album_del.cgi?albumID=$albumID">Del</a>
@@ -109,17 +117,41 @@ sub show_album_info_full{
         <p>
     };
 
-
+    ##
+    ## Admin options for the owner
+    ## Let's hide this stuff most of the time to cut down on page-size.
+    ##
     if ($displayLevel eq 'admin'){
-        ## options for the owner
         if ($album{albumOwnerID} == $USERID){
-            print qq{<p>
-                <hr noshade size="2"><p>
-                Release All Pics!!! (to do)
 
+            print qq{
+                <hr noshade size="2"><p>
+                <b>Album Admin Options</a><br>
+            };
+
+            if ( (!$album{albumTypePublic}) && ($USERID == $album{albumOwnerID})){
+                print qq{<p>
+                    <form method="post" action="pic_edit_list_submit.cgi">
+                    <input type="hidden" name="destination" value="$ENV{REQUEST_URI}">
+                };
+                
+                my @pics;
+                &list_links_for_album(\@pics, $albumID);
+                foreach my $picID (@pics){
+                    print qq{<input type="hidden" name="PIC${picID}_typePublic" value="1">\n};
+                }
+            
+                print qq{
+                    <input type="submit" value="Release All Pics">
+                    </form>
+                };
+            }
+            
+            print qq{
+                <p>
                 <form action="link_add.cgi" method="post">
                 <b>Add PicID:</b>
-                <input type="hidden" name="groupID" value="$groupID">
+                <input type="hidden" name="albumID" value="$albumID">
                 <input type="text" name="picID">
                 <input type="submit" value="Add">
                 </form>
@@ -134,15 +166,17 @@ sub show_album_nav_menu_basic{
 
     print qq{
 
-        <form method="get" action="/pics/album_view.cgi">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+        <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="/pics/album_view.cgi">
         <input type="hidden" name="albumID" value="$nav->{albumID}">
         <input type="hidden" name="listSize" value="$nav->{listSize}">
         <input type="hidden" name="listLimit" value="$nav->{listLimit}">
         <input type="hidden" name="listContents" value="$nav->{listContent}">
         <input type="hidden" name="listColumns" value="$nav->{listColumns}">
-        <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td>List Type</td>
+
+                List Type</td>
                 <td>Show Range:</td>
             </tr>
             <tr>
@@ -165,19 +199,43 @@ sub show_album_nav_menu_basic{
     };
 
     ## HACK - need better number for album size
-    for (my $i = 0; $i <= 200; $i += $nav->{listLimit}){
+    my $max = scalar(@{$nav->{pics}});
+    my $options_curr = 0;
+    my $options_count = 0;
+    for (my $i = 0; $i < $max; $i += $nav->{listLimit}){
+
+        my $top = $i + $nav->{listLimit};
+        $top = $max if ($max < $top);
+        $options_count++;
+
         if ($nav->{listStart} == $i){
-            print "<option selected value=\"$i\">" . ($i + 1) . " - " . ($i + $nav->{listLimit}) . "\n";
+            $options_curr = $options_count - 1;
+            print "<option selected value=\"$i\">" . ($i + 1) . " - " . $top . "\n";
         }
         else{
-            print "<option value=\"$i\">" . ($i + 1) . " - " . ($i + $nav->{listLimit}) . "\n";
+            print "<option value=\"$i\">" . ($i + 1) . " - " . $top . "\n";
         }
     }
 
-   print qq{
+    # next, prev info
+    my $options_next = $options_curr + 1;
+    my $options_prev = $options_curr - 1;
+    $options_next = $options_count if ($options_next > $options_count);
+    $options_prev = 0 if ($options_prev < 0);
+
+    print qq{
                     </select>
                     </td>
                 <td><input type="submit" value="go"></td>
+                    <td> &nbsp;
+                    <a href="javascript:
+                        document.album_basic_nav_menu.listStart.selectedIndex = $options_prev;
+                        document.album_basic_nav_menu.submit();
+                    ">Prev</a> -
+                    <a href="javascript:
+                        document.album_basic_nav_menu.listStart.selectedIndex = $options_next;
+                        document.album_basic_nav_menu.submit();
+                    ">Next</a></td>
             </tr>
         </table>
         </form>
@@ -335,7 +393,7 @@ sub show_piclist{
         &get_pic($picID, \%pic);
 
         ## only show the good pics
-        next if ($pic{rateContent} <= $limitContent && $nav->{listType} ne 'admin');
+        next if ($pic{rateContent} < $limitContent && $nav->{listType} ne 'admin');
 
         $pic{DISPLAYtitle} = $pic{title} || '(untitled)';
 
@@ -393,6 +451,7 @@ sub show_piclist{
         elsif($listType eq 'admin'){
             my %sel_content;
             my %sel_image;
+            my %sel_public;
             $sel_content{int($pic{rateContent})} = 'checked';
             $sel_image{int($pic{rateImage})} = 'checked';
             $sel_public{int($pic{typePublic})} = 'selected';
@@ -402,21 +461,34 @@ sub show_piclist{
                 <td valign="top">
                     <input type="text" name="PIC${picID}_title" value="$pic{title}" size="20"><br>
                     
-                    <textarea rows=2 columns=18 wrap="virtual"  name="PIC${picID}_description">$description</textarea><br>
+                    <textarea rows=2 columns=18 wrap="virtual"  name="PIC${picID}_description">$pic{description}</textarea><br>
                     
                     <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"><input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"><input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2"> 
 
+            };
+            if ($USERID == $pic{ownerID}){
+                print qq{
                         <select name="PIC${picID}_typePublic">
-                        <option $sel_public{1} value="1">show
                         <option $sel_public{0} value="0">hide
+                        <option $sel_public{1} value="1">show
                         </select>
+                };
+            }
+            print qq{
                             <br>
 
                     <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"><input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0">
                     Image ($pic{width} x $pic{height})<br>
 
-                    $pic{timestamp} - $owners{$pic{ownerID}} $pic{flags}<br>
-                    
+                    $i. $pic{timestamp} - $owners{$pic{ownerID}} $pic{flags}<br>
+            };
+            if ($USERID eq $pic{ownerID}){
+                print qq{       <a href="pic_edit.cgi?picID=$picID">edit</a> &\#149; };
+            }
+            if ($USERID eq $nav->{album}->{albumOwnerID}){
+                print qq{       <a href="link_del.cgi?picID=$picID&albumID=$albumID">unlink</a> };
+            }
+            print qq{
                 </td>
             };
         }else{
@@ -428,12 +500,11 @@ sub show_piclist{
                     <img $pic_src border="0" ></a>
                     <br><br></td>
                 <td valign="top">
-                    <a href="$pic_url"><b>$pic{DISPLAYtitle}</b></a><br>
+                    <b><a href="$pic_url">$pic{DISPLAYtitle}</a></b><br>
                     $pic_desc
                     <br>
-                    $show_listContent ($pic{rateImage}) -
-                    $pic{width} x $pic{height}<br>
-                    $pic{timestamp} - $owners{$pic{ownerID}} $pic{flags} $i<br>
+                    $i $show_listContent ($pic{width}&nbsp;x&nbsp;$pic{height})<br>
+                    $pic{timestamp}<br>
                 </td>
             };
         }
@@ -444,7 +515,7 @@ sub show_piclist{
     };
     if ($listType eq 'admin'){
         print qq{
-            <input type="submit">
+            <input type="submit" value="Save Changes">
             </form>
         };
     }

@@ -5,8 +5,12 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
+use lib '/tnmc';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+
 require 'pics/PICS.pl';
 
 {
@@ -49,6 +53,11 @@ require 'pics/PICS.pl';
         
         print qq{
             <tr><th colspan="2">override default database fields (optional)</th></tr>
+                <tr><td></td>
+                <td><b><font color="ff0000">Be Careful!</font></b><br>
+                    only change these fields if you <b>really</b><br>
+                    know what you\'re doing. And be especially<br>
+                    carefull of the \'filename\'</td></tr>
         };
 	
         foreach $key (keys %pic){

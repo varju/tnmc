@@ -5,9 +5,11 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
+use lib '/tnmc';
+
 use tnmc::cookie;
+use tnmc::db;
+
 require 'pics/PICS.pl';
 
 {
@@ -47,12 +49,14 @@ require 'pics/PICS.pl';
     # determine pic filename
     if (!$pic{filename}){
         $pic{timestamp} =~ /(....)\-(..)\-(..) (..)\:(..)\:(..)/;
-        my $file_dir_name = "api/$1/$1-$2-$3/";
+        my $pic_dir_name = "api/$1/$1-$2-$3/";
         my $pic_file_name = "pic_$1_$2_$3_$4_$5_$6_$FILE";
         $pic_file_name =~ s/^.*[\/\\]//; # get rid of the dir stuff
-        $pic_file_name =~ s/[\W^\.]/_/; # remove strange chars
-        $pic{filename} = $file_dir_name . $pic_file_name;
-        `mkdir -p data/$pic_dir_name`;
+        $pic_file_name =~ s/[\s]/_/; # remove spaces
+#        $pic_file_name =~ s/[^\.\W]/_/; # remove strange chars
+        $pic{filename} = $pic_dir_name . $pic_file_name;
+        print `mkdir -p data/$pic_dir_name`;
+        print "mkdir -p data/$pic_dir_name";
         print "dest file:$pic{filename}\n";
     }
     else{

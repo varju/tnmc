@@ -5,8 +5,12 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/usr/local/apache/tnmc/';
-use tnmc;
+use lib '/tnmc';
+
+use tnmc::cookie;
+use tnmc::db;
+use tnmc::template;
+
 require 'pics/PICS.pl';
 
 {	
@@ -36,7 +40,7 @@ sub show_all_albums{
     my @albums;
     &list_albums(\@albums, 
                  "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
-                 "ORDER BY albumDateStart DESC, albumTitle LIMIT 10");
+                 "ORDER BY albumDateStart DESC, albumTitle LIMIT 30");
 
 
 #    &show_album_listing(\@albums,);
