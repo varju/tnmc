@@ -2,8 +2,11 @@ package tnmc::mail::data;
 
 use strict;
 
+use tnmc::config;
 use tnmc::db;
 use tnmc::user;
+
+use tnmc::mail::prefs::data;
 
 #
 # module configuration
@@ -129,12 +132,18 @@ sub delete_message {
 
 sub mail_get_email_address {
     my ($UserId) = @_;
+    my (%user,$addr);
 
-    my %user;
     get_user($UserId,\%user);
-
     my $fullname = $user{fullname};
-    my $addr = $user{email};
+
+    my $FromAddr = mail_get_pref($UserId,'FromAddr');
+    if ($FromAddr eq 'Prefs') {
+        $addr = $user{email};
+    }
+    else {
+        $addr = $user{username} . '@' . $tnmc_maildomain;
+    }
 
     my $email = $fullname . " <" . $addr . ">";
     return $email;

@@ -23,6 +23,7 @@ if ($USERID) {
 
     my %message;
     $message{AddrFrom} = mail_get_email_address($USERID);
+
     message_print_compose(\%message);
 }
     

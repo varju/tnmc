@@ -24,30 +24,40 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 sub messages_print_prefs {
     my ($prefs_ref) = @_;
 
-    my %default_prefs;
-    my @from_val = ('Both','Name','Addr');
-    $default_prefs{From}->{Desc} = "Address Display";
-    $default_prefs{From}->{Value} = \@from_val;
-
     print "<form method=post action='set_prefs.cgi'>\n";
 
     print "<table>\n";
 
-    foreach my $pref (keys %default_prefs) {
-        my $curr_setting = $$prefs_ref{$pref};
+    print "<tr>\n";
+    print "  <td>address display</td>\n";
+    print "  <td>\n";
+    print "    <select name='From'>\n";
+    print "      <option value='Name'";
+    print " selected" if $$prefs_ref{From} eq 'Name';
+    print ">name only\n";
+    print "      <option value='Addr'";
+    print " selected" if $$prefs_ref{From} eq 'Addr';
+    print ">address only\n";
+    print "      <option value='Both'";
+    print " selected" if $$prefs_ref{From} eq 'Both' || !$$prefs_ref{From};
+    print ">both name and address\n";
+    print "    </select>\n";
+    print "  </td>\n";
+    print "</tr>\n";
 
-        print "<tr>\n";
-        print "  <td>", $default_prefs{$pref}->{Desc}, "</td>\n";
-        print "  <td>\n";
-        print "    <select name='$pref'>\n";
-        foreach my $opt (@{$default_prefs{$pref}->{Value}}) {
-            my $sel = " selected" if $curr_setting eq $opt;
-            print "    <option", $sel, ">", $opt, "\n";
-        }
-        print "    </select>\n";
-        print "  </td>\n";
-        print "</tr>\n";
-    }
+    print "<tr>\n";
+    print "  <td>my address</td>\n";
+    print "  <td>\n";
+    print "    <select name='FromAddr'>\n";
+    print "      <option value='TNMC'";
+    print " selected" if $$prefs_ref{FromAddr} eq 'TNMC' || !$$prefs_ref{FromAddr};
+    print ">use tnmc address\n";
+    print "      <option value='Prefs'";
+    print " selected" if $$prefs_ref{FromAddr} eq 'Prefs';
+    print ">use value from preferences\n";
+    print "    </select>\n";
+    print "  </td>\n";
+    print "</tr>\n";
 
     print "</table>\n";
 

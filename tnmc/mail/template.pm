@@ -121,14 +121,27 @@ sub mail_format_from {
     my @addrs = Mail::Address->parse($From);
     my $addr = $addrs[0];
 
+    my $phrase = $addr->phrase();
+    my $address = $addr->address();
+
     if ($format eq 'Name') {
-        return $addr->phrase();
+        if ($phrase) {
+            return $phrase;
+        }
+        else {
+            return $address;
+        }
     }
     elsif ($format eq 'Addr') {
-        return $addr->address();
+        return $address;
     }
     else {
-        return $addr->phrase() . ' &lt;' . $addr->address() . '&gt;';
+        if ($phrase) {
+            return $phrase . ' &lt;' . $address . '&gt;';
+        }
+        else {
+            return $address;
+        }
     }
 }
 
