@@ -3,9 +3,10 @@ package tnmc::menu;
 use strict;
 
 use tnmc::config;
-use tnmc::cookie;
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
+use tnmc::pics::show;
 
 #
 # module configuration
@@ -103,11 +104,21 @@ sub new_nav_menu{
             }
         }
         &show_menu_item( 0, "", "", "");
+
+    }
+    
+    ## Random-Pic
+    if ($USERID{groupPics}){
+        &show_random_pic(); 
+        &show_menu_item( 0, "", "", "");
+        &show_menu_item( 0, "", "", "");
+    }
+    else{
+        &show_menu_item( 0, "", "", "<hr noshade size='1'>");
     }
 
+    
     if ($USERID{groupAdmin}){
-        &show_menu_item( 0, "", "", "<hr noshade size='1'>");
-
         if (&show_menu_item( 0, "/admin/", "Admin", "")){
             &show_menu_item( 1, "/admin/user_list.cgi", "All users", "");
             &show_menu_item( 1, "/admin/groups.cgi", "Groups", "");
@@ -132,9 +143,13 @@ sub new_nav_menu{
             &show_menu_item( 1,  "/development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer", "");
         }
         &show_menu_item( 0, "", "", "");
+        
     }
     
-    &show_menu_item( 0, "", "", "<hr noshade size='1'>");
+    if ($USERID{groupDev} || $USERID{groupAdmin}){
+        &show_menu_item( 0, "", "", "<hr noshade size='1'>");
+    }
+    
     &show_menu_item( 0, "/user/my_prefs.cgi", "Preferences", "");
     &show_menu_item( 0, "", "", "");
     &show_menu_item( 0, "/user/suggestion_add.cgi", "Ideas&nbsp;&amp;&nbsp;Bugs", "");
