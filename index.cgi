@@ -14,7 +14,7 @@ use CGI;
 use lib '/usr/local/apache/tnmc';
 use tnmc;
 
-use tnmc::bulletins;
+use tnmc::templates::bulletins;
 
 	#############
 	### Main logic
