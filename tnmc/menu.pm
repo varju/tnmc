@@ -45,7 +45,7 @@ sub show_menu_item{
 sub new_nav_menu{
     
     ### this test should probably be elsewhere.
-    my $HOMEPAGE =  ($ENV{SCRIPT_NAME} eq '/index.cgi');
+    my $HOMEPAGE =  ($ENV{SCRIPT_NAME} eq 'index.cgi');
     
     &show_menu_item( 0, "", "", "");
     &show_menu_item( 0, "index.cgi", "Home", "");

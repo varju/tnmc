@@ -26,7 +26,7 @@ if ($USERID){
     &tnmc::user::get_user($USERID, \%user);
     
     print qq{
-            <form action="my_prefs_submit.cgi" method="post">
+            <form action="user/my_prefs_submit.cgi" method="post">
             <input type="hidden" name="userID" value="$USERID">
             };
     

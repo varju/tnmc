@@ -97,7 +97,7 @@ sub conv_get_msg_list{
     
     my $sql = "SELECT msgID from MessageMsg
                 WHERE convID = ? 
-                  AND (date_posted > date_sub(NOW(), INTERVAL 10080 MINUTE))
+                  AND (date_posted > date_sub(NOW(), INTERVAL 4320 MINUTE))
              ORDER BY date_posted";
     my $sth = $dbh->prepare($sql);
     $sth->execute($convID);
