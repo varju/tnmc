@@ -21,7 +21,9 @@ sub db_connect{
         $password = "password";
 
 	if ($dbh_tnmc) {
-		$dbh_tnmc->disconnect();
+            # since we only have one database, we can just reuse the
+            # handle
+            return;
 	}
 
         # say hello.
