@@ -25,14 +25,20 @@ require 'MOVIES.pl';
 
 	if ($movie{statusSeen}){
 		$checkboxSeen = 'CHECKED';
+	}else{
+		$checkboxNotSeen = 'CHECKED';
 	}
 
 	if ($movie{statusShowing}){
 		$checkboxShowing = 'CHECKED';
+	}else{
+		$checkboxNotShowing = 'CHECKED';
 	}
 
 	if ($movie{statusNew}){
 		$checkboxNew = 'CHECKED';
+	}else{
+		$checkboxNotNew = 'CHECKED';
 	}
 
 	print qq{
@@ -63,9 +69,12 @@ require 'MOVIES.pl';
 		<tr valign=top>
 			<td><b>Status</b></td>
 			<td>
-				<input type="checkbox" name="statusNew" value="1" $checkboxNew>New<br>
-				<input type="checkbox" name="statusShowing" value="1" $checkboxShowing>Showing<br>
-				<input type="checkbox" name="statusSeen" value="1" $checkboxSeen>Seen<br>
+				<input type="radio" name="statusNew" value="1" $checkboxNew>Y
+				<input type="radio" name="statusNew" value="0" $checkboxNotNew>N &nbsp; <b>New</b><br>
+				<input type="radio" name="statusShowing" value="1" $checkboxShowing>Y
+				<input type="radio" name="statusShowing" value="0" $checkboxNotShowing>N &nbsp; <b>Showing</b><br>
+				<input type="radio" name="statusSeen" value="1" $checkboxSeen>Y
+				<input type="radio" name="statusSeen" value="0" $checkboxNotSeen>N &nbsp <b>Seen</b><br>
 			</td>
 		</tr>
 
