@@ -54,7 +54,7 @@ use tnmc::movies::night;
     my $vote_blurb = &tnmc::general_config::get_general_config("movie_vote_blurb");
     
     open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
-    print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
+    print SENDMAIL "From: TNMC Website <$to_email>\n";
     print SENDMAIL "To: tnmc-list <$to_email>\n";
     print SENDMAIL "Subject: $next_tuesday_string\n";
     print SENDMAIL "\n";

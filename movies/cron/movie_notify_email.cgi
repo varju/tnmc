@@ -39,7 +39,7 @@ use tnmc::movies::faction;
     
     
     open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
-    print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
+    print SENDMAIL "From: TNMC Website <$to_email>\n";
     print SENDMAIL "To: tnmc-list <$to_email>\n";
     print SENDMAIL "Subject: $today_string\n";
     print SENDMAIL "\n";
