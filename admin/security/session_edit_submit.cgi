@@ -25,7 +25,7 @@ my @cols = &db_get_cols_list('SessionInfo');
 
 my %session;
 foreach my $key (@cols) {
-    $session{$key} = $tnmc_cgi->param($key);
+    $session{$key} = $cgih->param($key);
 }
 &tnmc::security::session::set_session(\%session);
 
