@@ -17,15 +17,16 @@ use tnmc::pics::pic;
 ### Main logic
 
 &header();
-&show_upload_page();
+&show_upload_pic_page();
+&show_upload_api_page();
 &footer();
         
 
-sub show_upload_page{
+sub show_upload_api_page{
     %pic;	
     
     my @cols = &db_get_cols_list("Pics");
-    
+    &show_heading("upload api");
     print qq {
         
         <form action="api_upload_submit.cgi" method="post" enctype="multipart/form-data">
@@ -78,6 +79,46 @@ sub show_upload_page{
             };
        	}
 	
+	print qq{
+            </table>
+	    <input type="submit" value="Submit">
+	    </form>
+	};
+        
+}
+
+
+
+sub show_upload_pic_page{
+    %pic;	
+    
+    my @cols = &db_get_cols_list("Pics");
+    
+    &show_heading("upload pic");
+
+    print qq {
+        
+        <form action="upload_do_pic.cgi" method="post" enctype="multipart/form-data">
+        <table>
+            
+            <tr><td><b>File</b></td>
+                <td><input type="file" name="UPLOAD_FILENAME"></td>
+            </tr>
+
+            <tr><td><b>Timestamp</b></td>
+                <td><input type="text" name="timestamp" value="0000-00-00 00:00:00"></td>
+            </tr>
+
+            <tr><td><b>Title</b></td>
+                <td><input type="text" name="title"></td>
+            </tr>
+
+            <tr><td><b>Description</b></td>
+                <td><input type="text" name="description"></td>
+            </tr>
+
+	};
+        
 	print qq{
             </table>
 	    <input type="submit" value="Submit">
