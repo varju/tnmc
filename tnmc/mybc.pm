@@ -79,15 +79,15 @@ sub mybc_get_movie_info {
         $info{title} = $1;
         $info{title} =~ s/^(The|A)\s+(.*)$/$2, $1/;
 
+        if ($text =~ m|<b>PREMISE</b></font>\s*<BR>\s*(.*?)\s*<br><br>|si) {
+            $info{premise} = $1;
+            chomp $info{premise};
+        }
+        
         $info{stars} = 0;
         if ($text =~ /<IMG SRC=\"\/movies\/images\/star_(.*)\.gif/m) {
             $info{stars} = $1;
             $info{stars} =~ s/_half/.5/;
-        }
-        
-        if ($text =~ m|<b>PREMISE</b></font>\s<BR>(.*?)<br><br>|si) {
-            $info{premise} = $1;
-            chomp $info{premise};
         }
         
         if ($text =~ m|<B><I>@ THESE LOCATIONS</I></B>\:</font><br>\s+<font face="Verdana,Arial" size="1">\s(.*?)</font>|si) {
