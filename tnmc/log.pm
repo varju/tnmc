@@ -38,7 +38,7 @@ sub log_login {
                       $oldid, $oldname, $newid, $newname, $pass);
     push(@elements,'FAILED') unless $success;
 
-    my $entry = join('\t', @elements);
+    my $entry = join("\t", @elements);
 
     open (LOG, '>>log/login.log');
     print LOG $entry, "\n";
