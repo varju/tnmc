@@ -23,8 +23,9 @@ use CGI;
 &show_heading('<a id="personal">Personal</a>');
 &show_basic_users_list();
 
-&db_disconnect();
+
 &footer();
+&db_disconnect();
 
 ##########################################################
 #### sub procedures.

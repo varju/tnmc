@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
+use tnmc::cgi;
 
 #############
 ### Main logic
@@ -18,6 +19,7 @@ use tnmc::user;
 &db_connect();
 
 &tnmc::security::auth::authenticate();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my @cols = &db_get_cols_list('Personal');
 

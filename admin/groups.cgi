@@ -13,19 +13,21 @@ use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
 use tnmc::user;
+use tnmc::cgi;
 
 #############
 ### Main logic
 
 &header();
 &db_connect();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my $groupID = $tnmc_cgi->param('groupID');
 &show_group_selector($groupID);
 &show_edit_group($groupID);
 
-&db_disconnect();
 &footer();
+&db_disconnect();
 
 
 #########################################

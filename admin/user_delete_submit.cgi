@@ -11,12 +11,14 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::user;
+use tnmc::cgi;
 
 #############
 ### Main logic
 
 db_connect();
 &tnmc::security::auth::authenticate();
+my $tnmc_cgi = &tnmc::cgi::get_cgih();
 
 my $userID = $tnmc_cgi->param('userID');    
 if ($userID) {
