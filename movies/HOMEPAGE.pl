@@ -154,7 +154,13 @@ sub show_movie_list{
 			$Vtype = $row[4];
 			$Vstatus = $row[5];
 
-			if (!$Vstatus){
+                       if ( ($Vperson eq 'demo')
+                           && ($effectiveUserID != 38)){        
+                                # 
+                                # Do nothing
+                                #
+                        }
+                        elsif (!$Vstatus){
 				if ($Vtype == 1){
 					$votes{$movieID} .= "<font color='888888'>$Vperson</font> ";
 					$votesAgainst{$movieID} ++;
