@@ -2,33 +2,34 @@ package tnmc::movies::show;
 
 use strict;
 
-use tnmc::db;
-use tnmc::general_config;
-use tnmc::movies::movie;
-use tnmc::movies::night;
-
 
 #
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+BEGIN {
+    
+    require Exporter;
+    require AutoLoader;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter AutoLoader);
+    
+    @EXPORT = qw(show_superfavorite_movie_select show_favorite_movie_select list_movies show_current_nights show_night);
+    @EXPORT_OK = qw();
+}
 
-@ISA = qw(Exporter);
-@EXPORT = qw(show_superfavorite_movie_select show_favorite_movie_select show_current_movie list_movies show_current_nights show_night);
-@EXPORT_OK = qw();
+1;
+
+__END__
 
 #
-# module vars
-#
-
-#
-# module routines
+# autoloaded module routines
 #
 
 sub show_favorite_movie_select{
-
+    use tnmc::db;
+    
     my ($effectiveUserID) = @_;
     my ($sql, $sth, @row, $favoriteMovie, $faveSel);
 
@@ -68,7 +69,8 @@ sub show_favorite_movie_select{
 }
 
 sub show_superfavorite_movie_select{
-
+    use tnmc::db;
+    
     my ($effectiveUserID) = @_;
     my ($sql, $sth, @row, $favoriteMovie, $faveSel);
 
@@ -107,86 +109,9 @@ sub show_superfavorite_movie_select{
     };
 }
 
-sub show_current_movie
-{
-        
-        my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
-        my (%movie);
-        
-        my $sql = "SELECT DATE_ADD(NOW(), INTERVAL ((9 - DATE_FORMAT(NOW(), 'w') ) % 7) DAY)";
-        my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        my ($next_tuesday) = $sth->fetchrow_array();
-        $sth->finish();
-
-        $sql = "SELECT DATE_FORMAT('$next_tuesday', 'W M D, Y')";
-        $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute();
-        my ($next_tuesday_string) = $sth->fetchrow_array();
-        $sth->finish();
- 
-    $current_movie = get_general_config('movie_current_movie');
-        $current_cinema = get_general_config('movie_current_cinema');
-        $current_showtime = get_general_config('movie_current_showtime');
-        $current_meeting_place = get_general_config('movie_current_meeting_place');
-        $current_meeting_time = get_general_config('movie_current_meeting_time');
-        $current_winner_blurb = get_general_config('movie_winner_blurb');
-
-    $current_winner_blurb =~ s/\n/<br>/g;
-    
-        if (!$current_movie)
-        {
-            print qq
-                {
-            <!-- no movie selected -->
-                };
-                return (0);
-        }
-    else{
-            %movie = {};
-            &get_movie($current_movie, \%movie);
-
-                print qq{
-                <TABLE CELLSPACING=0 CELLPADDING=0 width="100">
-                        <TR>
-                        <TD colspan="2">$current_winner_blurb<p><br></TD>
-                        </TR>
-
-                        <TR>
-                        <TD nowrap><B>Movie: </TD>
-                        <TD nowrap><a href="/movies/movie_view.cgi?movieID=$current_movie" target="viewmovie">$movie{'title'}</a></TD>
-                        </TR>
-                        
-                        <TR>
-                        <TD nowrap><B>Cinema: </TD>
-                        <TD nowrap>$current_cinema</TD>
-                        </TR>
-
-                        <TR>
-                        <TD nowrap><B>Showtime: </TD>
-                        <TD nowrap>$current_showtime</TD>
-                        </TR>
-
-                        <TR>
-                        <TD nowrap><B>Meeting time: </TD>
-                        <TD nowrap>$current_meeting_time</TD>
-                        </TR>
-
-                        <TR>
-                        <TD nowrap><B>Meeting place: </TD>
-                        <TD nowrap>$current_meeting_place</TD>
-                        </TR>
-
-                        </TABLE>
-                        <P>
-                };
-        return (1);
-    }
-}
-
-
-
 sub show_current_nights{
+    
+    use tnmc::movies::night;
     
     my @nights = &list_active_nights();
     foreach my $nightID (@nights){
@@ -196,15 +121,18 @@ sub show_current_nights{
     return scalar (@nights);
 }
 
-
 sub show_night{
     my ($nightID) = @_;
     
+    use tnmc::db;
+    use tnmc::movies::movie;
+    use tnmc::movies::night;
+    
     my %night;
     &get_night($nightID, \%night);
-
     
-        my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
+    
+    my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
     my (%movie);
     
     my $sql = "SELECT DATE_FORMAT('$night{date}', 'W M D, Y')";
@@ -256,10 +184,13 @@ sub show_night{
 
 sub list_movies{
     my ($movie_list_ref, $where_clause, $by_clause, $junk) = @_;
+    
+    use tnmc::db;
+    
     my (@row, $sql, $sth);
-
+    
     @$movie_list_ref = ();
-
+    
     $sql = "SELECT movieID from Movies $where_clause $by_clause";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
@@ -267,7 +198,7 @@ sub list_movies{
         push (@$movie_list_ref, $row[0]);
     }
     $sth->finish;
-
+    
     return $#$movie_list_ref;
 }
 

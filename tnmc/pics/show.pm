@@ -2,86 +2,35 @@ package tnmc::pics::show;
 
 use strict;
 
-use tnmc::security::auth;
-use tnmc::db;
-use tnmc::user;
-use tnmc::pics::pic;
-use tnmc::pics::album;
-use tnmc::pics::link;
-use tnmc::util::date;
-
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(show_random_pic show_pic_listing show_album_info show_album_listing);
-
-
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    
+    use tnmc::db;
+    use tnmc::pics::pic;
+    
+    require Exporter;
+    require AutoLoader;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter AutoLoader);
+    
+    @EXPORT = qw(
+                 show_pic_listing show_album_info show_album_listing
+                 );
+    
+    @EXPORT_OK = qw();
+}
 
 #
 # module routines
 #
 
-sub show_random_pic{
-    my ($offset) = @_;
-    
-    my $sql = "SELECT DATE_FORMAT(NOW(), '%m%j%H%i')";
-    my $sth = $dbh_tnmc->prepare($sql); 
-    $sth->execute();
-    my ($seed) = $sth->fetchrow_array();
-    $seed = int ($seed / 10);
-    my $picID = &get_random_pic($seed, $offset);
-    
-    my %pic;
-    &get_pic($picID, \%pic);
-    
-    my $pic_img = &get_pic_url($picID, ['mode'=>'thumb']);
-    $pic{description} &&= " ($pic{description})";
-    my $date = $pic{timestamp};
-    $date =~ s/\s.*//;
-    my $pic_url = "/pics/search_slide.cgi?search=date-span&search_from=$date+00%3A00&search_to=$date+23%3A59%3A59&picID=$picID";
-    print qq{
-        <a href="$pic_url"><img src="$pic_img" width="80" height="64" border="0" alt="$pic{title}$pic{description}"></a>
-    };
-    
-}
 
-# to-do: move this function
-sub get_random_pic{
-    my ($seed, $offset) = @_;
-
-    my $sql = "SELECT count(*) FROM Pics WHERE typePublic = '1'";
-    my $sth = $dbh_tnmc->prepare($sql); 
-    $sth->execute();
-    my ($count_pics) = $sth->fetchrow_array();
-    
-    if ($seed){
-        srand($seed);
-    }
-    
-    my $index;
-    $offset++;
-    while ($offset--){
-        $index = int(rand($count_pics/100)) . int(rand(100)) ;
-    }
-    
-    $sql = "SELECT picID FROM Pics WHERE typePublic = '1' LIMIT $index, 1";
-    $sth = $dbh_tnmc->prepare($sql);
-    $sth->execute();
-    my ($picID) = $sth->fetchrow_array();
-     
-    return $picID;
-}
+#
+# autoloaded module routines
+#
 
 sub show_pic_listing{
     my ($pics_ref, $albumID, $dateID) = @_;
@@ -131,6 +80,11 @@ sub show_pic_listing{
 sub show_album_listing{
     my ($albums_ref, $params_ref) = @_;
 
+    use tnmc::pics::album;
+    use tnmc::pics::link;
+    use tnmc::util::date;
+    use tnmc::user;
+    
     my @albums = (@$albums_ref);
 
     my %album;
@@ -202,6 +156,10 @@ sub show_album_listing{
 sub show_album_info{
     my ($albumID) = @_;
 
+    use tnmc::pics::album;
+    use tnmc::pics::link;
+    use tnmc::user;
+    
     my %album;
     &get_album($albumID, \%album);
 
@@ -247,5 +205,9 @@ sub show_album_info{
     };
         
 }
+
+1;
+
+__END__
 
 1;

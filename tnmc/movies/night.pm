@@ -1,24 +1,22 @@
 package tnmc::movies::night;
 
 use strict;
-use POSIX qw(strftime);
-
-use tnmc::db;
 
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(set_night get_night get_next_night list_nights list_future_nights list_active_nights);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    
+    use tnmc::db;
+    
+    use Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    @EXPORT = qw(set_night get_night get_next_night list_nights list_future_nights list_active_nights);
+    @EXPORT_OK = qw();
+    
+}
 
 #
 # module routines
@@ -29,7 +27,7 @@ sub set_night{
     my ($sql, $sth, $return);
     
     &db_set_row(\%night, $dbh_tnmc, 'MovieNights', 'nightID');
-
+    
     if (!$night{nightID}){
         $sql = "SELECT nightID FROM MovieNights WHERE date = " . $dbh_tnmc->quote($night{date});
         $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
@@ -50,23 +48,27 @@ sub get_night{
     &db_get_row($night_ref, $dbh_tnmc, 'MovieNights', $condition);
 }
 
+{
+    my $get_next_night_cache;
 sub get_next_night{
-    my ($date, $junk) = @_;
-    my ($sql, $sth, $return);
-
-    if (!$date){
-        $date = strftime("%Y%m%d", localtime());
+    
+    ## cache it if we can
+    if (defined $get_next_night_cache){
+        return $get_next_night_cache;
     }
-
-    ### BUG ALERT
-
-    $sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= '$date' ORDER BY date LIMIT 1";
+    
+    my ($sql, $sth);
+    
+    ### BUG ALERT (?)
+    
+    $sql = "SELECT DATE_FORMAT(date, '%Y%m%d') FROM MovieNights WHERE date >= NOW() ORDER BY date LIMIT 1";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
-    ($return) = $sth->fetchrow_array();
+    ($get_next_night_cache) = $sth->fetchrow_array();
     $sth->finish();
     
-    return $return;
+    return $get_next_night_cache;
+}
 }
 
 sub list_nights{

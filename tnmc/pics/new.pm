@@ -450,7 +450,7 @@ sub show_piclist{
         my $img_url = &get_pic_url($picID, ['mode'=>$listSize]);
         my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
         my $pic_src = $img_src;
-        my $can_edit = ( ($pic{'type_public'}) ||
+        my $can_edit = ( ($pic{'typePublic'}) ||
                          ($pic{'ownerID'} eq $tnmc::security::auth::USERID) );
         
         ### showpic: list

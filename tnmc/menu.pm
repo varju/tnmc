@@ -2,36 +2,52 @@ package tnmc::menu;
 
 use strict;
 
-use tnmc::config;
-use tnmc::security::auth;
-use tnmc::db;
-use tnmc::user;
-use tnmc::pics::show;
-
 #
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(new_nav_menu new_nav_login);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use tnmc::config;
+    use tnmc::security::auth;
+    require tnmc::util::date;
+    
+    require Exporter;
+    require AutoLoader;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter AutoLoader);
+    @EXPORT = qw(new_nav_menu new_nav_login);
+    @EXPORT_OK = qw();
+    
+}
 
 #
 # module routines
 #
 
-sub new_nav_menu{
 
+sub show_menu_item{
+    my ($indent, $url, $name, $text) = @_;
+    
+    my $indent_text = '';
+    while($indent--){
+        $indent_text .= '&nbsp;&nbsp;&nbsp;';
+    }
+    if ($ENV{REQUEST_URI} =~ /^\Q$url\E/){
+        print qq{\t\t$indent_text<b><a href="$url" class="menulink">$name</a>$text</b><br>\n};
+        return 1;
+    }
+    else{
+        print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
+        return 0;
+    }
+}
+
+sub new_nav_menu{
+    
     ### this test should probably be elsewhere.
     my $HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
-
+    
     &show_menu_item( 0, "", "", "");
     &show_menu_item( 0, "/", "Home", "");
     &show_menu_item( 0, "", "", "");
@@ -95,7 +111,7 @@ sub new_nav_menu{
         &show_menu_item( 0, "/cabin/", "Cabin", "");
         &show_menu_item( 0, "", "", "");
     }
-
+    
     if ($USERID{groupPics}){
         if (&show_menu_item( 0, "/pics/", "Pics", "")){
             &show_menu_item( 1, "/pics/album_index.cgi", "Albums", "");
@@ -110,7 +126,8 @@ sub new_nav_menu{
     
     ## Random-Pic
     if ($USERID{groupPics} && ! $USERID{'I_am_a_misanthrope'}){
-        &show_random_pic(); 
+        require tnmc::pics::random;
+        &tnmc::pics::random::show_random_pic(); 
         &show_menu_item( 0, "", "", "");
         &show_menu_item( 0, "", "", "");
     }
@@ -159,10 +176,25 @@ sub new_nav_menu{
     &show_menu_item( 0, "", "", "");
     &show_menu_item( 0, "/user/logout.cgi", "Log Out", "");
     &show_menu_item( 0, "", "", "");
+    
+    my $date = &tnmc::util::date::now();
+    $date = &tnmc::util::date::format_date('day_time', $date);
+    &show_menu_item( 0, "time", "", "$date");
 }
+
+1;
+
+__END__
+
+#
+# autoloaded module routines
+#
 
 sub new_nav_login{
 
+    use tnmc::db;
+    use tnmc::user;
+    
     my (@row, $userID, %user, $hits, $sth, $sql);
 
                 print qq
@@ -219,24 +251,6 @@ sub new_nav_login{
             <br>
                 };
             
-}
-
-###################################################################
-sub show_menu_item{
-    my ($indent, $url, $name, $text) = @_;
-    
-    my $indent_text = '';
-    while($indent--){
-        $indent_text .= '&nbsp;&nbsp;&nbsp;';
-    }
-    if ($ENV{REQUEST_URI} =~ /^\Q$url\E/){
-        print qq{\t\t$indent_text<b><a href="$url" class="menulink">$name</a>$text</b><br>\n};
-        return 1;
-    }
-    else{
-        print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
-        return 0;
-    }
 }
 
 1;

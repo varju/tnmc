@@ -1,27 +1,25 @@
 package tnmc::mybc;
 
 use strict;
-use LWP::UserAgent;
-use HTTP::Request::Common qw(POST);
-
-use tnmc::general_config;
 
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(mybc_get_movie_list mybc_get_valid_theatres mybc_get_movie_info);
-
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use LWP::UserAgent;
+    use HTTP::Request::Common qw(POST);
+    
+    use tnmc::general_config;
+    
+    use Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    
+    @EXPORT = qw(mybc_get_movie_list mybc_get_valid_theatres mybc_get_movie_info);
+    
+    @EXPORT_OK = qw();
+}
 
 #
 # module routines
@@ -29,7 +27,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 sub mybc_get_movie_list {
     my %results;
-
+    
     my $URL = "http://www2.mybc.com/movies/";
     my $req = new HTTP::Request GET => $URL;
     my $ua = new LWP::UserAgent;

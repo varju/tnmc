@@ -2,22 +2,20 @@ package tnmc::movies::attend;
 
 use strict;
 
-use tnmc::db;
-
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(set_attendance get_attendance list_my_attendance);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use tnmc::db;
+    
+    use Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    @EXPORT = qw(set_attendance get_attendance list_my_attendance);
+    @EXPORT_OK = qw();
+ 
+}
 
 #
 # module routines

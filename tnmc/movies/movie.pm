@@ -2,26 +2,24 @@ package tnmc::movies::movie;
 
 use strict;
 
-use tnmc::db;
-use tnmc::security::auth;
-use tnmc::movies::night;
-use tnmc::movies::attendance;
-use tnmc::movies::vote;
-use tnmc::user;
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(set_movie get_movie get_movie_extended get_movie_extended2 del_movie);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN{
+    use tnmc::db;
+    use tnmc::security::auth;
+    use tnmc::movies::night;
+    use tnmc::movies::attendance;
+    use tnmc::movies::vote;
+    use tnmc::user;
+    
+    require Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    @EXPORT = qw(set_movie get_movie get_movie_extended get_movie_extended2 del_movie);
+    @EXPORT_OK = qw();
+}
 
 #
 # module routines
@@ -68,9 +66,15 @@ sub set_movie{
 sub get_movie{
     my ($movieID, $movie_ref, $junk) = @_;
     my ($condition);
-
-    $condition = "(movieID = '$movieID' OR title = '$movieID')";
-    &db_get_row($movie_ref, $dbh_tnmc, 'Movies', $condition);
+    
+    my $sql = "SELECT * FROM Movies WHERE movieID = ?";
+    my $sth = $dbh_tnmc->prepare($sql)
+        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($movieID);
+    my $ref = $sth->fetchrow_hashref();
+    $sth->finish;
+    %$movie_ref = %$ref;
+    
 }
 
 {

@@ -2,35 +2,28 @@ package tnmc::broadcast;
 
 use strict;
 
-use tnmc::config;
-use tnmc::security::auth;
-use tnmc::user;
-
-use tnmc::broadcast::fido;
-use tnmc::broadcast::telus;
-use tnmc::broadcast::rogers;
-use tnmc::broadcast::vstream;
-use tnmc::broadcast::tapzing;
-
 #
 # module configuration
 #
+BEGIN{
+    
+    require Exporter;
+    require AutoLoader;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter AutoLoader);
+    
+    @EXPORT = qw(smsBroadcast smsShout sms_admin_notify);
+    
+    @EXPORT_OK = qw();
+}
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+1;
 
-@ISA = qw(Exporter);
-
-@EXPORT = qw(smsBroadcast smsShout sms_admin_notify);
-
-@EXPORT_OK = qw();
+__END__
 
 #
-# module vars
-#
-
-#
-# module routines
+# autoload module routines
 #
 
 ##################################################################
@@ -49,6 +42,16 @@ sub smsBroadcast{
 }
 
 sub smsShout{
+    use tnmc::config;
+    use tnmc::security::auth;
+    use tnmc::user;
+    
+    use tnmc::broadcast::fido;
+    use tnmc::broadcast::telus;
+    use tnmc::broadcast::rogers;
+    use tnmc::broadcast::vstream;
+    use tnmc::broadcast::tapzing;
+    
     my ($userID, $msg, $maxPackets, $junk) = @_;
     my (%user, $sender);
     

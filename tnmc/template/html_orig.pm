@@ -2,32 +2,23 @@ package tnmc::template::html_orig;
 
 use strict;
 
-use tnmc::config;
-use tnmc::db;
-use tnmc::menu;
-use tnmc::security::auth;
-
 #
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw();
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN{
+    use tnmc::config;
+    require tnmc::menu;
+    use tnmc::security::auth;
+    
+    use vars qw();
+}
 
 #
 # module routines
 #
 
 sub header{
-    &db_connect();
     
     # header and title
     print "Content-type: text/html\n\n";
@@ -101,7 +92,6 @@ th {
 sub footer{
     my ($pageID) = @_;
     
-    &db_connect();
     
     print q{
   <br></TD>
@@ -117,10 +107,10 @@ sub footer{
     if (!$pageID)
     {
         if ($LOGGED_IN) {
-            new_nav_menu();
+            &tnmc::menu::new_nav_menu();
         }
         else {
-            new_nav_login();
+            &tnmc::menu::new_nav_login();
         }
     }
     else {
@@ -167,7 +157,6 @@ sub footer{
 </HTML>
     };
     
-    &db_disconnect();
 }
 
 ###################################################################

@@ -2,30 +2,27 @@ package tnmc::pics::pic;
 
 use strict;
 
-use tnmc::security::auth;
-use tnmc::db;
-use tnmc::user;
-
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(
-             set_pic del_pic get_pic
-             update_cache save_pic get_file_info
-             get_pic_url list_pics
-             );
-
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN{
+    use tnmc::db;
+    
+    require Exporter;
+    require AutoLoader;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter AutoLoader);
+    
+    @EXPORT = qw(
+                 set_pic del_pic get_pic
+                 get_pic_url list_pics
+                 
+                 update_cache save_pic get_file_info
+                 );
+    
+    @EXPORT_OK = qw();
+}
 
 #
 # module routines
@@ -57,11 +54,74 @@ sub del_pic{
 ########################################
 sub get_pic{
     my ($picID, $pic_ref, $junk) = @_;
-    my ($condition);
-
-    $condition = "(picID = '$picID')";
-    &db_get_row($pic_ref, $dbh_tnmc, 'Pics', $condition);
+    
+    my $sql = "SELECT * FROM Pics WHERE picID = ?";
+    my $sth = $dbh_tnmc->prepare($sql)
+        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($picID);
+    my $ref = $sth->fetchrow_hashref() || return;
+    $sth->finish;
+    
+    %$pic_ref = %$ref;
 }
+
+########################################
+sub get_pic_url{
+    my ($picID, $format, $junk) = @_;
+    my %format = @$format;
+    
+    my %pic;
+    my $pic_url;
+    
+    if (($format{mode} eq 'mini') ||
+        ($format{mode} eq 'thumb')){
+        
+        &get_pic($picID, \%pic);
+        if ($pic{typePublic}){
+            $pic_url = "/pics/pub/cache/thumb/$picID";
+        }else{
+            $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
+        }
+    }
+    elsif (($format{mode} eq 'small') ||
+           ($format{mode} eq 'big') ||
+           ($format{mode} eq 'full') ||
+           ($format{mode} eq 'raw')){
+        $pic_url = "/pics/serve_pic.cgi?picID=$picID";
+    }else{
+        $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
+    }
+    
+    return $pic_url;
+    
+}
+
+########################################
+sub list_pics{
+    my ($pic_list_ref, $where_clause, $by_clause, $junk) = @_;
+    my (@row, $sql, $sth);
+    
+    @$pic_list_ref = ();
+    
+    $sql = "SELECT picID from Pics $where_clause $by_clause";
+    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute;
+    while (@row = $sth->fetchrow_array()){
+        push (@$pic_list_ref, $row[0]);
+    }
+    $sth->finish;
+
+    return scalar(@$pic_list_ref);
+}
+
+1;
+
+__END__
+
+
+#
+# autoloaded module routines
+#
 
 ########################################
 sub save_pic{
@@ -149,55 +209,6 @@ sub get_file_info{
     $pic{width} = $width;
     
     return \%pic;
-}
-
-########################################
-sub get_pic_url{
-    my ($picID, $format, $junk) = @_;
-    my %format = @$format;
-    
-    my %pic;
-    my $pic_url;
-    
-    if (($format{mode} eq 'mini') ||
-        ($format{mode} eq 'thumb')){
-        
-        &get_pic($picID, \%pic);
-        if ($pic{typePublic}){
-            $pic_url = "/pics/pub/cache/thumb/$picID";
-        }else{
-            $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
-        }
-    }
-    elsif (($format{mode} eq 'small') ||
-           ($format{mode} eq 'big') ||
-           ($format{mode} eq 'full') ||
-           ($format{mode} eq 'raw')){
-        $pic_url = "/pics/serve_pic.cgi?picID=$picID";
-    }else{
-        $pic_url = "/pics/serve_pic.cgi?mode=thumb&picID=$picID";
-    }
-    
-    return $pic_url;
-    
-}
-
-########################################
-sub list_pics{
-    my ($pic_list_ref, $where_clause, $by_clause, $junk) = @_;
-    my (@row, $sql, $sth);
-
-    @$pic_list_ref = ();
-
-    $sql = "SELECT picID from Pics $where_clause $by_clause";
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-    $sth->execute;
-    while (@row = $sth->fetchrow_array()){
-        push (@$pic_list_ref, $row[0]);
-    }
-    $sth->finish;
-
-    return scalar(@$pic_list_ref);
 }
 
 1;

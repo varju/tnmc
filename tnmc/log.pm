@@ -5,19 +5,16 @@ use strict;
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw(log_login);
-
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    
+    @EXPORT = qw(log_login);
+    
+    @EXPORT_OK = qw();
+}
 
 #
 # module routines

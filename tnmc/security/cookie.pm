@@ -1,26 +1,15 @@
 package tnmc::security::cookie;
 
 use strict;
-use tnmc::security::auth;
-use tnmc::cgi;
 
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK
-            );
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw();
-
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    
+    use vars qw(%cookie);
+    
+}
 
 #
 # module routines
@@ -30,11 +19,12 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 sub create_cookie{
     my ($sessionID) = @_;
     
+    require tnmc::cgi;
+    require tnmc::security::auth;
+    
     my $cgih = &tnmc::cgi::get_cgih();
     
-    if (! defined $sessionID){
-        $sessionID = &security::auth::get_my_sessionID();
-    }
+    $sessionID ||= &tnmc::security::auth::get_my_sessionID();
     
     my %cookie = ('sessionID' => $sessionID,
                   );
@@ -52,11 +42,25 @@ sub create_cookie{
 
 # grabs the cookie from the browser, 
 sub parse_cookie{
-    my %cookie;
     
-    my $cgih = &tnmc::cgi::get_cgih();
+    ## cache it if we can
+    if (defined %cookie){
+        return \%cookie;
+    }
     
-    %cookie = $cgih->cookie('TNMC');
+    ## get all the cookies
+    my(@pairs) = split("; ",$ENV{'HTTP_COOKIE'});
+    ## find our cookie
+    foreach my $line (@pairs) {
+        my($key,$value) = split("=", $line);
+        next if ($key ne 'TNMC');
+        
+        # note: this is ugly. it unescapes the keys and vals. i *know* there's a better
+        # way to do this, but i'm presently suffering from a massive synaptical failure.
+        %cookie = map {($_ =~ s/\%(..)/chr(hex($1))/e) ? $_ : $_}  (split('&',$value));
+        
+        last;
+    }
     
     return \%cookie;
 }

@@ -24,6 +24,14 @@ sub format_date{
     if ($format eq 'numeric'){
         return sprintf("%s/%s/%s %s:%s:%s", @date);
     }
+    elsif ($format eq 'day_time'){
+        my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+                   'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
+        return sprintf("%s %s, %s:%s:%s", $mon, $dd, $h, $m, $s);
+    }
+    elsif ($format eq 'full_time'){
+        return sprintf("%s:%s:%s", $h, $m, $s);
+    }
     elsif ($format eq 'short_date'){
         my $mon = ('', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
                    'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
@@ -34,6 +42,31 @@ sub format_date{
                    'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[$mm];
         return  "$mon $dd";
     }
+    elsif ($format eq 'full_date'){
+        require tnmc::db;
+        my $dbh = $tnmc::db::dbh;
+        
+        my $sql = "SELECT DATE_FORMAT(?, 'W M D, Y')";
+        my $sth = $dbh->prepare($sql);
+        $sth->execute($date);
+        my ($ret) = $sth->fetchrow_array();
+        $sth->finish();
+        return $ret;
+    }
+    return $date;
+}
+
+sub now{
+    
+    
+    my ($sec, $min, $hour, 
+        $day, $month, $year) = (localtime(time()))[0, 1, 2, 3, 4, 5];
+    
+    $month = $month + 1;
+    $year = $year + 1900;
+    
+    return "$year\-$month\-$day $hour\:$min\:$sec";
+    
 }
 
 return 1;

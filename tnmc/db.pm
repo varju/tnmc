@@ -22,10 +22,11 @@ BEGIN{
     # aotomatically connect and disconnect to the db.
     #
     
+    use AutoLoader;
     use Exporter;
-    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc);
+    use vars qw(@ISA @EXPORT @EXPORT_OK $dbh_tnmc $dbh);
     
-    @ISA = qw(Exporter);
+    @ISA = qw(Exporter AutoLoader);
     
     @EXPORT = qw(db_connect 
                  db_disconnect 
@@ -35,7 +36,7 @@ BEGIN{
                  $dbh_tnmc);
     
     @EXPORT_OK = qw($dbh);
-    *dbh = *tnmc_dbh;
+
 }
 
 #
@@ -72,15 +73,19 @@ sub db_disconnect{
 #
 
 BEGIN {
-    &db_connect();
+    $dbh = &db_connect();
 }
 END {
     &db_disconnect();
 }
 
+1;
+
 #
 # autoloaded module routines
 #
+
+__END__
 
 sub db_get_cols_list{
     my ($table) = @_;
@@ -124,14 +129,17 @@ sub db_set_row{
         $sth->finish;
     }
     
+#    print STDERR %db_hash;
+    
     ###############
     ### Set New Row Info
+    
     
     foreach $key (keys %$hash_ref){
         $db_hash{$key} = $hash_ref->{$key};
     }
     
-    @columns = db_get_cols_list($table);
+    @columns = db_get_cols_list($table);    
     $cols_string = "$primary_key";
     my $vals_string = "'$hash_ref->{$primary_key}'";
     foreach $item (@columns){
@@ -139,8 +147,8 @@ sub db_set_row{
         $cols_string .= ", $item";
         $vals_string .= ", " . $dbh_tnmc->quote($db_hash{$item});
     }
-    
     $sql = "REPLACE INTO $table ($cols_string) VALUES ($vals_string)";
+#    print $sql, "\n\n\n";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     $sth->finish;
@@ -150,32 +158,20 @@ sub db_set_row{
 }
 
 sub db_get_row{
-    my ($hash_ref, $dbh, $table, $where, $junk) = @_;
-    my ($sql, $sth, @cols, @row, $cols_string, $key, $val);
-
+    my ($hash_ref, $dbh, $table, $where) = @_;
+    my ($sql, $sth, $ref);
+    
     ### clear the hash
     %$hash_ref = ();
     
-    ###############
-    ### Build Select Statement
-
-    @cols = db_get_cols_list($table);
-    foreach (@cols){
-        $cols_string .= ", $_";
-    }
-    $sql = "SELECT NOW() $cols_string FROM $table WHERE $where";
-    
-    ###############
-    ### Get The Data
-
-    $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-    $sth->execute;
-    @row = $sth->fetchrow_array();
-    while ($key = pop (@cols)){
-        $val = pop @row;
-        $hash_ref->{$key} = $val;
-    }
+    $sql = "SELECT * FROM $table WHERE $where";
+    $sth = $dbh_tnmc->prepare($sql)
+        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute();
+    $ref = $sth->fetchrow_hashref();
     $sth->finish;
+    
+    %$hash_ref = %$ref;
 }
 
 1;

@@ -1,25 +1,14 @@
 package tnmc::cgi;
 
 use strict;
-use CGI;
 
 #
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK
-            $cgih);
-
-@ISA = qw(Exporter);
-
-@EXPORT = qw();
-
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use vars qw($cgih);
+}
 
 #
 # module routines
@@ -28,9 +17,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 sub get_cgih{
     
     # reuse handle if possible
-    if ($cgih){
+    if (defined $cgih){
         return $cgih;
     }
+    
+    require CGI;
     
     $cgih = new CGI;
     return $cgih;

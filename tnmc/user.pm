@@ -2,23 +2,21 @@ package tnmc::user;
 
 use strict;
 
-use tnmc::config;
-use tnmc::db;
-
 #
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(set_user del_user get_user get_user_cache get_user_extended list_users get_user_list);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use tnmc::db;
+    
+    use Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    @EXPORT = qw(set_user del_user get_user get_user_cache get_user_extended list_users get_user_list);
+    @EXPORT_OK = qw();
+    
+}
 
 #
 # module routines
@@ -56,11 +54,16 @@ sub del_user{
 }
 
 sub get_user{
-    my ($userID, $user_ref, $junk) = @_;
-    my ($condition);
-
-    $condition = "userID = '$userID'";
-    &db_get_row($user_ref, $dbh_tnmc, 'Personal', $condition);
+    my ($userID, $user_ref) = @_;
+    
+    my $sql = "SELECT * FROM Personal WHERE userID = ?";
+    my $sth = $dbh_tnmc->prepare($sql)
+        or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
+    $sth->execute($userID);
+    my $ref = $sth->fetchrow_hashref() || return;
+    $sth->finish;
+    
+    %$user_ref = %$ref;
 }
 
 # sub get_user_cache;

@@ -2,25 +2,15 @@ package tnmc::template::html_black;
 
 use strict;
 
-use tnmc::config;
-use tnmc::db;
-use tnmc::menu;
-use tnmc::security::auth;
-
 #
 # module configuration
 #
 
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw();
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use tnmc::security::auth;
+    
+    use vars qw();
+}
 
 #
 # module routines
@@ -28,7 +18,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 
 sub header{
-    &db_connect();
     
     # header and title
     print "Content-type: text/html\n\n";
@@ -78,8 +67,6 @@ th {
 
 sub footer{
     print "\n</body><\html>\n\n";
-    
-    &db_disconnect();
 }
 
 

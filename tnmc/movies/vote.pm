@@ -2,22 +2,21 @@ package tnmc::movies::vote;
 
 use strict;
 
-use tnmc::db;
 
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(get_vote set_vote list_votes_by_movie get_movie_votes_hash);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN{
+    use tnmc::db;
+    
+    use Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    @EXPORT = qw(get_vote set_vote list_votes_by_movie get_movie_votes_hash);
+    @EXPORT_OK = qw();
+    
+}
 
 #
 # module routines

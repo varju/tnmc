@@ -2,23 +2,20 @@ package tnmc::movies::attendance;
 
 use strict;
 
-use tnmc::db;
-use tnmc::movies::night;
-
 #
 # module configuration
 #
-
-use Exporter;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
-
-@ISA = qw(Exporter);
-@EXPORT = qw(set_attendance get_attendance get_user_attendance_hash get_night_attendance_hash show_my_attendance_chooser);
-@EXPORT_OK = qw();
-
-#
-# module vars
-#
+BEGIN {
+    use tnmc::db;
+    
+    require Exporter;
+    use vars qw(@ISA @EXPORT @EXPORT_OK);
+    
+    @ISA = qw(Exporter);
+    @EXPORT = qw(set_attendance get_attendance get_user_attendance_hash get_night_attendance_hash show_my_attendance_chooser);
+    @EXPORT_OK = qw();
+    
+}
 
 #
 # module routines
@@ -85,6 +82,8 @@ sub get_user_attendance_hash{
 
 sub get_night_attendance_hash{
     my ($nightID) = @_;
+    
+    use tnmc::movies::night;
     
     my %hash;
     
