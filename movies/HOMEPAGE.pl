@@ -155,7 +155,7 @@ sub show_movie_list{
 			$Vstatus = $row[5];
 
                        if ( ($Vperson eq 'demo')
-                           && ($effectiveUserID != 38)){        
+                           && ($USERID != 38)){        
                                 # 
                                 # Do nothing
                                 #
