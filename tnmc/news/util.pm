@@ -56,8 +56,8 @@ sub get_news {
     while (my @row = $sth->fetchrow_array()) {
         my %news_row;
 
-        $news_row{id} = shift @row;
-        $news_row{user} = shift @row;
+        $news_row{newsId} = shift @row;
+        $news_row{userId} = shift @row;
         $news_row{value} = shift @row;
         $news_row{date} = shift @row;
 
@@ -69,13 +69,13 @@ sub get_news {
 }
 
 sub set_news_item {
-    my ($id, $user, $value, $date) = @_;
+    my ($newsId, $userId, $value, $date) = @_;
     my ($sql, $sth);
 
-    if ($id) {
-        $sql = "DELETE FROM News WHERE newsID='$id'";
+    if ($newsId) {
+        $sql = "DELETE FROM News WHERE newsID=?";
         $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-        $sth->execute();
+        $sth->execute($newsId);
         $sth->finish();
     }
 
@@ -87,25 +87,25 @@ sub set_news_item {
 
     $sql = "INSERT INTO News (newsID, userID, value, date) VALUES (?, ?, ?, ?)";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-    $sth->execute($id, $user, $value, $date);
+    $sth->execute($newsId, $userId, $value, $date);
     $sth->finish();
 }
 
 sub get_news_item {
-    my ($id) = @_;
+    my ($newsId) = @_;
 
     my $sql = "SELECT n.newsID, n.userID, n.value, n.date
                  FROM News as n
-                WHERE n.newsID='$id'";
+                WHERE n.newsID=?";
 
     my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
-    $sth->execute();
+    $sth->execute($newsId);
     my @row = $sth->fetchrow_array();
     $sth->finish();
 
     my %news_row;
-    $news_row{id} = shift @row;
-    $news_row{user} = shift @row;
+    $news_row{newsId} = shift @row;
+    $news_row{userId} = shift @row;
     $news_row{value} = shift @row;
     $news_row{date} = shift @row;
 
@@ -113,9 +113,9 @@ sub get_news_item {
 }
 
 sub del_news_item {
-    my ($id) = @_;
+    my ($newsId) = @_;
 
-    my $sql = "DELETE FROM News WHERE newsID='$id'";
+    my $sql = "DELETE FROM News WHERE newsID='$newsId'";
     my $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute();
     $sth->finish();

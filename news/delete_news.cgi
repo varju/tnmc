@@ -15,7 +15,7 @@ use tnmc::news::util;
 db_connect();
 cookie_get();
 
-my $newsid = $tnmc_cgi->param('newsid');
+my $newsid = $tnmc_cgi->param('newsId');
 
 del_news_item($newsid);
 

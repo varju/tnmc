@@ -46,18 +46,18 @@ sub news_print {
 
     my $i = 0;
     foreach my $news_row (@$news_ref) {
-        my $newsid = $$news_row{id};
-        my $user = $$news_row{user};
+        my $newsId = $$news_row{newsId};
+        my $userId = $$news_row{userId};
         my $value = $$news_row{value};
         my $date = $$news_row{date};
         
         print "<p>$date\n";
         print "<p>$value\n";
-        print "<p>-<i>$user</i>\n";
+        print "<p>-<i>$userId</i>\n";
 
         if ($edit_links && $USERID{groupAdmin}) {
-            print "<p><a href='edit_news.cgi?newsid=$newsid'>edit</a>\n";
-            print " <a href='delete_news.cgi?newsid=$newsid'>delete</a>\n";
+            print "<p><a href='edit_news.cgi?newsId=$newsId'>edit</a>\n";
+            print " <a href='delete_news.cgi?newsId=$newsId'>delete</a>\n";
         }
         
         if (++$i < $count) {
@@ -73,7 +73,7 @@ sub news_print {
 }
 
 sub news_edit {
-    my ($newsid,$userid,$date,$value) = @_;
+    my ($newsId,$userId,$date,$value) = @_;
 
     my $userlist = get_user_list();
 
@@ -86,12 +86,12 @@ sub news_edit {
   </tr>
   <tr>
     <td><b>User</b></td>
-    <td><select name="userid">
+    <td><select name="userId">
 };
     
     foreach my $key (sort keys %$userlist) {
         print "<option value='$$userlist{$key}'";
-        print " selected" if $$userlist{$key} == $userid;
+        print " selected" if $$userlist{$key} == $userId;
         print ">$key\n";
     }
 
@@ -105,7 +105,7 @@ sub news_edit {
 </table>
 <p>
 
-<input type="hidden" name="newsid" value="$newsid">
+<input type="hidden" name="newsId" value="$newsId">
 <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
 </form>
 };
