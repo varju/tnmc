@@ -211,23 +211,134 @@ sub update_cache_pub{
 
 ########################################
 sub get_file_info{
-    my ($filename) = @_;
+    my ($picID) = @_;
+    
+    return if !$picID;
     
     my %pic;
+    &get_pic($picID, \%pic);
+    
+    my $filename = "data\/$pic{filename}";
+    return if (! -e $filename);
     
     use Image::Magick;
     my($image, $x);
     
     # load in the pic data
     $image = Image::Magick->new;
-    $x = $image->Read("data/$filename");
+    $x = $image->Read("$filename");
     
     # grab the height and width
     my ($height, $width) = $image->Get('base_rows', 'base_columns');
     $pic{height} = $height;
     $pic{width} = $width;
     
-    return \%pic;
+    &set_pic(%pic);
 }
+
+sub pic_add{
+    my ($details, $FILE, $conf) = @_;
+    
+    use tnmc::util::file;
+    use tnmc::util::date;
+    use tnmc::security::auth;
+    
+    my %pic = %$details;
+    my $verbose = $conf->{'verbose'};
+    
+    # pic: timestamp
+    if(!$pic{timestamp} ||
+       $pic{timestamp} eq '0000-00-00 00:00:00' || 
+       $pic{timestamp} !~ /(....)\-(..)\-(..) (..)\:(..)\:(..)/)
+    {
+        print ("invalid timestamp ($pic{timestamp})... ") if $verbose;
+        $pic{timestamp} = &tnmc::util::date::now();
+        print ("set to now ($pic{timestamp})\n") if $verbose;
+    }
+    
+    # pic: ownerID
+    if (! int($pic{ownerID})){
+        print "no owner ($pic{ownerID} ->" if $verbose;
+        $pic{ownerID} = $USERID;
+        print " $pic{ownerID}) ($USERID)\n" if $verbose;
+    }
+    
+    # pic: filename
+    if (!$pic{filename}){
+        $pic{timestamp} =~ /(....)\-(..)\-(..) (..)\:(..)\:(..)/;
+        my $pic_dir_name = "$pic{ownerID}/$1/$1-$2-$3/";
+        my $pic_file_name = "$4_$5_$6_$FILE";
+        $pic_file_name =~ s/^.*[\/\\]//g;  # get rid of the dir stuff
+        $pic_file_name =~ s/[\s]/_/g;      # remove spaces
+        $pic_file_name =~ s/[^\.\w]/_/g;   # remove strange chars
+        $pic{filename} = $pic_dir_name . $pic_file_name;
+        print "Generating filename: $pic{filename}\n" if $verbose;
+    }
+    
+    # pic: picID
+    $pic{picID} = 0;
+    
+    # pic: user info (rateContent, rateImage, title, description, typePublic)
+    
+    # test: pic already exists
+    if (-e "data\/$pic{filename}"){
+        print "error: pic already exists!\n" if $verbose;
+        $conf->{'error_str'} = "pic already exists";
+        return 0;
+    }
+    
+    # file: data/dir
+    my ($pic_dir, $junk) = &tnmc::util::file::split_filepath($pic{filename});
+    print "dir: $pic_dir\n" if $verbose;
+    `mkdir -p data/$pic_dir`;
+    
+    # file: data/file
+    open (OUTFILE, ">data/$pic{filename}");
+    binmode(OUTFILE);
+    binmode($FILE);
+    my $buffer;
+    while (my $bytesread = read($FILE, $buffer, 1024)){
+        print OUTFILE $buffer;
+    }
+    close OUTFILE;
+    print "file saved ($FILE)\n" if $verbose;
+    
+    # db: add entry
+    print "saving to db...\n" if $verbose;
+    &set_pic(%pic);
+    
+    # db: get picID
+    print "saving to data/ ($pic{filename})\n";
+    my $sql = "SELECT picID FROM Pics WHERE filename = ?";
+    my $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute($pic{filename});
+    my ($picID) = $sth->fetchrow_array();
+    $sth->finish();
+    $pic{picID} = $picID;
+    print "picID: $picID\n" if $verbose;
+    $conf->{picID} = $picID;
+    
+    # test: picID
+    if (!$picID){
+        print "error: cannot find picID\n" if $verbose;
+        $conf->{'error_str'} = "can not find picID";
+        $conf->{'error_filename'} = $pic{filename};
+        return 0;
+    }
+    
+    # pic: extended info (width, height)
+    print "reading file info\n" if $verbose;
+    &tnmc::pics::pic::get_file_info($picID);
+    
+    # file: process & cache
+    print "setting up cache...\n" if $verbose;
+    &tnmc::pics::pic::update_cache($picID);
+    &tnmc::pics::pic::update_cache_pub($picID);
+    
+    # done
+    print "pic added.\n" if $verbose;
+    return 1;
+}
+
 
 1;
