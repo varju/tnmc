@@ -35,14 +35,21 @@ use tnmc;
 			<b> $numRec Recipients:</b><br>
 			<hr noshade size="1">
 		};
+
+		&get_user($USERID, \%user);
+
+		open (LOG, '>>broadcast.log');
+		print LOG qq{$user{username} "$message" [};
 		
 		foreach $_ (@userList){
 			&get_user($_, \%user);
 			print qq{
 				$user{username}
-			}
+			};
+			print LOG " $user{username}";
 		}
-		
+		print LOG " ]\n";
+		close LOG;
 		print qq{
 			<hr noshade size="1">
 		};
@@ -58,7 +65,8 @@ use tnmc;
 
 		# print "Location: $ENV{HTTP_REFERER}\n\n";
 
-&footer();		
+		&footer();		
+
 	&db_disconnect();
 
 ##########################################################
