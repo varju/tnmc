@@ -76,11 +76,10 @@ th {
 
 <TABLE BORDER="0" CELLPADDING=0 CELLSPACING=0 background="">
 <TR>
-  <TD colspan="4">
+  <TD colspan="4" BACKGROUND="/template/top_center_bg.gif"  bgcolor="2266aa">
     <TABLE BORDER="0" CELLPADDING=0 CELLSPACING=0>
     <TR>
-      <TD><IMG width="290" height="36" SRC="/template/logo/$logo"></TD>
-      <TD width="100%" bgcolor="2266aa" BACKGROUND="/template/top_center_bg.gif">&nbsp;</TD>
+      <TD BACKGROUND="/template/blank_dot.gif" bgcolor="$colour_bg"><IMG width="290" height="36" SRC="/template/logo/$logo"></TD>
     </TR>
     </TABLE>
   </TD>
