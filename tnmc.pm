@@ -44,6 +44,7 @@ BEGIN
 			%USERID
 			$LOGGED_IN
 			$tnmc_cgi
+                        %user
 
 			&db_get_cols_list
 			&db_get_row
