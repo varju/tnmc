@@ -15,6 +15,7 @@ use vars qw(%sports);
 %sports = qw(ulti Ultimate
 	     vball Volleyball
 	     hockey Hockey
+             softball Softball
 	     none (none) );
 
 my $table = 'Teams';

@@ -35,6 +35,8 @@ sub list_templates{
 		    html_black
 		    html_2003
 		    html_blat
+                    html_monkeys
+                    html_nuts
 		    );
     return @styles;
 }

@@ -17,7 +17,8 @@ use vars qw(%types);
 	  "Tournament",
 	  "Party",
 	  "Games Night",
-	  "Canceled",
+	  "BBQ",
+          "Canceled",
           "(none)",
 	  );
 
