@@ -87,7 +87,7 @@ use tnmc;
 	$lines_of_code = <LINES>;
 	close (LINES);
 
-        @file_status = stat("/usr/local/apache/tnmc/tnmc.tar.gz");
+        @file_status = stat("/usr/local/apache/tnmc/source/tnmc.tar.gz");
         use POSIX qw(strftime);
         $flastmod = strftime "%b %e, %Y", gmtime $file_status[9];
         
@@ -100,7 +100,7 @@ use tnmc;
 
  	
 		<TR>
-		<TD valign="top" nowrap><B><a href="tnmc.tar.gz">Download Source Code</a></b><br>
+		<TD valign="top" nowrap><B><a href="source/tnmc.tar.gz">Download Source Code</a></b><br>
 			(as of $flastmod)<br>
 		</TD>
 		<TD>
