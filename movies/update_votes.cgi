@@ -51,7 +51,7 @@ require 'MOVIES.pl';
 
 		if ($favoriteMovie ne ''){
 			### Kill old Fave.
-			$sql = "UPDATE Movies SET type = '1' WHERE type = '2' AND userID = '$userID'";
+			$sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
 			$sth = $dbh_tnmc->prepare($sql);
 			$sth->execute;
 			
