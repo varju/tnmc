@@ -21,7 +21,7 @@ use tnmc::movies::night;
     
     &db_connect();
     
-    my @nights = &get_future_nights();
+    my @nights = &list_future_nights();
     my %next_night;
     &get_night($nights[0], \%next_night);
     
