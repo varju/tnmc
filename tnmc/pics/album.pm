@@ -105,13 +105,16 @@ sub list_valid_albums{
     my ($album_list_ref, $timestamp) = @_;
     my (@row, $sql, $sth);
     
+    use tnmc::security::auth;
+    
     my $dbh_tnmc = &tnmc::db::db_connect();
     
     @$album_list_ref = ();
     
     $sql = "SELECT albumID 
               FROM PicAlbums
-             WHERE (albumDateStart <= ? && albumDateEnd >= ?)";
+             WHERE (albumDateStart <= ? && albumDateEnd >= ?)
+               AND (albumTypePublic >= 2 OR albumOwnerID = $USERID)";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($timestamp, $timestamp);
     while (@row = $sth->fetchrow_array()){

@@ -164,15 +164,15 @@ sub list_links_for_album{
 sub list_links_for_pic{
     my ($link_list_ref, $picID) = @_;
     my (@row, $sql, $sth);
-
+    
     my $dbh_tnmc = &tnmc::db::db_connect();
     
     @$link_list_ref = ();
-
+    
     $sql = "SELECT l.albumID
                   FROM PicLinks as l LEFT JOIN PicAlbums as a USING (albumID)
                  WHERE l.picID = ?
-                   AND ((a.AlbumOwnerID = '$USERID') OR a.AlbumTypePublic = 1)
+                   AND ((a.AlbumOwnerID = '$USERID') OR a.AlbumTypePublic >= 1)
                  ORDER BY a.albumDateStart, a.albumID";
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute($picID);

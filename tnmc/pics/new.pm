@@ -28,7 +28,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
              auth_access_album_edit auth_access_album_view auth_access_pic_edit auth_access_pic_view
              
-             show_album_thumb_header show_album_nav_menu_basic show_album_nav_menu_full access_pics_admin show_piclist
+             show_album_thumb_header show_album_nav_menu_basic show_album_nav_menu_full show_piclist
              
              show_album_slide_header show_slide array_get_index show_slide_nav_menu_basic show_slide_thumbnails show_slide_pic make_nav_url
              );
@@ -121,13 +121,12 @@ sub show_thumbs{
     ## help the user get around a bit
     &show_album_nav_menu_full($nav, $piclist);
     
-    
 }
 
 sub auth_access_album_edit{
     my ($albumID, $album) = @_;
     use tnmc::security::auth;
-    return &_has_access_album('view', $albumID, $album, $USERID, undef);
+    return &_has_access_album('edit', $albumID, $album, $USERID, undef);
 }
 
 sub auth_access_album_view{
@@ -147,18 +146,18 @@ sub _has_access_album{
     if (! defined $userID){
         $userID = $user->{userID};
     }
-    
+    print STDERR " ($album->{albumOwnerID} == $userID) \n";
     # decide if user has access
-    if ($album->{ownerID} == $userID){
+    if ($album->{albumOwnerID} == $userID){
         return 1;
     }
     elsif ($album->{albumTypePublic} eq 2){
-        return 1 if $access = 'view';
-        return 1 if $access = 'edit';
+        return 1 if $access eq 'view';
+        return 1 if $access eq 'edit';
     }
     elsif ($album->{albumTypePublic} eq 1){
-        return 1 if $access = 'view';
-        return 0 if $access = 'edit';
+        return 1 if $access eq 'view';
+        return 0 if $access eq 'edit';
     }
     elsif ($album->{albumTypePublic} eq 0){
         return 0;
@@ -197,12 +196,12 @@ sub _has_access_pic{
         return 1;
     }
     elsif ($pic->{typePublic} eq 2){
-        return 1 if $access = 'view';
-        return 1 if $access = 'edit';
+        return 1 if $access eq 'view';
+        return 1 if $access eq 'edit';
     }
     elsif ($pic->{typePublic} eq 1){
-        return 1 if $access = 'view';
-        return 0 if $access = 'edit';
+        return 1 if $access eq 'view';
+        return 0 if $access eq 'edit';
     }
     elsif ($pic->{typePublic} eq 0){
         return 0;
@@ -419,17 +418,6 @@ sub show_album_nav_menu_full{
 }
 
 ########################################
-sub access_pics_admin{
-    # TODO: replace this function with something more usefull (and intentional)
-    my ($picID, $albumID) = @_;
-
-    if ($USERID{groupPics} >= 10 ){
-        return 1;
-    }
-    return 0;
-}
-
-########################################
 sub show_piclist{
     my ($nav, $piclist) = @_;
     
@@ -466,13 +454,8 @@ sub show_piclist{
         $listColumns = 2 if ($listType eq 'thumbnail');
         $listColumns = 2 if ($listType eq 'admin');
     }
-    my $nav_query = join ('&',
-                          (map 
-                           {$_ . '=' . $nav{$_}}
-                           (keys(%nav))
-                           )
-                          );
-    
+    my $nav_query = &make_nav_url($nav);
+
     ## grab the pics that we'll be using
     my @pics = splice (@$piclist, $start, $limit);
     
@@ -589,6 +572,8 @@ sub show_piclist{
             $sel_content{int($pic{rateContent})} = 'checked';
             $sel_image{int($pic{rateImage})} = 'checked';
             $sel_public{int($pic{typePublic})} = 'selected';
+            
+            ### pic, title, description
             print qq{
                 <td valign="top"><a href="$slide_url">
                     <img $pic_src border="0" ></a></td>
@@ -596,41 +581,72 @@ sub show_piclist{
                     <input type="text" name="PIC${picID}_title" value="$pic{title}" size="20"><br>
                     
                     <textarea rows=2 columns=18 wrap="virtual"  name="PIC${picID}_description">$pic{description}</textarea><br>
-                    
-                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"><input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"><input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2"> 
-
             };
+            
+            ### other usefull info
+            print qq{
+                    $i. $pic{timestamp} - $owner{username}
+            };
+            
+            ### edit/admin links
+            if ($USERID eq $pic{ownerID}){
+                print qq{     
+                    &\#149;   <a href="pic_edit.cgi?picID=$picID">edit</a>
+                    <br>
+                };
+            }
+            
+            ### width/height
+            print qq{
+                    ($pic{width} x $pic{height})<br>
+            };
+            
+            ### rating
+            print qq{
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"><input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"><input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2"> 
+            };
+            
+            ### access control
             if ($USERID == $pic{ownerID}){
                 print qq{
                         <select name="PIC${picID}_typePublic">
-                        <option $sel_public{0} value="0">hide
-                        <option $sel_public{1} value="1">show
+                        <option $sel_public{2} value="2">view/edit
+                        <option $sel_public{1} value="1">view
+                        <option $sel_public{0} value="0">hidden
                         </select>
                 };
             }
-            print qq{
-                            <br>
-
-                    <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"><input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0">
-                    Image ($pic{width} x $pic{height})<br>
-            };
-
+            
+            ### image rating
+            #print qq{
+            #        <br>
+            #        <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"><input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0">
+            #        Image<br>
+            #};
+            
             ### album info
             my @valid_albums;
-            &tnmc::pics::album::list_valid_albums(\@valid_albums, $pic{'timestamp'});
+            &tnmc::pics::album::list_valid_albums(\@valid_albums, $pic{'timestamp'}, );
             my @pic_albums;
             &tnmc::pics::link::list_links_for_pic(\@pic_albums, $picID);
-            if (! scalar(@pic_albums)  && scalar(@valid_albums) ){
-                @pic_albums = (0); #allow creation of a new link
+            if ( scalar(@valid_albums) ){
+                push @pic_albums, 0; #allow creation of a new link
             }
             foreach my $albumID (@pic_albums){
+                my %album;
                 if ($albumID){
+                    &tnmc::pics::album::get_album_cache($albumID, \%album);
                     my $link = &tnmc::pics::link::get_link($picID, $albumID,);
                     
+                    # print current album separately in case it's not in valid list
                     print "<select name=\"LINK$link->{'linkID'}_albumID\">\n";
-                    my %album; # print current album separately in case it's not in valid list
-                    &tnmc::pics::album::get_album_cache($albumID, \%album);
                     print "<option  value=\"$albumID\">$albumID. $album{'albumTitle'}</option>\n";
+                    
+                    if (! &auth_access_album_edit($albumID, \%album)){
+                        print "</select>\n";
+                        next;
+                    }
+                    
                 }
                 else{
                     print "<select name=\"NEWLINK${picID}_albumID\">\n";
@@ -646,16 +662,6 @@ sub show_piclist{
                 
             }
             
-            ### other usefull info
-            print qq{
-                    $i. $pic{timestamp} - $owner{username} $pic{flags}<br>
-            };
-            
-            
-            ### edit/admin links
-            if ($USERID eq $pic{ownerID}){
-                print qq{       <a href="pic_edit.cgi?picID=$picID">edit</a> &\#149; };
-            }
             ### the end
             print qq{
                 </td>
@@ -995,24 +1001,23 @@ sub show_slide_pic{
                 <tr><td colspan="2">$pic{description}</td></tr>
                 <tr><td colspan="2">$pic{comments}</td></tr>
         </table>
-
     };
-
+    
 }
 
 sub make_nav_url{
+    require tnmc::util::url;
+
     my ($nav) = @_;
-    return ( join ('&',
-                   (map 
-                    {$_ . '=' . $nav->{$_}}
-                    (keys(%$nav))
-                    )
-                   )
-             );
+    return join ('&',
+                 (map 
+                  { &tnmc::util::url::url_encode($_) .
+                    '=' .
+                    &tnmc::util::url::url_encode($nav->{$_})}
+                  (keys(%$nav))
+                  )
+                 );
 }
-
-
-
 
 return 1;
 

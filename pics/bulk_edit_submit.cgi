@@ -27,9 +27,12 @@ use tnmc::pics::link;
 sub do_bulk_edit{
     $cgih = &tnmc::cgi::get_cgih();
     
+    &header();
+    
+    &show_heading("Bulk edit - save changes");
     my $destination = $cgih->param(destination);
-    print "Location: $destination\n\n";
-
+    print "<p><a href=\"$destination\">continue</a><br><br>\n\n";
+    
     # grab the cgi info into a big 2-d hash
     my @params = $cgih->param();
     
@@ -88,20 +91,23 @@ sub do_bulk_edit{
             }
     }
     
-#        # user output
-#        &header();
-#        print $moo;
-#        &show_heading("pics");
-#        foreach $picID (keys(%PICS)){
-#            print  %{$PICS{$picID}};
-#            print "<p>";
-#        }
-#        &show_heading("links");
-#        foreach $key (keys(%LINKS)){
-#            print  %{$LINKS{$key}};
-#            print "<p>";
-#        }
-#        &footer();
+    my $debug = 0;
+    if ($debug){
+        # user output
+        print $moo;
+        &show_heading("pics");
+        foreach $picID (keys(%PICS)){
+            print  %{$PICS{$picID}};
+            print "<p>";
+        }
+        &show_heading("links");
+        foreach $key (keys(%LINKS)){
+            print  %{$LINKS{$key}};
+            print "<p>";
+        }
+    }
+    
+    &footer();
     
     ## save all the pics to the db
     foreach $picID (keys(%PICS)){
