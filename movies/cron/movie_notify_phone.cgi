@@ -9,9 +9,6 @@ use lib '/usr/local/apache/tnmc/';
 use tnmc;
 require 'movies/MOVIES.pl';
 
-require 'sms_fido.pl';
-require 'sms_bctel.pl';
-
 	#############
 	### Main logic
 

@@ -146,14 +146,12 @@ sub new_nav_login{
 			solely to figuring <BR>out which movie to<BR>
 			go to every week.
 			<p>
-			More functionality <BR>will be added whenever<BR>
-			someone feels like <BR>coding it. If you have<BR>
-			an idea for a cool, <BR>new feature, the<BR>
-			source code is avaliable <BR>on the
-			<a href="/site_info.cgi">site info</a>
-			page.
-			<p>
-			The same thing goes <BR>for bugs. <b>:)</b>
+			
+			<u><b>Notice to Visitors:</b></u><br>
+			If you are not a<br> regular user and<br>
+			would like to browse<br> the site, please<br>
+			login as user <b>demo</b>.<br>
+			
 			<br>
 			<p>
                 };
