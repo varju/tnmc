@@ -40,6 +40,15 @@ sub smsShout{
 	
 	### Get the user info from the db
 	&get_user($userID, \%user);
+
+	### Get the sender info
+	if ($USERID){
+		&get_user($USERID, \%sender);
+		$sender = uc($sender{username});
+	}else{
+		$sender = 'TNMC';
+	}
+	$msg = "$sender: $msg";
 	
 	#
 	# Now we run through each provider.
@@ -71,16 +80,26 @@ sub smsShout{
 sub sms_send_fido{
 
         my ($phone, $msg, $junk) = @_;
+	my ($areacode);
 
         ### see if we actually want to send anything.
         if (length($msg) == 0){
                 return 0;       # nope.
         }
 
+	### get the areacode, if they have one.
+	$phone =~ s/!\d//;
+	if (length($phone) == 9){
+		$phone =! s/(...)//;
+		$areacode = $1;
+	}else{
+		$areacode = '604';
+	}
+
         ### Build the argument string.
         my $SEND = substr($msg, 0, 160);
 	# $SEND =~ s/(\W)/'%' . sprintf "%2.2X",  unpack('c',"$1")/eg; 
-        my $args = 'areacode=604&address='.$phone.'&message=' . $SEND . '&total=' . length($SEND);
+        my $args = 'areacode=' . $areacode . '&address='.$phone.'&message=' . $SEND . '&total=' . length($SEND);
 
         ### Get a User agent
         my $ua = new LWP::UserAgent;
