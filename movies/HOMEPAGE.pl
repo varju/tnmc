@@ -116,14 +116,21 @@ sub show_movie_list{
 	# my $cutoff = sqrt ($movieInfo{$list[0]}->{rank});
 	my $cutoff = 0.5 * $movieInfo{$list[0]}->{rank};
 	my $min_listing_size = 5;
+	my $max_listing_size = 15;
+	my $listing_index = 0;
 	foreach $movieID (@list){
+	
+		$listing_index ++;
 
-		$min_listing_size -= 1;
-		if (( $movieInfo{$movieID}->{rank} < $cutoff)
-		   && ! $movieInfo{$movieID}->{statusNew}
-		   && ($min_listing_size < 0)){
+		if (  (! $movieInfo{$movieID}->{statusNew})
+		      && (  (  (  ($movieInfo{$movieID}->{rank} < $cutoff)
+	   		       && ($listing_index > $min_listing_size))  )
+		         || ($listing_index > $max_listing_size)
+		      )
+                   ){
 			next;
 		}
+
                 %vote_status_word = ();
                 $vote = &get_vote($movieID, $effectiveUserID);
                 $vote_status_word{$vote} = "CHECKED";
