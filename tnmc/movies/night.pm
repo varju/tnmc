@@ -64,6 +64,7 @@ sub get_next_night{
     $sth = $dbh_tnmc->prepare($sql) or die "Can't prepare $sql:$dbh_tnmc->errstr\n";
     $sth->execute;
     ($return) = $sth->fetchrow_array();
+    $sth->finish();
     
     return $return;
 }

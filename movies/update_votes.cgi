@@ -68,7 +68,8 @@ use tnmc::template;
         ### Kill old Fave.
         my $sql = "UPDATE MovieVotes SET type = '1' WHERE type = '2' AND userID = '$userID'";
         my $sth = $dbh_tnmc->prepare($sql);
-        $sth->execute;
+        $sth->execute();
+        $sth->finish();
         
         ### Set new Fave.
         if ($favoriteMovie){ &set_vote($favoriteMovie, $userID, '2');}

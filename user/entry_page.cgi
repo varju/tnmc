@@ -36,8 +36,8 @@ srand;
 sub show_full_login{
 	
     my (@row, $userID, %user, $hits, $sth, $sql);
-
-                print qq{
+    
+    print qq{
 
             <form action="/user/login.cgi" method="post">
 	    <input type="hidden" name="location" value="$tnmc_url">
@@ -46,29 +46,30 @@ sub show_full_login{
             <select name="userID" size="1">
                         <option value="0">Pick a user...
                         <option value="0">---------------
-                };
+                        };
 
-                $sql = "SELECT userID, username, fullname FROM Personal WHERE groupDead != '1' ORDER BY fullname ASC";
-                $sth = $dbh_tnmc->prepare($sql);
-                $sth->execute();
-                
-                while (@row = $sth->fetchrow_array()){
-	    if ($row[1] ne ''){
-		$row[1] = "(" . $row[1] . ")";
-	    }
-            if ($row[0] eq $USERID_LAST_KNOWN){
-                            print qq{
-                                   <option value="$row[0]" selected>$row[2] $row[1]
-                            };
-            }else{
-                            print qq{
-                                   <option value="$row[0]">$row[2] $row[1]
-                            };
-            }
-                };
+    $sql = "SELECT userID, username, fullname FROM Personal WHERE groupDead != '1' ORDER BY fullname ASC";
+    $sth = $dbh_tnmc->prepare($sql);
+    $sth->execute();
     
-                print qq 
-                {       </select><br>
+    while (@row = $sth->fetchrow_array()){
+        if ($row[1] ne ''){
+            $row[1] = "(" . $row[1] . ")";
+        }
+        if ($row[0] eq $USERID_LAST_KNOWN){
+            print qq{
+                                   <option value="$row[0]" selected>$row[2] $row[1]
+                                   };
+        }else{
+            print qq{
+                                   <option value="$row[0]">$row[2] $row[1]
+                                   };
+        }
+    };
+    $sth->finish();
+    
+    print qq 
+    {       </select><br>
             <b>Password:</b><br>
             <input type="password" name="password" size="10"><br>
                         <input type="image" border=0 src="/template/go_submit.gif" alt="Go"><br>
@@ -83,9 +84,7 @@ sub show_full_login{
             Create a New Account</a></b><br>
             <br>
             <p>
-                };
-            
-	
+            };
 }
 
 

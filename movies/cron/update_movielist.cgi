@@ -200,6 +200,7 @@ use tnmc::movies::movie;
         $sth = $dbh_tnmc->prepare($sql);
         $sth->execute();
         my @row = $sth->fetchrow_array();
+        $sth->finish();
         my $movieID = $row[0];
         
         if ($movieID){
@@ -215,6 +216,8 @@ use tnmc::movies::movie;
             $sth = $dbh_tnmc->prepare($sql);
             $sth->execute();
             @row = $sth->fetchrow_array();
+            $sth->finish();
+
             $movieID = $row[0];
             
             if ($movieID){
@@ -265,8 +268,6 @@ use tnmc::movies::movie;
         
       }
     }
-
-    $sth->finish();
 
     &db_disconnect();
 }

@@ -53,20 +53,22 @@ sub show_seen_movie_list{
     };
 
     my $year = '';
-        foreach $movieID (@movies){
-                &get_movie($movieID, \%movie);
+    foreach $movieID (@movies){
+        &get_movie($movieID, \%movie);
         
         $movie{date} =~ /^(....)/; # grab the year
         if ($year ne $1){
             $year = $1;
             print qq{
                 <tr><th colspan="5">$year</th></tr>
-            };
+                };
         }
         my $sql = "SELECT DATE_FORMAT('$movie{date}', '%b %d')";
         my $sth = $dbh_tnmc->prepare($sql); 
         $sth->execute();
         my ($dateString) = $sth->fetchrow_array();
+        $sth->finish();
+
         print qq{
             <tr>
                 <td nowrap>$movie{title}</td>

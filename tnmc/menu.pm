@@ -167,18 +167,19 @@ sub new_nav_login{
                 $sth = $dbh_tnmc->prepare($sql);
                 $sth->execute();
                 
-                while (@row = $sth->fetchrow_array()){
-            if ($row[0] eq $USERID_LAST_KNOWN){
-                            print qq{
+    while (@row = $sth->fetchrow_array()){
+        if ($row[0] eq $USERID_LAST_KNOWN){
+            print qq{
                                    <option value="$row[0]" selected>$row[1]
-                            };
-            }else{
-                            print qq{
+                                   };
+        }else{
+            print qq{
                                    <option value="$row[0]">$row[1]
-                            };
-            }
-                };
-    
+                                   };
+        }
+    }
+    $sth->finish();
+
                 print qq 
                 {       </select><br>
             <b>Password:</b><br>

@@ -74,6 +74,7 @@ if (1 == 1){
     # $sth = $dbh_tnmc->prepare($sql);
     # $sth->execute();
     # ($this_tuesday) = $sth->fetchrow_array();
+    # $sth->finish();
     
     my $span = 7 * $numberOfWeeksToShow;
     
@@ -81,20 +82,23 @@ if (1 == 1){
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
     my ($far_tuesday) = $sth->fetchrow_array();
-    
-    
+    $sth->finish();
+       
     $sql = "SELECT DATE_FORMAT(NOW(), '%Y%m%d'), DATE_FORMAT('$far_tuesday', '%Y%m%d')";
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
     my ($oldMovieDate, $newMovieDate) = $sth->fetchrow_array();
-    
+    $sth->finish();
+
     $sql = "ALTER TABLE MovieAttendance ADD movie$newMovieDate char(20), DROP COLUMN movie$oldMovieDate";
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
+    $sth->finish();
     
     # $sql = "UPDATE MovieAttendance SET movie$newMovieDate = 'Default'";
     # $sth = $dbh_tnmc->prepare($sql);
     # $sth->execute();
+    # $sth->finish();
 }
 
 foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
@@ -105,7 +109,8 @@ foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute($i * 7);
     my ($i_date) = $sth->fetchrow_array();
-    
+    $sth->finish();
+
     print "$i_date\n";
 
     # next if the night already exists
@@ -121,7 +126,6 @@ foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
 
 
 # the end.
-$sth->finish();
 &db_disconnect();
 
 

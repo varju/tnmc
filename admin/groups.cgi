@@ -43,7 +43,8 @@ sub show_group_selector{
             push (@groups, $field);
         }
     }
-    
+    $sth->finish();
+
     print qq{
         <form action="/admin/groups.cgi" method="post">
         <select name="groupID" defaultoption="$group" onChange="form.submit();">
@@ -84,6 +85,7 @@ sub show_edit_group{
         next if ($row[0] == 0);
         push (@ranks, $row[0]);
     }
+    $sth->finish();
 
     &show_heading("Group Administration: $group");
     print qq{

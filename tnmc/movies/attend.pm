@@ -74,8 +74,9 @@ sub list_my_attendance{
     my $sql = "SELECT DATE_FORMAT('$tuesdayDate', '%b %D')";
     my $sth = $dbh_tnmc->prepare($sql);
     $sth->execute();
-        my @row = $sth->fetchrow_array();
-    
+    my @row = $sth->fetchrow_array();
+    $sth->finish();
+
     print qq{
         <td align="center"><font color="888888"><b>$row[0]&nbsp;</td>
         <td>&nbsp;&nbsp;</td>

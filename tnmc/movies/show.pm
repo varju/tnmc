@@ -43,6 +43,7 @@ sub show_favorite_movie_select{
     $sth = $dbh_tnmc->prepare($sql);
     $sth->execute;
     ($favoriteMovie) = $sth->fetchrow_array();
+    $sth->finish();
 
     $sql = "SELECT movieID, title
              FROM Movies
@@ -58,9 +59,8 @@ sub show_favorite_movie_select{
             else{                                   $faveSel = '';}
             print qq{               <option value="$row[0]" $faveSel>$row[1]\n};
     }
-
-        $sth->finish;
-
+    $sth->finish;
+    
     print qq{
         </select>
     };
