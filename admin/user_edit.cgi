@@ -20,34 +20,39 @@ use tnmc::cgi;
 &tnmc::db::db_connect();
 &tnmc::template::header();
 
-my $userID = &tnmc::cgi::param('userID');
+my @cols = &tnmc::db::db_get_cols_list('Personal');
 
+my $userID = &tnmc::cgi::param('userID');
+my %user;    
 if ($userID)
 { 
-    my %user;    
-    my @cols = &tnmc::db::db_get_cols_list('Personal');
     &tnmc::user::get_user($userID, \%user);
-    
+}
+else
+{
+    $user{userID} = 0;
+}
+
+print qq 
+{    <form action="admin/user_edit_submit.cgi" method="post">
+	 <table>
+     };
+
+foreach my $key (@cols)
+{
     print qq 
-    {    <form action="admin/user_edit_submit.cgi" method="post">
-            <table>
-            };
-    
-    foreach my $key (@cols)
-    {       print qq 
-            {    
-                <tr><td><b>$key</td>
-                    <td><input type="text" name="$key" value="$user{$key}"></td>
-                </tr>
-                };
-        }
-    
-    print qq
-    {    </table>
+    {    
+	<tr><td><b>$key</td>
+	    <td><input type="text" name="$key" value="$user{$key}"></td>
+	    </tr>
+	};
+}
+
+print qq
+{    </table>
             <input type="submit" value="Submit">
             </form>
-            }; 
-}
+	}; 
 
 &tnmc::template::footer();
 
