@@ -162,7 +162,7 @@ sub sms_send_tapzing{
 	$msg =~ s/\s/ /; 	# Can't put cr's in the subject line
 	my $to_email = '604' . $phone . '@tapzing.com';
 
-        open(SENDMAIL, "| /usr/lib/sendmail $to_email");
+        open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
         print SENDMAIL "From: TNMC <scottt\@interchange.ubc.ca>\n";
         print SENDMAIL "To: $to_email\n";
         print SENDMAIL "Subject: $msg\n";

@@ -44,11 +44,12 @@ require 'movies/MOVIES.pl';
 	# send the mail
 	#
 
-	$to_email = 'tnmc-list@interchange.ubc.ca';
+	# $to_email = 'tnmc-list@interchange.ubc.ca';
+	$to_email = 'scottt@interchange.ubc.ca';
 
         $vote_blurb =  &get_general_config("movie_vote_blurb");
 
-	open(SENDMAIL, "| /usr/lib/sendmail $to_email");
+	open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
 	print SENDMAIL "From: TNMC Website <scottt\@interchange.ubc.ca>\n";
 	print SENDMAIL "To: tnnc-list <$to_email>\n";
 	print SENDMAIL "Subject: $next_tuesday_string\n";
