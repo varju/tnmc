@@ -18,12 +18,18 @@ use tnmc::pics::link;
 #############
 ### Main logic
 
+&do_bulk_edit();
+
+#
+# subs
+#
 
 sub do_bulk_edit{
     $cgih = &tnmc::cgi::get_cgih();
     
-    
-    
+    my $destination = $cgih->param(destination);
+    print "Location: $destination\n\n";
+
     # grab the cgi info into a big 2-d hash
     my @params = $cgih->param();
     
@@ -110,6 +116,4 @@ sub do_bulk_edit{
     # goodbye 
     
     
-    my $destination = $cgih->param(destination);
-    print "Location: $destination\n\n";
 }

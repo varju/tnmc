@@ -435,7 +435,7 @@ sub show_piclist{
     
     ## get info
     my %nav = %$nav;
-    my $albumID = $nav->{albumID};
+    my $albumID = $nav{albumID};
     my $listType = delete($nav{listType});
     my $listColumns = delete($nav{listColumns});
     my $start = delete($nav{listStart});
@@ -521,7 +521,7 @@ sub show_piclist{
         ## get pic info
         &get_pic($picID, \%pic);
         
-        my $slide_url = "$nav->{_nav_select}_slide.cgi?picID=$picID&$nav_query";
+        my $slide_url = "$nav{_nav_select}_slide.cgi?picID=$picID&$nav_query";
         my $img_url = &get_pic_url($picID, ['mode'=>$listSize]);
         my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
         my $pic_src = $img_src;
@@ -656,10 +656,6 @@ sub show_piclist{
             if ($USERID eq $pic{ownerID}){
                 print qq{       <a href="pic_edit.cgi?picID=$picID">edit</a> &\#149; };
             }
-            if ($USERID eq $nav->{album}->{albumOwnerID}){
-                print qq{       <a href="link_del.cgi?picID=$picID&albumID=$albumID">unlink</a> };
-            }
-            
             ### the end
             print qq{
                 </td>
