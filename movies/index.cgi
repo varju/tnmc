@@ -69,6 +69,7 @@ sub show_movies_enhanced
     }
     my %sortSel = ('title','',
                    'rank','',
+                   'order','',
                    'votesFor','',
                    'votesAgainst','',
                    'votesAway','',
@@ -88,6 +89,7 @@ sub show_movies_enhanced
               <select name="sortOrder" onChange="form.submit();">
                   <option $sortSel{title} value="title">Title
                   <option $sortSel{rank} value="rank">Rank (#)
+                  <option $sortSel{order} value="order">Order
                   <option $sortSel{votesFor} value="votesForTotal">Votes For (+)
                   <option $sortSel{votesAgainst} value="votesAgainst">Votes Against (-)
                   <option $sortSel{votesAway} value="votesAway">Votes Away (grey)
