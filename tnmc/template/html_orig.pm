@@ -21,6 +21,8 @@ BEGIN{
 sub header{
     
     # header and title
+    print "Pragma: no-cache\n";
+    print "Expires:Thu Jan  1 00:00:00 1970\n";
     print "Content-type: text/html\n\n";
     
     &tnmc::security::auth::authenticate();
