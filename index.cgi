@@ -93,9 +93,11 @@ sub greeting
     }
     
     my $greeting = @greetings[int(rand ($#greetings + 1) ) ]; 
+    my $out = $greeting;
+    $out .= ' ' . $fullname if $fullname;
 
     return qq{
-        <font style="font-size: 8pt ;"><b>$greeting $fullname.</b><P>
+        <font style="font-size: 8pt ;"><b>$out.</b><P>
 	};
 }
 
