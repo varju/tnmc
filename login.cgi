@@ -53,12 +53,12 @@ use tnmc;
 		-value=>\%cookie_out,
 		-expires=>'+1y',
 		-path=>'/',
-		-domain=>'tnmc.webct.com',
+		-domain=>'tnmc.dhs.org',
 		-secure=>'0'
 		);
 
 
-	$location = 'http://tnmc.webct.com/index.cgi';
+	$location = 'http://tnmc.dhs.org/index.cgi';
 	if (	($password ne $user{'password'}) && ($user{'password'} ne '')	){
 		&header();
 		print qq{

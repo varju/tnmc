@@ -29,5 +29,5 @@ require 'basic_testing_tools.pl';
 
 	&db_disconnect();
 
-	print "Location: http://tnmc.webct.com\n\n";
+	print "Location: http://tnmc.dhs.org\n\n";
 

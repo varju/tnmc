@@ -28,7 +28,7 @@ use tnmc;
 
 		<TR>
 		<TD VALIGN=TOP><B>Hosting:</B></TD>
-		<TD>tnmc.webct.com is hosted by Alex. <br>
+		<TD>tnmc.dhs.org is hosted by Alex. <br>
 			It was previously on <a href="http://steinbok.lvwr.com">steinbok.lvwr.com</a> <BR>
 		</TR>
 
