@@ -67,7 +67,7 @@ sub show_movie
             print qq 
             {    <tr><td><b><a href="
                 javascript:window.open(
-                    'http://www2.mybc.com/aroundtown/movies/playing/movies/$mybcID.html',
+                    'http://www2.mybc.com/movies/movies/$mybcID.html',
                         'ViewMYBC'); index.cgi">myBC Info</a>
             };
         }
@@ -112,7 +112,7 @@ sub show_movie_extended
             print qq 
             {    <tr><td><b><a href="
                 javascript:window.open(
-                    'http://www2.mybc.com/aroundtown/movies/playing/movies/$mybcID.html',
+                    'http://www2.mybc.com/movies/movies/$mybcID.html',
                         'ViewMYBC'); index.cgi">myBC Info</a>
             };
         }
