@@ -25,7 +25,7 @@ use tnmc::movies::night;
     &get_night($nightID, \%night);
     
     print qq{
-		<form action="night_edit_submit.cgi" method="post">
+		<form action="night_edit_admin_submit.cgi" method="post">
 		<table>
                 };
     
@@ -53,3 +53,6 @@ use tnmc::movies::night;
     
     &footer();
 }
+
+
+

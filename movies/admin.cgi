@@ -124,13 +124,12 @@ use tnmc::movies::show;
 
         ## List of Future Nights
         &show_heading ("future nights");
-        my @NIGHTS;
-        &list_nights(\@NIGHTS, "WHERE date >= NOW()", "");
+        my @NIGHTS = &list_future_nights();
         foreach my $nightID (@NIGHTS){
             my %night;
             &get_night ($nightID, \%night);
             print qq{
-                <a href="night_edit_admin.cgi?nightID=$nightID">$night{date}</a>
+                <a href="night_edit.cgi?nightID=$nightID">$night{date}</a>
                 ($nightID)<br>
             };
         }
