@@ -262,11 +262,12 @@ sub show_my_attendance_chooser{
         my $night = $nights{$nightID};
         my $faction = $factions{$night->{'factionID'}};
         my $god = &tnmc::user::get_user_cache($night->{'godID'});
+        my $bg_colour = ($userID == $night->{'godID'})? "bgcolor=\"99ff00\"" : "";
         
         print qq{
-            <td valign="top" align="center"><font size="-1">
+            <td valign="top" $bg_colour align="center"><font size="-1">
                 $faction->{'name'}&nbsp(};
-        if (($userID = $night->{'godID'})
+        if (($userID == $night->{'godID'})
             || ($user->{groupMovies} >= 100)
             ){
             print qq{<a href="/movies/night_edit.cgi?nightID=$nightID">$god->{'username'}</a>};

@@ -62,6 +62,9 @@ sub approve{
         return 0;
     }
     
+    if ($path =~ /submit/ && !$USERID && $USERID){
+        return 0;
+    }
     return 1;
 }
 
