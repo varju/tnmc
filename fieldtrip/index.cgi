@@ -98,10 +98,12 @@ sub show_trip{
 
 	####################
 	### userlist
-	$sql = qq{SELECT userID, interest, driving, 
+	$sql = qq{SELECT p.userID, interest, driving, 
 			 DATE_FORMAT(departDate, '%a %l:%i %p'),
 			 DATE_FORMAT(returnDate, '%a %l:%i %p')
-		    FROM FieldtripSurvey WHERE (tripID = '$tripID') AND interest >= '1'};
+		    FROM FieldtripSurvey AS f LEFT JOIN Personal AS p USING (userID)
+		   WHERE (tripID = '$tripID') AND interest >= '1'
+		   ORDER BY p.username};
 	$sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
 

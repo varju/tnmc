@@ -10,9 +10,6 @@ use strict;
 ###################################################################
 sub new_nav_menu{
 
-	my (%user);
-	&get_user($USERID, \%user);
-
 	### this test should probably be elsewhere.
 	$HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
 
@@ -22,7 +19,7 @@ sub new_nav_menu{
 	# &show_menu_item( 0, "/announcements/", "Announcements", "");
 	# &show_menu_item( 0, "", "", "");
 
-	if ($user{groupTrusted} >= 1){
+	if ($USERID{groupTrusted} >= 1){
             if (&show_menu_item( 0, "/people/", "People", "")){
 		&show_menu_item( 1, "/people/list_all.cgi", "Everybody", "");
 		&show_menu_item( 1, "/people/list_by_group.cgi?group=Movies&cutoff=10", "Movie&nbsp;Junkies", "");
@@ -30,14 +27,14 @@ sub new_nav_menu{
             &show_menu_item( 0, "", "", "");
         }
 	
-	if ($user{groupMovies} >= 1){
+	if ($USERID{groupMovies} >= 1){
             if (&show_menu_item( 0, "/movies/", "Movies", "")){
 		&show_menu_item( 1, "/movies/list_seen_movies.cgi", "Seen", "");
 		&show_menu_item( 1, "/movies/list_showing_movies.cgi", "All&nbsp;Showing", "");
 		&show_menu_item( 1, "/movies/attendance.cgi", "Attendance", "");
 		&show_menu_item( 1, "/movies/movie_add.cgi", "Add&nbsp;a&nbsp;Movie", "");
 		&show_menu_item( 1, "/movies/help.cgi", "Info", "");
-		if ($user{groupMovies} >= 100){
+		if ($USERID{groupMovies} >= 100){
 			&show_menu_item( 1, "", "", "");
 			&show_menu_item( 1, "/movies/admin.cgi", "Admin", "");
 			&show_menu_item( 1, "/movies/list_all_movies.cgi", "All&nbsp;Movies", "");
@@ -47,21 +44,27 @@ sub new_nav_menu{
 	    &show_menu_item( 0, "", "", "");
 	}
 
-	if ($user{groupTrusted} >= 1){
+	if ($USERID{groupTrusted} >= 1){
             &show_menu_item( 0, "/broadcast/", "Broadcast", "");
             &show_menu_item( 0, "", "", "");
         }
 
-        if ($user{groupTrusted} >= 1){
+        if ($USERID{groupTrusted} >= 1){
             &show_menu_item( 0, "/fieldtrip/", "FieldTrips", "");
             &show_menu_item( 0, "", "", "");
         }
-	if ($user{groupCabin}){
+
+	if ($USERID{groupCabin}){
 		&show_menu_item( 0, "/cabin/", "Cabin", "");
 		&show_menu_item( 0, "", "", "");
 	}
 
-	if ($user{groupAdmin}){
+	if ($USERID{groupPics}){
+		&show_menu_item( 0, "/pics/", "Pics", "");
+		&show_menu_item( 0, "", "", "");
+	}
+
+	if ($USERID{groupAdmin}){
 		&show_menu_item( 0, "", "", "<hr noshade size='1'>");
 		&show_menu_item( 0, "/bulletins/", "Bulletins", "");
 		&show_menu_item( 0, "", "", "");
@@ -71,16 +74,14 @@ sub new_nav_menu{
 		}
 		&show_menu_item( 0, "", "", "");
 	}
-	if ( ($USERID == 1) || ($USERID == 16) ){
+	if ( $USERID == 1 ){
 		if (&show_menu_item( 0, "/user/log/", "Log", "") || $HOMEPAGE){
 			&show_menu_item( 1, "/user/log/login.log", "Login", "");
 			&show_menu_item( 1, "/user/log/splash.log", "Splash", "");
 		}
 		&show_menu_item( 0, "", "", "");
-		&show_menu_item( 0, "/pics/", "Pics", "");
-		&show_menu_item( 0, "", "", "");
 	}
-	if ($user{groupDev}){
+	if ($USERID{groupDev}){
 		if (&show_menu_item( 0, "/development/", "Development", "")){
 			&show_menu_item( 1, "/development/todo_list.cgi", "To&nbsp;do&nbsp;List", "");
 			&show_menu_item( 1, "/development/suggestions.cgi", "Suggestions", "");
@@ -121,9 +122,15 @@ sub new_nav_login{
                 $sth->execute();
                 
                 while (@row = $sth->fetchrow_array()){
-                        print qq{
-                               <option value="$row[0]">$row[1]
-                        };
+			if ($row[0] eq $USERID_LAST_KNOWN){
+	                        print qq{
+        	                       <option value="$row[0]" selected>$row[1]
+                	        };
+			}else{
+	                        print qq{
+        	                       <option value="$row[0]">$row[1]
+                	        };
+			}
                 };
     
                 print qq 

@@ -16,7 +16,7 @@ BEGIN
 
         use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
 		$dbh_tnmc
-		$USERID %USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
+                $USERID_LAST_KNOWN $USERID %USERID $LOGGED_IN $tnmc_cgi %tnmc_cookie_in $HOMEPAGE);
 
         @ISA = qw(Exporter);
 
@@ -66,6 +66,8 @@ sub get_cookie{
 	        &get_user($USERID, \%USERID);
                 $ENV{REMOTE_USER} = $USERID{username};
 		$LOGGED_IN = $tnmc_cookie_in{'logged-in'};
+	}else{
+		$USERID_LAST_KNOWN = $tnmc_cookie_in{'userID'};
 	}
 }
 

@@ -7,9 +7,10 @@
 
 use lib '/usr/local/apache/tnmc/';
 use tnmc;
+use strict;
 require 'MOVIES.pl';
 
-{
+
 
 	#############
 	### Main logic
@@ -18,10 +19,12 @@ require 'MOVIES.pl';
 	&header();
 
         ## Global Variable ( bad scott! )
-	$sortOrder = $tnmc_cgi->param('sortOrder');
+	my $sortOrder = $tnmc_cgi->param('sortOrder');
         if (!$sortOrder){
             $sortOrder = 'rank';
         }
+
+        my (%REAL_USER, $effectiveUserID, %USER);
 
 	&get_user($USERID, \%REAL_USER);
 
@@ -39,12 +42,22 @@ require 'MOVIES.pl';
 	&footer();
 	&db_disconnect();
 
-}
+
 
 ##########################################################
 sub show_movies
 {
 
+    # mini-hack
+    my $displaySortOrder = $sortOrder;
+    if ( ($displaySortOrder eq 'title')
+       ||($displaySortOrder eq 'rank')
+       ||($displaySortOrder eq 'votesForTotal')
+       ||($displaySortOrder eq 'votesAgainst')
+       ||($displaySortOrder eq 'votesAway')
+       ){
+        $displaySortOrder = ''
+    }
     my %sortSel;
     $sortSel{$sortOrder} = 'selected';
     print qq{
@@ -60,9 +73,11 @@ sub show_movies
                   <option $sortSel{votesFor} value="votesForTotal">Votes For (+)
                   <option $sortSel{votesAgainst} value="votesAgainst">Votes Against (-)
                   <option $sortSel{votesAway} value="votesAway">Votes Away (grey)
+                  <option $sortSel{movieID} value="movieID">Movie ID
+                  <option  value="$sortOrder">
                   <option $sortSel{rating} value="rating">Rating
                   <option $sortSel{type} value="type">Type
-                  <option $sortSel{movieID} value="movieID">Movie ID
+                  <option $sortSel{theatres} value="theatres">Theatres
               </select>
          </td>
     };
@@ -75,15 +90,16 @@ sub show_movies
                     <select name="effectiveUserID" onChange="form.submit();">
         };
 
-        $sql = "SELECT userID, username FROM Personal WHERE groupMovies >= 1  ORDER BY username";
-        $sth = $dbh_tnmc->prepare($sql);
+        my $sql = "SELECT userID, username FROM Personal WHERE groupMovies >= 1  ORDER BY username";
+        my $sth = $dbh_tnmc->prepare($sql);
         $sth->execute();
 
-        while (($userID, $username) = $sth->fetchrow_array()){
+        while (my ($userID, $username) = $sth->fetchrow_array()){
             my $sel = '';
             $sel = 'selected' if ($userID == $effectiveUserID);
             print qq{           <option value="$userID" $sel>$username \n };
         }
+        $sth->finish();
         print qq{    </select>     </td>      };
     }
 
@@ -107,27 +123,29 @@ sub show_movies
 			<td>&nbsp;&nbsp;</td>
 			<td><b>Title</b></td>
 			<td>&nbsp;&nbsp;</td>
+			<td><b>$displaySortOrder</b></td>
+			<td>&nbsp;&nbsp;</td>
 			<td><b>Votes</b></td>
 			</tr>
 		<tr>
-			<td colspan="9" bgcolor="cccccc" align="right">
+			<td colspan="11" bgcolor="cccccc" align="right">
 				<form action="/movies/update_votes.cgi" method="post">
 				<input type="hidden" name="userID" value="$effectiveUserID">
 				<font color="888888"><b>now showing </td></tr>
     };
 
     ########################
-    # show_movie_list( "WHERE (m.status = 'showing' OR m.status = 'just released')");
-    show_movie_list( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )");
+    # Now Showing
+    show_movie_list( "WHERE (statusShowing AND ( NOT (statusSeen OR 0)) AND NOT (statusBanned or 0) )", $displaySortOrder);
 
     print qq{	<tr>
-			<td colspan="9" bgcolor="cccccc" align="right">
+			<td colspan="11" bgcolor="cccccc" align="right">
 			<font color="888888"><b>coming soon </td></tr>
     };
 
     ########################
-    # show_movie_list( "WHERE m.status = 'coming soon'");
-    show_movie_list( "WHERE (statusNew AND NOT (statusShowing OR 0))");
+    # Coming Soon
+    show_movie_list( "WHERE (statusNew AND NOT (statusShowing OR 0))", $displaySortOrder);
 
     print qq{\n	</table><p>\n};
 
@@ -150,6 +168,7 @@ sub show_movies
     ########################
     ### Warn if modifying another user's votes.
 
+    my $useridNotice;
     if ($effectiveUserID != $USERID){
         $useridNotice = qq{
             <font face="arial" size="+1" color="086DA5"><i><b>
@@ -171,30 +190,36 @@ sub show_movies
 ##########################################################
 sub show_movie_list{
 
-	($whereClause, $junk) = @_;
+	my ($whereClause, $extraField, $junk) = @_;
 
-	my (@movies, $anon, $movieID, $movieInfo);
-	my ($boldNew, %vote_status_word);
+	my (@movies, $anon, $movieID, %movieInfo);
+	my ($boldNew, %vote_status_word, @list);
 
 	&list_movies(\@list, $whereClause, 'ORDER BY title');
-	foreach $movieID (@list){
-		$anon = {}; 	### create an anonymous hash.
+	foreach my $movieID (@list){
+		my $anon = {}; 	### create an anonymous hash.
 		&get_movie_extended($movieID, $anon);
 		$movieInfo{$movieID} = $anon;
 	}
 	if ($sortOrder){
-		@list = sort  {       $movieInfo{$b}->{$sortOrder}
-			      <=>     $movieInfo{$a}->{$sortOrder}}
-			@list ;
+            @list = sort  {
+                (   ($movieInfo{$b}->{$sortOrder}
+                     <=>     $movieInfo{$a}->{$sortOrder})
+                    ||
+                    ($movieInfo{$a}->{$sortOrder}
+                     cmp     $movieInfo{$b}->{$sortOrder})
+                    )
+                }
+		@list ;
 	}
 
-	foreach $movieID (@list){
+	foreach my $movieID (@list){
 
-                %vote_status_word = ();
-                $vote = &get_vote($movieID, $effectiveUserID);
+                my %vote_status_word = ();
+                my $vote = &get_vote($movieID, $effectiveUserID);
                 $vote_status_word{$vote} = "CHECKED";
                 
-		$votesFor = $movieInfo{$movieID}->{votesFor}
+		my $votesFor = $movieInfo{$movieID}->{votesFor}
 			  + $movieInfo{$movieID}->{votesFave}
 			  + $movieInfo{$movieID}->{votesBday};
 		print qq{
@@ -216,6 +241,8 @@ sub show_movie_list{
 						'resizable,height=350,width=450');
 						index.cgi
 					">$movieInfo{$movieID}->{title}</a></td>
+				<td></td>
+				<td>$movieInfo{$movieID}->{$extraField}</td>
 				<td></td>
 				<td>$movieInfo{$movieID}->{votesHTML}</td>
 

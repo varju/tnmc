@@ -30,6 +30,17 @@ require 'MOVIES.pl';
 			$vote_count{$type} += 1;
 		}
 
+		### Tell alex M to get rid of his silly username.
+		if ($USERID{username} =~ 'bambi'){
+			&header();
+			print qq{
+				<p><b>$USERID{username}?!?</b>
+				<p>Go on and give yourself a normal username first, <i>then</i> you can vote.
+			};
+			&footer();
+			exit(1);
+		}
+
 		### grumpy people who make too many negative votes get denied.
 		if ($vote_count{'1'} < $vote_count{'-1'}){
 			&header();

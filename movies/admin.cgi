@@ -39,6 +39,7 @@ require 'MOVIES.pl';
 		$winner_blurb = &get_general_config("movie_winner_blurb");
 
 		$valid_theatres = &get_general_config("movie_valid_theatres");
+		$other_theatres = &get_general_config("movie_other_theatres");
 		$current_nightID = &get_general_config("movie_current_nightID");
 
 
@@ -102,9 +103,15 @@ require 'MOVIES.pl';
 			</tr>
 
 			<tr>
-			<td><b>Valid Thetres</td>
+			<td><b>Valid Theatres</td>
 			<td><textarea cols="19" rows="6" wrap="virtual" name="movie_valid_theatres">$valid_theatres</textarea></td>
 			</tr>
+
+			<tr>
+			<td><b>Other Theatres</td>
+			<td><textarea cols="19" rows="6" wrap="virtual" name="movie_other_theatres">$other_theatres</textarea></td>
+			</tr>
+
 
 			</table>
 

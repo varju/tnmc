@@ -111,6 +111,9 @@ sub db_set_row{
 sub db_get_row{
 	my ($hash_ref, $dbh, $table, $where, $junk) = @_;
 	my ($sql, $sth, @cols, @row, $cols_string, $key, $val);
+
+        ### clear the hash
+        %$hash_ref = ();
 	
 	###############
 	### Build Select Statement
