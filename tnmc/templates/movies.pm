@@ -43,7 +43,6 @@ sub show_movies {
     my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
     
     if ($USERID && $USERID{groupMovies}){
-        
         &tnmc::movies::attendance::show_my_attendance_chooser($USERID, $nightID);
         
         my %night;
@@ -75,7 +74,7 @@ sub show_movies_home_anon_old{
                 &nbsp;now showing</th></tr>
     };
     my @movie_list;
-    &tnmc::movies::show::list_movies(\@movie_list, "WHERE (statusShowing)", '');
+    &tnmc::movies::show::list_movies(\@movie_list, "WHERE (statusShowing) AND NOT (statusSeen)", '');
     &show_movie_list_home_old(\@movie_list, '', $nightID);
     print qq{\n    </table><p>\n};
     
