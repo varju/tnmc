@@ -33,7 +33,7 @@ use tnmc::cgi;
 sub show_movie
 {
     my ($movieID, $junk) = @_;    
-    my (@cols, $movie, $key, $mybcID);
+    my (@cols, $movie, $key, $mybcID, $imdbID);
 
     my %movie;
     
@@ -56,6 +56,9 @@ sub show_movie
             if ($key eq 'mybcID')
             {    next;
             }
+            if ($key eq 'imdbID')
+            {    next;
+            }
 
             print qq 
             {    
@@ -71,6 +74,12 @@ sub show_movie
             {    <tr><td><b><a href="http://www2.mybc.com/movies/movies/$mybcID.html" target="mybc">myBC Info</a>
             };
         }
+        if ($movie{'imdbID'})
+        {    $imdbID = $movie{'imdbID'};
+            print qq 
+            {    <tr><td><b><a href="http://www.imdb.com/Title?$imdbID" target="imdb">IMDB Info</a>
+            };
+        }
         print qq
         {    </table>
             <input type="submit" value="Submit">
@@ -83,7 +92,7 @@ sub show_movie
 sub show_movie_extended
 {
     my ($movieID, $junk) = @_;    
-    my (@cols, $movie, %movie, $key, $mybcID);
+    my (@cols, $movie, %movie, $key, $mybcID, $imdbID);
     
     if ($movieID)
     { 
@@ -99,6 +108,7 @@ sub show_movie_extended
             next if ($key eq 'votesText');
             next if ($key eq 'movieID');
             next if ($key eq 'mybcID');
+            next if ($key eq 'imdbID');
 
             print qq{    
                 <tr valign=top><td><B>$key</B></td>
@@ -111,6 +121,12 @@ sub show_movie_extended
         {    $mybcID = $movie{'mybcID'};
             print qq 
             {    <tr><td><b><a href="http://www2.mybc.com/movies/movies/$mybcID.html" target="mybc">myBC Info</a>
+            };
+        }
+        if ($movie{'imdbID'})
+        {    $imdbID = $movie{'imdbID'};
+            print qq 
+            {    <tr><td><b><a href="http://www.imdb.com/Title?$imdbID" target="imdb">IMDB Info</a>
             };
         }
         print qq
