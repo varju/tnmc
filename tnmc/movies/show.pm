@@ -23,20 +23,7 @@ sub show_special_movie_select{
     require tnmc::movies::night;
     require tnmc::movies::movie;
     
-    my %vote_types = ('-1' => 'Anti',
-                      '0' => 'Neutral',
-                      '1' => 'Normal',
-                      '2' => 'Favorite',
-                      '3' => 'Super-Favorite',
-                      '4' => 'Birthday');
-    
     my ($sql, $sth);
-    
-    print qq{
-        <select name="SpecialVote_$vote_type">
-        <option value="0">none
-        <option value="0">
-    };
     
     $sql = "SELECT movieID
              FROM MovieVotes
@@ -48,13 +35,25 @@ sub show_special_movie_select{
     $sth->finish();
     
     my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
-    
+
+    my %sorted;
     foreach my $movieID (@movie_list){
         my %movie;
         &tnmc::movies::movie::get_movie($movieID, \%movie);
         
+	$sorted{$movieID}->{'title'} = $movie{'title'};
+    }
+
+    print qq{
+        <select name="SpecialVote_$vote_type">
+        <option value="0">none
+        <option value="0">
+    };
+    
+    foreach my $movieID (sort {$sorted{$a}->{'title'} cmp $sorted{$b}->{'title'}} keys %sorted)
+    {
         my $faveSel = ($current_vote == $movieID)? 'selected' : '';
-        print qq{               <option value="$movieID" $faveSel>$movie{'title'}\n};
+        print qq{               <option value="$movieID" $faveSel>$sorted{$movieID}->{'title'}\n};
     }
     
     print qq{
