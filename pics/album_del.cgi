@@ -13,7 +13,7 @@ use tnmc::template;
 use tnmc::cgi;
 
 use tnmc::pics::album;
-use tnmc::pics::link
+use tnmc::pics::link;
 
 {
 	#############
@@ -76,7 +76,7 @@ use tnmc::pics::link
 
                 print qq{
                     <p>
-                    <a href="album_list.cgi">Continue</a>
+                    <a href="index.cgi">Continue</a>
                 };
             }
         }
