@@ -50,7 +50,7 @@ sub show_user_listing{
     };
     
     foreach $userID (@users)
-    {    &get_user($userID, \%user);
+    {    &get_user_extended($userID, \%user);
         
         print qq
         {    <tr>

@@ -31,7 +31,8 @@ sub show_users()
 {
     my (@users, $userID, %user);
 
-    &list_users(\@users, "WHERE groupDead != '1'", 'ORDER BY username');
+    &list_users(\@users, "WHERE groupDead != '1' && username != ''", 'ORDER BY
+username');
 
     print qq
     {    <table border="0" cellpadding="0" cellspacing="5">
@@ -47,7 +48,7 @@ sub show_users()
     };
     
     foreach $userID (@users)
-    {    &get_user($userID, \%user);
+    {    &get_user_extended($userID, \%user);
         
         print qq
         {    <tr>

@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::cookie;
 use tnmc::db;
 use tnmc::movies::vote;
+use tnmc::template;
 
     #############
     ### Main logic

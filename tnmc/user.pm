@@ -72,7 +72,8 @@ sub get_user_extended{
 
     if (!$user_ref->{username}){
         $user_ref->{username} = $user_ref->{fullname};
-	$user_ref->{username} =~ s/\W+//g;
+	$user_ref->{username} =~ s/\W+/_/g;
+	$user_ref->{username} = lc($user_ref->{username});
     }
 }
 

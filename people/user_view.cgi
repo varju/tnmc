@@ -56,7 +56,7 @@ sub show_user
          # @cols = &db_get_cols_list($dbh_tnmc, 'Personal');
         
             
-            &get_user($userID, \%user);
+            &get_user_extended($userID, \%user);
         &db_disconnect();
           
         print qq 

@@ -162,7 +162,7 @@ sub new_nav_login{
                         <input type="image" border=0 src="/template/go_submit.gif" alt="Go"><br>
                         </form>
             <p>
-	    <b><a href="/user/entry_page.cgi">All other logins</a></b>
+	    <b><a href="/user/entry_page.cgi">Visitors, New Users and Enhanced login</a></b>
 	    <p>
             Hello there!<br>
             <br>
@@ -171,16 +171,7 @@ sub new_nav_login{
             solely to figuring <BR>out which movie to<BR>
             go to every week.
             <p>
-            
-            <u><b>Notice to Visitors:</b></u><br>
-            If you are not a<br> regular user and<br>
-            would like to browse<br> the site, please<br>
-            login as user <b>demo</b>.<br>
             <br>
-            <b><a href="/user/create_1.cgi">
-            Create a New Account</a></b><br>
-            <br>
-            <p>
                 };
             
 }
