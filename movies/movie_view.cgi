@@ -50,6 +50,7 @@ sub show_movie_extended
             next if ($key eq 'movieID');
             next if ($key eq 'mybcID');
             next if ($key eq 'imdbID');
+            next if ($key eq 'filmcanID');
             next if ($key eq 'theatres');
             next if ($key eq 'theatres_string');
             
@@ -70,6 +71,13 @@ sub show_movie_extended
         {    $imdbID = $movie{'imdbID'};
             print qq 
             {    <tr><td><b><a href="http://www.imdb.com/Title?$imdbID" target="imdb">IMDB Info</a>
+            };
+        }
+        if ($movie{'filmcanID'})
+        {    
+	    my $filmcanID = $movie{'filmcanID'};
+            print qq 
+            {    <tr><td><b><a href="http://vancouver.film-can.com/cgi-bin/main/mview.cgi?FID=$filmcanID" target="filmcan">FilmCan Info</a>
             };
         }
         print qq
