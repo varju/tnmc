@@ -9,6 +9,7 @@ use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::template;
+use tnmc::util::date;
 
 
 #############
@@ -25,7 +26,8 @@ use tnmc::template;
 #
 
 sub show_album_add_form{
-    
+    &show_heading("Add a new Album");
+    my $now = &tnmc::util::date::now();
     print qq {
 	<form action="album_add_submit.cgi" method="post">
         
@@ -38,23 +40,39 @@ sub show_album_add_form{
             <td><input type="text" name="albumTitle" value=""></td>
             </tr>
 
-        <tr><td><b>Start Date</td>
-            <td><input type="text" name="albumDateStart" value=""></td>
-            </tr>
-
-        <tr><td><b>End Date</td>
-            <td><input type="text" name="albumDateEnd" value=""></td>
-            </tr>
-
         <tr><td><b>Description</td>
             <td><textarea name="albumDescription" wrap="virtual" rows="5"></textarea></td>
             </tr>
-        <tr><td><b>Public</td>
-            <td><input type="radio" name="albumTypePublic" value="1">Yes
-                <input type="radio" name="albumTypePublic" value="0" checked>No
+
+        <tr><td><b>Access</td>
+            <td>
+                <select name="albumTypePublic">
+                    <option value="2">Public view/edit
+                    <option value="1">Public view
+                    <option selected value="0">Hidden
+                </select>
                 </td>
             </tr>
         
+        <tr><td nowrap><b>Start Date</td>
+            <td><input type="text" name="albumDateStart" value="$now"></td>
+            </tr>
+
+        <tr><td><b>End Date</td>
+            <td><input type="text" name="albumDateEnd" value="$now"></td>
+            </tr>
+
+        <tr><td colspan="2">
+            Do you want to pre-fill the album with all available
+            pictures that are in the above date range?
+            </td></tr>
+        <tr><td></td>
+            <td>
+                <select name="optionFill">
+                    <option value="0">No
+                    <option value="1">Yes
+                </select>
+            </td></tr>
         </table>
         <input type="submit" value="Submit">
 	</form>
