@@ -213,12 +213,15 @@ sub show_movie_list{
                 $vote = &get_vote($movieID, $effectiveUserID);
                 $vote_status_word{$vote} = "CHECKED";
                 
+		$votesFor = $movieInfo{$movieID}->{votesFor}
+			  + $movieInfo{$movieID}->{votesFave}
+			  + $movieInfo{$movieID}->{votesBday};
 		print qq{
 			<tr valign="top">
 				<td><a href="movie_edit.cgi?movieID=$movieID"><font color="cccccc">$movieID</a></td>
 				<td valign="top" nowrap><input type="radio" name="v$movieID" value="-1" $vote_status_word{'-1'}><input type="radio" name="v$movieID" value="0" $vote_status_word{'0'}><input type="radio" name="v$movieID" value="1" $vote_status_word{'1'} $vote_status_word{'2'}></td>
-				<td align="right">$movieInfo{$movieID}->{votesFave}</td>
-				<td align="right">$movieInfo{$movieID}->{votesFor}</td>
+				<td align="right">$movieInfo{$movieID}->{rank}</td>
+				<td align="right">$votesFor</td>
 				<td align="right">$movieInfo{$movieID}->{votesAgainst}</td>
 				<td></td>
 				<td valign="top">
