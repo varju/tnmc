@@ -6,12 +6,14 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use LWP::UserAgent;
-# use HTTP::Request::Form;
 use HTTP::Request::Common qw(POST);
 
+use strict;
 use lib '/usr/local/apache/tnmc';
-use tnmc;
-require 'movies/MOVIES.pl';
+
+use tnmc::db;
+use tnmc::general_config;
+use tnmc::movies::movie;
 
         #############
         ### Main logic
@@ -26,20 +28,21 @@ require 'movies/MOVIES.pl';
 	######################
 	print "Searching through Directory Listing\n";
 
-	$URL = "http://www2.mybc.com/aroundtown/movies/playing/movies/";
+	my $URL = "http://www2.mybc.com/aroundtown/movies/playing/movies/";
 
         ### Get a User agent
-        $ua = new LWP::UserAgent;
+        my $ua = new LWP::UserAgent;
         $ua->agent("tnmcWebAgent/01 " . $ua->agent);
 
         ### Make the Request
-        $req = new HTTP::Request GET => $URL;
-        $res = $ua->request($req);
+        my $req = new HTTP::Request GET => $URL;
+        my $res = $ua->request($req);
 
-	$directory = $res->content;
-	@directory = split("\n", $directory);
+	my $directory = $res->content;
+	my @directory = split("\n", $directory);
 
-	foreach $line (@directory){
+        my %list;
+	foreach my $line (@directory){
 		#print "	$line\n";
 		if ($line =~ /^<A HREF=\"(\d+).html\"/i) {
 	#		print "$1\n";
@@ -54,13 +57,13 @@ require 'movies/MOVIES.pl';
         $req = new HTTP::Request GET => $URL;
         $res = $ua->request($req);
 
-	$list = $res->content;
+	my $list = $res->content;
 	$list =~ s/.*\n\<SELECT name\=\"movieid\"\>\n//s;
 	$list =~ s/\n\<\/SELECT\>\n.*//s;
 
-	@list = split("\n", $list);
+	my @list = split("\n", $list);
 
-	foreach $item (@list){
+	foreach my $item (@list){
 		$item =~ /.+\"(\d+)\"\>(.*)$/;
 		$list{$1} = $2;
 	}
@@ -69,7 +72,7 @@ require 'movies/MOVIES.pl';
 	#		print "$mybcID	$list{$mybcID}\n";
 	#	}
 
-	$i = 0;
+	my $i = 0;
 	foreach (keys(%list)){
 		$i++;
 	}	
@@ -80,8 +83,9 @@ require 'movies/MOVIES.pl';
 	print "Ordered List of Acceptable Theatres:\n";
 	print "------------------------------------\n";
 	&db_connect();
-	$valid_theatres = &get_general_config("movie_valid_theatres");
-	@valid_theatres = split(/\s/, $valid_theatres);
+	my $valid_theatres = &get_general_config("movie_valid_theatres");
+	my @valid_theatres = split(/\s/, $valid_theatres);
+        my %valid_theatres;
 	foreach (@valid_theatres){
 		$valid_theatres{$_} = 1;
 		print $_ . "\n";
@@ -94,9 +98,16 @@ require 'movies/MOVIES.pl';
 	print "****               Retrieve the Movie Info             ****\n";
 	print "***********************************************************\n";
 
-	@mShowing = ();
+	my @mShowing = ();
 
-	foreach $mID (sort(keys(%list))){
+        my %mTitle;
+        my %mStars;
+        my %mPremise;
+        my %mOurTheatres;
+
+	foreach my $mID (sort(keys(%list))){
+                my $mTheatres;
+                my $mInfo;
 		
 		#################
 		### Request the page
@@ -105,7 +116,7 @@ require 'movies/MOVIES.pl';
 		my $req = new HTTP::Request GET => $URL;
 		$res = $ua->request($req);
 
-		$mPage = $res->content;
+		my $mPage = $res->content;
 		
 		#################
 		### Parse the page
@@ -144,9 +155,9 @@ require 'movies/MOVIES.pl';
 		#################
 		### Extract the Theatres
 
-		@mTheatres = split('<BR>&#160;&#160;', $mTheatres);
-		%mTheatres = ();
-		foreach $mTh (@mTheatres){
+		my @mTheatres = split('<BR>&#160;&#160;', $mTheatres);
+		my %mTheatres = ();
+		foreach my $mTh (@mTheatres){
 			if (!$mTh) {	next;	}
 			$mTh =~ /cinemas\/(.+)\.html">(.+)<\/A>$/;
 			$mTheatres{$1} = $2;
@@ -174,13 +185,13 @@ require 'movies/MOVIES.pl';
 
         &db_connect();
 
-	$sql = "UPDATE Movies SET statusShowing = '0', theatres = ''";
-	$sth = $dbh_tnmc->prepare($sql);
+	my $sql = "UPDATE Movies SET statusShowing = '0', theatres = ''";
+	my $sth = $dbh_tnmc->prepare($sql);
 	$sth->execute();
 	$sth->finish();
 
 
-	foreach $mID (@mShowing){
+	foreach my $mID (@mShowing){
 	  if ($mID){
 		printf ("(%s)	%-40.40s", $mID, $mTitle{$mID});
 	
@@ -190,8 +201,8 @@ require 'movies/MOVIES.pl';
 		$sql = "SELECT movieID FROM Movies WHERE mybcID = '$mID'";
 		$sth = $dbh_tnmc->prepare($sql);
 		$sth->execute();
-		@row = $sth->fetchrow_array();
-		$movieID = $row[0];
+		my @row = $sth->fetchrow_array();
+		my $movieID = $row[0];
 		
 		if ($movieID){
 			print "   ..Found (mybcID)\n";
@@ -215,6 +226,7 @@ require 'movies/MOVIES.pl';
 
 		if ($movieID){
 			
+                        my %dbMovie;
 			&get_movie($movieID, \%dbMovie);
 
 			$dbMovie{mybcID} = $mID;
@@ -236,7 +248,8 @@ require 'movies/MOVIES.pl';
 		
 		####################
 		### Can't find movie in DB. Let's make a new one.
-		
+
+		my %newMovie;
 		$newMovie{movieID} = '0';
 		$newMovie{mybcID} = $mID;
 		$newMovie{title} = $mTitle{$mID};
