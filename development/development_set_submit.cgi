@@ -28,4 +28,4 @@ use tnmc::config;
 
         &db_disconnect();
 
-        print "Location: $tnmc_url/development/\n\n";
+        print "Location: /development/\n\n";

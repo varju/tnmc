@@ -25,7 +25,7 @@ cookie_revoke();
 
 my $cookie = cookie_tostring();
 
-my $location = $tnmc_url . '/';
+my $location = '/';
 print $tnmc_cgi->redirect(
                           -uri=>$location,
                           -cookie=>$cookie);

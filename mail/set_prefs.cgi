@@ -26,6 +26,6 @@ if ($USERID) {
     mail_set_all_prefs($USERID,\%prefs);
 }
 
-print "Location: $tnmc_url/mail/\n\n";
+print "Location: /mail/\n\n";
     
 db_disconnect();

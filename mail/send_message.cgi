@@ -34,6 +34,6 @@ if ($USERID) {
     message_send(\%message);
 }
     
-print "Location: $tnmc_url/mail/\n\n";
+print "Location: /mail/\n\n";
     
 db_disconnect();

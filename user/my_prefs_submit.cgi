@@ -27,5 +27,5 @@ use tnmc::config;
     
     &db_disconnect();
 
-    print "Location: $tnmc_url/user/my_prefs.cgi\n\n";
+    print "Location: /user/my_prefs.cgi\n\n";
 

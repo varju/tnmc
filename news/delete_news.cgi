@@ -23,4 +23,4 @@ del_news_item($newsid);
 
 db_disconnect();
 
-print "Location: $tnmc_url/news/\n\n";
+print "Location: /news/\n\n";

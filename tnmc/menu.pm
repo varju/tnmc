@@ -32,7 +32,7 @@ sub new_nav_menu{
     my $HOMEPAGE =  ($ENV{REQUEST_URI} eq '/' || $ENV{REQUEST_URI} eq '/index.cgi');
 
     &show_menu_item( 0, "", "", "");
-    &show_menu_item( 0, $tnmc_url, "Home", "");
+    &show_menu_item( 0, "/", "Home", "");
     &show_menu_item( 0, "", "", "");
 
     if ($USERID{groupTrusted} >= 1){
@@ -98,8 +98,10 @@ sub new_nav_menu{
             &show_menu_item( 1, "/pics/album_list.cgi", "Album List", "");
             &show_menu_item( 1, "/pics/date_list.cgi", "Date List", "");
             &show_menu_item( 0, "", "", "");
-            &show_menu_item( 1, "/pics/album_add.cgi", "Add Album", "");
             &show_menu_item( 1, "/pics/api_upload.cgi", "Upload Pic", "");
+            if ($USERID{groupPics} >= 10 ){
+                &show_menu_item( 1, "/pics/album_add.cgi", "Add Album", "");
+            }
         }
         &show_menu_item( 0, "", "", "");
     }
@@ -147,7 +149,7 @@ sub new_nav_login{
 
                 print qq
                 {
-            <form action="$tnmc_url/user/login.cgi" method="post">
+            <form action="/user/login.cgi" method="post">
                 <br><b>Fast Login:</b><br>
                         <!-- <select onChange="form.submit();" name="userID"> -->
             <select name="userID">

@@ -38,7 +38,7 @@ cookie_set($userID);
 my $cookie = cookie_tostring();
 
 if (!$location) {
-    $location = $tnmc_url . '/';
+    $location = '/';
 }
 
 if (($password ne $user{'password'})

@@ -28,4 +28,4 @@ set_news_item(\%news);
 
 db_disconnect();
 
-print "Location: $tnmc_url/news/\n\n";
+print "Location: /news/\n\n";

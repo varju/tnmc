@@ -22,6 +22,6 @@ if ($USERID) {
     delete_message($USERID,$Id);
 }
     
-print "Location: $tnmc_url/mail/\n\n";
+print "Location: /mail/\n\n";
 
 db_disconnect();
