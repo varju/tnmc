@@ -229,6 +229,8 @@ sub show_current_movie
         $current_meeting_place = get_general_config('movie_current_meeting_place');
         $current_meeting_time = get_general_config('movie_current_meeting_time');
         $current_winner_blurb = get_general_config('movie_winner_blurb');
+
+	$current_winner_blurb =~ s/\n/<br>/g;
 	
         if (!$current_movie)
         {
@@ -497,7 +499,6 @@ sub get_movie_extended{
 	if ($rating != 0){
 		$rating -= 2.5;
 		if ($rating >= 1){
-			$movie->{order} ++;
 			$movie->{order} *=     1 + ( $rating / 5 );
 		}else{
 			$movie->{order} +=        $rating;
