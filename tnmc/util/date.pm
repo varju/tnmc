@@ -65,7 +65,7 @@ sub now{
     $month = $month + 1;
     $year = $year + 1900;
     
-    return "$year\-$month\-$day $hour\:$min\:$sec";
+    return sprintf ("%4.4d\-%2.2d\-%2.2d %2.2d\:%2.2d\:%2.2d", $year, $month, $day, $hour, $min, $sec);
     
 }
 
