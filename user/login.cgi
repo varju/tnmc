@@ -14,6 +14,7 @@ use tnmc::cookie;
 use tnmc::config;
 use tnmc::db;
 use tnmc::log;
+use tnmc::template;
 use tnmc::user;
 
 #############
