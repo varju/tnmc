@@ -29,6 +29,7 @@ $msg{sender} = $tnmc::security::auth::USERID;
 $msg{msgID} = 0;
 
 &tnmc::message::set_msg(\%msg);
+&tnmc::message::forward_external(\%msg);
 
 my $location = &tnmc::cgi::param('location') || "index.cgi";
 
