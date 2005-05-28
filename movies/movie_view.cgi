@@ -51,6 +51,8 @@ sub show_movie_extended
             next if ($key eq 'mybcID');
             next if ($key eq 'imdbID');
             next if ($key eq 'filmcanID');
+            next if ($key eq 'cinemaclockID');
+            next if ($key eq 'cinemaclockPage');
             next if ($key eq 'theatres');
             next if ($key eq 'theatres_string');
             
@@ -78,6 +80,14 @@ sub show_movie_extended
 	    my $filmcanID = $movie{'filmcanID'};
             print qq 
             {    <tr><td><b><a href="http://vancouver.film-can.com/cgi-bin/main/mview.cgi?FID=$filmcanID" target="filmcan">FilmCan Info</a>
+            };
+        }
+        if ($movie{'cinemaclockID'} && $movie{'cinemaclockPage'})
+        {    
+	    my $cinemaclockID = $movie{'cinemaclockID'};
+	    my $cinemaclockPage = $movie{'cinemaclockPage'};
+            print qq 
+            {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.$cinemaclockID/f.$cinemaclockPage" target="filmcan">Cinemaclock Info</a>
             };
         }
         print qq
