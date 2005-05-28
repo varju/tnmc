@@ -14,6 +14,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
+use tnmc::movies::showtimes;
 use tnmc::mybc;
 
 {
