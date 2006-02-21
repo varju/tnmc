@@ -47,10 +47,10 @@ sub get_theatre_showtimes(){
 
     ## parse webpage
     my @MOVIES;
-    if ($text =~ m|<!-- underaddress -->(.*)<!-- Cinema-Clock BigBox -->|si){
+    if ($text =~ m|<!-- underaddress -->(.*)<!-- BIGBOX -->|si){
 	my $movie_text = $1;
-
-	while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=verdanab2>(.*?)</span></a>.*?<span class=arial2>&nbsp;(.*?)</span>||s){
+	
+        while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=movietitlelink>(.*?)</span></a>.*?<span class=arial2>&nbsp;(.*?)</span>||s){
 	    my $FID = $1;
             my $page = $2;
 	    my $title = $3;
@@ -62,6 +62,7 @@ sub get_theatre_showtimes(){
 
 	    $title = &tnmc::movies::movie::reformat_title($title);
 
+            print "$FID   $title    $page\n";
 	    my %movie = (
 			 "cinemaclockid" => $FID,
                          "page" => $page,
