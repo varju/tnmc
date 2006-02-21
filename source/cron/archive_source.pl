@@ -6,7 +6,7 @@ use POSIX qw(strftime);
 use File::Copy;
 
 my $base = "/tnmc";
-my $cvs = "/var/db/tnmc-cvs";
+my $cvs = "/home/varju/tnmc/cvs";
 
 my $tmp = $$;
 while (-d "/tmp/$tmp")
