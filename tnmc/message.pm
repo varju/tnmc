@@ -5,10 +5,8 @@ use strict;
 #
 # module configuration
 #
-BEGIN
-{
-    use tnmc::db;
-}
+use tnmc::db;
+use tnmc::mail::send;
 
 #
 # module routines
@@ -202,17 +200,15 @@ sub forward_external
     my $from_email = $tnmc::config::tnmc_email;
     my $subject = 'TNMC: Forwarded web message';
     my $sender = &tnmc::user::get_user_cache($hash->{sender});
-    my $body = $hash->{'body'};
+    my $body = sprintf("%s says:\n\n%s\n", $sender->{'username'}, $hash->{'body'});
 
-    open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
-    print SENDMAIL "From: TNMC Website <$from_email>\n";
-    print SENDMAIL "Subject: $subject\n";
-    print SENDMAIL "To: TNMC <$from_email>\n";
-    print SENDMAIL "Precedence: List\n";
-    print SENDMAIL "\n";
-    print SENDMAIL $sender->{'username'}, " says:\n\n";
-    print SENDMAIL $hash->{'body'}, "\n";
-    close(SENDMAIL);
+    my %headers =
+	( 'To' => $to_email,
+	  'From' => "TNMC Website <$from_email>",
+	  'Subject' => $subject,
+	  'Precedence' => 'List',
+	  );
+    &tnmc::mail::send::message_send(\%headers, $body);
 }
 
 1;

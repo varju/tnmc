@@ -11,6 +11,7 @@ use lib '/tnmc';
 use tnmc::config;
 use tnmc::db;
 use tnmc::general_config;
+use tnmc::mail::send;
 use tnmc::movies::movie;
 use tnmc::movies::show;
 use tnmc::movies::night;
@@ -53,21 +54,19 @@ use tnmc::movies::night;
     
     my $vote_blurb = &tnmc::general_config::get_general_config("movie_vote_blurb");
     
-    open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
-    print SENDMAIL "From: TNMC Website <$to_email>\n";
-    print SENDMAIL "To: tnmc-list <$to_email>\n";
-    print SENDMAIL "Subject: $next_tuesday_string\n";
-    print SENDMAIL "\n";
-    
-    print SENDMAIL $vote_blurb;
-    
+    my %headers =
+	( 'To' => $to_email,
+	  'From' => "TNMC Website <$to_email>",
+	  'Subject' => $next_tuesday_string,
+	  );
+
+    my $body = $vote_blurb;
     open(MESSAGE, "<$filename");
-    while (<MESSAGE>){
-        print SENDMAIL $_;
+    while (defined(my $line = <MESSAGE>)) {
+	$body .= $line;
     }
     close MESSAGE;
-
-    close SENDMAIL;
+    &tnmc::mail::send::message_send(\%headers, $body);
 
     &tnmc::db::db_disconnect();
 }
@@ -170,7 +169,3 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}
 ##########################################################
 #### The end.
 ##########################################################
-
-
-
-

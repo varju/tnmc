@@ -76,17 +76,15 @@ sub send_password_to_user{
     my %user;
     &tnmc::user::get_user($userID, \%user);
     
-    my %message = 
-        ( 'AddrTo' => $user{'email'},
-          'AddrFrom' => $tnmc::config::tnmc_webserver_email,
+    my %headers = 
+        ( 'To' => $user{'email'},
+          'From' => $tnmc::config::tnmc_webserver_email,
           'Subject' => "[TNMC] Forgot your password?",
-          'Body' => "\nHi $user{'username'},\n\nYour password for tnmc is \"$user{'password'}\".\n\n",
           );
-    &tnmc::mail::send::message_send(\%message);
+    my $body = sprintf("\nHi %s,\n\nYour password for TNMC is \"%s\".\n\n", $user{'username'}, $user{'password'});
+    &tnmc::mail::send::message_send(\%headers, $body);
 }
 
 ##########################################################
 #### The end.
 ##########################################################
-
-

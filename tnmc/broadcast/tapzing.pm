@@ -2,6 +2,7 @@ package tnmc::broadcast::tapzing;
 
 use strict;
 
+use tnmc::mail::send;
 use tnmc::security::auth;
 use tnmc::user;
 use tnmc::broadcast::util;
@@ -34,14 +35,13 @@ sub sms_send_tapzing{
     $msg =~ s/\s/ /;     # Can't put cr's in the subject line
     my $to_email = $areacode . $phone . '@tapzing.com';
     
-    open(SENDMAIL, "| /usr/sbin/sendmail $to_email");
-    print SENDMAIL "From: TNMC <scottt\@interchange.ubc.ca>\n";
-    print SENDMAIL "To: $to_email\n";
-    print SENDMAIL "Subject: $msg\n";
-    print SENDMAIL "\n";
-    print SENDMAIL "$msg";
-    close SENDMAIL;
-    
+    my %headers =
+	( 'To' => $to_email,
+	  'From' => $tnmc::config::tnmc_webserver_email,
+	  'Subject' => $msg,
+	  );
+    &tnmc::mail::send::message_send(\%headers, $msg);
+
     return 1;
 }
 

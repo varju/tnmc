@@ -16,14 +16,13 @@ use Mail::Sendmail;
 #
 
 sub message_send {
-    my ($message_ref) = @_;
+    my ($headers_ref, $body) = @_;
 
-    my %mail = 
-        ( To      => $$message_ref{AddrTo},
-          From    => $$message_ref{AddrFrom},
-          Subject => $$message_ref{Subject},
-          Body    => $$message_ref{Body},
-          );
+    my %mail;
+    foreach my $key (keys %$headers_ref) {
+	$mail{$key} = $$headers_ref{$key};
+    }
+    $mail{'Body'} = $body;
 
     sendmail(%mail);
 }

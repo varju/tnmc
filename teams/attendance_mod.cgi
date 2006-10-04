@@ -244,13 +244,12 @@ sub action_player_submit{
 		    my $subject = "No $user->{username} on $meet->{date_text} ($meet->{totals}->{M}->{yes}/$meet->{totals}->{F}->{yes})";
 		    my $body = "\n\n$user->{username}\'s attendance was changed from yes to $val.\n\nThe roster for $meet->{date_text} now has $meet->{totals}->{M}->{yes} guys, $meet->{totals}->{F}->{yes} girls.\n\n";
 		    
-		    my %message =
-			( 'AddrTo' => $team->{emailList},
-			  'AddrFrom' => $team->{emailList},
+		    my %headers =
+			( 'To' => $team->{emailList},
+			  'From' => $team->{emailList},
 			  'Subject' => $subject,
-			  'Body' => $body,
 			  );
-		    &tnmc::mail::send::message_send(\%message);
+		    &tnmc::mail::send::message_send(\%headers, $body);
 		    
 		}
 	    }
