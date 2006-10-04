@@ -154,12 +154,25 @@ sub show_conv{
     if ($tnmc::security::auth::USERID) {
         print qq{
 	<tr valign="top"><td>
-	<form action="message/msg_post.cgi" method="post">
+<script>
+var submitting = 0;
+function doSubmit() {
+    var ff = document.forms.msg_form;
+    if (ff.body.value == '') {
+        return;
+    }
+    if (submitting++) {
+        return;
+    }
+    ff.submit();
+}
+</script>
+	<form name="msg_form" action="message/msg_post.cgi" method="post" onsubmit="doSubmit(); return false;">
 	    <input type="hidden" name="convID" value="$convID">
 	    <b>$tnmc::security::auth::USERID{username}&nbsp;</b>
 		</td><td nowrap>
 	       <input type="text" size="40" name="body">
-	    <input type="submit" value="post msg">
+	    <input type="submit" value="post msg" onclick="doSubmit();">
 	    </form>
 		</td></tr>
 		
@@ -195,6 +208,7 @@ sub forward_external
     print SENDMAIL "From: TNMC Website <$from_email>\n";
     print SENDMAIL "Subject: $subject\n";
     print SENDMAIL "To: TNMC <$from_email>\n";
+    print SENDMAIL "Precedence: List\n";
     print SENDMAIL "\n";
     print SENDMAIL $sender->{'username'}, " says:\n\n";
     print SENDMAIL $hash->{'body'}, "\n";
