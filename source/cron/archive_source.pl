@@ -6,7 +6,6 @@ use POSIX qw(strftime);
 use File::Copy;
 
 my $base = "/tnmc";
-my $cvs = "/home/varju/tnmc/cvs";
 
 my $tmp = $$;
 while (-d "/tmp/$tmp")
@@ -16,7 +15,7 @@ while (-d "/tmp/$tmp")
 
 mkdir("/tmp/$tmp",504);
 chdir("/tmp/$tmp");
-system("cvs -d $cvs export -rHEAD tnmc");
+system("svn export svn+ssh://alex/home/svn/repository/trunk/tnmc");
 system("tar cvzf tnmc.tar.gz tnmc");
 
 chdir($base);
