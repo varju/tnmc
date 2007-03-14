@@ -203,7 +203,7 @@ sub forward_external
     my $body = sprintf("%s says:\n\n%s\n", $sender->{'username'}, $hash->{'body'});
 
     my %headers =
-	( 'To' => $to_email,
+	( 'Bcc' => $to_email,
 	  'From' => "TNMC Website <$from_email>",
 	  'Subject' => $subject,
 	  'Precedence' => 'List',
