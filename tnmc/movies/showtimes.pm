@@ -30,13 +30,6 @@ sub set_showtimes{
     return &tnmc::db::link::replaceLink($table, \@keys, $_[0]);
 }
 
-sub get_showtimes{
-    # usage: &getShowtimes($movieID, $theatreID);
-    my %hash = ("movieID" => $_[0],
-                "theatreID" => $_[1]);
-    return &tnmc::db::link::getLink($table, \@keys, \%hash);
-}
-
 sub del_showtimes{
     # usage: &delShowtimes($movieID, $theatreID);
     my %hash = ("movieID" => $_[0],

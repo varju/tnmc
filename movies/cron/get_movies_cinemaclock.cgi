@@ -131,7 +131,6 @@ use tnmc::mybc;
 	    my $showtimes = &tnmc::movies::showtimes::new_showtimes;
 	    $showtimes->{theatreID} = $theatreID;
 	    $showtimes->{movieID} = $movie->{movieID};
-	    $showtimes->{showtimes} = $listing->{showtimes};
 	    &tnmc::movies::showtimes::set_showtimes($showtimes);
 
 	    print "\n";

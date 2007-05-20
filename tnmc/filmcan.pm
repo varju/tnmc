@@ -53,12 +53,10 @@ sub get_theatre_showtimes(){
 	while ($movie_text =~ s|mview.cgi\?FID\=(.*?)\">(.*?)</A>.*?SIZE\=2>\s+([^\<]*)||s){
 	    my $FID = $1;
 	    my $title = $2;
-	    my $showtimes = $3;
 	    $title = &tnmc::movies::movie::reformat_title($title);
 	    my %movie = (
 			 "filmcanid" => $FID,
 			 "title" => $title,
-			 "showtimes" => $showtimes,
 			 );
 	    push @MOVIES, \%movie;
 	}

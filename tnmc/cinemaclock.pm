@@ -50,11 +50,10 @@ sub get_theatre_showtimes(){
     if ($text =~ m|<!-- underaddress -->(.*)<!-- BIGBOX -->|si){
 	my $movie_text = $1;
 	
-        while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=movietitlelink>(.*?)</span></a>.*?<span class=arial2>(.*?)</span>||s){
+        while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=movietitlelink>(.*?)</span>||s){
 	    my $FID = $1;
             my $page = $2;
 	    my $title = $3;
-	    my $showtimes = $4;
 
             $title =~ s| - Eng. Subt.||;
             $title =~ s|Imax: ||;
@@ -67,7 +66,6 @@ sub get_theatre_showtimes(){
 			 "cinemaclockid" => $FID,
                          "page" => $page,
 			 "title" => $title,
-			 "showtimes" => $showtimes,
 			 );
 	    push @MOVIES, \%movie;
 	}
