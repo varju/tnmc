@@ -69,6 +69,8 @@ $sth->finish;
 #
 # (3) Make an extra night off in the future - night row
 #
+# Note that this must be run on a Tuesday because of the NOW() code
+#
 
 my $numberOfWeeksToShow = 3;
 
