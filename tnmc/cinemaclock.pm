@@ -41,6 +41,7 @@ sub get_theatre_showtimes(){
     ## get webpage
     my $ua = &get_valid_ua();
     my $URL = "http://www.cinemaclock.com/aw/ctha.aw?p=clock&r=bri&m=Vancouver&j=e&k=$cinemaclockid&submit=Go%21";
+    print "DEBUG: Requesting $URL\n";
     my $req = new HTTP::Request GET => $URL;
     my $res = $ua->request($req);
     my $text = $res->content;
@@ -49,8 +50,10 @@ sub get_theatre_showtimes(){
     my @MOVIES;
     if ($text =~ m|<!-- underaddress -->(.*)<!-- BIGBOX -->|si){
 	my $movie_text = $1;
-	
-        while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=movietitlelink>(.*?)</span>||s){
+
+	#<a href="/aw/crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.648/f.Imax__Alaska__Spirit_Of_The_Wild__1997_.html"><span class=movietitlelink>Imax: Alaska: Spirit Of The Wild</span></a>
+
+        while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=movietitlelink>(.*?)</span>.*?/10||s){
 	    my $FID = $1;
             my $page = $2;
 	    my $title = $3;
