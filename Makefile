@@ -2,4 +2,4 @@ autosplit:
 	./autosplit.pl
 
 TAGS:
-	etags --append --language=perl *.p? */*.p? */*/*.p?
+	etags --append --language=perl `find . -name '*.p?'`
