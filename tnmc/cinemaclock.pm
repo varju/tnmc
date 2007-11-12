@@ -51,22 +51,20 @@ sub get_theatre_showtimes(){
     if ($text =~ m|<!-- underaddress -->(.*)<!-- BIGBOX -->|si){
 	my $movie_text = $1;
 
-	#<a href="/aw/crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.648/f.Imax__Alaska__Spirit_Of_The_Wild__1997_.html"><span class=movietitlelink>Imax: Alaska: Spirit Of The Wild</span></a>
-
-        while ($movie_text =~ s|crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.(.*?)/f.(.*?)\"><span class=movietitlelink>(.*?)</span>.*?/10||s){
-	    my $FID = $1;
+	#<a href="/aw/crva.aw/bri/Vancouver/e/9144/Imax__Deep_Sea.html"><span class=movietitlelink>Imax: Deep Sea</span></a>
+        while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(.*?)/(.*?)"><span class=movietitlelink>(.*?)</span>.*?/10||s)
+	{
+	    my $cinemaclockid = $1;
             my $page = $2;
 	    my $title = $3;
 
             $title =~ s| - Eng. Subt.||;
             $title =~ s|Imax: ||;
-            
-
 	    $title = &tnmc::movies::movie::reformat_title($title);
 
-            print "$FID   $title    $page\n";
+            print "$cinemaclockid   $title    $page\n";
 	    my %movie = (
-			 "cinemaclockid" => $FID,
+			 "cinemaclockid" => $cinemaclockid,
                          "page" => $page,
 			 "title" => $title,
 			 );
