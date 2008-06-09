@@ -52,7 +52,7 @@ sub get_theatre_showtimes(){
 	my $movie_text = $1;
 
 	#<a href="/aw/crva.aw/bri/Vancouver/e/9144/Imax__Deep_Sea.html"><span class=movietitlelink>Imax: Deep Sea</span></a>
-        while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(.*?)/(.*?)"><span class=movietitlelink>(.*?)</span>.*?/10||s)
+        while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(.*?)/(.*?)"><span class=movietitlelink>(.*?)</span>||s)
 	{
 	    my $cinemaclockid = $1;
             my $page = $2;
