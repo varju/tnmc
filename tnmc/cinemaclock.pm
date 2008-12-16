@@ -51,8 +51,19 @@ sub get_theatre_showtimes(){
     if ($text =~ m|<!-- underaddress -->(.*)<!-- BIGBOX -->|si){
 	my $movie_text = $1;
 
-	#<a href="/aw/crva.aw/bri/Vancouver/e/9144/Imax__Deep_Sea.html"><span class=movietitlelink>Imax: Deep Sea</span></a>
-        while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(.*?)/(.*?)"><span class=movietitlelink>(.*?)</span>||s)
+# <span class=arial1><br></span><a href="/aw/crva.aw/bri/Vancouver/e/11184/Wall-E.html"><span class=movietitlelink>Wall-E</span></a>
+# <span class=arial2><font color=#0000aa> (G) </font></span>
+# <span class=arial2><font color=#440088>[1:37] </font></span>
+# <span class=arial2><font color=#444444>5 weeks</font></span> 
+
+# <!-- nosol --><a href="/aw/crva.aw/bri/Vancouver/e/11184/0/Wall-E.html"><span class=verdana2><font color=#aa0000>8.9</font></span><span class=verdana1>/10</span></a>
+# <br><span class=arial2><table border=0 cellspacing=0 cellpadding=1 width="100%"><tr><td width=5><img src="/html/1x1.gif" height=1 width=1></td></tr></table>
+
+# <table border=0 cellspacing=0 cellpadding=1 width="100%"><tr><td width=5><img src="/html/1x1.gif" height=1 width=1></td><td><span class=arial2>Tue, Wed, Thu: 12:20, 1:55, 2:50, 4:20, 5:25, 7:05, 9:35</span></td></tr></table>
+
+	# The \1 is to trim out everything up to and including the last reference to this movie ID.  It
+	# appears to be very CPU intensive.
+        while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(.*?)/(.*?)"><span class=movietitlelink>(.*?)</span>.*\1||s)
 	{
 	    my $cinemaclockid = $1;
             my $page = $2;
@@ -69,6 +80,9 @@ sub get_theatre_showtimes(){
 			 "title" => $title,
 			 );
 	    push @MOVIES, \%movie;
+
+	    # Strip out any more references to the same movie URL, or they will mess up our parsing
+	    #$movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/$cinemaclockid/$page"><span class=movietitlelink>||g;
 	}
     }
     
