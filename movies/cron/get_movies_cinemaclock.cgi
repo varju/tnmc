@@ -48,9 +48,10 @@ use tnmc::mybc;
 	print "$theatre->{name}\n";
 	
 	my $showtimes = &tnmc::cinemaclock::get_theatre_showtimes($theatre->{cinemaclockid});
-	
-	# map {print "\t$_->{title}\n";} @$showtimes;
-	
+	foreach my $listing (@$showtimes) {
+	    print $listing->{cinemaclockid}, "   ", $listing->{title}, "    ", $listing->{page}, "\n";
+	}
+
 	$SHOWTIMES{$theatreID} = $showtimes;
 	
     }
@@ -92,6 +93,7 @@ use tnmc::mybc;
 	    if ($movie->{movieID}){
 		$movieID = $movie->{movieID};
 		$movie->{statusShowing} = 1;
+		$movie->{cinemaclockPage} = $listing->{page};
 		&tnmc::movies::movie::set_movie($movie);
 		print "(cinemaclockid $movieID)";
 	    }

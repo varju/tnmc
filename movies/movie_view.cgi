@@ -87,7 +87,7 @@ sub show_movie_extended
 	    my $cinemaclockID = $movie{'cinemaclockID'};
 	    my $cinemaclockPage = $movie{'cinemaclockPage'};
             print qq 
-            {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/p.clock/r.bri/m.Vancouver/j.e/i.$cinemaclockID/f.$cinemaclockPage" target="filmcan">Cinemaclock Info</a>
+            {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/bri/Vancouver/e/$cinemaclockID/$cinemaclockPage" target="filmcan">Cinemaclock Info</a>
             };
         }
         print qq
