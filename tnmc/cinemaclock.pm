@@ -48,7 +48,7 @@ sub parse_theatre_showtimes
 
     ## parse webpage
     my @MOVIES;
-    if ($text =~ m|<!-- underaddress -->(.*)<!-- BIGBOX -->|si){
+    if ($text =~ m|<!-- BEGINHOURS -->(.*)<!-- ENDHOURS -->|si){
 	my $movie_text = $1;
 
         while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(\d+?)/([^\"]+?)"><span class=movietitlelink>(.*?)</span>||s)
