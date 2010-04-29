@@ -22,6 +22,7 @@ sub mybc_get_movie_list
     my %results;
 
     my $URL = "http://www.mytelus.com/movies/releases.do";
+    print "DEBUG: Requesting $URL\n";
     my $req = new HTTP::Request GET => $URL;
     my $ua = new LWP::UserAgent;
     my $res = $ua->request($req);
@@ -53,6 +54,7 @@ sub mybc_get_movie_info
 
     my $ua = new LWP::UserAgent;
     my $URL = "http://www.mytelus.com/movies/mdetails.do?movieID=$mID";
+    print "DEBUG: Requesting $URL\n";
     my $req = new HTTP::Request GET => $URL;
     my $res = $ua->request($req);
 
@@ -82,6 +84,7 @@ sub mybc_get_movie_info
     }
 
     $URL = "http://www.mytelus.com/movies/theatres.do?prov=BC&movieID=$mID";
+    print "DEBUG: Requesting $URL\n";
     $req = new HTTP::Request GET => $URL;
     $res = $ua->request($req);
     $text = $res->content;
