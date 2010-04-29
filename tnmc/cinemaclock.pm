@@ -65,7 +65,7 @@ sub parse_theatre_showtimes
 
 	    if (defined($after) && $after =~ /Also playing in 3D/)
 	    {
-		add_movie(\@MOVIES, $cinemaclockid . '.3d', $page, $title . ': 3D');
+		add_movie(\@MOVIES, $cinemaclockid . '.3d', $page, $title . ' 3D');
 	    }
 	}
     }
