@@ -51,7 +51,7 @@ sub parse_theatre_showtimes
     if ($text =~ m|<!-- BEGINHOURS -->(.*)<!-- ENDHOURS -->|si){
 	my $movie_text = $1;
 
-        while ($movie_text =~ s|<a href="/aw/crva.aw/bri/Vancouver/e/(\d+?)/([^\"]+?)"><span class=movietitlelink>(.*?)</span>||s)
+        while ($movie_text =~ s|<a href="/movies/bri/Vancouver/(\d+?)/([^\"]+?)"><span class=movietitlelink>(.*?)</span>||s)
 	{
 	    my $cinemaclockid = $1;
             my $page = $2;
