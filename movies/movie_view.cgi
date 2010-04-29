@@ -85,6 +85,7 @@ sub show_movie_extended
         if ($movie{'cinemaclockID'} && $movie{'cinemaclockPage'})
         {    
 	    my $cinemaclockID = $movie{'cinemaclockID'};
+	    $cinemaclockID =~ s/\.3d$//;
 	    my $cinemaclockPage = $movie{'cinemaclockPage'};
             print qq 
             {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/bri/Vancouver/e/$cinemaclockID/$cinemaclockPage" target="filmcan">Cinemaclock Info</a>

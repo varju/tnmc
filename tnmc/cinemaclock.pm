@@ -51,26 +51,34 @@ sub parse_theatre_showtimes
     if ($text =~ m|<!-- BEGINHOURS -->(.*)<!-- ENDHOURS -->|si){
 	my $movie_text = $1;
 
-        while ($movie_text =~ s|<a href="/movies/bri/Vancouver/(\d+?)/([^\"]+?)"><span class=movietitlelink>(.*?)</span>||s)
+        while ($movie_text =~ s|<a href="/movies/bri/Vancouver/(\d+?)/([^\"]+?)"><span class=movietitlelink>(.*?)</span>(.*?<span class=arial1>)?||s)
 	{
 	    my $cinemaclockid = $1;
             my $page = $2;
 	    my $title = $3;
+	    my $after = $4;
 
             $title =~ s| - Eng. Subt.||;
             $title =~ s|Imax: ||;
-	    $title = &tnmc::movies::movie::reformat_title($title);
 
-	    my %movie = (
-			 "cinemaclockid" => $cinemaclockid,
-                         "page" => $page,
-			 "title" => $title,
-			 );
-	    push @MOVIES, \%movie;
+	    add_movie(\@MOVIES, $cinemaclockid, $page, $title);
+
+	    if (defined($after) && $after =~ /Also playing in 3D/)
+	    {
+		add_movie(\@MOVIES, $cinemaclockid . '.3d', $page, $title . ': 3D');
+	    }
 	}
     }
 
     return \@MOVIES;
+}
+
+sub add_movie
+{
+    my ($movies, $cinemaclockid, $page, $title) = @_;
+    my $pretty_title = &tnmc::movies::movie::reformat_title($title);
+    my %movie = ( "cinemaclockid" => $cinemaclockid, "page" => $page, "title" => $pretty_title );
+    push @$movies, \%movie;
 }
 
 1;
