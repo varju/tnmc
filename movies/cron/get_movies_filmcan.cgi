@@ -27,34 +27,8 @@ use tnmc::mybc;
     
     print "Content-type: text/html\n\n<pre>\n";
     
-    print "***********************************************************\n";
-    print "****           FILMCAN: Get The Theatre List           ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-    
-    my @theatres = &tnmc::movies::theatres::list_theatres("WHERE filmcanid != ''");
-    print join " ", @theatres;
-    print "\n\n";
-
-    print "***********************************************************\n";
-    print "****           FILMCAN: Get The Showtimes              ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-    
-    
-    my %SHOWTIMES;
-    foreach my $theatreID (@theatres){
-	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
-	
-	print "$theatre->{name}\n";
-	
-	my $showtimes = &tnmc::filmcan::get_theatre_showtimes($theatre->{filmcanid});
-	
-	# map {print "\t$_->{title}\n";} @$showtimes;
-	
-	$SHOWTIMES{$theatreID} = $showtimes;
-	
-    }
+    my $theatres = get_theatres();
+    my $showtimes = get_showtimes($theatres);
     
     print "\n\n";
     print "***********************************************************\n";
@@ -64,17 +38,14 @@ use tnmc::mybc;
     
     &tnmc::movies::cron::reset_status_showing();
     
+    ## del old showtimes
+    &tnmc::movies::showtimes::del_all_showtimes();
+
     ## update movies
-    foreach my $theatreID (keys %SHOWTIMES){
-	
-	## del old showtimes
-	my @movies = &tnmc::movies::showtimes::list_movies($theatreID);
-	foreach my $movieID (@movies){
-	    &tnmc::movies::showtimes::del_showtimes($movieID, $theatreID);
-	}
-	
+    foreach my $theatreID (keys %$showtimes){
+
 	## set new showtimes
-	my $listings = $SHOWTIMES{$theatreID};
+	my $listings = $showtimes->{$theatreID};
 	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
 	print "$theatre->{name}\n";
 	
@@ -139,4 +110,44 @@ use tnmc::mybc;
     &tnmc::movies::night::update_all_cache_movieIDs();
     
     &tnmc::db::db_disconnect();
+}
+
+sub get_theatres
+{
+    print "***********************************************************\n";
+    print "****           FILMCAN: Get The Theatre List           ****\n";
+    print "***********************************************************\n";
+    print "\n\n";
+
+    my @theatres = &tnmc::movies::theatres::list_theatres("WHERE filmcanid != ''");
+    print join " ", @theatres;
+    print "\n\n";
+
+    retun \@theatres;
+}
+
+sub get_showtimes
+{
+    my ($theatres) = @_;
+
+    print "***********************************************************\n";
+    print "****           FILMCAN: Get The Showtimes              ****\n";
+    print "***********************************************************\n";
+    print "\n\n";
+    
+    my %SHOWTIMES;
+    foreach my $theatreID (@$theatres){
+	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
+	
+	print "$theatre->{name}\n";
+	
+	my $showtimes = &tnmc::filmcan::get_theatre_showtimes($theatre->{filmcanid});
+	
+	# map {print "\t$_->{title}\n";} @$showtimes;
+	
+	$SHOWTIMES{$theatreID} = $showtimes;
+	
+    }
+
+    return \%SHOWTIMES;
 }

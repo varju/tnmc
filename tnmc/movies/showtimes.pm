@@ -37,6 +37,11 @@ sub del_showtimes{
     return &tnmc::db::link::delLink($table, \@keys, \%hash);
 }
 
+sub del_all_showtimes
+{
+    &tnmc::db::link::delAllLinks($table);
+}
+
 sub list_theatres{
     # usage: &listTheatres($movieID);
     return &tnmc::db::link::listLinks($table, "theatreID", "WHERE movieID = $_[0]");
@@ -58,15 +63,4 @@ sub list_all_movies{
     return @movies;
 }
 
-# keepin perl happy...
-return 1;
-
-
-
-
-
-
-
-
-
-
+1;

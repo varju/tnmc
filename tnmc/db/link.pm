@@ -99,5 +99,14 @@ sub listLinks{
     return (wantarray())? @list : \@list;
 }
 
-return 1;
+sub delAllLinks
+{
+    my ($table) = @_;
 
+    my $sql = "DELETE FROM $table";
+    my $sth = $dbh->prepare($sql);
+    $sth->execute();
+    $sth->finish();
+}
+
+1;

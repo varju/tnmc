@@ -27,36 +27,9 @@ use tnmc::mybc;
     
     print "Content-type: text/html\n\n<pre>\n";
     
-    print "***********************************************************\n";
-    print "****           CINEMACLOCK: Get The Theatre List           ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-    
-    my @theatres = &tnmc::movies::theatres::list_theatres("WHERE cinemaclockid != ''");
-    print join " ", @theatres;
-    print "\n\n";
+    my $theatres = get_theatres();
+    my $showtimes = get_showtimes($theatres);
 
-    print "***********************************************************\n";
-    print "****           CINEMACLOCK: Get The Showtimes              ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-    
-    
-    my %SHOWTIMES;
-    foreach my $theatreID (@theatres){
-	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
-	
-	print "$theatre->{name}\n";
-	
-	my $showtimes = &tnmc::cinemaclock::get_theatre_showtimes($theatre->{cinemaclockid});
-	foreach my $listing (@$showtimes) {
-	    print $listing->{cinemaclockid}, "   ", $listing->{title}, "    ", $listing->{page}, "\n";
-	}
-
-	$SHOWTIMES{$theatreID} = $showtimes;
-	
-    }
-    
     print "\n\n";
     print "***********************************************************\n";
     print "****               Update the Database                 ****\n";
@@ -64,18 +37,15 @@ use tnmc::mybc;
     print "\n\n";
     
     &tnmc::movies::cron::reset_status_showing();
-    
+
+    ## del old showtimes
+    &tnmc::movies::showtimes::del_all_showtimes();
+
     ## update movies
-    foreach my $theatreID (keys %SHOWTIMES){
-	
-	## del old showtimes
-	my @movies = &tnmc::movies::showtimes::list_movies($theatreID);
-	foreach my $movieID (@movies){
-	    &tnmc::movies::showtimes::del_showtimes($movieID, $theatreID);
-	}
-	
+    foreach my $theatreID (keys %$showtimes){
+
 	## set new showtimes
-	my $listings = $SHOWTIMES{$theatreID};
+	my $listings = $showtimes->{$theatreID};
 	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
 	print "$theatre->{name}\n";
 	
@@ -144,3 +114,44 @@ use tnmc::mybc;
     
     &tnmc::db::db_disconnect();
 }
+
+sub get_theatres
+{
+    print "***********************************************************\n";
+    print "****           CINEMACLOCK: Get The Theatre List           ****\n";
+    print "***********************************************************\n";
+    print "\n\n";
+    
+    my @theatres = &tnmc::movies::theatres::list_theatres("WHERE cinemaclockid != ''");
+    print join " ", @theatres;
+    print "\n\n";
+
+    return \@theatres;
+}
+
+sub get_showtimes
+{
+    my ($theatres) = @_;
+
+    print "***********************************************************\n";
+    print "****           CINEMACLOCK: Get The Showtimes              ****\n";
+    print "***********************************************************\n";
+    print "\n\n";
+    
+    my %SHOWTIMES;
+    foreach my $theatreID (@$theatres){
+	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
+	print "Theatre: $theatre->{name}\n";
+	
+	my $showtimes = &tnmc::cinemaclock::get_theatre_showtimes($theatre->{cinemaclockid});
+	foreach my $listing (@$showtimes) {
+	    print $listing->{cinemaclockid}, "   ", $listing->{title}, "    ", $listing->{page}, "\n";
+	}
+
+	$SHOWTIMES{$theatreID} = $showtimes;
+	
+    }
+
+    return \%SHOWTIMES;
+}
+
