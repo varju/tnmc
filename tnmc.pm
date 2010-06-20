@@ -33,8 +33,8 @@ BEGIN {
 
 sub AUTOLOAD{
     my $sub = $AUTOLOAD;
-    
-    if ($sub =~ /^tnmc::/){
+
+    if ($sub =~ /^tnmc::/ && $sub !~ /::DESTROY$/){
         
         $sub =~ /^(.*)::([^*]+)/;
         my $req = $1 . ".pm";

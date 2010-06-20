@@ -10,4 +10,9 @@ use lib '/tnmc';
 
 use tnmc::updater::cinemaclock;
 
-tnmc::updater::cinemaclock::update();
+$| = 1;
+
+my $updater = tnmc::updater::cinemaclock->new();
+$updater->update();
+
+1;

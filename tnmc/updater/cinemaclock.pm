@@ -3,48 +3,48 @@ package tnmc::updater::cinemaclock;
 use strict;
 use warnings;
 
-#
-# module configuration
-#
-BEGIN
-{
-    use LWP::UserAgent;
-    use HTTP::Request::Common qw(POST);
+use LWP::UserAgent;
+use HTTP::Request::Common qw(POST);
     
-    use tnmc::general_config;
-    use tnmc::movies::movie;
+use tnmc::general_config;
+use tnmc::movies::movie;
+
+sub new
+{
+    my $self = {};
+    $self->{ua} = undef;
+    bless($self);
+    return $self;
 }
 
-#
-# module routines
-#
-
-my $ua;
-sub get_valid_ua {
-    if (! $ua) {
-	$ua = new LWP::UserAgent;
-	$ua->cookie_jar({});
+sub get_valid_ua
+{
+    my ($self) = @_;
+    if (! $self->{ua}) {
+	$self->{ua} = new LWP::UserAgent;
+	$self->{ua}->cookie_jar({});
     }
-    return $ua;
+    return $self->{ua};
 }
 
-sub get_theatre_showtimes {
-    my ($cinemaclockid) = @_;
+sub get_theatre_showtimes
+{
+    my ($self, $cinemaclockid) = @_;
     
     ## get webpage
-    my $ua = &get_valid_ua();
+    my $ua = $self->get_valid_ua();
     my $URL = "http://www.cinemaclock.com/aw/ctha.aw/bri/Vancouver/e/$cinemaclockid.html";
     print "DEBUG: Requesting $URL\n";
     my $req = new HTTP::Request GET => $URL;
     my $res = $ua->request($req);
     my $text = $res->content;
 
-    return parse_theatre_showtimes($text);
+    return $self->parse_theatre_showtimes($text);
 }
 
 sub parse_theatre_showtimes
 {
-    my ($text) = @_;
+    my ($self, $text) = @_;
 
     ## parse webpage
     my @MOVIES;
@@ -61,11 +61,11 @@ sub parse_theatre_showtimes
             $title =~ s| - Eng. Subt.||;
             $title =~ s|Imax: ||;
 
-	    add_movie(\@MOVIES, $cinemaclockid, $page, $title);
+	    $self->add_movie(\@MOVIES, $cinemaclockid, $page, $title);
 
 	    if (defined($after) && $after =~ /Also playing in 3D/)
 	    {
-		add_movie(\@MOVIES, $cinemaclockid . '.3d', $page, $title . ' 3D');
+		$self->add_movie(\@MOVIES, $cinemaclockid . '.3d', $page, $title . ' 3D');
 	    }
 	}
     }
@@ -75,7 +75,8 @@ sub parse_theatre_showtimes
 
 sub add_movie
 {
-    my ($movies, $cinemaclockid, $page, $title) = @_;
+    my ($self, $movies, $cinemaclockid, $page, $title) = @_;
+
     my $pretty_title = &tnmc::movies::movie::reformat_title($title);
     my %movie = ( "cinemaclockid" => $cinemaclockid, "page" => $page, "title" => $pretty_title );
     push @$movies, \%movie;
@@ -83,11 +84,12 @@ sub add_movie
 
 sub update
 {
-    $| = 1;
+    my ($self) = @_;
+
     print "Content-type: text/html\n\n<pre>\n";
     
-    my $theatres = get_theatres();
-    my $showtimes = get_showtimes($theatres);
+    my $theatres = $self->get_theatres();
+    my $showtimes = $self->get_showtimes($theatres);
 
     print "\n\n";
     print "***********************************************************\n";
@@ -95,24 +97,32 @@ sub update
     print "***********************************************************\n";
     print "\n\n";
 
+    #print "- reset statusShowing\n";
     &tnmc::movies::cron::reset_status_showing();
 
     ## del old showtimes
+    #print "- delete old showtimes\n";
     &tnmc::movies::showtimes::del_all_showtimes();
 
     ## update movies
+    #print "- update showtimes\n";
     foreach my $theatreID (keys %$showtimes) {
-	process_theatre($theatreID, $showtimes->{$theatreID});
+	$self->process_theatre($theatreID, $showtimes->{$theatreID});
     }
 
     ### update the movie caches
+    #print "- update movie caches\n";
     &tnmc::movies::night::update_all_cache_movieIDs();
 
+    #print "- disconnect\n";
     &tnmc::db::db_disconnect();
+    #print "- done\n";
 }
 
 sub get_theatres
 {
+    my ($self) = @_;
+
     print "***********************************************************\n";
     print "****           CINEMACLOCK: Get The Theatre List           ****\n";
     print "***********************************************************\n";
@@ -127,7 +137,7 @@ sub get_theatres
 
 sub get_showtimes
 {
-    my ($theatres) = @_;
+    my ($self, $theatres) = @_;
 
     print "***********************************************************\n";
     print "****           CINEMACLOCK: Get The Showtimes              ****\n";
@@ -139,7 +149,7 @@ sub get_showtimes
 	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
 	print "Theatre: $theatre->{name}\n";
 	
-	my $showtimes = get_theatre_showtimes($theatre->{cinemaclockid});
+	my $showtimes = $self->get_theatre_showtimes($theatre->{cinemaclockid});
 	foreach my $listing (@$showtimes) {
 	    print $listing->{cinemaclockid}, "   ", $listing->{title}, "    ", $listing->{page}, "\n";
 	}
@@ -154,7 +164,7 @@ sub get_showtimes
 ## sets new showtimes
 sub process_theatre
 {
-    my ($theatreID, $listings) = @_;
+    my ($self, $theatreID, $listings) = @_;
 
     my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
     print "$theatre->{name}\n";
@@ -163,7 +173,7 @@ sub process_theatre
 	print "\t$listing->{cinemaclockid}\t$listing->{title} ";
 
 	## find movie
-	my $movie = get_or_create_movie($listing->{cinemaclockid}, $listing->{title});
+	my $movie = $self->get_or_create_movie($listing->{cinemaclockid}, $listing->{title});
 
 	## update attributes
 	$movie->{cinemaclockID} = $listing->{cinemaclockid};
@@ -173,7 +183,7 @@ sub process_theatre
 	&tnmc::movies::movie::set_movie($movie);
 
 	## update showtimes
-	add_showtime($theatreID, $movie->{movieID});
+	$self->add_showtime($theatreID, $movie->{movieID});
 	
 	print "\n";
     }
@@ -181,7 +191,7 @@ sub process_theatre
 
 sub get_or_create_movie
 {
-    my ($cinemaclockid, $title) = @_;
+    my ($self, $cinemaclockid, $title) = @_;
 
     my $movie = &tnmc::movies::movie::get_movie_by_cinemaclockid($cinemaclockid);
     if ($movie->{movieID}) {
@@ -211,7 +221,7 @@ sub get_or_create_movie
 
 sub add_showtime
 {
-    my ($theatreID, $movieID) = @_;
+    my ($self, $theatreID, $movieID) = @_;
 
     my $showtimes = &tnmc::movies::showtimes::new_showtimes();
     $showtimes->{theatreID} = $theatreID;
