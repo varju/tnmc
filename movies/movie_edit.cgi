@@ -108,11 +108,6 @@ sub show_movie_edit_form{
         </tr>
 
         <tr valign=top>
-            <td><b>FilmCan ID</b></td>
-            <td><input type="text" size="10" name="filmcanID" value="$movie{filmcanID}"></td>
-        </tr>
-
-        <tr valign=top>
             <td><b>IMDB ID</b></td>
             <td><input type="text" size="10" name="imdbID" value="$movie{imdbID}"></td>
         </tr>

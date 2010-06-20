@@ -97,18 +97,13 @@ sub get_movie{
     }
 }
 
-sub get_movie_by_filmcanid{
-    # usage: my $movie_hash = &get_movie($filmcanid);
-    return &tnmc::db::item::getItem($table, "filmcanID", $_[0]);
-}
-
 sub get_movie_by_cinemaclockid{
-    # usage: my $movie_hash = &get_movie($filmcanid);
+    # usage: my $movie_hash = &get_movie($cinemaclockid);
     return &tnmc::db::item::getItem($table, "cinemaclockID", $_[0]);
 }
 
 sub get_movie_by_imdbid{
-    # usage: my $movie_hash = &get_movie($filmcanid);
+    # usage: my $movie_hash = &get_movie($imdbid);
     return &tnmc::db::item::getItem($table, "imdbID", $_[0]);
 }
 

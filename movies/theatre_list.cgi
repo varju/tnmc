@@ -20,10 +20,10 @@ use tnmc::movies::theatres;
 
 my @theatres = &tnmc::movies::theatres::list_theatres();
 
-print "<table><tr><th>TheatreID</th><th>Name</th><th>Mybc</th><th>FilmCan</th><th>Other</th></tr>";
+print "<table><tr><th>TheatreID</th><th>Name</th><th>Mybc</th><th>Other</th></tr>";
 foreach my $theatreid ( @theatres){
     my $theatre =  &tnmc::movies::theatres::get_theatre($theatreid);
-    print "<tr><td>$theatreid</td><td><a href=\"movies/theatre_edit_admin.cgi?theatreID=$theatreid\">$theatre->{'name'}</a></td><td>$theatre->{'mybcid'}</td><td>$theatre->{'filmcanid'}</td><td>$theatre->{'otherid'}</td></tr>\n";
+    print "<tr><td>$theatreid</td><td><a href=\"movies/theatre_edit_admin.cgi?theatreID=$theatreid\">$theatre->{'name'}</a></td><td>$theatre->{'mybcid'}</td><td>$theatre->{'otherid'}</td></tr>\n";
 }
 
 

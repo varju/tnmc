@@ -75,20 +75,13 @@ sub show_movie_extended
             {    <tr><td><b><a href="http://www.imdb.com/Title?$imdbID" target="imdb">IMDB Info</a>
             };
         }
-        if ($movie{'filmcanID'})
-        {    
-	    my $filmcanID = $movie{'filmcanID'};
-            print qq 
-            {    <tr><td><b><a href="http://vancouver.film-can.com/cgi-bin/main/mview.cgi?FID=$filmcanID" target="filmcan">FilmCan Info</a>
-            };
-        }
         if ($movie{'cinemaclockID'} && $movie{'cinemaclockPage'})
         {    
 	    my $cinemaclockID = $movie{'cinemaclockID'};
 	    $cinemaclockID =~ s/\.3d$//;
 	    my $cinemaclockPage = $movie{'cinemaclockPage'};
             print qq 
-            {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/bri/Vancouver/e/$cinemaclockID/$cinemaclockPage" target="filmcan">Cinemaclock Info</a>
+            {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/bri/Vancouver/e/$cinemaclockID/$cinemaclockPage" target="cinemaclock">Cinemaclock Info</a>
             };
         }
         print qq
