@@ -102,11 +102,6 @@ sub get_movie_by_cinemaclockid{
     return &tnmc::db::item::getItem($table, "cinemaclockID", $_[0]);
 }
 
-sub get_movie_by_imdbid{
-    # usage: my $movie_hash = &get_movie($imdbid);
-    return &tnmc::db::item::getItem($table, "imdbID", $_[0]);
-}
-
 sub get_movie_by_mybcid{
     # usage: my $movie_hash = &get_movie($mybcid);
     return &tnmc::db::item::getItem($table, "mybcID", $_[0]);
