@@ -4,12 +4,12 @@ use strict;
 use warnings;
 
 use lib '/tnmc';
-use tnmc::cinemaclock;
+use tnmc::updater::cinemaclock;
 
 use Test::Simple tests => 46;
 
 my $body = read_file('Tinseltown.html');
-my $showtimes = tnmc::cinemaclock::parse_theatre_showtimes($body);
+my $showtimes = tnmc::updater::cinemaclock::parse_theatre_showtimes($body);
 
 ok(15 == scalar(@$showtimes));
 ok_movie(shift(@$showtimes), 'The Ghost Writer', 36237, 'The_Ghost_Writer.html');

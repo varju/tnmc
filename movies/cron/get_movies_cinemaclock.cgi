@@ -8,6 +8,6 @@
 use strict;
 use lib '/tnmc';
 
-use tnmc::cinemaclock;
+use tnmc::updater::cinemaclock;
 
-tnmc::cinemaclock::update();
+tnmc::updater::cinemaclock::update();

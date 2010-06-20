@@ -1,4 +1,4 @@
-package tnmc::imdb;
+package tnmc::updater::imdb;
 
 use strict;
 

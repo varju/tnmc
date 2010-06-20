@@ -14,7 +14,7 @@ use lib '/tnmc';
 use tnmc::db;
 use tnmc::general_config;
 use tnmc::movies::movie;
-use tnmc::mybc;
+use tnmc::updater::mybc;
 
 {
     #############
@@ -29,7 +29,7 @@ use tnmc::mybc;
     print "***********************************************************\n";
     print "\n\n";
     
-    my %list = &tnmc::mybc::mybc_get_movie_list();
+    my %list = &tnmc::updater::mybc::mybc_get_movie_list();
     
     my $i = keys %list;
     print "$i movies found online at mybc.com\n\n";
@@ -48,7 +48,7 @@ use tnmc::mybc;
     my @MOVIES;
     
     foreach my $mID (sort(keys(%list))){
-        my %movieInfo = &tnmc::mybc::mybc_get_movie_info($mID);
+        my %movieInfo = &tnmc::updater::mybc::mybc_get_movie_info($mID);
         if (! %movieInfo) {
             print "\n$mID (failed - parse error)";
             next;

@@ -1,4 +1,4 @@
-package tnmc::mybc;
+package tnmc::updater::mybc;
 
 use strict;
 

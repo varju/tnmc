@@ -1,4 +1,4 @@
-package tnmc::cinemaclock;
+package tnmc::updater::cinemaclock;
 
 use strict;
 use warnings;
@@ -28,7 +28,7 @@ sub get_valid_ua {
     return $ua;
 }
 
-sub get_theatre_showtimes(){
+sub get_theatre_showtimes {
     my ($cinemaclockid) = @_;
     
     ## get webpage
@@ -139,7 +139,7 @@ sub get_showtimes
 	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
 	print "Theatre: $theatre->{name}\n";
 	
-	my $showtimes = &tnmc::cinemaclock::get_theatre_showtimes($theatre->{cinemaclockid});
+	my $showtimes = get_theatre_showtimes($theatre->{cinemaclockid});
 	foreach my $listing (@$showtimes) {
 	    print $listing->{cinemaclockid}, "   ", $listing->{title}, "    ", $listing->{page}, "\n";
 	}
