@@ -8,23 +8,17 @@ use HTTP::Request::Common qw(POST);
     
 use tnmc::general_config;
 use tnmc::movies::movie;
+use tnmc::updater::base;
+
+use vars qw(@ISA);
+@ISA = ("tnmc::updater::base");
 
 sub new
 {
-    my $self = {};
-    $self->{ua} = undef;
-    bless($self);
+    my $class = shift;
+    my $self = $class->SUPER::new();
+    bless($self, $class);
     return $self;
-}
-
-sub get_valid_ua
-{
-    my ($self) = @_;
-    if (! $self->{ua}) {
-	$self->{ua} = new LWP::UserAgent;
-	$self->{ua}->cookie_jar({});
-    }
-    return $self->{ua};
 }
 
 sub get_theatre_showtimes

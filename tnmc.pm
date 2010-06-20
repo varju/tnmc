@@ -34,18 +34,17 @@ BEGIN {
 sub AUTOLOAD{
     my $sub = $AUTOLOAD;
 
-    if ($sub =~ /^tnmc::/ && $sub !~ /::DESTROY$/){
-        
-        $sub =~ /^(.*)::([^*]+)/;
-        my $req = $1 . ".pm";
-        $req =~ s/\:\:/\//g;
-        #my $call = $2;
-        my @vars = @_;
-        require $req;
-#	if (defined(&{$sub})){
-	    &$sub(@vars);
-#	}
-    }
+    return unless $sub =~ /^tnmc::/;
+    return if $sub =~ /::DESTROY$/;
+    return if $sub =~ /tnmc::updater::/;
+
+    $sub =~ /^(.*)::([^*]+)/;
+    my $req = $1 . ".pm";
+    $req =~ s/\:\:/\//g;
+    my @vars = @_;
+    require $req;
+
+    &$sub(@vars);
 }
 
 1;
