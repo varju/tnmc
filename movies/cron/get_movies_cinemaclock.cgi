@@ -13,6 +13,7 @@ use lib '/tnmc';
 
 use tnmc::db;
 use tnmc::general_config;
+use tnmc::movies::cron;
 use tnmc::movies::movie;
 use tnmc::movies::showtimes;
 use tnmc::cinemaclock;
@@ -62,11 +63,7 @@ use tnmc::mybc;
     print "***********************************************************\n";
     print "\n\n";
     
-    ## reset statusShowing
-    my $sql = "UPDATE Movies SET statusShowing = '0', theatres = ''";
-    my $sth = $dbh->prepare($sql);
-    $sth->execute();
-    $sth->finish();
+    &tnmc::movies::cron::reset_status_showing();
     
     ## update movies
     foreach my $theatreID (keys %SHOWTIMES){
