@@ -20,7 +20,7 @@ require tnmc::template;
 
 &tnmc::template::header();
 
-&upgrade_db_02();
+&upgrade_db_20100620();
 
 &tnmc::template::footer();
 
@@ -28,6 +28,15 @@ require tnmc::template;
 #
 # subs
 #
+
+sub upgrade_db_20100620
+{
+    my $dbh = &tnmc::db::db_connect();
+    
+    $dbh->do("ALTER TABLE MovieTheatres
+      CHANGE COLUMN cinemaclockid cinemaclockID varchar(32)
+    ");
+}
 
 sub upgrade_db_03{
 

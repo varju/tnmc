@@ -21,6 +21,18 @@ sub new
     return $self;
 }
 
+sub get_label
+{
+    my ($self) = @_;
+    return 'CINEMACLOCK';
+}
+
+sub get_type
+{
+    my ($self) = @_;
+    return 'cinemaclockID';
+}
+
 sub get_theatre_showtimes
 {
     my ($self, $cinemaclockid) = @_;
@@ -72,87 +84,8 @@ sub add_movie
     my ($self, $movies, $cinemaclockid, $page, $title) = @_;
 
     my $pretty_title = &tnmc::movies::movie::reformat_title($title);
-    my %movie = ( "cinemaclockid" => $cinemaclockid, "page" => $page, "title" => $pretty_title );
+    my %movie = ( "cinemaclockID" => $cinemaclockid, "page" => $page, "title" => $pretty_title );
     push @$movies, \%movie;
-}
-
-sub update
-{
-    my ($self) = @_;
-
-    print "Content-type: text/html\n\n<pre>\n";
-    
-    my $theatres = $self->get_theatres();
-    my $showtimes = $self->get_showtimes($theatres);
-
-    print "\n\n";
-    print "***********************************************************\n";
-    print "****               Update the Database                 ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-
-    #print "- reset statusShowing\n";
-    &tnmc::movies::cron::reset_status_showing();
-
-    ## del old showtimes
-    #print "- delete old showtimes\n";
-    &tnmc::movies::showtimes::del_all_showtimes();
-
-    ## update movies
-    #print "- update showtimes\n";
-    foreach my $theatreID (keys %$showtimes) {
-	$self->process_theatre($theatreID, $showtimes->{$theatreID});
-    }
-
-    ### update the movie caches
-    #print "- update movie caches\n";
-    &tnmc::movies::night::update_all_cache_movieIDs();
-
-    #print "- disconnect\n";
-    &tnmc::db::db_disconnect();
-    #print "- done\n";
-}
-
-sub get_theatres
-{
-    my ($self) = @_;
-
-    print "***********************************************************\n";
-    print "****           CINEMACLOCK: Get The Theatre List           ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-    
-    my @theatres = &tnmc::movies::theatres::list_theatres("WHERE cinemaclockid != ''");
-    print join " ", @theatres;
-    print "\n\n";
-
-    return \@theatres;
-}
-
-sub get_showtimes
-{
-    my ($self, $theatres) = @_;
-
-    print "***********************************************************\n";
-    print "****           CINEMACLOCK: Get The Showtimes              ****\n";
-    print "***********************************************************\n";
-    print "\n\n";
-    
-    my %SHOWTIMES;
-    foreach my $theatreID (@$theatres){
-	my $theatre = &tnmc::movies::theatres::get_theatre($theatreID);
-	print "Theatre: $theatre->{name}\n";
-	
-	my $showtimes = $self->get_theatre_showtimes($theatre->{cinemaclockid});
-	foreach my $listing (@$showtimes) {
-	    print $listing->{cinemaclockid}, "   ", $listing->{title}, "    ", $listing->{page}, "\n";
-	}
-
-	$SHOWTIMES{$theatreID} = $showtimes;
-	
-    }
-
-    return \%SHOWTIMES;
 }
 
 ## sets new showtimes
@@ -164,13 +97,13 @@ sub process_theatre
     print "$theatre->{name}\n";
 
     foreach my $listing (@$listings) {
-	print "\t$listing->{cinemaclockid}\t$listing->{title} ";
+	print "\t", $listing->{cinemaclockID}, "\t", $listing->{title}, " ";
 
 	## find movie
-	my $movie = $self->get_or_create_movie($listing->{cinemaclockid}, $listing->{title});
+	my $movie = $self->get_or_create_movie($listing);
 
 	## update attributes
-	$movie->{cinemaclockID} = $listing->{cinemaclockid};
+	$movie->{cinemaclockID} = $listing->{cinemaclockID};
 	$movie->{cinemaclockPage} = $listing->{page};
 	$movie->{statusShowing} = 1;
 	$movie->{title} = $listing->{title};
@@ -181,46 +114,6 @@ sub process_theatre
 	
 	print "\n";
     }
-}
-
-sub get_or_create_movie
-{
-    my ($self, $cinemaclockid, $title) = @_;
-
-    my $movie = &tnmc::movies::movie::get_movie_by_cinemaclockid($cinemaclockid);
-    if ($movie->{movieID}) {
-	print "(cinemaclockid ", $movie->{movieID}, ")";
-	return $movie;
-    }
-
-    my $movieID = &tnmc::movies::movie::get_movieid_by_title($title);
-    if ($movieID) {
-	print "(title $movieID)";
-	return &tnmc::movies::movie::get_movie($movieID);
-    }
-
-    ## add new movie
-    $movie = &tnmc::movies::movie::new_movie();
-    $movie->{title} = $title;
-    $movie->{cinemaclockID} = $cinemaclockid;
-
-    $movie->{statusBanned} = 0;
-    $movie->{statusNew} = 1;
-    $movie->{statusSeen} = 0;
-
-    $movieID = &tnmc::movies::movie::add_movie($movie);
-    print "(new $movieID)";
-    return &tnmc::movies::movie::get_movie($movieID);
-}
-
-sub add_showtime
-{
-    my ($self, $theatreID, $movieID) = @_;
-
-    my $showtimes = &tnmc::movies::showtimes::new_showtimes();
-    $showtimes->{theatreID} = $theatreID;
-    $showtimes->{movieID} = $movieID;
-    &tnmc::movies::showtimes::set_showtimes($showtimes);
 }
 
 1;

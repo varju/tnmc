@@ -43,6 +43,6 @@ sub ok_movie {
     $title = &tnmc::movies::movie::reformat_title($title);
 
     ok($title eq $listing->{title}, "Title: $title eq " . $listing->{title});
-    ok($cinemaclockid eq $listing->{cinemaclockid}, "- CinemaclockId: $cinemaclockid eq " . $listing->{cinemaclockid});
+    ok($cinemaclockid eq $listing->{cinemaclockID}, "- CinemaclockId: $cinemaclockid eq " . $listing->{cinemaclockID});
     ok($page eq $listing->{page}, "- Page: $page eq " . $listing->{page});
 }

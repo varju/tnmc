@@ -97,14 +97,15 @@ sub get_movie{
     }
 }
 
-sub get_movie_by_cinemaclockid{
-    # usage: my $movie_hash = &get_movie($cinemaclockid);
-    return &tnmc::db::item::getItem($table, "cinemaclockID", $_[0]);
+sub get_movie_by_type
+{
+    my ($type, $type_id) = @_;
+    return &tnmc::db::item::getItem($table, $type, $type_id);
 }
 
-sub get_movie_by_mybcid{
-    # usage: my $movie_hash = &get_movie($mybcid);
-    return &tnmc::db::item::getItem($table, "mybcID", $_[0]);
+sub get_movie_by_mybcid
+{
+    return get_movie_by_type('mybcID', $_[0]);
 }
 
 sub reformat_title{
@@ -304,8 +305,4 @@ sub del_movie{
     $sth->finish;
 }
 
-
 1;
-
-
-
