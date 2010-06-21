@@ -3,6 +3,7 @@ package tnmc::updater::google;
 use strict;
 use warnings;
 
+use Carp qw(confess);
 use LWP::UserAgent;
 use HTTP::Request::Common qw(POST);
 use HTML::TreeBuilder::XPath;
@@ -54,33 +55,16 @@ sub parse_theatre_showtimes
     my ($self, $text) = @_;
 
     my $tree = HTML::TreeBuilder::XPath->new_from_content($text);
-    #print "tree: $tree\n";
-
     my $movie_divs = $tree->findnodes( qq{//div[\@class="movie"]} );
-    #print "movie_divs: $movie_divs\n";
-
 
     my @movies;
-
     foreach my $movie_div ($movie_divs->get_nodelist())
     {
-	#print "movie_div $movie_div\n";
-
-	#my @children = $movie_div->content_list;
-	#print "children: @children\n";
-
 	my $name_div = get_child($movie_div, 0, 'div', { 'class', 'name' });
 	my $name_anchor = get_child($name_div, 0, 'a');
 	my $movieid = parse_movie_href($name_anchor->attr('href'));
-	#print "- href: ", $name_anchor->attr('href'), ", movieid=", $movieid, "\n";
 
-	my $name_span = get_child($name_anchor, 0, 'span');
-	my $title = parse_title($name_span->as_text());
-	#print "- title: ", $title, "\n";
-
-	#my $times_div = get_child($movie_div, 2, 'div', { 'class', 'times' });
-	#my $times = $times_div->as_text();
-	#print "- times: ", $times, "\n";
+	my $title = $name_anchor->as_text();
 
 	my %movie = ( "googleID" => $movieid, "title" => $title, 'page' => '' );
 	push @movies, \%movie;
@@ -97,7 +81,7 @@ sub get_child
 
     my @children = $element->content_list();
     my $child = $children[$child_index];
-    die "couldn't find child" if !defined($child);
+    confess "couldn't find child" if !defined($child);
     
     if (!defined($assert_attrs)) {
 	$assert_attrs = {};
@@ -107,7 +91,15 @@ sub get_child
     foreach my $key (keys %$assert_attrs)
     {
 	my $expected_val = $assert_attrs->{$key};
-	die "Wrong value for $key" unless $child->attr($key) eq $expected_val;
+	my $actual_val = $child->attr($key);
+	if (!defined($child->attr($key)))
+	{
+	    confess "Can't find attribute $key";
+	}
+	if ($child->attr($key) ne $expected_val)
+	{
+	    confess "Wrong value for $key (was $actual_val, expected $expected_val)";
+	}
     }
 
     return $child;
@@ -120,7 +112,7 @@ sub parse_movie_href
     if ($href =~ /&mid=(\w+)/) {
 	return $1;
     }
-    die "Can't parse href $href\n";
+    confess "Can't parse href $href\n";
 }
 
 sub parse_title
