@@ -53,6 +53,7 @@ sub show_movie_extended
             next if ($key eq 'filmcanID');
             next if ($key eq 'cinemaclockID');
             next if ($key eq 'cinemaclockPage');
+            next if ($key eq 'googleID');
             next if ($key eq 'theatres');
             next if ($key eq 'theatres_string');
             
@@ -82,6 +83,13 @@ sub show_movie_extended
 	    my $cinemaclockPage = $movie{'cinemaclockPage'};
             print qq 
             {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/bri/Vancouver/e/$cinemaclockID/$cinemaclockPage" target="cinemaclock">Cinemaclock Info</a>
+            };
+        }
+        if ($movie{'googleID'})
+        {
+	    my $googleID = $movie{'googleID'};
+            print qq 
+            {    <tr><td><b><a href="http://www.google.com/movies?mid=$googleID" target="google">Google info</a>
             };
         }
         print qq

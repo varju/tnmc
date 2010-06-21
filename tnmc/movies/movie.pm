@@ -111,7 +111,10 @@ sub get_movie_by_mybcid
 sub reformat_title{
     my ($title) = @_;
     
+    $title =~ s/ - Eng. Subt.//;
+    $title =~ s/Imax: //;
     $title =~ s/^(A|The|An) (.*)$/$2\, $1/i;
+
     return $title;
 }
 

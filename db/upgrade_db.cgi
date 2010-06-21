@@ -36,6 +36,12 @@ sub upgrade_db_20100620
     $dbh->do("ALTER TABLE MovieTheatres
       CHANGE COLUMN cinemaclockid cinemaclockID varchar(32)
     ");
+    $dbh->do("ALTER TABLE MovieTheatres
+      ADD COLUMN googleID varchar(32)
+    ");
+    $dbh->do("ALTER TABLE Movies
+      ADD COLUMN googleID varchar(32)
+    ");
 }
 
 sub upgrade_db_03{

@@ -20,15 +20,32 @@ use tnmc::movies::theatres;
 
 my @theatres = &tnmc::movies::theatres::list_theatres();
 
-print "<table><tr><th>TheatreID</th><th>Name</th><th>Mybc</th><th>Other</th></tr>";
+
+print "<table>\n";
+print "<tr>\n";
+print "<th>TheatreID</th>\n";
+print "<th>Name</th>\n";
+print "<th>Mybc</th>\n";
+print "<th>Google</th>\n";
+print "<th>Other</th>\n";
+print "</tr>";
 foreach my $theatreid ( @theatres){
     my $theatre =  &tnmc::movies::theatres::get_theatre($theatreid);
-    print "<tr><td>$theatreid</td><td><a href=\"movies/theatre_edit_admin.cgi?theatreID=$theatreid\">$theatre->{'name'}</a></td><td>$theatre->{'mybcid'}</td><td>$theatre->{'otherid'}</td></tr>\n";
+    print "<tr>\n";
+    print "<td>$theatreid</td>\n";
+    print "<td><a href=\"movies/theatre_edit_admin.cgi?theatreID=$theatreid\">$theatre->{'name'}</a></td>\n";
+    print "<td>$theatre->{'mybcid'}</td>\n";
+    print "<td><a href=\"http://www.google.com/movies?tid=$theatre->{'googleID'}\">$theatre->{'googleID'}</a></td>\n";
+    print "<td>$theatre->{'otherid'}</td>\n";
+    print "</tr>\n";
 }
 
 
-print "<tr><td></td><td><a href=\"movies/theatre_edit_admin.cgi?theatreID=0\">New theatre...</a></td><td></td></tr>\n";
+print "<tr>\n";
+print "<td></td>\n";
+print "<td><a href=\"movies/theatre_edit_admin.cgi?theatreID=0\">New theatre...</a></td>\n";
+print "<td></td>\n";
+print "</tr>\n";
 print "</table>";
 
 &tnmc::template::footer();
-

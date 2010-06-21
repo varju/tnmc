@@ -183,6 +183,7 @@ sub get_or_create_movie
 
     $movie->{statusBanned} = 0;
     $movie->{statusNew} = 1;
+    $movie->{statusShowing} = 0;
     $movie->{statusSeen} = 0;
 
     $movieID = &tnmc::movies::movie::add_movie($movie);
