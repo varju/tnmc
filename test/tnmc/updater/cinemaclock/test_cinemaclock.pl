@@ -9,13 +9,15 @@ use tnmc::updater::cinemaclock;
 use Test::Simple tests => 46;
 
 my $body = read_file('Tinseltown.html');
-my $showtimes = tnmc::updater::cinemaclock::parse_theatre_showtimes($body);
+
+my $updater = tnmc::updater::cinemaclock->new();
+my $showtimes = $updater->parse_theatre_showtimes($body);
 
 ok(15 == scalar(@$showtimes));
 ok_movie(shift(@$showtimes), 'The Ghost Writer', 36237, 'The_Ghost_Writer.html');
 ok_movie(shift(@$showtimes), 'Chloe', 35869, 'Chloe.html');
 ok_movie(shift(@$showtimes), 'How to Train Your Dragon', 13121, 'How_to_Train_Your_Dragon.html');
-ok_movie(shift(@$showtimes), 'How to Train Your Dragon 3D', 13121, 'How_to_Train_Your_Dragon.html');
+ok_movie(shift(@$showtimes), 'How to Train Your Dragon 3D', '13121.3d', 'How_to_Train_Your_Dragon.html');
 ok_movie(shift(@$showtimes), 'A Shine of Rainbows', 32985, 'A_Shine_of_Rainbows.html');
 ok_movie(shift(@$showtimes), 'Death at a Funeral', 35720, 'Death_at_a_Funeral.html');
 ok_movie(shift(@$showtimes), 'Shutter Island', 19234, 'Shutter_Island.html');
