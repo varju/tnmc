@@ -18,7 +18,7 @@ sub db_connect{
     my ($database, $host, $user, $password);
 
     $database = "tnmc";
-    $host = "alex.varju.ca";
+    $host = "mysql.varju.ca";
     $user = "tnmc";
     $password = "password";
     
@@ -29,7 +29,7 @@ sub db_connect{
     }
     
     # say hello.
-    $dbh_tnmc = DBI->connect("DBI:mysql:$database:$host", $user, $password)
+    $dbh_tnmc = DBI->connect("DBI:mysql:database=$database:host=$host", $user, $password)
         or die "Can't connect: $dbh_tnmc->errstr\n";
     
     return $dbh_tnmc;
