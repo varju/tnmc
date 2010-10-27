@@ -74,11 +74,12 @@ sub smsShout{
     }
 
     ### Telus
-    if (($user{phoneTextMail} eq 'Telus' || $user{phoneTextMail} eq 'all')
-        && $user{phoneTelus})
-    {
-        &tnmc::broadcast::tapzing::sms_send_tapzing($user{phoneTelus}, $msg);
-    }
+# 2010-10-26: tapzing.com is gone
+#    if (($user{phoneTextMail} eq 'Telus' || $user{phoneTextMail} eq 'all')
+#        && $user{phoneTelus})
+#    {
+#        &tnmc::broadcast::tapzing::sms_send_tapzing($user{phoneTelus}, $msg);
+#    }
 
     ### Rogers
     if (($user{phoneTextMail} eq 'Rogers' || $user{phoneTextMail} eq 'all')
