@@ -142,7 +142,7 @@ sub update_cache_movieIDs{
     my $night =  &tnmc::movies::night::get_night($nightID);
     
     # check: don't touch old nights.
-    return if ($night->{date} > &tnmc::util::date::now());
+    return if ($night->{date} < &tnmc::util::date::now());
     
     ## get movie list
     my @movies = &list_movies_for_night($nightID);
