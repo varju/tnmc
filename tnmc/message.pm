@@ -200,12 +200,17 @@ sub forward_external
     my $from_email = $tnmc::config::tnmc_email;
     my $subject = 'TNMC: Forwarded web message';
     my $sender = &tnmc::user::get_user_cache($hash->{sender});
-    my $body = sprintf("%s says:\n\n%s\n", $sender->{'username'}, $hash->{'body'});
+    my $sendername = $sender->{'username'};
+    my $body = sprintf("%s says:\n\n%s\n", $sendername, $hash->{'body'});
+
+    my @nights = &tnmc::movies::night::list_future_nights();
+    my $threadid = 'tnmc-night-' . @nights[0];
 
     my %headers =
 	( 'Bcc' => $to_email,
-	  'From' => "TNMC Website <$from_email>",
+	  'From' => "$sendername <$from_email>",
 	  'Subject' => $subject,
+	  'In-Reply-To' => $threadid,
 	  'Precedence' => 'List',
 	  );
     &tnmc::mail::send::message_send(\%headers, $body);
