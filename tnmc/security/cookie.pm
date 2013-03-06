@@ -42,7 +42,7 @@ sub create_cookie{
 sub parse_cookie{
     
     ## cache it if we can
-    if (defined %cookie){
+    if (%cookie){
         return \%cookie;
     }
     
