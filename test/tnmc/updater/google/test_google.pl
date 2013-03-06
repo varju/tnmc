@@ -8,22 +8,23 @@ use tnmc::updater::google;
 
 use Test::Simple tests => 21;
 
-my $body = read_file('tinseltown.html');
+my $body = read_file('theatre.html');
 
 my $updater = tnmc::updater::google->new();
 my $showtimes = $updater->parse_theatre_showtimes($body);
 
-ok(10 == scalar(@$showtimes));
-ok_movie(shift(@$showtimes), 'Toy Story 3 in Disney Digital 3D', '2b1743e27b89eee2', '');
-ok_movie(shift(@$showtimes), 'Get Him to the Greek', '654b591075323417', '');
-ok_movie(shift(@$showtimes), 'Jonah Hex', 'b50b817399c1f168', '');
-ok_movie(shift(@$showtimes), 'Killers', '75157c2fe2862811', '');
-ok_movie(shift(@$showtimes), 'Splice', 'dcc1fa3a575a65db', '');
-ok_movie(shift(@$showtimes), 'Year of the Carnivore', '257bb700078750e1', '');
-ok_movie(shift(@$showtimes), 'Agora', '80f244942c731186', '');
-ok_movie(shift(@$showtimes), 'Toy Story 3', '582321b538bd65ba', '');
-ok_movie(shift(@$showtimes), 'Harry Brown', 'ebf02d9cc22db7fe', '');
-ok_movie(shift(@$showtimes), 'Exit Through the Gift Shop', '1ebaacde93f7265b', '');
+ok_movie(shift(@$showtimes), 'A Respectable Family (Yek Khanevadeh-e Mohtaram)', 'c9df04bcc6552621', '');
+ok_movie(shift(@$showtimes), 'Abu, Son of Adam (Adaminte Makan Abu)', '89d0dc27fbfb2380', '');
+ok_movie(shift(@$showtimes), 'Bitter Seeds', '51e69169cc4d331', '');
+ok_movie(shift(@$showtimes), 'Heart of Sky, Heart of Earth (Herz des Himmels, Herz der Erde)', 'b0d4207b73bd183e', '');
+ok_movie(shift(@$showtimes), 'In Search of Blind Joe Death: The Saga of John Fahey', '9f7ea346276a9234', '');
+ok_movie(shift(@$showtimes), 'Lore', '34134cfc8f93063e', '');
+ok_movie(shift(@$showtimes), 'Neighbouring Sounds (O som ao redor)', '706b43f0ffbbdf9f', '');
+ok_movie(shift(@$showtimes), 'Paradise: Love (Paradis: Liebe)', '1169b509d3ea4b2b', '');
+ok_movie(shift(@$showtimes), 'Quando la notte', '3ef5fea316edd163', '');
+ok_movie(shift(@$showtimes), '', '', '');
+
+ok(0 == scalar(@$showtimes));
 
 sub read_file {
     my ($filename) = @_;
@@ -36,8 +37,6 @@ sub read_file {
 
 sub ok_movie {
     my ($listing, $title, $googleID, $page) = @_;
-
-    $title = &tnmc::movies::movie::reformat_title($title);
 
     ok($title eq $listing->{title}, "Title: $title eq " . $listing->{title});
     ok($googleID eq $listing->{googleID}, "- googleID: $googleID eq " . $listing->{googleID});
