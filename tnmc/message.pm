@@ -197,7 +197,6 @@ sub forward_external
     }
     my $to_email = join(' ', @to_addrs);
 
-    my $from_email = $tnmc::config::tnmc_email;
     my $subject = 'TNMC: Forwarded web message';
     my $sender = &tnmc::user::get_user_cache($hash->{sender});
     my $sendername = $sender->{'username'};
@@ -208,8 +207,9 @@ sub forward_external
 
     my %headers =
 	( 'Bcc' => $to_email,
-	  'From' => "$sendername <$from_email>",
+	  'From' => "$sendername <no-such-address\@tnmc.ca>",
 	  'Subject' => $subject,
+          'Reply-To' => $tnmc::config::tnmc_email,
 	  'In-Reply-To' => $threadid,
 	  'Precedence' => 'List',
 	  );
