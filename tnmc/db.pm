@@ -18,7 +18,7 @@ sub db_connect{
     my ($database, $host, $user, $password);
 
     $database = "tnmc";
-    $host = "mysql.varju.ca";
+    $host = "localhost";
     $user = "tnmc";
     $password = "password";
     
