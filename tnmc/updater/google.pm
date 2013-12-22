@@ -41,7 +41,7 @@ sub get_theatre_showtimes
     
     ## get webpage
     my $ua = $self->get_valid_ua();
-    my $URL = "http://www.google.com/movies?tid=$googleID";
+    my $URL = "http://www.google.com/movies?hl=en&near=v7e1m5&tid=$googleID";
     print "DEBUG: Requesting $URL\n";
     my $req = new HTTP::Request GET => $URL;
     my $res = $ua->request($req);
