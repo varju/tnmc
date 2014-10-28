@@ -3,3 +3,4 @@ backups
 
 /user/log
 /movies/cron/send_movielist.txt
+/movies/cron/*.log
