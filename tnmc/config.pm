@@ -20,7 +20,8 @@ BEGIN {
     
     $tnmc_domain = '.tnmc.ca';
     $tnmc_url_path = "/";
-    $tnmc_url = "http://$ENV{HTTP_HOST}$tnmc_url_path";
+    my $method = $ENV{HTTPS} == "on" ? "https" : "http";
+    $tnmc_url = "$method://$ENV{HTTP_HOST}$tnmc_url_path";
     $tnmc_email = 'tnmc-list@interchange.ubc.ca';
     $tnmc_maildomain = 'tnmc.ca';
     $tnmc_basepath = '/tnmc';
