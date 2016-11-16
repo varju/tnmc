@@ -27,6 +27,7 @@ print "<th>TheatreID</th>\n";
 print "<th>Name</th>\n";
 print "<th>Mybc</th>\n";
 print "<th>Google</th>\n";
+print "<th>Cineplex</th>\n";
 print "<th>Other</th>\n";
 print "</tr>";
 foreach my $theatreid ( @theatres){
@@ -36,6 +37,7 @@ foreach my $theatreid ( @theatres){
     print "<td><a href=\"movies/theatre_edit_admin.cgi?theatreID=$theatreid\">$theatre->{'name'}</a></td>\n";
     print "<td>$theatre->{'mybcid'}</td>\n";
     print "<td><a href=\"http://www.google.com/movies?tid=$theatre->{'googleID'}\">$theatre->{'googleID'}</a></td>\n";
+    print "<td><a href=\"http://www.cineplex.com/Showtimes/any-movie/$theatre->{'cineplexID'}\">$theatre->{'cineplexID'}</a></td>\n";
     print "<td>$theatre->{'otherid'}</td>\n";
     print "</tr>\n";
 }
