@@ -1,0 +1,965 @@
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            if (typeof UseDefaultSkin !== 'undefined' && UseDefaultSkin !== true) {
+                $("body").removeClass("layout-skin");
+                $(".extra-styles").remove();
+            }
+        });
+        
+    </script>
+
+<script type="text/javascript">
+    $(function(){
+        if (CINEPLEX.showtimes != undefined) {
+            //boolean set if nothing to show
+            CINEPLEX.showtimes.NoListings=false;
+
+            //set the request model
+            var request = CINEPLEX.showtimes.RequestModel;   
+
+            
+            request.Page.value="1";
+            request.RequestType.value = "TheatreLookup";
+            request.TimeFormat.value = "12";
+
+            
+            request.SearchTime.value= 0;
+            request.Date.value = "11/15/2016";
+
+            //this was added because request.Date.value is often modified by ajax calls etc. this is a dependable previously selected value holder.
+            request.PreviousDate.value = request.Date.value;
+            
+            request.Location.value = "scotiabank-theatre-vancouver";
+            request.LocationDisplayName.value = "Scotiabank Theatre Vancouver";
+            request.LocationUrl.value = "scotiabank-theatre-vancouver";            
+            
+            request.Longitude.value = 0;
+            request.Latitude.value = 0;
+            
+            request.FilmUrl.value = "any-movie";
+            request.MovieTitle.value = "Any Movie";
+            
+            request.FavouriteTheatres.value = "";
+            
+            request.Genre.value = "0";
+            request.Range.value = "50";
+            request.Rating.value = "";
+            request.ReleaseDateStart.value = "";
+            request.ReleaseDateEnd.value = "";
+            request.Type.value = "";
+            request.Warning.value = 0;
+
+            
+            request.ApiId.value = "";
+            request.MovieRowType.value = "";
+            request.LocationId.value = 1422;
+            request.LocationRowType.value = "theatre";
+            
+            $(document).trigger("requestModelBound", [request]);
+        }
+    });
+</script>
+
+<script>
+    $(function () {
+        if (window.location.hash) {
+            if (window.location.hash.indexOf("print") != -1) {
+                if (window.print)
+                    window.print();
+            }
+        }
+    });
+</script>
+<style>
+    @media Print {
+        .showtime-card--details-print {
+            min-height: inherit !important;
+        }
+    }
+</style>
+
+                    <div class="showtime-theatre" itemscope itemtype="http://schema.org/MovieTheater">
+
+<div class="grid grid--full theatre-infoV2">
+    <div class="grid__item one-fifth hidden-xs">
+        
+        <div class="theatre-logoV2">
+            <a>
+                <img itemprop="logo" alt="Scotiabank Theatre Vancouver" width="90" height="120" src="http://mediafiles.cineplex.com/TheatreBrandLogos/scotiabank.png" />
+            </a>
+        </div>
+    </div>
+    <div class="grid__item three-fifths theatre-detailsV2 palm--one-whole">
+        <h3 class="theatre-name">
+                <a class="theatre-favourite" data-locid="1422" data-locname="Scotiabank Theatre Vancouver" data-locurl="scotiabank-theatre-vancouver">
+                    <i class="icon-star" data-tooltip="true" data-tooltip-margin="5" title="Favourite this theatre for quick access!"></i>
+                </a>
+            <div class="theatre-text" itemprop="name">
+                Scotiabank Theatre Vancouver
+            </div>
+        </h3>
+        <div class="theatre-info--sub">
+            <div class="theatre-address" itemprop="address">
+                <p>900 Burrard Street, Vancouver, BC, V6Z 3G5</p>
+            </div>
+                <div class="">
+            <div class="desk-show-nav theatre-info--content">
+                <p>
+                    <a data-linktype=" viewmap" title="View Map" data-tooltip-margin="5" data-theatre-name="Scotiabank Theatre Vancouver" data-modal-url="/Utilities/GetShowtimeMapping?theatreUrl=scotiabank-theatre-vancouver" href="#" class="theatre-map-modal">
+                        <i class="icon-location"></i>&nbsp;View Map
+                    </a>
+                </p>
+            </div>
+                    <div class="theatre-info--content">
+                <p itemprop="telephone">
+                    <a href="tel:(604) 630-1407"><i class="icon-phone"></i>&nbsp;(604) 630-1407</a>
+                </p>
+            </div>
+                    <div class="theatre-info--content">
+                <p>
+                    <a itemprop="url" class="call-modal theatre-info-link-click" href="/Theatre/scotiabank-theatre-vancouver"><i class="icon-arrow-right"></i>&nbsp;Theatre Info &amp; Prices</a>
+                </p>
+            </div>
+                <div class="theatre-ammenities hidden-print">
+            <p class="formats"><i class='spriteV2 sprite-format_atmos'></i> | <i class='spriteV2 sprite-format_ultraAVX'></i> | <i class='spriteV2 sprite-format_dbox'></i> | <i class='spriteV2 sprite-format_reald3d'></i></p>
+        </div>
+        <div class="show-showtimesV2 no-print">
+                <a href="#" data-toggle="movie-times" class="btn-primary toggle-trigger btn-showtime toggle-open">
+                    <span class="toggle-hide">Hide Movies and Showtimes
+                        <i class="icon-arrow-up"></i>
+                    </span>
+                    <span class="toggle-show">Show Movies and Showtimes
+                        <i class="icon-arrow-down"></i>
+                    </span>
+                </a>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <div class="grid__item one-fifth desk-only-nav theatre-mapV2">
+            <p class="no-print theatre-icons desk-only-nav">
+                <a class="email-link-click" data-theatre-url="scotiabank-theatre-vancouver" data-email-link="mailto: ?subject=Showtimes%20for%20Scotiabank%20Theatre%20Vancouver&body=Hey%2C%20check%20out%20the%20showtimes%20and%20latest%20trailers%20for%20movies%20playing%20at%20Scotiabank%20Theatre%20Vancouver!%20%7B0%7D" href="#" title="Email this theatre&#39;s showtimes">
+                    <i class="icon-email"></i>
+                </a>
+                <a class="print-link-click" href="javascript:if(window.print)window.print()" title="Print this theatre&#39;s showtimes">
+                    <i class="icon-print"></i>
+                </a>
+
+    </p>
+
+            <a data-linktype="deskViewMap"
+               title="View Map"
+               data-theatre-name="Scotiabank Theatre Vancouver"
+               data-loc="1422"
+               data-modal-url="/Utilities/GetShowtimeMapping?theatreUrl=scotiabank-theatre-vancouver"
+               href="#"
+               class="theatre-map-modal">
+
+<div class="cineplex-map-dialog-map">
+    <img src="http://maps.googleapis.com/maps/api/staticmap?center=49.282176,-123.124341&amp;zoom=15&amp;size=150x120&amp;sensor=false&amp;markers=icon:http://mediafiles.cineplex.com/Maps/Icons/Theatre/cineplex_placemark.png|label:|49.282176,-123.124341&amp;key=AIzaSyBsdz0VakJ8uRyOSqjCQl7Ut3XF-KVdDPQ&amp;language=en" alt="Scotiabank Theatre Vancouver" />
+</div>
+
+                    <p class="center theatre-distance">
+                        <i class="icon-location"></i>&nbsp;13 km away
+                    </p>
+            </a>
+    </div>
+</div>
+
+
+
+
+                
+
+
+
+
+                <div class="grid showtime-theatre--body toggle-container  ">
+
+
+
+<div class="grid__item no-page-break-inside" itemprop="event" itemscope itemtype="http://schema.org/ScreeningEvent">
+    <div class="showtime-card showtime-single">
+        
+<div class="grid movie-showtime-header">
+    <meta itemprop="name" content="Doctor Strange">
+    <div class="grid__item one-fifth lap--one-quarter palm--one-third" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        <meta itemprop="name" content="Scotiabank Theatre Vancouver">
+        <meta itemprop="address" content="900 Burrard Street">
+        <img class="dbposter dbsmallposter" src="http://mediafiles.cineplex.com/Central/Film/Posters/21777_130_193.jpg" alt="Doctor Strange" />
+    </div>
+    <div class="grid__item three-fifths lap--three-quarters palm--two-thirds movie-showtimes-details" itemprop="workPresented" itemscope itemtype="http://schema.org/Movie">
+        <h3 class="showtime-card--title">
+            <meta itemprop="name" content="Doctor Strange">
+            <meta itemprop='url' content="/Movie/doctor-strange">
+            <meta itemprop='image' content="http://mediafiles.cineplex.com/Central/Film/Posters/21777_130_193.jpg">
+            <a class="movie-details-link-click" href="/Movie/doctor-strange">
+                Doctor Strange
+            </a>
+            <span>| </span>
+            <span><meta itemprop="duration" content="PT1h55m">1h 55m</span>
+        </h3>
+        <div class="movie-header-details">
+                <p>
+                    
+                    <meta itemprop="contentRating" content="PG" /><a data-tooltip="true" title="Parental guidance is advised. Theme or content may not be suitable for all children." href="/Showtimes?rating=PG"><em aria-hidden="true" class="icon-rating" style="background-image: url(http://mediafiles.cineplex.com/_att/4307a686-3283-45c1-a909-44595924f2f6/icon_pg.gif);"></em></a>
+Violence, Coarse Language
+                </p>
+            <p>
+                
+                <a href="#" data-pagename="Showtimes" data-video-title="Doctor Strange: Trailer #1" data-videoid="4863959041001" class="trailer-player-click cta-primary showtime-trailer-link no-print trailer-home-link">Watch Trailer&nbsp;<i class="icon-arrow-2-right"></i></a>
+            </p>
+                <p>Click <i class="iconV2 iconV2-theatre-seat"></i> for reserved seating availability</p>
+            <div class="hidden-xs">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__item one-fifth visible-lg date-calendar">
+<div class="ticket-calendar calendar-small"><div class="ticket-day">Tuesday</div><div class="ticket-calendar--inner"><div class="ticket-month">November</div><div class="ticket-date">15</div><div class="ticket-year">2016</div></div><div class="ticket-calendar--bottom"><div data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8px" title="'No passes' means that Cineplex 'Be Our Guest' passes and any Free Admission Coupons will not be accepted towards Cineplex admission tickets. This does not include Gift Cards or any pre-paid corporate products such as Cineplex 'Night Out'  or 'Admit One' vouchers, which will be accepted for admission." class="ticket-time movie-nopasses">No passes</div></div></div>    </div>
+</div>
+
+            <div class="grid">
+                    <div class="grid__item one-whole">
+                        <p class="showtime-date-mobile hidden-lg">
+                            Showtimes for Tue, Nov 15, 2016
+                                &nbsp;-&nbsp;
+                                <span class="movie-nopasses" data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8px" title="&#39;No passes&#39; means that Cineplex &#39;Be Our Guest&#39; passes and any Free Admission Coupons will not be accepted towards Cineplex admission tickets. This does not include Gift Cards or any pre-paid corporate products such as Cineplex &#39;Night Out&#39;  or &#39;Admit One&#39; vouchers, which will be accepted for admission.">No passes</span>
+                        </p>
+                        
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="UltraAVX (3D) (ATMOS) (DBOX)" class="spriteV2 sprite-ultraavx_3d_atmos_dbox"></i>
+                                        <span class="sr-only">UltraAVX (3D) (ATMOS) (DBOX)</span>
+                                        <span class="visible-print-block">UltraAVX (3D) (ATMOS) (DBOX)</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT14:00">
+                                                    <a id="l_1422_s_159433_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159433&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">2:00 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159433', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:50">
+                                                    <a id="l_1422_s_159434_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159434&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">4:50 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159434', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:40">
+                                                    <a id="l_1422_s_159435_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159435&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">7:40 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159435', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:30">
+                                                    <a id="l_1422_s_159436_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159436&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">10:30 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159436', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="UltraAVX (3D) (ATMOS)" class="spriteV2 sprite-ultraavx_3d_atmos"></i>
+                                        <span class="sr-only">UltraAVX (3D) (ATMOS)</span>
+                                        <span class="visible-print-block">UltraAVX (3D) (ATMOS)</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT14:00">
+                                                    <a id="l_1422_s_159433_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159433&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">2:00 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159433', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:50">
+                                                    <a id="l_1422_s_159434_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159434&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:50 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159434', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:40">
+                                                    <a id="l_1422_s_159435_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159435&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">7:40 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159435', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:30">
+                                                    <a id="l_1422_s_159436_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159436&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">10:30 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159436', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="UltraAVX (3D) (DBOX)" class="spriteV2 sprite-ultraavx_3d_dbox"></i>
+                                        <span class="sr-only">UltraAVX (3D) (DBOX)</span>
+                                        <span class="visible-print-block">UltraAVX (3D) (DBOX)</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:30">
+                                                    <a id="l_1422_s_159429_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159429&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">1:30 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159429', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:20">
+                                                    <a id="l_1422_s_159430_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159430&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">4:20 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159430', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:10">
+                                                    <a id="l_1422_s_159431_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159431&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">7:10 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159431', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:00">
+                                                    <a id="l_1422_s_159432_c_0000000004" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159432&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000004&PromotionCode=">10:00 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159432', '0000000004', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="UltraAVX (3D)" class="spriteV2 sprite-ultraavx_3d"></i>
+                                        <span class="sr-only">UltraAVX (3D)</span>
+                                        <span class="visible-print-block">UltraAVX (3D)</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:30">
+                                                    <a id="l_1422_s_159429_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159429&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">1:30 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159429', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:20">
+                                                    <a id="l_1422_s_159430_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159430&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:20 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159430', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:10">
+                                                    <a id="l_1422_s_159431_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159431&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">7:10 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159431', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:00">
+                                                    <a id="l_1422_s_159432_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159432&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">10:00 PM</a>
+                                                        <a data-tooltip="true" data-tooltip-direction="bottom" title="View seat map" onclick="javascript:seatMap('1422', '159432', '0000000001', 'true');return false; " class="seatMapLink" href="#">
+                                                            <i class="iconV2 iconV2-theatre-seat"></i>
+                                                        </a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular (3D)" class="spriteV2 sprite-regular_3d"></i>
+                                        <span class="sr-only">Regular (3D)</span>
+                                        <span class="visible-print-block">Regular (3D)</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT12:30">
+                                                    <a id="l_1422_s_159457_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159457&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">12:30 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT15:20">
+                                                    <a id="l_1422_s_159458_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159458&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">3:20 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT18:10">
+                                                    <a id="l_1422_s_159459_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159459&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">6:10 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT21:00">
+                                                    <a id="l_1422_s_159460_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159460&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">9:00 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular" class="spriteV2 sprite-regular"></i>
+                                        <span class="sr-only">Regular</span>
+                                        <span class="visible-print-block">Regular</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:00">
+                                                    <a id="l_1422_s_159445_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159445&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">1:00 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT15:50">
+                                                    <a id="l_1422_s_159446_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159446&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">3:50 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT18:40">
+                                                    <a id="l_1422_s_159447_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159447&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">6:40 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT21:30">
+                                                    <a id="l_1422_s_159448_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159448&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">9:30 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+    </div>
+</div>
+
+<div class="grid__item no-page-break-inside" itemprop="event" itemscope itemtype="http://schema.org/ScreeningEvent">
+    <div class="showtime-card showtime-single">
+        
+<div class="grid movie-showtime-header">
+    <meta itemprop="name" content="Arrival">
+    <div class="grid__item one-fifth lap--one-quarter palm--one-third" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        <meta itemprop="name" content="Scotiabank Theatre Vancouver">
+        <meta itemprop="address" content="900 Burrard Street">
+        <img class="dbposter dbsmallposter" src="http://mediafiles.cineplex.com/Central/Film/Posters/25153_130_193.jpg" alt="Arrival" />
+    </div>
+    <div class="grid__item three-fifths lap--three-quarters palm--two-thirds movie-showtimes-details" itemprop="workPresented" itemscope itemtype="http://schema.org/Movie">
+        <h3 class="showtime-card--title">
+            <meta itemprop="name" content="Arrival">
+            <meta itemprop='url' content="/Movie/arrival-2016">
+            <meta itemprop='image' content="http://mediafiles.cineplex.com/Central/Film/Posters/25153_130_193.jpg">
+            <a class="movie-details-link-click" href="/Movie/arrival-2016">
+                Arrival
+            </a>
+            <span>| </span>
+            <span><meta itemprop="duration" content="PT1h57m">1h 57m</span>
+        </h3>
+        <div class="movie-header-details">
+                <p>
+                    
+                    <meta itemprop="contentRating" content="PG" /><a data-tooltip="true" title="Parental guidance is advised. Theme or content may not be suitable for all children." href="/Showtimes?rating=PG"><em aria-hidden="true" class="icon-rating" style="background-image: url(http://mediafiles.cineplex.com/_att/4307a686-3283-45c1-a909-44595924f2f6/icon_pg.gif);"></em></a>
+Coarse Language, Violence
+                </p>
+            <p>
+                
+                <a href="#" data-pagename="Showtimes" data-video-title="Arrival: Trailer #1" data-videoid="5138417267001" class="trailer-player-click cta-primary showtime-trailer-link no-print trailer-home-link">Watch Trailer&nbsp;<i class="icon-arrow-2-right"></i></a>
+            </p>
+            <div class="hidden-xs">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__item one-fifth visible-lg date-calendar">
+<div class="ticket-calendar calendar-small"><div class="ticket-day">Tuesday</div><div class="ticket-calendar--inner"><div class="ticket-month">November</div><div class="ticket-date">15</div><div class="ticket-year">2016</div></div><div class="ticket-calendar--bottom"><div data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8px" title="'No passes' means that Cineplex 'Be Our Guest' passes and any Free Admission Coupons will not be accepted towards Cineplex admission tickets. This does not include Gift Cards or any pre-paid corporate products such as Cineplex 'Night Out'  or 'Admit One' vouchers, which will be accepted for admission." class="ticket-time movie-nopasses">No passes</div></div></div>    </div>
+</div>
+
+            <div class="grid">
+                    <div class="grid__item one-whole">
+                        <p class="showtime-date-mobile hidden-lg">
+                            Showtimes for Tue, Nov 15, 2016
+                                &nbsp;-&nbsp;
+                                <span class="movie-nopasses" data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8px" title="&#39;No passes&#39; means that Cineplex &#39;Be Our Guest&#39; passes and any Free Admission Coupons will not be accepted towards Cineplex admission tickets. This does not include Gift Cards or any pre-paid corporate products such as Cineplex &#39;Night Out&#39;  or &#39;Admit One&#39; vouchers, which will be accepted for admission.">No passes</span>
+                        </p>
+                        
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular" class="spriteV2 sprite-regular"></i>
+                                        <span class="sr-only">Regular</span>
+                                        <span class="visible-print-block">Regular</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:50">
+                                                    <a id="l_1422_s_159441_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159441&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">1:50 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:40">
+                                                    <a id="l_1422_s_159442_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159442&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:40 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:30">
+                                                    <a id="l_1422_s_159443_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159443&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">7:30 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:20">
+                                                    <a id="l_1422_s_159444_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159444&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">10:20 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+    </div>
+</div>
+
+<div class="grid__item no-page-break-inside" itemprop="event" itemscope itemtype="http://schema.org/ScreeningEvent">
+    <div class="showtime-card showtime-single">
+        
+<div class="grid movie-showtime-header">
+    <meta itemprop="name" content="Hacksaw Ridge">
+    <div class="grid__item one-fifth lap--one-quarter palm--one-third" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        <meta itemprop="name" content="Scotiabank Theatre Vancouver">
+        <meta itemprop="address" content="900 Burrard Street">
+        <img class="dbposter dbsmallposter" src="http://mediafiles.cineplex.com/Central/Film/Posters/26492_130_193.jpg" alt="Hacksaw Ridge" />
+    </div>
+    <div class="grid__item three-fifths lap--three-quarters palm--two-thirds movie-showtimes-details" itemprop="workPresented" itemscope itemtype="http://schema.org/Movie">
+        <h3 class="showtime-card--title">
+            <meta itemprop="name" content="Hacksaw Ridge">
+            <meta itemprop='url' content="/Movie/hacksaw-ridge">
+            <meta itemprop='image' content="http://mediafiles.cineplex.com/Central/Film/Posters/26492_130_193.jpg">
+            <a class="movie-details-link-click" href="/Movie/hacksaw-ridge">
+                Hacksaw Ridge
+            </a>
+            <span>| </span>
+            <span><meta itemprop="duration" content="PT2h11m">2h 11m</span>
+        </h3>
+        <div class="movie-header-details">
+                <p>
+                    
+                    <meta itemprop="contentRating" content="14A" /><a data-tooltip="true" title="Anyone under 14 years of age must be accompanied by an adult. Parents cautioned." href="/Showtimes?rating=14A"><em aria-hidden="true" class="icon-rating" style="background-image: url(http://mediafiles.cineplex.com/_att/02e7e9fc-c77f-49ea-b81d-cdf62f8b922d/icon_14a.gif);"></em></a>
+Frequent Violence
+                </p>
+            <p>
+                
+                <a href="#" data-pagename="Showtimes" data-video-title="Hacksaw Ridge: Trailer #1" data-videoid="5159339118001" class="trailer-player-click cta-primary showtime-trailer-link no-print trailer-home-link">Watch Trailer&nbsp;<i class="icon-arrow-2-right"></i></a>
+            </p>
+            <div class="hidden-xs">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__item one-fifth visible-lg date-calendar">
+<div class="ticket-calendar calendar-small"><div class="ticket-day">Tuesday</div><div class="ticket-calendar--inner"><div class="ticket-month">November</div><div class="ticket-date">15</div><div class="ticket-year">2016</div></div><div class="ticket-calendar--bottom"><div data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8px" title="'No passes' means that Cineplex 'Be Our Guest' passes and any Free Admission Coupons will not be accepted towards Cineplex admission tickets. This does not include Gift Cards or any pre-paid corporate products such as Cineplex 'Night Out'  or 'Admit One' vouchers, which will be accepted for admission." class="ticket-time movie-nopasses">No passes</div></div></div>    </div>
+</div>
+
+            <div class="grid">
+                    <div class="grid__item one-whole">
+                        <p class="showtime-date-mobile hidden-lg">
+                            Showtimes for Tue, Nov 15, 2016
+                                &nbsp;-&nbsp;
+                                <span class="movie-nopasses" data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8px" title="&#39;No passes&#39; means that Cineplex &#39;Be Our Guest&#39; passes and any Free Admission Coupons will not be accepted towards Cineplex admission tickets. This does not include Gift Cards or any pre-paid corporate products such as Cineplex &#39;Night Out&#39;  or &#39;Admit One&#39; vouchers, which will be accepted for admission.">No passes</span>
+                        </p>
+                        
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular" class="spriteV2 sprite-regular"></i>
+                                        <span class="sr-only">Regular</span>
+                                        <span class="visible-print-block">Regular</span>
+
+
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT12:55">
+                                                    <a id="l_1422_s_159449_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159449&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">12:55 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:00">
+                                                    <a id="l_1422_s_159450_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159450&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:00 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:05">
+                                                    <a id="l_1422_s_159451_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159451&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">7:05 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:15">
+                                                    <a id="l_1422_s_159452_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159452&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">10:15 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+    </div>
+</div>
+
+<div class="grid__item no-page-break-inside" itemprop="event" itemscope itemtype="http://schema.org/ScreeningEvent">
+    <div class="showtime-card showtime-single">
+        
+<div class="grid movie-showtime-header">
+    <meta itemprop="name" content="Inferno">
+    <div class="grid__item one-fifth lap--one-quarter palm--one-third" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        <meta itemprop="name" content="Scotiabank Theatre Vancouver">
+        <meta itemprop="address" content="900 Burrard Street">
+        <img class="dbposter dbsmallposter" src="http://mediafiles.cineplex.com/Central/Film/Posters/21833_130_193.jpg" alt="Inferno" />
+    </div>
+    <div class="grid__item three-fifths lap--three-quarters palm--two-thirds movie-showtimes-details" itemprop="workPresented" itemscope itemtype="http://schema.org/Movie">
+        <h3 class="showtime-card--title">
+            <meta itemprop="name" content="Inferno">
+            <meta itemprop='url' content="/Movie/inferno-2016">
+            <meta itemprop='image' content="http://mediafiles.cineplex.com/Central/Film/Posters/21833_130_193.jpg">
+            <a class="movie-details-link-click" href="/Movie/inferno-2016">
+                Inferno
+            </a>
+            <span>| </span>
+            <span><meta itemprop="duration" content="PT2h02m">2h 02m</span>
+        </h3>
+        <div class="movie-header-details">
+                <p>
+                    
+                    <meta itemprop="contentRating" content="PG" /><a data-tooltip="true" title="Parental guidance is advised. Theme or content may not be suitable for all children." href="/Showtimes?rating=PG"><em aria-hidden="true" class="icon-rating" style="background-image: url(http://mediafiles.cineplex.com/_att/4307a686-3283-45c1-a909-44595924f2f6/icon_pg.gif);"></em></a>
+Violence, Coarse Language
+                </p>
+            <p>
+                
+                <a href="#" data-pagename="Showtimes" data-video-title="Inferno: Trailer #1" data-videoid="4899925128001" class="trailer-player-click cta-primary showtime-trailer-link no-print trailer-home-link">Watch Trailer&nbsp;<i class="icon-arrow-2-right"></i></a>
+            </p>
+            <div class="hidden-xs">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__item one-fifth visible-lg date-calendar">
+<div class="ticket-calendar calendar-small"><div class="ticket-day">Tuesday</div><div class="ticket-calendar--inner"><div class="ticket-month">November</div><div class="ticket-date">15</div><div class="ticket-year">2016</div></div></div>    </div>
+</div>
+
+            <div class="grid">
+                    <div class="grid__item one-whole">
+                        <p class="showtime-date-mobile hidden-lg">
+                            Showtimes for Tue, Nov 15, 2016
+                        </p>
+                        
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular" class="spriteV2 sprite-regular"></i>
+                                        <span class="sr-only">Regular</span>
+                                        <span class="visible-print-block">Regular</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:40">
+                                                    <a id="l_1422_s_159437_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159437&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">1:40 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:30">
+                                                    <a id="l_1422_s_159438_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159438&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:30 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:35">
+                                                    <a id="l_1422_s_159439_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159439&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">7:35 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:25">
+                                                    <a id="l_1422_s_159440_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159440&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">10:25 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+    </div>
+</div>
+
+<div class="grid__item no-page-break-inside" itemprop="event" itemscope itemtype="http://schema.org/ScreeningEvent">
+    <div class="showtime-card showtime-single">
+        
+<div class="grid movie-showtime-header">
+    <meta itemprop="name" content="Jack Reacher: Never Go Back">
+    <div class="grid__item one-fifth lap--one-quarter palm--one-third" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        <meta itemprop="name" content="Scotiabank Theatre Vancouver">
+        <meta itemprop="address" content="900 Burrard Street">
+        <img class="dbposter dbsmallposter" src="http://mediafiles.cineplex.com/Central/Film/Posters/24280_130_193.jpg" alt="Jack Reacher: Never Go Back" />
+    </div>
+    <div class="grid__item three-fifths lap--three-quarters palm--two-thirds movie-showtimes-details" itemprop="workPresented" itemscope itemtype="http://schema.org/Movie">
+        <h3 class="showtime-card--title">
+            <meta itemprop="name" content="Jack Reacher: Never Go Back">
+            <meta itemprop='url' content="/Movie/jack-reacher-never-go-back">
+            <meta itemprop='image' content="http://mediafiles.cineplex.com/Central/Film/Posters/24280_130_193.jpg">
+            <a class="movie-details-link-click" href="/Movie/jack-reacher-never-go-back">
+                Jack Reacher: Never Go Back
+            </a>
+            <span>| </span>
+            <span><meta itemprop="duration" content="PT1h58m">1h 58m</span>
+        </h3>
+        <div class="movie-header-details">
+                <p>
+                    
+                    <meta itemprop="contentRating" content="PG" /><a data-tooltip="true" title="Parental guidance is advised. Theme or content may not be suitable for all children." href="/Showtimes?rating=PG"><em aria-hidden="true" class="icon-rating" style="background-image: url(http://mediafiles.cineplex.com/_att/4307a686-3283-45c1-a909-44595924f2f6/icon_pg.gif);"></em></a>
+Violence, Coarse Language
+                </p>
+            <p>
+                
+                <a href="#" data-pagename="Showtimes" data-video-title="Jack Reacher Never Go Back: Trailer #1" data-videoid="5023467163001" class="trailer-player-click cta-primary showtime-trailer-link no-print trailer-home-link">Watch Trailer&nbsp;<i class="icon-arrow-2-right"></i></a>
+            </p>
+            <div class="hidden-xs">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__item one-fifth visible-lg date-calendar">
+<div class="ticket-calendar calendar-small"><div class="ticket-day">Tuesday</div><div class="ticket-calendar--inner"><div class="ticket-month">November</div><div class="ticket-date">15</div><div class="ticket-year">2016</div></div></div>    </div>
+</div>
+
+            <div class="grid">
+                    <div class="grid__item one-whole">
+                        <p class="showtime-date-mobile hidden-lg">
+                            Showtimes for Tue, Nov 15, 2016
+                        </p>
+                        
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular" class="spriteV2 sprite-regular"></i>
+                                        <span class="sr-only">Regular</span>
+                                        <span class="visible-print-block">Regular</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:15">
+                                                    <a id="l_1422_s_159461_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159461&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">1:15 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:05">
+                                                    <a id="l_1422_s_159462_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159462&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:05 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT18:55">
+                                                    <a id="l_1422_s_159463_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159463&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">6:55 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT21:55">
+                                                    <a id="l_1422_s_159464_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159464&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">9:55 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+    </div>
+</div>
+
+<div class="grid__item no-page-break-inside" itemprop="event" itemscope itemtype="http://schema.org/ScreeningEvent">
+    <div class="showtime-card showtime-single">
+        
+<div class="grid movie-showtime-header">
+    <meta itemprop="name" content="The Accountant">
+    <div class="grid__item one-fifth lap--one-quarter palm--one-third" itemprop="location" itemscope itemtype="http://schema.org/Place">
+        <meta itemprop="name" content="Scotiabank Theatre Vancouver">
+        <meta itemprop="address" content="900 Burrard Street">
+        <img class="dbposter dbsmallposter" src="http://mediafiles.cineplex.com/Central/Film/Posters/23879_130_193.jpg" alt="The Accountant" />
+    </div>
+    <div class="grid__item three-fifths lap--three-quarters palm--two-thirds movie-showtimes-details" itemprop="workPresented" itemscope itemtype="http://schema.org/Movie">
+        <h3 class="showtime-card--title">
+            <meta itemprop="name" content="The Accountant">
+            <meta itemprop='url' content="/Movie/the-accountant-2016">
+            <meta itemprop='image' content="http://mediafiles.cineplex.com/Central/Film/Posters/23879_130_193.jpg">
+            <a class="movie-details-link-click" href="/Movie/the-accountant-2016">
+                The Accountant
+            </a>
+            <span>| </span>
+            <span><meta itemprop="duration" content="PT2h08m">2h 08m</span>
+        </h3>
+        <div class="movie-header-details">
+                <p>
+                    
+                    <meta itemprop="contentRating" content="14A" /><a data-tooltip="true" title="Anyone under 14 years of age must be accompanied by an adult. Parents cautioned." href="/Showtimes?rating=14A"><em aria-hidden="true" class="icon-rating" style="background-image: url(http://mediafiles.cineplex.com/_att/02e7e9fc-c77f-49ea-b81d-cdf62f8b922d/icon_14a.gif);"></em></a>
+Coarse Language, Violence
+                </p>
+            <p>
+                
+                <a href="#" data-pagename="Showtimes" data-video-title="The Accountant: Trailer #1" data-videoid="4899929970001" class="trailer-player-click cta-primary showtime-trailer-link no-print trailer-home-link">Watch Trailer&nbsp;<i class="icon-arrow-2-right"></i></a>
+            </p>
+            <div class="hidden-xs">
+            </div>
+        </div>
+    </div>
+
+    <div class="grid__item one-fifth visible-lg date-calendar">
+<div class="ticket-calendar calendar-small"><div class="ticket-day">Tuesday</div><div class="ticket-calendar--inner"><div class="ticket-month">November</div><div class="ticket-date">15</div><div class="ticket-year">2016</div></div></div>    </div>
+</div>
+
+            <div class="grid">
+                    <div class="grid__item one-whole">
+                        <p class="showtime-date-mobile hidden-lg">
+                            Showtimes for Tue, Nov 15, 2016
+                        </p>
+                        
+                            <div class="grid showtime--item">
+                                <div class="grid__item ffec-grid mediumDown--one-whole one-half">
+                                        <i data-tooltip="true" data-tooltip-direction="left" data-tooltip-margin="8" title="Regular" class="spriteV2 sprite-regular"></i>
+                                        <span class="sr-only">Regular</span>
+                                        <span class="visible-print-block">Regular</span>
+
+
+                                        <span data-tooltip="true" data-tooltip-direction="bottom" data-tooltip-margin="8" title="Closed Captions for the hearing impaired and  Descriptive Service for the visually impaired">(CC/DS)</span>
+
+                                </div>
+                                <div class="grid__item showtime-grid mediumDown--one-whole one-half">
+                                        <ul class="showtime--list">
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT13:10">
+                                                    <a id="l_1422_s_159453_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159453&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">1:10 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT16:10">
+                                                    <a id="l_1422_s_159454_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159454&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">4:10 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT19:15">
+                                                    <a id="l_1422_s_159455_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159455&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">7:15 PM</a>
+                                                </li>
+                                                <li>
+
+                                                    <meta itemprop="startDate" content="11/15/2016 12:00:00 AMT22:10">
+                                                    <a id="l_1422_s_159456_c_0000000001" title="Buy Tickets" data-tooltip-direction="bottom" class="showtime" href="/Services/OnlineTicketing.ashx?LocationId=1422&VistaSessionId=159456&ReturnURL=http%3a%2f%2fwww.cineplex.com%2fShowtimes%2fany-movie%2fscotiabank-theatre-vancouver%3fLocationUrl%3dscotiabank-theatre-vancouver%26RequestType%3dTheatreLookup%26Date%3d11%2f15%2f2016%26PreviousDate%3d11%2f15%2f2016%26TimeFormat%3d12%26Range%3d50&VISTAHOCategoryCode=0000000001&PromotionCode=">10:10 PM</a>
+                                                </li>
+                                        </ul>
+
+                                </div>
+                            </div>
+                    </div>
+            </div>
+
+    </div>
+</div>                    <div class="no-print show-showtimesV2 bottom-btnShowtimes">
+                        <a href="#" data-toggle="movie-times" class="btn-primary toggle-trigger btn-showtime toggle-open">
+                            <span class="toggle-hide">
+                                Hide Movies and Showtimes
+                                <i class="icon-arrow-up"></i>
+                            </span>
+                            <span class="toggle-show">
+                                Show Movies and Showtimes
+                                <i class="icon-arrow-down"></i>
+                            </span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        
+
+
+
+
