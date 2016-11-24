@@ -156,5 +156,18 @@ sub convert_to_epoch {
 
     return timelocal($sec, $min, $hour, $day, $month-1, $year-1900);     
 }
+
+sub get_next_tuesday
+{
+    my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
+
+    my $diff = (7 - ($wday - 2)) % 7;
+
+    ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time + $diff * 86400);
+
+    my $dateStr = sprintf("%d/%d/%d", $mon+1, $mday, $year+1900);
+
+    return $dateStr;
+}
     
 1;

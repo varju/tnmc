@@ -11,6 +11,7 @@ use HTML::TreeBuilder::XPath;
 use tnmc::general_config;
 use tnmc::movies::movie;
 use tnmc::updater::base;
+use tnmc::util::date;
 
 use vars qw(@ISA);
 @ISA = ("tnmc::updater::base");
@@ -42,7 +43,7 @@ sub get_theatre_showtimes
     ## get webpage
     my $ua = $self->get_valid_ua();
 
-    my $tues = $self->get_next_tuesday();
+    my $tues = &tnmc::util::date::get_next_tuesday();
     my $URL = "http://www.cineplex.com/Showtimes/GetShowtimes?Location=$cineplexID&LocationUrl=$cineplexID&Latitude=49.2493221&Longitude=-123.1465862&RequestType=TheatreLookup&OutputType=showtimesonly&Date=$tues&PreviousDate=$tues&TimeFormat=12&Range=50";
 
     print "DEBUG: Requesting $URL\n";
@@ -51,20 +52,6 @@ sub get_theatre_showtimes
     my $text = $res->content;
 
     return $self->parse_theatre_showtimes($text);
-}
-
-sub get_next_tuesday
-{
-    my ($self) = @_;
-    my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
-
-    my $diff = (7 - ($wday - 2)) % 7;
-
-    ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time + $diff * 86400);
-
-    my $dateStr = sprintf("%d/%d/%d", $mon+1, $mday, $year+1900);
-
-    return $dateStr;
 }
 
 sub parse_theatre_showtimes
