@@ -12,6 +12,7 @@ use tnmc::template;
 use tnmc::db;
 use tnmc::movies::movie;
 use tnmc::cgi;
+use tnmc::util::date;
 
 
 #############
@@ -96,8 +97,10 @@ sub show_movie_extended
         if ($movie{'cineplexID'})
         {
         my $cineplexID = $movie{'cineplexID'};
+        my $next_tuesday = &tnmc::util::date::get_next_tuesday();
             print qq 
-            {    <tr><td><b><a href="http://www.cineplex.com/Movie/$cineplexID" target="cineplex">Cineplex info</a>
+            {    <tr><td><b><a href="http://www.cineplex.com/Movie/$cineplexID" target="cineplex">Cineplex info</a></b></td></tr>
+                 <tr><td><b><a href="http://www.cineplex.com/Showtimes/$cineplexID/vancouver-bc?Date=$next_tuesday" target="cineplex_show">Cineplex showtimes</a></b></td></tr>
             };
         }
         print qq
