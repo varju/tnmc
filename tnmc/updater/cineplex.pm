@@ -44,7 +44,7 @@ sub get_theatre_showtimes
     my $ua = $self->get_valid_ua();
 
     my $tues = &tnmc::util::date::get_next_tuesday();
-    my $URL = "http://www.cineplex.com/Showtimes/GetShowtimes?Location=$cineplexID&LocationUrl=$cineplexID&Latitude=49.2493221&Longitude=-123.1465862&RequestType=TheatreLookup&OutputType=showtimesonly&Date=$tues&PreviousDate=$tues&TimeFormat=12&Range=50";
+    my $URL = "http://www.cineplex.com/Showtimes/GetShowtimes?Location=$cineplexID&LocationUrl=$cineplexID&Latitude=49.2493221&Longitude=-123.1465862&RequestType=TheatreLookup&OutputType=showtimesonly&Date=$tues&PreviousDate=$tues&TimeFormat=12";
 
     print "DEBUG: Requesting $URL\n";
     my $req = new HTTP::Request GET => $URL;
