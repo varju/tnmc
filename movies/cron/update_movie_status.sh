@@ -6,6 +6,12 @@ BASE_DIR=$(cd $(dirname $0)/../..; pwd)
 LOG_FILE=$BASE_DIR/logs/$(basename $0 | sed -e 's|\..*||').log
 
 date >> $LOG_FILE
-docker exec -ti tnmc_web_1 /tnmc/movies/cron/get_movies_cineplex.cgi 2>&1 | tee -a $LOG_FILE
+
+if [[ $(date +%u) -eq 2 ]]; then
+  docker exec -ti tnmc_web_1 /tnmc/movies/cron/update_movie_status.cgi 2>&1 | tee -a $LOG_FILE
+else
+  echo "Error: Script should only be run on Tuesdays" 2>&1 | tee -a $LOG_FILE
+fi
+
 echo >> $LOG_FILE
 echo >> $LOG_FILE
