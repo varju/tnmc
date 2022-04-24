@@ -1,5 +1,6 @@
 .git
 Dockerfile
+rebuild.sh
 
 auto
 logs
