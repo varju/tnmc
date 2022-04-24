@@ -21,15 +21,15 @@ use tnmc::cgi;
 my $nightID = &tnmc::cgi::param('nightID');
 
 ## update the night with submitted vals.
-if ($nightID){
+if ($nightID) {
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
-    
-    foreach my $key (keys %night){
-        my $val =  &tnmc::cgi::param($key);
-        $night{$key} = $val if(defined $val);
+
+    foreach my $key (keys %night) {
+        my $val = &tnmc::cgi::param($key);
+        $night{$key} = $val if (defined $val);
     }
-    
+
     &tnmc::movies::night::set_night(%night);
 }
 

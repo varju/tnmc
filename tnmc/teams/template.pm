@@ -6,61 +6,62 @@ package tnmc::teams::template;
 
 use tnmc;
 
-
 #
 # vars
 #
 
 my $table = 'Teams';
-my $key = 'teamID';
+my $key   = 'teamID';
 
 #
 # Team
 #
 
-sub show_team{
+sub show_team {
     my ($teamID, $mode) = @_;
-    
+
     #
     # mode: full, teampage
-    # 
-    
+    #
+
     my %show;
-    if ($mode eq 'big'){
-	$show{title} = 1;
-	$show{desc} = 1;
-	$show{season} = 1;
-	$show{captain} = 1;
-	$show{league} = 1;
-	$show{meets} = 1;
-	$show{actions} = 1;
+    if ($mode eq 'big') {
+        $show{title}   = 1;
+        $show{desc}    = 1;
+        $show{season}  = 1;
+        $show{captain} = 1;
+        $show{league}  = 1;
+        $show{meets}   = 1;
+        $show{actions} = 1;
     }
-    if ($mode eq 'teampage'){
-	$show{title} = 1;
-	$show{desc} = 1;
-	$show{league} = 1;
-	$show{actions} = 1;
+    if ($mode eq 'teampage') {
+        $show{title}   = 1;
+        $show{desc}    = 1;
+        $show{league}  = 1;
+        $show{actions} = 1;
     }
-    if ($mode eq 'tiny'){
-	$show{title} = 1;
-	$show{desc} = 1;
-	$show{meets} = 1;
+    if ($mode eq 'tiny') {
+        $show{title} = 1;
+        $show{desc}  = 1;
+        $show{meets} = 1;
     }
-    
+
     #
     # get team
     #
-    
+
     my $team = &tnmc::teams::team::get_team_extended($teamID);
-    
+
     my $season_start = &tnmc::util::date::format('short_date', $team->{seasonStart});
-    my $season_end = &tnmc::util::date::format('short_date', $team->{seasonEnd});
-    my $sport = $tnmc::teams::team::sports{$team->{sport}};
-    my $captain = &tnmc::user::get_user($team->{captainID});
-    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) AND date < DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY date");
-    
+    my $season_end   = &tnmc::util::date::format('short_date', $team->{seasonEnd});
+    my $sport        = $tnmc::teams::team::sports{ $team->{sport} };
+    my $captain      = &tnmc::user::get_user($team->{captainID});
+    my @meets        = &tnmc::teams::meet::find_meets(
+"WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) AND date < DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY date"
+    );
+
     # show team
-    
+
     print qq{
 	<table border=0 cellspacing=0 cellpadding=1 width=100%>
 		};
@@ -86,26 +87,27 @@ sub show_team{
 	    <tr><td></td>
 		<td nowrap><a href="$team->{leagueScheduleURL}">League Schedule</a></td></tr>
 		} if ($team->{leagueScheduleURL} && $show{league});
-    if ($show{actions}){
-	
-	print qq{
+
+    if ($show{actions}) {
+
+        print qq{
 	    <tr><td><b>Actions</b></td>
 		<td>
 		};
-	foreach my $action (keys %{$team->{action}}){
-	    print qq{<a href="$team->{action}->{$action}">[$action]</a>
+        foreach my $action (keys %{ $team->{action} }) {
+            print qq{<a href="$team->{action}->{$action}">[$action]</a>
 		 };
-	}
-	print qq{
+        }
+        print qq{
 		</td></tr>
 		};
     }
-    if ($show{meets}){
-	foreach my $meetID (@meets){
-	    my $Meet = &tnmc::teams::meet::get_meet_extended($meetID);
-	    my $day = &tnmc::util::date::format("short_wday", $Meet->{date});
-	    my $time = &tnmc::util::date::format("time", $Meet->{date});
-	    print qq{
+    if ($show{meets}) {
+        foreach my $meetID (@meets) {
+            my $Meet = &tnmc::teams::meet::get_meet_extended($meetID);
+            my $day  = &tnmc::util::date::format("short_wday", $Meet->{date});
+            my $time = &tnmc::util::date::format("time",       $Meet->{date});
+            print qq{
 		<tr valign="top"><td nowrap><b>$day</b><br>
 		    $Meet->{totals}->{X}->{yes}
 			($Meet->{totals}->{M}->{yes}/$Meet->{totals}->{F}->{yes}) 
@@ -116,7 +118,7 @@ sub show_team{
 		    </td>
 		</tr>
 	    };
-	}
+        }
     }
     print qq{
 	</table>
@@ -124,16 +126,16 @@ sub show_team{
     };
 }
 
-
-sub show_team_schedule{
+sub show_team_schedule {
     my ($teamID) = @_;
-    
+
     &tnmc::template::show_heading("Schedule");
-    
+
     # get data
-    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date");
+    my @meets =
+      &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date");
     my @players = &tnmc::teams::roster::list_users($teamID);
-    
+
     # start up
     print qq{
 	<table border=0 cellspacing=0 width=100%>
@@ -147,10 +149,10 @@ sub show_team_schedule{
 	    <th>&nbsp;</th>
 	    </tr>
     };
-    
-    foreach my $meetID (@meets){
-	my $Meet = &tnmc::teams::meet::get_meet_extended($meetID);
-	
+
+    foreach my $meetID (@meets) {
+        my $Meet = &tnmc::teams::meet::get_meet_extended($meetID);
+
         print qq{
 	    <tr valign="top">
 		<td nowrap><a href="$Meet->{action}->{edit}"><b>$Meet->{date_text}</b></a></td>
@@ -165,7 +167,7 @@ sub show_team_schedule{
 	};
 
     }
-    
+
     print qq{
 	<tr><td nowrap>
 	    [<a href="teams/meet_mod.cgi?ACTION=add&teamID=$teamID">add game</a>]
@@ -173,55 +175,55 @@ sub show_team_schedule{
 	</table>
 	<br>
     };
-    
+
 }
 
-sub show_team_roster{
+sub show_team_roster {
     my ($teamID) = @_;
-    
+
     &tnmc::template::show_heading("Roster");
-    
+
     # get data
-    my @meets = &tnmc::teams::meet::find_meets("WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date LIMIT 3");
+    my @meets = &tnmc::teams::meet::find_meets(
+        "WHERE teamID = $teamID AND TO_DAYS(date) >= TO_DAYS(NOW()) ORDER BY date LIMIT 3");
     my @players = &tnmc::teams::roster::list_users($teamID);
     @players = sort tnmc::user::by_username @players;
-    
-    
+
     print qq{
 	<table border=0 cellspacing=0 width=100%>
 	<tr valign="top">
 	    <th nowrap>Name</th>
 	    <th nowrap>Phone</th>
     };
-    foreach my $meetID (@meets){
-        my $meet = &tnmc::teams::meet::get_meet_extended($meetID);
-        my $game_date = &tnmc::util::date::format('short_month_day', $meet->{"date"}) ;
+    foreach my $meetID (@meets) {
+        my $meet      = &tnmc::teams::meet::get_meet_extended($meetID);
+        my $game_date = &tnmc::util::date::format('short_month_day', $meet->{"date"});
         print qq{<th nowrap>$game_date<br>
 		 <font size=+1>$meet->{totals}->{M}->{yes}/$meet->{totals}->{F}->{yes}</font></th>
 	};
     }
     print "<th></th></tr>\n";
 
+    foreach my $userID (@players) {
 
-    foreach my $userID (@players){
-	
-	my $user = &tnmc::user::get_user($userID);
-	my $roster = &tnmc::teams::roster::get_roster($teamID, $userID);
-	my $phone = $user->{"phone$user->{phonePrimary}"};
+        my $user   = &tnmc::user::get_user($userID);
+        my $roster = &tnmc::teams::roster::get_roster($teamID, $userID);
+        my $phone  = $user->{"phone$user->{phonePrimary}"};
         print qq{
             <tr>
 		<td nowrap><a href="teams/roster_mod.cgi?ACTION=edit&teamID=$teamID&userID=$userID">$user->{username}</a></td>
 		<td nowrap>$phone</td>
         };
-        foreach $meetID (@meets){
+        foreach $meetID (@meets) {
             my $attendance = &tnmc::teams::attendance::get_attendance($meetID, $userID);
-	    my $type = $tnmc::teams::attendance::type{$attendance->{type}};
-	    if ($attendance->{type} eq 'yes' || $attendance->{type} eq 'late'){
-		print "<td><b>$type</b></td>\n";
-	    }else{
-		print "<td>$type</td>\n";
-	    }
-		
+            my $type       = $tnmc::teams::attendance::type{ $attendance->{type} };
+            if ($attendance->{type} eq 'yes' || $attendance->{type} eq 'late') {
+                print "<td><b>$type</b></td>\n";
+            }
+            else {
+                print "<td>$type</td>\n";
+            }
+
         }
         print qq{
             <td nowrap>
@@ -239,10 +241,4 @@ sub show_team_roster{
 
 # keepin perl happy...
 return 1;
-
-
-
-
-
-
 

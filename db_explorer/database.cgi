@@ -12,32 +12,30 @@ use CGI;
 
 ########################################################
 ### Get all the little variables that we'll want to use.
-    
-        # header and title
-    $cgih = new CGI;
-    print $cgih -> header();
-    
-        # grab the PubID from the query string
-    $query_string = $ENV{QUERY_STRING};
-    ($crap, $morecrap) = split (/=/,$query_string);
-    
+
+# header and title
+$cgih = new CGI;
+print $cgih->header();
+
+# grab the PubID from the query string
+$query_string = $ENV{QUERY_STRING};
+($crap, $morecrap) = split(/=/, $query_string);
+
 ########################################################
 ### Do the database thing
 
-    #############
-    ### connect to the database
-        $database = $query_string;
-        $host = "localhost";
-        $user = "tnmc";
-        $password = "password";
-        
-        # say hello.
-        $dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password) or die "Can't connect: $dbh->errstr\n";
+#############
+### connect to the database
+$database = $query_string;
+$host     = "localhost";
+$user     = "tnmc";
+$password = "password";
 
+# say hello.
+$dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password) or die "Can't connect: $dbh->errstr\n";
 
 ##########################################################
 #### The Beginning of the HTML.
-
 
 $title = "scott's database explorer: $host : $database";
 
@@ -70,19 +68,20 @@ print <<_HTML;
     </tr>
 _HTML
 
-    $sql1 ="SHOW TABLES FROM $database";
-    $sth1 = $dbh->prepare($sql1) or die "Can't prepare $sql1:$dbh->errstr\n";
-    $sth1 ->execute or die "Can't execute: $dbh->errstr\n";
-     while (@tables = $sth1->fetchrow_array){
-         foreach $table (@tables){
-            print "<tr>";
-            print "<b><td bgcolor=\"#cece9c\"><div align=\"right\"><a href=\"table.cgi?$database=$table\"><b><font color=\"#000000\">$table</font></a></b></div></td>";
-            print "<b><td bgcolor=\"ffffff\"><div align=\"right\"><a href=\"#$table\">column info</a></b></div></td>";
-            print "</tr>";
-        }
+$sql1 = "SHOW TABLES FROM $database";
+$sth1 = $dbh->prepare($sql1) or die "Can't prepare $sql1:$dbh->errstr\n";
+$sth1->execute or die "Can't execute: $dbh->errstr\n";
+while (@tables = $sth1->fetchrow_array) {
+    foreach $table (@tables) {
+        print "<tr>";
+        print
+"<b><td bgcolor=\"#cece9c\"><div align=\"right\"><a href=\"table.cgi?$database=$table\"><b><font color=\"#000000\">$table</font></a></b></div></td>";
+        print "<b><td bgcolor=\"ffffff\"><div align=\"right\"><a href=\"#$table\">column info</a></b></div></td>";
+        print "</tr>";
     }
-    $sth1 ->finish;
-    
+}
+$sth1->finish;
+
 print <<_HTML;
 
 </table>
@@ -113,35 +112,35 @@ print <<_HTML;
 
 _HTML
 
-    $sql1 ="SHOW TABLES FROM $database";
-    $sth1 = $dbh->prepare($sql1) or die "Can't prepare $sql1:$dbh->errstr\n";
-    $sth1 ->execute or die "Can't execute: $dbh->errstr\n";
-     while (@tables = $sth1->fetchrow_array){
-         foreach $table (@tables){
-        
-            print "<tr><td colspan=\"3\" bgcolor=\"#cece9c\"><div align=\"center\">";
-            print "<a name=\"$table\" href=\"table.cgi?$database=$table\">";
-            print "<font color=\"000000\" size=\"3\">";
-            print "<b>$table</b>";
-            print "</font></a></div></td></tr>";
+$sql1 = "SHOW TABLES FROM $database";
+$sth1 = $dbh->prepare($sql1) or die "Can't prepare $sql1:$dbh->errstr\n";
+$sth1->execute or die "Can't execute: $dbh->errstr\n";
+while (@tables = $sth1->fetchrow_array) {
+    foreach $table (@tables) {
 
-            $sql2="SHOW COLUMNS FROM $table FROM $database";
-            $sth2 = $dbh->prepare($sql2) or die "Can't prepare $sql2:$dbh->errstr\n";
-            $sth2 ->execute or die "Can't execute: $dbh->errstr\n";
-            while (@row2 = $sth2->fetchrow_array){
-                print "<tr>";
-                print "<td><font size=\"-1\">&nbsp;@row2[0]&nbsp;</font></td>";
-                print "<td><font size=\"-1\">&nbsp;@row2[1]&nbsp;</font></td>";
-                print "<td><font size=\"-1\">&nbsp;@row2[2]&nbsp;</font></td>";
-                print "</tr>";
-            }    
-            $sth2 ->finish;
+        print "<tr><td colspan=\"3\" bgcolor=\"#cece9c\"><div align=\"center\">";
+        print "<a name=\"$table\" href=\"table.cgi?$database=$table\">";
+        print "<font color=\"000000\" size=\"3\">";
+        print "<b>$table</b>";
+        print "</font></a></div></td></tr>";
 
+        $sql2 = "SHOW COLUMNS FROM $table FROM $database";
+        $sth2 = $dbh->prepare($sql2) or die "Can't prepare $sql2:$dbh->errstr\n";
+        $sth2->execute or die "Can't execute: $dbh->errstr\n";
+        while (@row2 = $sth2->fetchrow_array) {
+            print "<tr>";
+            print "<td><font size=\"-1\">&nbsp;@row2[0]&nbsp;</font></td>";
+            print "<td><font size=\"-1\">&nbsp;@row2[1]&nbsp;</font></td>";
+            print "<td><font size=\"-1\">&nbsp;@row2[2]&nbsp;</font></td>";
+            print "</tr>";
         }
-    }
+        $sth2->finish;
 
-    $sth1 ->finish;
-        
+    }
+}
+
+$sth1->finish;
+
 print <<_HTML;
 
 </table>
@@ -154,10 +153,9 @@ print <<_HTML;
 
 _HTML
 
-
 #############
 ### Adios
-    $dbh ->disconnect;
+$dbh->disconnect;
 
 print "<div align=\"right\"><i>- database complete</i></div>";
 

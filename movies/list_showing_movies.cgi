@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson - scottt@interchange.ubc.ca 
+#    Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -17,7 +17,7 @@ use tnmc::movies::vote;
 
 #############
 ### Main logic
-    
+
 &tnmc::template::header();
 &tnmc::db::db_connect();
 
@@ -26,15 +26,15 @@ use tnmc::movies::vote;
 &tnmc::template::footer();
 
 #
-# subs 
+# subs
 #
 
 #########################################
-sub show_showing_movie_list{
+sub show_showing_movie_list {
     my (@movies, %movie, $movieID, $key);
-    
+
     my @movies = &tnmc::movies::showtimes::list_all_movies();
-    
+
     &tnmc::template::show_heading("All Movies that are Currently Showing");
     print qq{
         <font color="0000ff">Blue means we\'ve seen it</font><br>
@@ -42,20 +42,20 @@ sub show_showing_movie_list{
         <br>
                 <table cellspacing="0" cellpadding="1" border="0" width="100%">
     };
-    
-    foreach $movieID (@movies){
+
+    foreach $movieID (@movies) {
         my %movie;
-	&tnmc::movies::movie::get_movie_extended2($movieID, \%movie);
-        
+        &tnmc::movies::movie::get_movie_extended2($movieID, \%movie);
+
         my $my_vote;
-        if (&tnmc::movies::vote::get_vote($movieID, $USERID) >= 1){
+        if (&tnmc::movies::vote::get_vote($movieID, $USERID) >= 1) {
             $my_vote = "<b>";
         }
         my $seen_colour;
-        if ($movie{statusSeen}){
+        if ($movie{statusSeen}) {
             $seen_colour = '<font color="0000ff">';
         }
-        
+
         print qq{
             <tr>
                 <td nowrap>$movie{rank}</td>

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson - scottt@css.sfu.ca 
+#    Scott Thompson - scottt@css.sfu.ca
 #    Jeff Steinbok  - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
@@ -28,9 +28,8 @@ my $groupID = &tnmc::cgi::param('groupID');
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
 
-
 #########################################
-sub show_group_selector{
+sub show_group_selector {
 
     my ($group) = @_;
     $group = '' if !defined $group;
@@ -41,9 +40,9 @@ sub show_group_selector{
     my $dbh = &tnmc::db::db_connect();
     my $sth = $dbh->prepare($sql);
     $sth->execute();
-    while (my ($field, $junk) = $sth->fetchrow_array()){
-        if ($field =~ s/^group//){
-            push (@groups, $field);
+    while (my ($field, $junk) = $sth->fetchrow_array()) {
+        if ($field =~ s/^group//) {
+            push(@groups, $field);
         }
     }
     $sth->finish();
@@ -52,12 +51,12 @@ sub show_group_selector{
         <form action="admin/groups.cgi" method="post">
         <select name="groupID" defaultoption="$group" onChange="form.submit();">
     };
-    
 
-    foreach $groupID (@groups){
-        if ($group eq $groupID){
+    foreach $groupID (@groups) {
+        if ($group eq $groupID) {
             print qq{        <option value="$groupID" selected>$groupID\n};
-        }else{
+        }
+        else {
             print qq{        <option value="$groupID">$groupID\n};
         }
     }
@@ -67,7 +66,7 @@ sub show_group_selector{
     };
 }
 #########################################
-sub show_edit_group{
+sub show_edit_group {
 
     my ($group) = @_;
 
@@ -76,7 +75,6 @@ sub show_edit_group{
     my (@users, %user, $userID, $key);
     my @ranks = ('0', '1');
 
-
     &tnmc::user::list_users(\@users, '', 'ORDER BY username');
     &tnmc::user::get_user($users[0], \%user);
 
@@ -84,10 +82,10 @@ sub show_edit_group{
     my $dbh = &tnmc::db::db_connect();
     my $sth = $dbh->prepare($sql);
     $sth->execute();
-    while (my @row = $sth->fetchrow_array()){
+    while (my @row = $sth->fetchrow_array()) {
         next if ($row[0] == 1);
         next if ($row[0] == 0);
-        push (@ranks, $row[0]);
+        push(@ranks, $row[0]);
     }
     $sth->finish();
 
@@ -99,15 +97,15 @@ sub show_edit_group{
     };
 
     my $count = 0;
-        foreach $userID (@users){
-        if (! ($count++ % 20)){
-    
+    foreach $userID (@users) {
+        if (!($count++ % 20)) {
+
             print qq{
                 <tr>    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;&nbsp;</th>
             };
-            foreach my $rank (@ranks){
+            foreach my $rank (@ranks) {
                 print qq{
                     <th>$rank&nbsp;&nbsp;&nbsp;</th>
                 };
@@ -117,15 +115,15 @@ sub show_edit_group{
                     </tr>
             };
         }
-                &tnmc::user::get_user($userID, \%user);
+        &tnmc::user::get_user($userID, \%user);
         print qq{
             <tr>    <td>$userID</td>
                 <td><b>$user{username}</b></td>
                 <td></td>
         };
-        foreach my $rank (@ranks){
+        foreach my $rank (@ranks) {
             my $sel = '';
-            if ($user{"group$group"} == $rank){
+            if ($user{"group$group"} == $rank) {
                 $sel = 'checked';
             }
             print qq{
@@ -136,9 +134,9 @@ sub show_edit_group{
                 <td>$user{fullname}</td>
                 </tr>
         };
-        }
+    }
 
-        print qq{
+    print qq{
                 </table>
         </form>
         };

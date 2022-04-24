@@ -17,7 +17,7 @@ use strict;
 sub count_words {
     my ($str) = @_;
 
-    my @words = split(/\w+/,$str);
+    my @words = split(/\w+/, $str);
     my $count = @words;
 
     return $count;
@@ -28,8 +28,8 @@ sub phone_get_areacode {
     my $areacode;
 
     $phone =~ s/\D//g;
-    if (length($phone) == 10){
-        $areacode = substr($phone,0,3);
+    if (length($phone) == 10) {
+        $areacode = substr($phone, 0, 3);
     }
     else {
         $areacode = '604';
@@ -43,8 +43,8 @@ sub phone_get_localnum {
     my $localnum;
 
     $phone =~ s/\D//g;
-    if (length($phone) > 7){
-        $localnum = substr($phone,-7,7);
+    if (length($phone) > 7) {
+        $localnum = substr($phone, -7, 7);
     }
     else {
         $localnum = $phone;

@@ -28,25 +28,22 @@ srand;
 my $userID = &tnmc::cgi::param('userID');
 &show_forgot_password($userID);
 
-
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
-
-
 
 ##########################################################
 #### Sub Procedures
 ##########################################################
 
-sub show_forgot_password{
+sub show_forgot_password {
     my ($userID) = @_;
-    
+
     my %user;
     &tnmc::user::get_user($userID, \%user);
-    
-    if ($user{'email'}){
+
+    if ($user{'email'}) {
         &send_password_to_user($userID);
-        
+
         &tnmc::template::show_heading('I forgot my password');
         print qq{
             <p>
@@ -59,7 +56,7 @@ sub show_forgot_password{
             <p>
         };
     }
-    else{
+    else {
         print qq{
             <p>
             Forget your password?
@@ -70,17 +67,17 @@ sub show_forgot_password{
     }
 }
 
-sub send_password_to_user{
+sub send_password_to_user {
     my ($userID) = @_;
-    
+
     my %user;
     &tnmc::user::get_user($userID, \%user);
-    
-    my %headers = 
-        ( 'To' => $user{'email'},
-          'From' => $tnmc::config::tnmc_webserver_email,
-          'Subject' => "[TNMC] Forgot your password?",
-          );
+
+    my %headers = (
+        'To'      => $user{'email'},
+        'From'    => $tnmc::config::tnmc_webserver_email,
+        'Subject' => "[TNMC] Forgot your password?",
+    );
     my $body = sprintf("\nHi %s,\n\nYour password for TNMC is \"%s\".\n\n", $user{'username'}, $user{'password'});
     &tnmc::mail::send::message_send(\%headers, $body);
 }

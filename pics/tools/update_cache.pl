@@ -16,12 +16,13 @@ $sql = "SELECT picID from Pics";
 $sth = $dbh_tnmc->prepare($sql);
 $sth->execute();
 
-while (my @row = $sth->fetchrow_array){
+while (my @row = $sth->fetchrow_array) {
     $picID = $row[0];
-    
+
     print $picID, "\n";
+
     # &tnmc::pics::pic::update_cache($picID);
     &tnmc::pics::pic::update_cache_pub($picID);
-    
+
 }
 

@@ -17,14 +17,14 @@ use tnmc::user;
 
 &tnmc::template::header();
 
-my $group = &tnmc::cgi::param('group');
+my $group  = &tnmc::cgi::param('group');
 my $cutoff = &tnmc::cgi::param('cutoff');
-my $limit = &tnmc::cgi::param('limit');
+my $limit  = &tnmc::cgi::param('limit');
 
 my @users;
 &tnmc::user::list_users(\@users, "WHERE group$group >= '$cutoff'", 'ORDER BY username');
 
-&tnmc::template::show_heading ("$group People (min: $cutoff)");
+&tnmc::template::show_heading("$group People (min: $cutoff)");
 &show_user_listing(@users);
 
 &tnmc::template::footer();
@@ -34,7 +34,7 @@ my @users;
 #
 
 ##########################################################
-sub show_user_listing{
+sub show_user_listing {
     my (@users) = @_;
 
     my ($userID, %user);
@@ -51,11 +51,10 @@ sub show_user_listing{
         <td><b>E-Mail Address</td>
         </tr>
     };
-    
-    foreach $userID (@users)
-    {
-	&tnmc::user::get_user_extended($userID, \%user);
-        
+
+    foreach $userID (@users) {
+        &tnmc::user::get_user_extended($userID, \%user);
+
         print qq
         {    <tr>
             <td nowrap><a href="people/user_view.cgi?userID=$userID" target="viewuser">$user{'username'}</a></td>

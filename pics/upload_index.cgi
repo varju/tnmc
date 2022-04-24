@@ -20,11 +20,10 @@ use tnmc::pics::pic;
 &show_upload_pic_page();
 &show_upload_api_page();
 &tnmc::template::footer();
-        
 
-sub show_upload_api_page{
-    %pic;	
-    
+sub show_upload_api_page {
+    %pic;
+
     my @cols = &tnmc::db::db_get_cols_list("Pics");
     &tnmc::template::show_heading("upload api");
     print qq {
@@ -51,8 +50,8 @@ sub show_upload_api_page{
                 <td></td>
             </tr>
 	};
-        
-        print qq{
+
+    print qq{
             <tr><th colspan="2">override default database fields (optional)</th></tr>
                 <tr><td></td>
                 <td><b><font color="ff0000">Be Careful!</font></b><br>
@@ -60,40 +59,40 @@ sub show_upload_api_page{
                     know what you\'re doing. And be especially<br>
                     carefull of the \'filename\'</td></tr>
         };
-	
-        foreach $key (@cols){
-            
-            # please don't kill existing images
-            next if ($key eq 'picID');
-            # already defined above
-            next if ($key eq 'timestamp');
-            next if ($key eq 'title');
-            # we can figure this out ourselves
-            next if ($key eq 'width');
-            next if ($key eq 'height');
-            
-            print qq{	
+
+    foreach $key (@cols) {
+
+        # please don't kill existing images
+        next if ($key eq 'picID');
+
+        # already defined above
+        next if ($key eq 'timestamp');
+        next if ($key eq 'title');
+
+        # we can figure this out ourselves
+        next if ($key eq 'width');
+        next if ($key eq 'height');
+
+        print qq{	
                 <tr><td><b>$key</td>
                     <td><input type="text" name="$key" value=""></td>
                 </tr>
             };
-       	}
-	
-	print qq{
+    }
+
+    print qq{
             </table>
 	    <input type="submit" value="Submit">
 	    </form>
 	};
-        
+
 }
 
+sub show_upload_pic_page {
+    %pic;
 
-
-sub show_upload_pic_page{
-    %pic;	
-    
     my @cols = &tnmc::db::db_get_cols_list("Pics");
-    
+
     &tnmc::template::show_heading("upload pic");
 
     print qq {
@@ -118,11 +117,11 @@ sub show_upload_pic_page{
             </tr>
 
 	};
-        
-	print qq{
+
+    print qq{
             </table>
 	    <input type="submit" value="Submit">
 	    </form>
 	};
-        
+
 }

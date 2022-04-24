@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#       Scott Thompson - scottt@interchange.ubc.ca         
+#       Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -27,21 +27,19 @@ $tripID = &tnmc::cgi::param(tripID);
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
 
-
 #######################################
-sub show_trip_all{
+sub show_trip_all {
     my ($tripID) = @_;
-    
+
     my (%trip);
     &get_trip($tripID, \%trip);
 
     &tnmc::template::show_heading($trip{title});
-        
+
     print qq{
         <table border="0" cellpadding="1" cellspacing="0">
         <tr><td valign="top">$trip{blurb}</td></tr>
         </table>
     };
-
 
 }

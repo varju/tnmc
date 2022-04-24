@@ -16,15 +16,15 @@ __END__
 # autoloaded module routines
 #
 
-sub show_special_movie_select{
+sub show_special_movie_select {
     my ($effectiveUserID, $vote_type, $nightID) = @_;
-    
+
     use tnmc::db;
     require tnmc::movies::night;
     require tnmc::movies::movie;
-    
+
     my ($sql, $sth);
-    
+
     $sql = "SELECT movieID
              FROM MovieVotes
             WHERE userID = ? AND type = ?";
@@ -33,15 +33,15 @@ sub show_special_movie_select{
     $sth->execute($effectiveUserID, $vote_type);
     my ($current_vote) = $sth->fetchrow_array();
     $sth->finish();
-    
+
     my @movie_list = &tnmc::movies::night::list_cache_movieIDs($nightID);
 
     my %sorted;
-    foreach my $movieID (@movie_list){
+    foreach my $movieID (@movie_list) {
         my %movie;
         &tnmc::movies::movie::get_movie($movieID, \%movie);
-        
-	$sorted{$movieID}->{'title'} = $movie{'title'};
+
+        $sorted{$movieID}->{'title'} = $movie{'title'};
     }
 
     print qq{
@@ -49,55 +49,57 @@ sub show_special_movie_select{
         <option value="0">none
         <option value="0">
     };
-    
-    foreach my $movieID (sort {$sorted{$a}->{'title'} cmp $sorted{$b}->{'title'}} keys %sorted)
-    {
-        my $faveSel = ($current_vote == $movieID)? 'selected' : '';
+
+    foreach my $movieID (sort { $sorted{$a}->{'title'} cmp $sorted{$b}->{'title'} } keys %sorted) {
+        my $faveSel = ($current_vote == $movieID) ? 'selected' : '';
         print qq{               <option value="$movieID" $faveSel>$sorted{$movieID}->{'title'}\n};
     }
-    
+
     print qq{
         </select>
     };
 }
 
-sub show_current_nights{
-    
+sub show_current_nights {
+
     use tnmc::movies::night;
-    
+
     my @nights = &tnmc::movies::night::list_active_nights();
-    foreach my $nightID (@nights){
+    foreach my $nightID (@nights) {
         &show_night($nightID);
     }
-    
-    return scalar (@nights);
+
+    return scalar(@nights);
 }
 
-sub show_night{
+sub show_night {
     my ($nightID) = @_;
-    
+
     use tnmc::db;
     use tnmc::movies::movie;
     use tnmc::movies::night;
-    
+
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
 
-    my ($current_movie, $current_cinema, $current_showtime, $current_meeting_place, $current_meeting_time, $current_winner_blurb);
+    my (
+        $current_movie,         $current_cinema,       $current_showtime,
+        $current_meeting_place, $current_meeting_time, $current_winner_blurb
+    );
     my (%movie);
-    
+
     my $sql = "SELECT DATE_FORMAT('$night{date}', '%W %M %D, %Y')";
     my $dbh = &tnmc::db::db_connect();
     my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($next_tuesday_string) = $sth->fetchrow_array();
     $sth->finish();
-    
+
     $night{'winnerBlurb'} =~ s/\n/<br>/g;
-    
+
     my %movie;
     &tnmc::movies::movie::get_movie($night{'movieID'}, \%movie);
-    
+
     print qq{
         <TABLE CELLSPACING=0 CELLPADDING=0 width="100">
             <TR>
@@ -134,24 +136,24 @@ sub show_night{
     };
 }
 
-sub list_movies{
+sub list_movies {
     my ($movie_list_ref, $where_clause, $by_clause, $junk) = @_;
-    
+
     use tnmc::db;
-    
+
     my (@row, $sql, $sth);
-    
+
     @$movie_list_ref = ();
-    
+
     $sql = "SELECT movieID from Movies $where_clause $by_clause";
     my $dbh = &tnmc::db::db_connect();
     $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute;
-    while (@row = $sth->fetchrow_array()){
-        push (@$movie_list_ref, $row[0]);
+    while (@row = $sth->fetchrow_array()) {
+        push(@$movie_list_ref, $row[0]);
     }
     $sth->finish;
-    
+
     return $#$movie_list_ref;
 }
 

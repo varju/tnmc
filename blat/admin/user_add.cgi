@@ -18,6 +18,7 @@ use task::cgi;
 ### Main logic
 
 print "Content-type: text/html\n\n";
+
 #&header();
 
 &show_heading("add user");
@@ -30,6 +31,6 @@ print qq {
     </table>
     <input type="submit" value="Submit">
     </form>
-}; 
+};
 
 #&footer();

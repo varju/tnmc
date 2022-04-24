@@ -20,7 +20,7 @@ sub message_send {
 
     my %mail;
     foreach my $key (keys %$headers_ref) {
-	$mail{$key} = $$headers_ref{$key};
+        $mail{$key} = $$headers_ref{$key};
     }
     $mail{'Body'} = $body;
 

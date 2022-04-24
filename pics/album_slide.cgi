@@ -14,13 +14,12 @@ use tnmc::pics::new;
 
 use strict;
 
-
 #############
 ### Main logic
 
 &tnmc::security::auth::authenticate();
 
-my $nav = &tnmc::pics::new::get_nav();
+my $nav     = &tnmc::pics::new::get_nav();
 my $piclist = &tnmc::pics::new::album_get_piclist_from_nav($nav);
 
 &tnmc::template::html_black::header();
@@ -29,7 +28,6 @@ my $piclist = &tnmc::pics::new::album_get_piclist_from_nav($nav);
 &tnmc::pics::new::show_slide($nav, $piclist);
 
 &tnmc::template::html_black::footer();
-
 
 #
 # subs

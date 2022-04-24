@@ -10,14 +10,14 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::cgih
 
-use tnnc::pics::pic;
+  use tnnc::pics::pic;
 
 #############
 ### Main logic
 
-$picID = &tnmc::cgi::param('picID');	
+$picID = &tnmc::cgi::param('picID');
 
-if ($picID){
+if ($picID) {
     &tnmc::pics::pic::del_pic($picID);
 }
 

@@ -18,9 +18,9 @@ sub extract {
     while (my $line = <PH>) {
         next if ($line !~ /inflating:\s+$directory(.*[^\s])\s+$/);
 
-        push (@files_list, $1);
+        push(@files_list, $1);
     }
-    close (PH);
+    close(PH);
 
     return \@files_list;
 }
@@ -32,9 +32,9 @@ sub create {
     my ($parent) = &tnmc::util::file::split_filepath($zip_filename);
 
     &tnmc::util::file::make_directory($parent) if (defined $parent);
- 
+
     `cd $directory; zip -r $zip_filename .`;
-    
+
     return 1;
 }
 
@@ -47,9 +47,9 @@ sub tar {
     &tnmc::util::file::make_directory($parent) if (defined $parent);
 
     `cd $directory; tar cvhzf $zip_filename *`;
-    
+
     return 1;
 }
-    
+
 1;
 

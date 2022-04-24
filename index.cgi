@@ -10,7 +10,6 @@ use strict;
 use lib '/tnmc';
 use tnmc;
 
-
 #############
 ### Main logic
 

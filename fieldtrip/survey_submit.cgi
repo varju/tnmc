@@ -15,27 +15,25 @@ use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
-    #############
-    ### Main logic
-    
-    &tnmc::db::db_connect();
-    
-    $tripID = &tnmc::cgi::param('tripID');
-    $userID = &tnmc::cgi::param('userID');
-    
-    my %survey;
-    &get_tripSurvey($tripID, $userID, \%survey);
-    
-    
-    
-    @cols = &tnmc::db::db_get_cols_list('FieldtripSurvey');
-    foreach $key (@cols){
-         $survey{$key} = &tnmc::cgi::param($key) if (defined &tnmc::cgi::param($key));
-    }
+#############
+### Main logic
 
-    &set_tripSurvey(%survey);
+&tnmc::db::db_connect();
 
-    &tnmc::db::db_disconnect();
+$tripID = &tnmc::cgi::param('tripID');
+$userID = &tnmc::cgi::param('userID');
 
-    print "Location: index.cgi\n\n";
+my %survey;
+&get_tripSurvey($tripID, $userID, \%survey);
+
+@cols = &tnmc::db::db_get_cols_list('FieldtripSurvey');
+foreach $key (@cols) {
+    $survey{$key} = &tnmc::cgi::param($key) if (defined &tnmc::cgi::param($key));
+}
+
+&set_tripSurvey(%survey);
+
+&tnmc::db::db_disconnect();
+
+print "Location: index.cgi\n\n";
 

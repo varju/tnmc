@@ -23,24 +23,24 @@ use tnmc::cgi;
 
 &do_broadcast();
 
-&tnmc::template::footer();        
+&tnmc::template::footer();
 &tnmc::db::db_disconnect();
 
-sub do_broadcast{
-    
+sub do_broadcast {
+
     my $message = &tnmc::cgi::param('message');
-    my @params =  &tnmc::cgi::param();
-    
+    my @params  = &tnmc::cgi::param();
+
     my @userList = ();
-    
-    foreach $_ (@params){
-        if ( /^user-(.*)/) {
-            push (@userList, $1);
+
+    foreach $_ (@params) {
+        if (/^user-(.*)/) {
+            push(@userList, $1);
         }
     }
-    
+
     &tnmc::broadcast::smsBroadcast(\@userList, $message);
-    
+
     my $numRec = $#userList + 1;
     print qq{
         <b> $numRec Recipients:</b><br>
@@ -49,11 +49,11 @@ sub do_broadcast{
 
     my %user;
     &tnmc::user::get_user($USERID, \%user);
-    
-    open (LOG, '>>broadcast.log');
+
+    open(LOG, '>>broadcast.log');
     print LOG "$user{username} \"$message\" [";
-    
-    foreach $_ (@userList){
+
+    foreach $_ (@userList) {
         &tnmc::user::get_user($_, \%user);
         print qq{
             $user{username}
@@ -65,7 +65,7 @@ sub do_broadcast{
     print qq{
         <hr noshade size="1">
     };
-    
+
     print qq{ <br><br>
               <b>Message sent:</b><br>
         <hr noshade size="1">

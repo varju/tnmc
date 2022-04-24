@@ -8,19 +8,17 @@ use File::Copy;
 my $base = "/tnmc";
 
 my $tmp = $$;
-while (-d "/tmp/$tmp")
-{
+while (-d "/tmp/$tmp") {
     $tmp++;
 }
 
-mkdir("/tmp/$tmp",504);
+mkdir("/tmp/$tmp", 504);
 chdir("/tmp/$tmp");
 system("svn export svn+ssh://alex/home/svn/repository/trunk/tnmc");
 system("tar cvzf tnmc.tar.gz tnmc");
 
 chdir($base);
-if (-e "source/tnmc.tar.gz")
-{
+if (-e "source/tnmc.tar.gz") {
     unlink("source/tnmc.tar.gz");
 }
 

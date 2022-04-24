@@ -20,10 +20,10 @@ use tnmc::template;
 &tnmc::template::header();
 
 if ($USERID) {
-    &tnmc::template::show_heading ("dev job list");
-    
+    &tnmc::template::show_heading("dev job list");
+
     my $devBlurb = &tnmc::general_config::get_general_config("devBlurb");
-    
+
     print qq 
     {       <form action="fieldtrip/development_set_submit.cgi" method="post">
                         <table>
@@ -38,7 +38,7 @@ if ($USERID) {
                         <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
 
             </form>
-            }; 
+            };
 }
 
 &tnmc::template::footer();

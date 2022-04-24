@@ -21,7 +21,7 @@ use tnmc::config;
 
 my @params = &tnmc::cgi::param();
 my $userID = &tnmc::cgi::param('userID');
-my $user = &tnmc::user::get_user($userID);
+my $user   = &tnmc::user::get_user($userID);
 
 foreach my $key (@params) {
     next if ($key eq "submit");

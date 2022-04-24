@@ -16,7 +16,7 @@ use tnmc::pics::search;
 
 &tnmc::template::header();
 
-my $nav = &tnmc::pics::new::get_nav();
+my $nav     = &tnmc::pics::new::get_nav();
 my $albumID = $nav->{'albumID'};
 my $piclist = &tnmc::pics::search::search_get_piclist_from_nav($nav);
 
@@ -32,17 +32,16 @@ my $piclist = &tnmc::pics::search::search_get_piclist_from_nav($nav);
 # subs
 #
 
-
-sub show_search_thumb_header{
+sub show_search_thumb_header {
     my ($nav, $piclist) = @_;
-    
+
     &tnmc::template::show_heading("search - $nav->{'mode'}");
     my $count = scalar(@$piclist);
-    
+
     print qq{
         <p>
         <b>$count</b> Pictures found<br>
         <p>
     };
-    
+
 }

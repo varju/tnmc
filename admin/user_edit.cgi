@@ -23,13 +23,11 @@ use tnmc::cgi;
 my @cols = &tnmc::db::db_get_cols_list('Personal');
 
 my $userID = &tnmc::cgi::param('userID');
-my %user;    
-if ($userID)
-{ 
+my %user;
+if ($userID) {
     &tnmc::user::get_user($userID, \%user);
 }
-else
-{
+else {
     $user{userID} = 0;
 }
 
@@ -38,8 +36,7 @@ print qq
 	 <table>
      };
 
-foreach my $key (@cols)
-{
+foreach my $key (@cols) {
     print qq 
     {    
 	<tr><td><b>$key</td>
@@ -52,7 +49,7 @@ print qq
 {    </table>
             <input type="submit" value="Submit">
             </form>
-	}; 
+	};
 
 &tnmc::template::footer();
 

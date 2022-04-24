@@ -18,8 +18,7 @@ use tnmc::template::wml;
 &tnmc::template::wml::wml_header();
 
 ## menu
-my $splash_menu =
-    qq{
+my $splash_menu = qq{
         <p>
         <a href="/wap/movies/">Movies</a><br/>
         <a href="#sites">Other Sites</a><br/>
@@ -31,8 +30,7 @@ my $splash_menu =
 &tnmc::template::wml::show_card("menu", "TNMC Splash", $splash_menu);
 
 ## sites
-my $sites_card =
-    qq{
+my $sites_card = qq{
         <p>
         <a href="http://wap.fido.ca/NASApp/wportal/homepage.jsp#fidomenu">fido</a><br/>
         <a href="http://ca.wap.yahoo.com/">yahoo.ca</a><br/>

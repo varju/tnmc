@@ -10,22 +10,22 @@ use CGI;
 
 $cgih = new CGI;
 
-print $cgih -> header();
+print $cgih->header();
 print '<font face="arial, helvetica" size="-1">';
 
 ########################################################
 ### Get all the little variables that we'll want to use.
-    
-$select_database = $cgih -> param('database');
-$database = "tnmc";
-$host = "localhost";
-$user = "tnmc";
-$password = "password";
+
+$select_database = $cgih->param('database');
+$database        = "tnmc";
+$host            = "localhost";
+$user            = "tnmc";
+$password        = "password";
 
 ########################################################
 ### Do the database thing
 
-        print <<_HTML;
+print <<_HTML;
 
         <!----------------------------------- H E A D E R ---------------------------------------->
 
@@ -43,20 +43,16 @@ $password = "password";
 
 _HTML
 
+#############
+### connect to the database
 
-    #############
-    ### connect to the database
+# say hello.
+$dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password);
 
-        
-        # say hello.
-        $dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password);
+#############
+### Print the form
 
-
-
-    #############
-    ### Print the form
-
-        print qq{    
+print qq{    
     <table cellpadding="0" width="100%" cellspacing="0" border="0">
     <tr>
         <td><font face="arial, helvetica" size="-1">
@@ -64,23 +60,23 @@ _HTML
             <select name="database">
         };
 
-
-        $sql="SHOW databases";
-        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-        $sth ->execute;
-        while (@row = $sth->fetchrow_array){
-            foreach $db (@row){
-                if ($db eq $select_database){
-                    $selected = 'selected';
-                }else{
-                    $selected = '';
-                }
-                print qq{<option $selected value="$db">$db};
-            }
+$sql = "SHOW databases";
+$sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+$sth->execute;
+while (@row = $sth->fetchrow_array) {
+    foreach $db (@row) {
+        if ($db eq $select_database) {
+            $selected = 'selected';
         }
-        $sth ->finish;
-        
-    print qq{
+        else {
+            $selected = '';
+        }
+        print qq{<option $selected value="$db">$db};
+    }
+}
+$sth->finish;
+
+print qq{
     
             </select></font></td>
         <td><font face="arial, helvetica" size="-0">
@@ -112,14 +108,12 @@ _HTML
 
 };
 
-
-
 #############
 ### Adios
 
-    $dbh ->disconnect;
+$dbh->disconnect;
 
-        print <<_HTML;
+print <<_HTML;
 
 
 <p>
@@ -130,6 +124,6 @@ _HTML
 <div align="right"><i>- database complete</i></div>
 
 _HTML
-                    
+
 ### keepin' perl happy...
 

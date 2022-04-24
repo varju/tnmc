@@ -11,7 +11,6 @@ use tnmc::security::auth;
 use tnmc::template;
 use tnmc::util::date;
 
-
 #############
 ### Main logic
 
@@ -25,7 +24,7 @@ use tnmc::util::date;
 # subs
 #
 
-sub show_album_add_form{
+sub show_album_add_form {
     &tnmc::template::show_heading("Add a new Album");
     my $now = &tnmc::util::date::now();
     print qq {
@@ -76,6 +75,6 @@ sub show_album_add_form{
         </table>
         <input type="submit" value="Submit">
 	</form>
-    }; 
+    };
 
 }

@@ -23,7 +23,7 @@ use tnmc::pics::show;
 &tnmc::template::header();
 
 $picID = &tnmc::cgi::param('picID');
-%pic;	
+%pic;
 &tnmc::pics::pic::get_pic($picID, \%pic);
 
 print qq {
@@ -31,18 +31,18 @@ print qq {
     <table>
 };
 
-foreach $key (keys %pic){
+foreach $key (keys %pic) {
     print qq{	
         <tr><td><b>$key</td>
         <td><input type="text" name="$key" value="$pic{$key}"></td>
         </tr>
     };
 }
-	
+
 print qq{
     </table>
     <input type="submit" value="Submit">
     </form>
-}; 
+};
 
 &tnmc::template::footer();

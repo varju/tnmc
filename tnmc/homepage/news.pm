@@ -15,9 +15,8 @@ use tnmc;
 # module routines
 #
 
-sub show{
+sub show {
     &tnmc::news::template::news_print_quick();
 }
-
 
 1;

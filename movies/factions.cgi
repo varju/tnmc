@@ -23,28 +23,27 @@ use tnmc::movies::night;
 my @factions = &tnmc::movies::faction::list_factions();
 
 print "<a href='movies/faction_edit_admin.cgi?factionID=0'>New Faction</a><p>" if ($USERID{groupMovies} >= 100);
-foreach my $factionID (@factions){
+foreach my $factionID (@factions) {
     &show_faction($factionID);
 }
 
 &tnmc::template::footer();
 
-
 #
 # subs
 #
 
-sub show_faction{
+sub show_faction {
     my ($factionID) = @_;
-    
+
     my $faction = &tnmc::movies::faction::get_faction($factionID);
     my %god;
-    my @users = &tnmc::movies::faction::list_faction_members($factionID);
-    my $is_faction_admin = ($faction->{godID} == $USERID || $USERID{groupMovies} >= 100)? 1 : 0;
-    
+    my @users            = &tnmc::movies::faction::list_faction_members($factionID);
+    my $is_faction_admin = ($faction->{godID} == $USERID || $USERID{groupMovies} >= 100) ? 1 : 0;
+
     &tnmc::user::get_user($faction->{'godID'}, \%god);
     &tnmc::template::show_heading("$faction->{'name'}");
-    
+
     print qq{
         <table border=0 cellpadding=0 cellspacing=0>
             <tr><td colspan=2>
@@ -55,19 +54,21 @@ sub show_faction{
             <tr valign="top"><td><b>Weekly:</b></td><td> $faction->{'night_creation'}</td></tr>
             <tr valign="top"><td><b>Members:</b></td><td>
                 };
-    
-    my @users = sort {my $aa = tnmc::user::get_user_cache($a);
-                      my $bb = tnmc::user::get_user_cache($b);
-                      $aa->{username} cmp $bb->{username};} @users;
-    
-    foreach my $userID (@users){
-        my $user = &tnmc::user::get_user_cache($userID);
-        my $prefs = &tnmc::movies::faction::load_faction_prefs($factionID, $userID);
-        my $fontdef = ($prefs->{attendance} <= -1)? 'color="cccccc"' : 'color="000000"';
+
+    my @users = sort {
+        my $aa = tnmc::user::get_user_cache($a);
+        my $bb = tnmc::user::get_user_cache($b);
+        $aa->{username} cmp $bb->{username};
+    } @users;
+
+    foreach my $userID (@users) {
+        my $user    = &tnmc::user::get_user_cache($userID);
+        my $prefs   = &tnmc::movies::faction::load_faction_prefs($factionID, $userID);
+        my $fontdef = ($prefs->{attendance} <= -1) ? 'color="cccccc"' : 'color="000000"';
         print "<font $fontdef>$user->{username}</font>";
         print " ";
     }
-    if ($is_faction_admin){
+    if ($is_faction_admin) {
         print qq{
             <br>
             <form action="movies/faction_prefs_edit.cgi" method="get">
@@ -75,7 +76,7 @@ sub show_faction{
             <select name="userID">
         };
         my $newuserlist = &tnmc::user::get_user_list("WHERE groupMovies >= 1");
-        foreach my $username (sort keys %$newuserlist){
+        foreach my $username (sort keys %$newuserlist) {
             print "<option value='$newuserlist->{$username}'>$username\n";
         }
         print qq{
@@ -83,15 +84,16 @@ sub show_faction{
             <input type="submit" value="Add/Edit">
             </form>
         };
-            
+
     }
     print qq{
         </td></tr>
             <tr valign="top"><td><b>Upcoming Nights:</b></td><td> 
     };
     my @nights = &tnmc::movies::night::list_future_nights($factionID);
-    foreach my $nightID (@nights){
-        my %night; &tnmc::movies::night::get_night($nightID, \%night);
+    foreach my $nightID (@nights) {
+        my %night;
+        &tnmc::movies::night::get_night($nightID, \%night);
         print qq{<a href="movies/index.cgi?nightID=$nightID">$night{'date'}</a><br>};
     }
     print qq{
@@ -100,8 +102,8 @@ sub show_faction{
             <td colspan=2><br>
     };
     print qq{<a href="movies/faction_edit_admin.cgi?factionID=$factionID">admin</a> - delete - } if $is_faction_admin;
-    print qq{<a href="movies/night_create.cgi?factionID=$factionID">new night</a> -  } if $is_faction_admin;
-    
+    print qq{<a href="movies/night_create.cgi?factionID=$factionID">new night</a> -  }           if $is_faction_admin;
+
     print qq{
         <a href="movies/faction_prefs_edit.cgi?factionID=$factionID&userID=$USERID">prefs</a>
         <br>

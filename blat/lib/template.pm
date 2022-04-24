@@ -1,56 +1,58 @@
 package lib::template;
 use strict;
 
-BEGIN{
+BEGIN {
     use Exporter ();
     use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $fontsize);
-    
+
     $VERSION = 0.10;
-    
+
     @ISA = qw(Exporter);
-    
+
     @EXPORT = qw(header
-                 show_heading
-                 footer
-                 table_open
-                 table_close
-                 table_title
-                 );
-    
-    %EXPORT_TAGS = ( );
-    
+      show_heading
+      footer
+      table_open
+      table_close
+      table_title
+    );
+
+    %EXPORT_TAGS = ();
+
 }
 
-sub erin_roommate_log{
-    
-    my @bad_ips = ("209.53.250.32", # possible ip from blat logs
-                   "209.148.236.37" # antiflux hit from evan
-                   );
-    
+sub erin_roommate_log {
+
+    my @bad_ips = (
+        "209.53.250.32",    # possible ip from blat logs
+        "209.148.236.37"    # antiflux hit from evan
+    );
+
     my $remote_ip = $ENV{REMOTE_ADDR};
-    
-    foreach my $bad_ip (@bad_ips){
-        if ($remote_ip eq $bad_ip){
-            
+
+    foreach my $bad_ip (@bad_ips) {
+        if ($remote_ip eq $bad_ip) {
+
             my $message = "Hit from: $remote_ip\n\n";
-            $message .= join ("\n", %ENV);
-            
-            my %message = ('To:' => "erin\@antiflux.org",
-                           'Cc:' => "scottt\@webct.com",
-                           'From:' => "scottt\@webct.com",
-                           'Subject:' =>  "Blat site log",
-                           'Body' => $message
-                           );
-            
+            $message .= join("\n", %ENV);
+
+            my %message = (
+                'To:'      => "erin\@antiflux.org",
+                'Cc:'      => "scottt\@webct.com",
+                'From:'    => "scottt\@webct.com",
+                'Subject:' => "Blat site log",
+                'Body'     => $message
+            );
+
             require lib::email;
             &lib::email::send_email(\%message);
         }
     }
 }
 
-sub header{
+sub header {
     my $title = "blatsite!";
-    
+
     print "Content-type: text/html\n\n";
     print qq{
             
@@ -87,12 +89,12 @@ th {
 
                                 
     };
-    &show_heading("<img border=0 height=30 src=\"/blat/pics/misc/blatlogoR_small.jpg\">", "http://jello.webct.com/blat/");
-    
+    &show_heading("<img border=0 height=30 src=\"/blat/pics/misc/blatlogoR_small.jpg\">",
+        "http://jello.webct.com/blat/");
+
 }
 
-
-sub footer{
+sub footer {
 
     &show_heading();
     print qq{
@@ -103,7 +105,7 @@ sub footer{
     &erin_roommate_log();
 }
 
-sub show_heading{
+sub show_heading {
     my ($title, $url) = @_;
     $title ||= '&nbsp;';
     $url = qq{<a href="$url">} if $url;
@@ -120,15 +122,15 @@ sub show_heading{
 
 }
 
-sub table_open{
+sub table_open {
     print "<table width=\"100%\" border=0 cellspacing=0 cellpadding=3>\n";
 }
 
-sub table_close{
+sub table_close {
     print "</table>\n";
 }
 
-sub table_title{
+sub table_title {
     my ($title) = @_;
     print "<tr><td colspan=10 bgcolor='ffeedd'><b><font color='dd6600'>$title</font></b></td></tr>\n";
 }

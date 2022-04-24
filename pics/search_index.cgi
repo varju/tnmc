@@ -24,7 +24,7 @@ use tnmc::pics::search;
 # subs
 #
 
-sub show_search_index{
+sub show_search_index {
     &show_search_form_text();
     &show_search_form_date_span();
     &show_search_form_my_unreleased();
@@ -32,12 +32,12 @@ sub show_search_index{
     &show_search_form_user();
 }
 
-sub show_search_form_text{
-    
+sub show_search_form_text {
+
     my $url = "pics/search_thumb.cgi";
-    
+
     &tnmc::template::show_heading("search by text");
-    
+
     print qq{
         <table>
         <tr><td>
@@ -56,16 +56,15 @@ sub show_search_form_text{
         </table>
         
     };
-    
+
 }
 
+sub show_search_form_date_span {
 
-sub show_search_form_date_span{
-    
     my $url = "pics/search_thumb.cgi";
-    
+
     &tnmc::template::show_heading("search by date");
-    
+
     print qq{
         <table>
         <tr><td>
@@ -86,15 +85,15 @@ sub show_search_form_date_span{
         </table>
         
     };
-    
+
 }
 
-sub show_search_form_my_unreleased{
-    
+sub show_search_form_my_unreleased {
+
     my $url = "pics/search_thumb.cgi";
-    
+
     &tnmc::template::show_heading("search for my unreleased");
-    
+
     print qq{
         <table>
         <tr><td>
@@ -107,17 +106,15 @@ sub show_search_form_my_unreleased{
         </table>
         
     };
-    
+
 }
 
+sub show_search_form_untitled {
 
-
-sub show_search_form_untitled{
-    
     my $url = "pics/search_thumb.cgi";
-    
+
     &tnmc::template::show_heading("search for untitled pics");
-    
+
     print qq{
         <table>
         <tr><td>
@@ -130,14 +127,13 @@ sub show_search_form_untitled{
         </table>
         
     };
-    
+
 }
 
+sub show_search_form_user {
 
-sub show_search_form_user{
-    
     require tnmc::user;
-    
+
     my $url = "pics/search_thumb.cgi";
 
     &tnmc::template::show_heading("search by user");
@@ -149,12 +145,12 @@ sub show_search_form_user{
           <input type="hidden" name="search" value="user">
           <select name="userID">
     };
-    
+
     my $userlist = &tnmc::user::get_user_list("WHERE groupMovies >= '1'");
-    foreach my $username (sort keys %$userlist){
+    foreach my $username (sort keys %$userlist) {
         print "<option value=\"$userlist->{$username}\">$username\n";
     }
-    
+
     print qq{
           </select>
         </td>

@@ -16,22 +16,22 @@ use tnmc::cgi;
 {
     #############
     ### Main logic
-    
+
     &tnmc::template::header();
-    
+
     my $factionID = &tnmc::cgi::param('factionID');
-    my $userID = &tnmc::cgi::param('userID');
-    
+    my $userID    = &tnmc::cgi::param('userID');
+
     my $faction = &tnmc::movies::faction::get_faction($factionID);
-    my $user = &tnmc::user::get_user_cache($userID);
-    my $prefs =  &tnmc::movies::faction::load_faction_prefs($factionID, $userID);
-    
+    my $user    = &tnmc::user::get_user_cache($userID);
+    my $prefs   = &tnmc::movies::faction::load_faction_prefs($factionID, $userID);
+
     &tnmc::template::show_heading("Faction Prefs for $user->{username} in $faction->{name}");
-    
-    my %sel_membership = ($prefs->{membership} => 'checked');
-    my %sel_attendance = ($prefs->{attendance} => 'selected');
+
+    my %sel_membership   = ($prefs->{membership}   => 'checked');
+    my %sel_attendance   = ($prefs->{attendance}   => 'selected');
     my %sel_notify_phone = ($prefs->{notify_phone} => 'checked');
-    
+
     print qq{
             <form action="movies/faction_prefs_edit_admin_submit.cgi" method="post">
             <input type="hidden" name="factionID" value="$prefs->{factionID}">
@@ -66,10 +66,7 @@ use tnmc::cgi;
 	    <input type="submit" value="Submit">
 	    </form>
     };
-    
-    
+
     &tnmc::template::footer();
 }
-
-
 

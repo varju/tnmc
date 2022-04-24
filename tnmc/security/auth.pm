@@ -13,7 +13,7 @@ use tnmc::cgi;
 
 use Exporter;
 use vars qw(@ISA @EXPORT @EXPORT_OK
-            $USERID $LOGGED_IN $USERID_LAST_KNOWN %USERID);
+  $USERID $LOGGED_IN $USERID_LAST_KNOWN %USERID);
 
 @ISA = qw(Exporter);
 
@@ -31,80 +31,81 @@ use vars qw(@ISA @EXPORT @EXPORT_OK
 
 ### HACK: this code is a bit fuzzy. it needs to be cleaned up after the session db is working
 
-sub authenticate{
-    
+sub authenticate {
+
     my $sessionID = &get_my_sessionID();
-    $USERID = &get_my_userID();
+    $USERID            = &get_my_userID();
     $USERID_LAST_KNOWN = &get_my_userID();
-    $LOGGED_IN = &is_open();
-    
-    if ($USERID){
+    $LOGGED_IN         = &is_open();
+
+    if ($USERID) {
         &tnmc::user::get_user($USERID, \%USERID);
     }
     &tnmc::security::session::hit_session($sessionID);
-    
-    if (!&tnmc::security::auth::approve()){
+
+    if (!&tnmc::security::auth::approve()) {
         print "Content-type: text/html\n\n";
         print "<h1>Access Denied</h1>\n";
-        exit ("Access Denied $USERID - $USERID{'username'}")
+        exit("Access Denied $USERID - $USERID{'username'}");
     }
 }
 
-sub approve{
-    
+sub approve {
+
     my $path = $ENV{'SCRIPT_NAME'};
-    
-    if ($path =~ /^\/admin/ && !$USERID{'groupAdmin'}){
+
+    if ($path =~ /^\/admin/ && !$USERID{'groupAdmin'}) {
         return 0;
     }
-    
-    if ($path =~ /^\/development/ && !$USERID{'groupDev'}){
+
+    if ($path =~ /^\/development/ && !$USERID{'groupDev'}) {
         return 0;
     }
-    
-    if ($path =~ /submit/ && !$USERID && $USERID){
+
+    if ($path =~ /submit/ && !$USERID && $USERID) {
         return 0;
     }
     return 1;
 }
 
-sub get_my_sessionID{
+sub get_my_sessionID {
     my $cookie = &tnmc::security::cookie::parse_cookie();
-    if ($cookie && $cookie->{'sessionID'}){
+    if ($cookie && $cookie->{'sessionID'}) {
         return $cookie->{'sessionID'};
     }
-    else{
+    else {
         return &generate_sessionID();
     }
-    
+
 }
 
-sub generate_sessionID{
-    
+sub generate_sessionID {
+
     ## assume web connections
     return 'web_' . $ENV{'UNIQUE_ID'};
 }
 
-sub get_my_userID{
-    
+sub get_my_userID {
+
     my $sessionID = get_my_sessionID();
     my %session;
     &tnmc::security::session::get_session($sessionID, \%session);
-    
-    if ($session{'open'}){
+
+    if ($session{'open'}) {
         return $session{'userID'};
     }
-    else{
+    else {
         return 0;
     }
 }
 
-sub get_last_userID{
+sub get_last_userID {
+
     # stub
-    return 0
+    return 0;
 }
 
-sub is_open{
+sub is_open {
 
     my $sessionID = get_my_sessionID();
     my %session;
@@ -113,50 +114,51 @@ sub is_open{
     return $session{'open'};
 }
 
-sub login{
+sub login {
     my ($userID) = @_;
-    
+
     # get a fresh sessionid
     my $sessionID = &generate_sessionID();
-    
+
     # get the hostname
     my $hostname = &tnmc::util::ip::get_hostname($ENV{'REMOTE_ADDR'});
-    
+
     # save the session to the db
-    my %session = ('sessionID' => $sessionID,
-                   'userID' => $userID,
-                   'firstOnline' => undef(),
-                   'lastOnline' => undef(),
-                   'IP' => $ENV{'REMOTE_ADDR'},
-                   'host' => $hostname,
-                   'hits' => 0,
-                   'open' => 1,
-                   );
+    my %session = (
+        'sessionID'   => $sessionID,
+        'userID'      => $userID,
+        'firstOnline' => undef(),
+        'lastOnline'  => undef(),
+        'IP'          => $ENV{'REMOTE_ADDR'},
+        'host'        => $hostname,
+        'hits'        => 0,
+        'open'        => 1,
+    );
     &tnmc::security::session::set_session(\%session);
-    
+
     # send the cookie
     my $cookie_string = &tnmc::security::cookie::create_cookie($sessionID);
-    
+
     return $cookie_string;
-    
+
 }
 
-sub logout{
-    
+sub logout {
+
     # get the sessionid
     my $sessionID = &get_my_sessionID();
-    my $userID = &get_my_userID();
-    
+    my $userID    = &get_my_userID();
+
     &tnmc::security::session::revoke_session($sessionID);
-    
+
     # send the cookie
     my $cookie_string = &tnmc::security::cookie::create_cookie($sessionID);
     return $cookie_string;
-    
+
 }
 
-BEGIN{
-    $USERID = &get_my_userID();
+BEGIN {
+    $USERID    = &get_my_userID();
     $LOGGED_IN = &is_open();
 }
 

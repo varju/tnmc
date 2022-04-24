@@ -21,15 +21,15 @@ sub get_quick_news {
     my $news_ref = get_todays_news();
 
     my $default_num = 2;
-    my $count = @$news_ref;
-    
+    my $count       = @$news_ref;
+
     if ($count < $default_num) {
         $default_num = $count;
     }
 
     my @items;
-    for (my $i = 0; $i < $default_num; $i++) {
-        push(@items,shift(@$news_ref));
+    for (my $i = 0 ; $i < $default_num ; $i++) {
+        push(@items, shift(@$news_ref));
     }
 
     return \@items;
@@ -51,13 +51,13 @@ sub get_todays_news {
     while (my @row = $sth->fetchrow_array()) {
         my %news_row;
 
-        $news_row{newsId} = shift @row;
-        $news_row{userId} = shift @row;
-        $news_row{value} = shift @row;
-        $news_row{date} = shift @row;
+        $news_row{newsId}  = shift @row;
+        $news_row{userId}  = shift @row;
+        $news_row{value}   = shift @row;
+        $news_row{date}    = shift @row;
         $news_row{expires} = shift @row;
 
-        push(@news,\%news_row);
+        push(@news, \%news_row);
     }
     $sth->finish();
 
@@ -78,13 +78,13 @@ sub get_news {
     while (my @row = $sth->fetchrow_array()) {
         my %news_row;
 
-        $news_row{newsId} = shift @row;
-        $news_row{userId} = shift @row;
-        $news_row{value} = shift @row;
-        $news_row{date} = shift @row;
+        $news_row{newsId}  = shift @row;
+        $news_row{userId}  = shift @row;
+        $news_row{value}   = shift @row;
+        $news_row{date}    = shift @row;
         $news_row{expires} = shift @row;
 
-        push(@news,\%news_row);
+        push(@news, \%news_row);
     }
     $sth->finish();
 
@@ -95,10 +95,10 @@ sub set_news_item {
     my ($news_ref) = @_;
     my ($sql, $sth);
 
-    my $newsId = $$news_ref{newsId};
-    my $userId = $$news_ref{userId};
-    my $value = $$news_ref{value};
-    my $date = $$news_ref{date};
+    my $newsId  = $$news_ref{newsId};
+    my $userId  = $$news_ref{userId};
+    my $value   = $$news_ref{value};
+    my $date    = $$news_ref{date};
     my $expires = $$news_ref{expires};
 
     my $dbh = &tnmc::db::db_connect();
@@ -111,6 +111,7 @@ sub set_news_item {
     }
 
     if (!$date) {
+
         # this ensures that mysql gets null for the timestamp
         # and turns it into the current date
         undef $date;
@@ -141,10 +142,10 @@ sub get_news_item {
     $sth->finish();
 
     my %news_row;
-    $news_row{newsId} = shift @row;
-    $news_row{userId} = shift @row;
-    $news_row{value} = shift @row;
-    $news_row{date} = shift @row;
+    $news_row{newsId}  = shift @row;
+    $news_row{userId}  = shift @row;
+    $news_row{value}   = shift @row;
+    $news_row{date}    = shift @row;
     $news_row{expires} = shift @row;
 
     return \%news_row;
@@ -161,16 +162,16 @@ sub del_news_item {
 }
 
 sub news_default_expiry {
+
     # figure out today's date
-    my ($sec,$min,$hour,$day,$mon,$yr) = localtime();
+    my ($sec, $min, $hour, $day, $mon, $yr) = localtime();
     $mon++;
     $yr += 1900;
 
     # now figure out the expiry
     $day += 7;
 
-    my $timestamp = sprintf("%04d%02d%02d%02d%02d%02d",
-                            $yr,$mon,$day,$hour,$min,$sec);
+    my $timestamp = sprintf("%04d%02d%02d%02d%02d%02d", $yr, $mon, $day, $hour, $min, $sec);
 
     return $timestamp;
 }

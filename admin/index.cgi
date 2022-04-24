@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson - scottt@css.sfu.ca 
+#    Scott Thompson - scottt@css.sfu.ca
 #    Jeff Steinbok  - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
@@ -23,7 +23,6 @@ use tnmc::cgi;
 &tnmc::template::show_heading('<a id="personal">Personal</a>');
 &show_basic_users_list();
 
-
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
 
@@ -32,7 +31,7 @@ use tnmc::cgi;
 ##########################################################
 
 #########################################
-sub show_basic_users_list{
+sub show_basic_users_list {
     my (@users, %user, $userID, $key);
 
     my $order = &tnmc::cgi::param('order') || 'username';
@@ -52,7 +51,7 @@ sub show_basic_users_list{
         </tr>
     };
 
-    foreach $userID (@users){
+    foreach $userID (@users) {
         &tnmc::user::get_user($userID, \%user);
         print qq{
             <tr>

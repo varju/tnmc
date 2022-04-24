@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson - scottt@interchange.ubc.ca 
+#    Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -11,7 +11,6 @@ use lib '/tnmc';
 use tnmc::template;
 use tnmc::movies::movie;
 use tnmc::movies::show;
-
 
 #############
 ### Main logic
@@ -27,9 +26,8 @@ use tnmc::movies::show;
 # subs
 #
 
-
 #########################################
-sub show_admin_movie_list{
+sub show_admin_movie_list {
     my (@movies, %movie, $movieID, $key);
 
     &tnmc::movies::show::list_movies(\@movies, '', 'ORDER BY title');
@@ -44,15 +42,14 @@ sub show_admin_movie_list{
         </td>
     };
 
-    foreach $key (keys %movie){
-        if ($key eq 'description') {next;}
+    foreach $key (keys %movie) {
+        if ($key eq 'description') { next; }
         print "<td><b>$key</b></td>";
     }
     print qq{</tr>\n};
 
-
-        foreach $movieID (@movies){
-                &tnmc::movies::movie::get_movie($movieID, \%movie);
+    foreach $movieID (@movies) {
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{
             <tr>
                 <td nowrap>
@@ -60,12 +57,12 @@ sub show_admin_movie_list{
                 <a href="movies/movie_delete_submit.cgi?movieID=$movieID">[Del]</a>
                 </td>
         };
-        foreach $key (keys %movie){
-            if ($key eq 'description') {next;}
+        foreach $key (keys %movie) {
+            if ($key eq 'description') { next; }
             print "<td nowrap>$movie{$key}</td>";
         }
         print qq{</tr>\n};
-        }
+    }
 
     print qq{
         <tr>

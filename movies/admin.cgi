@@ -29,14 +29,14 @@ use tnmc::movies::show;
 # subs
 #
 
-sub show_admin_page{
+sub show_admin_page {
 
-    if ($USERID){
-        
+    if ($USERID) {
+
         ## List of Future Nights
-        &tnmc::template::show_heading ("upcoming movie nights");
+        &tnmc::template::show_heading("upcoming movie nights");
         my @NIGHTS = &tnmc::movies::night::list_future_nights();
-        foreach my $nightID (@NIGHTS){
+        foreach my $nightID (@NIGHTS) {
             my %night;
             &tnmc::movies::night::get_night($nightID, \%night);
             print qq{
@@ -45,8 +45,8 @@ sub show_admin_page{
             };
         }
         print qq{<br><p>};
-        &tnmc::template::show_heading ("administration");
-        
+        &tnmc::template::show_heading("administration");
+
         my $valid_theatres = &tnmc::general_config::get_general_config("movie_valid_theatres");
         my $other_theatres = &tnmc::general_config::get_general_config("movie_other_theatres");
 
@@ -69,7 +69,7 @@ sub show_admin_page{
             <p>    
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
-        }; 
+        };
 
     }
 }

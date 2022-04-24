@@ -31,34 +31,34 @@ my $sessionID = &tnmc::cgi::param('sessionID');
 #############
 ### Subs
 
-sub show_session_admin_edit_form{
+sub show_session_admin_edit_form {
     my ($sessionID) = (@_);
-    
-    return if ! $sessionID;
-    
+
+    return if !$sessionID;
+
     my %session;
     my @cols = &tnmc::db::db_get_cols_list('SessionInfo');
     &tnmc::security::session::get_session($sessionID, \%session);
-    
+
     &tnmc::template::show_heading("Edit Session: $sessionID");
-    
+
     print qq 
     {    <form action="admin/security/session_edit_submit.cgi" method="post">
             <table>
             };
-    
-    foreach my $key (@cols)
-    {       print qq 
+
+    foreach my $key (@cols) {
+        print qq 
             {    
                 <tr><td><b>$key</td>
                     <td><input type="text" name="$key" value="$session{$key}"></td>
                 </tr>
                 };
-        }
-    
+    }
+
     print qq
     {    </table>
             <input type="submit" value="Submit">
             </form>
-            }; 
+            };
 }

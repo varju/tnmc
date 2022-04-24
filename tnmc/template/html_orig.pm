@@ -6,11 +6,11 @@ use strict;
 # module configuration
 #
 
-BEGIN{
+BEGIN {
     use tnmc::config;
     require tnmc::menu;
     use tnmc::security::auth;
-    
+
     use vars qw();
 }
 
@@ -18,24 +18,24 @@ BEGIN{
 # module routines
 #
 
-sub header{
-    
+sub header {
+
     # header and title
     print "Pragma: no-cache\n";
     print "Expires:Thu Jan  1 00:00:00 1970\n";
     print "Content-type: text/html\n\n";
-    
+
     &tnmc::security::auth::authenticate();
-    
-    my $username = $USERID{'username'} || '';
-    my $logo = 'basic.gif';
+
+    my $username  = $USERID{'username'} || '';
+    my $logo      = 'basic.gif';
     my $colour_bg = $USERID{'colour_bg'} || '#99ff00';
     if ($colour_bg eq 'random') {
-        $colour_bg = rand (999999); # get a random colour
-        $colour_bg =~ tr/0123456789/0014589adef/; # make the colour glow
+        $colour_bg = rand(999999);                   # get a random colour
+        $colour_bg =~ tr/0123456789/0014589adef/;    # make the colour glow
     }
     my $font_size = get_font_size();
-    
+
     print qq{
 <HTML>
 <HEAD>
@@ -92,10 +92,9 @@ th {
 }
 
 ###################################################################
-sub footer{
+sub footer {
     my ($pageID) = @_;
-    
-    
+
     print q{
   <br></TD>
 
@@ -107,15 +106,14 @@ sub footer{
     <FONT style="text-decoration:none;" COLOR="#00067F" FACE="verdana" SIZE="-2">
 	<br>
     };
-    
-    if (!$pageID)
-    {
-	&show_menu();
+
+    if (!$pageID) {
+        &show_menu();
     }
     else {
         print "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<br>";
     }
-    
+
     print qq{
     </font>
   </TD>
@@ -139,8 +137,8 @@ sub footer{
     <a href="site_info.cgi" style="text-decoration:none"><font color="#000000">site info</font></a>
     };
     }
-    else { 
-        print "<BR>\n"; 
+    else {
+        print "<BR>\n";
     }
 
     print q{
@@ -155,41 +153,40 @@ sub footer{
 </BODY>
 </HTML>
     };
-    
+
 }
 
 ###################################################################
-sub show_menu{
-    
+sub show_menu {
+
     if ($LOGGED_IN) {
-	my $menu = &tnmc::menu::get_menu();
-	&tnmc::menu::print_menu($menu);
+        my $menu = &tnmc::menu::get_menu();
+        &tnmc::menu::print_menu($menu);
     }
     else {
-	&tnmc::menu::new_nav_login();
+        &tnmc::menu::new_nav_login();
     }
 }
 
-sub show_menu_item{
+sub show_menu_item {
     my ($indent, $url, $name, $text) = @_;
-    
+
     my $indent_text = '';
-    while($indent--){
+    while ($indent--) {
         $indent_text .= '&nbsp;&nbsp;&nbsp;';
     }
-    if ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/){
+    if ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/) {
         print qq{\t\t$indent_text<b><a href="$url" class="menulink">$name</a>$text</b><br>\n};
         return 1;
     }
-    else{
+    else {
         print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
         return 0;
     }
 }
 
-
 ###################################################################
-sub show_heading{
+sub show_heading {
     my ($heading_text) = @_;
     print qq{
     <table border="0" cellpadding="1" cellspacing="0" bgcolor="448800" width="100%">

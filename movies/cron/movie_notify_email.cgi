@@ -19,44 +19,47 @@ use tnmc::movies::faction;
 {
     #############
     ### Main logic
-    
+
     my $dbh = &tnmc::db::db_connect();
 
     my @nights = &tnmc::movies::night::list_active_nights();
 
     # If there is no current movie, don't do anything.
-    exit if (! scalar(@nights));
-    
+    exit if (!scalar(@nights));
+
     # send the mail
-    
+
     my $to_email = $tnmc_email;
-    
+
     my $sql = "SELECT DATE_FORMAT(NOW(), '%W %M %D, %Y')";
     my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($today_string) = $sth->fetchrow_array();
     my $today_string = &tnmc::util::date::format_date('full_date', &tnmc::util::date::now());
     $sth->finish();
-    
-    my %headers =
-	( 'To' => $to_email,
-	  'From' => "TNMC Website <$to_email>",
-	  'Subject' => $today_string,
-	  );
+
+    my %headers = (
+        'To'      => $to_email,
+        'From'    => "TNMC Website <$to_email>",
+        'Subject' => $today_string,
+    );
 
     my $body = '';
     foreach my $nightID (@nights) {
-        my %night; &tnmc::movies::night::get_night($nightID, \%night);
+        my %night;
+        &tnmc::movies::night::get_night($nightID, \%night);
         my $faction = &tnmc::movies::faction::get_faction($night{'factionID'});
-        my %god; &tnmc::user::get_user($night{'godID'}, \%god) ;
-        my %movie; &tnmc::movies::movie::get_movie($night{'movieID'}, \%movie);
-        
+        my %god;
+        &tnmc::user::get_user($night{'godID'}, \%god);
+        my %movie;
+        &tnmc::movies::movie::get_movie($night{'movieID'}, \%movie);
+
         $sql = "SELECT DATE_FORMAT('$night{'date'}', '%W %M %D, %Y')";
         $sth = $dbh->prepare($sql);
         $sth->execute();
         my $date_string = &tnmc::util::date::format_date('full_date', $night{'date'});
         $sth->finish();
-        
+
         $body .= "\n";
         $body .= "Faction $faction->{'name'} (picked by $god{'username'})\n";
         $body .= "------------------------------------------------------------\n";
@@ -70,9 +73,9 @@ use tnmc::movies::faction;
         $body .= "Meeting Place:   $night{'meetingPlace'}\n";
         $body .= "\n";
     }
-    
+
     &tnmc::mail::send::message_send(\%headers, $body);
-    
+
     &tnmc::db::db_disconnect();
 }
 

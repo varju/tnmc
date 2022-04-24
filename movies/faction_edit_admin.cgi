@@ -17,20 +17,20 @@ use tnmc::db;
 {
     #############
     ### Main logic
-    
+
     &tnmc::template::header();
-    
+
     my $factionID = &tnmc::cgi::param('factionID');
-    
+
     my $faction = &tnmc::movies::faction::get_faction($factionID);
-    my @cols = &tnmc::db::db_get_cols_list("MovieFactions");
-    
+    my @cols    = &tnmc::db::db_get_cols_list("MovieFactions");
+
     print qq{
 		<form action="movies/faction_edit_admin_submit.cgi" method="post">
 		<table>
                 };
-    
-    foreach my $key (@cols){
+
+    foreach my $key (@cols) {
         print qq {
             <tr valign=top><td>$key</td>
         };
@@ -39,16 +39,13 @@ use tnmc::db;
 
         print "</tr>";
     }
-    
+
     print qq{
 		</table>
 		<input type="submit" value="Submit">
 		</form>
-                }; 
-    
-    
+                };
+
     &tnmc::template::footer();
 }
-
-
 

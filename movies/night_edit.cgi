@@ -34,27 +34,27 @@ my $nightID = &tnmc::cgi::param('nightID');
 # subs
 #
 
-sub show_night_edit_form{
+sub show_night_edit_form {
     my ($nightID) = @_;
-    
+
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
-    
+
     # movieID select list
-    my @movies = &tnmc::movies::night::list_cache_movieIDs($nightID);
+    my @movies      = &tnmc::movies::night::list_cache_movieIDs($nightID);
     my %movieID_sel = ($night{'movieID'}, 'SELECTED');
-    
+
     # factionID select list
-    my @factions = &tnmc::movies::faction::list_factions();
+    my @factions      = &tnmc::movies::faction::list_factions();
     my %factionID_sel = ($night{'factionID'}, 'SELECTED');
-    
+
     # godID select list
-    my $users = &tnmc::user::get_user_list();
+    my $users     = &tnmc::user::get_user_list();
     my %godID_sel = ($night{'godID'}, 'SELECTED');
-    
+
     # show the form to the user...
     &tnmc::template::show_heading("Edit/Set Movie Night");
-    
+
     print qq{
         <form action="movies/night_edit_submit.cgi" method="post">
         <input type="hidden" name="nightID" value="$nightID">
@@ -66,16 +66,15 @@ sub show_night_edit_form{
             <td><select name="movieID">
                 <option value="0">NO CURRENT MOVIE
     };
-    
-    foreach my $movieID (@movies){
+
+    foreach my $movieID (@movies) {
         my %movie;
         &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{
                 <option value="$movie{'movieID'}" $movieID_sel{$movieID} >$movie{'title'}
         };
     }
-    
-    
+
     print qq{
                 </select>
             </tr>
@@ -84,13 +83,13 @@ sub show_night_edit_form{
             <td><b>Faction</td>
             <td><select name="factionID">
     };
-    foreach my $factionID (@factions){
+    foreach my $factionID (@factions) {
         my $faction = &tnmc::movies::faction::get_faction($factionID);
         print qq{
             <option value="$factionID" $factionID_sel{$factionID} >$faction->{name}
         };
     }
-    
+
     print qq{
                 </select>
             </tr>
@@ -135,14 +134,14 @@ sub show_night_edit_form{
                 <option value="0">NO CURRENT MOVIE
             
     };
-    
-    foreach my $username (sort keys %$users){
+
+    foreach my $username (sort keys %$users) {
         my $userID = $users->{$username};
         print qq{
                 <option value="$userID" $godID_sel{$userID} >$username
         };
     }
-    
+
     print qq{
                 </select>
             </td>
@@ -152,9 +151,7 @@ sub show_night_edit_form{
             <p>    
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
-    }; 
+    };
 
 }
-
-
 

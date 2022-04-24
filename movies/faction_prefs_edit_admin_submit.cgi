@@ -21,7 +21,7 @@ use tnmc::cgi;
 my @cols = &tnmc::db::db_get_cols_list('MovieFactionPrefs');
 
 my %prefs;
-foreach my $key (@cols){
+foreach my $key (@cols) {
     $prefs{$key} = &tnmc::cgi::param($key);
 }
 

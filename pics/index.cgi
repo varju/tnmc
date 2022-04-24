@@ -24,11 +24,9 @@ use tnmc::pics::show;
 
 &tnmc::template::footer();
 
-
-
 ###################################################################
-sub show_page{
-    
+sub show_page {
+
     &tnmc::template::show_heading("Pics");
     ## search
     my $url = "pics/search_thumb.cgi";
@@ -45,7 +43,7 @@ sub show_page{
         </td></tr></table>
         <p>
     };
-    
+
     ## quick links
     print qq{
         <a href="/pics/search_thumb.cgi?search=my_unreleased">my hidden pics</a> - 
@@ -54,7 +52,7 @@ sub show_page{
         <a href="/pics/upload_index.cgi">upload pics</a>
         <br>
     };
-    
+
     ## recent albums
     &tnmc::template::show_heading("Recent Albums");
     my @albums = &list_recent_albums();
@@ -63,35 +61,34 @@ sub show_page{
         <a href="pics/album_index.cgi">More albums...</a>
         <p>
     };
-    
+
 }
 
-sub list_recent_albums{
+sub list_recent_albums {
     ## note: the logic here is pretty lame. it grabs the 7
     ## most recent albums by EndDate, and the 7 most recent by albumID,
     ## then it lazilly combines them.
-    
+
     my (@albums1, @albums2);
-    
-    &tnmc::pics::album::list_albums
-        ( \@albums1, 
-          "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
-          "ORDER BY albumDateStart DESC, albumTitle LIMIT 7"
-          );
-    
-    &tnmc::pics::album::list_albums
-        ( \@albums2, 
-          "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
-          "ORDER BY albumID DESC LIMIT 7"
-          );
-    
-    foreach my $albumID (@albums2){
-        if (! grep {($_ eq $albumID)} @albums1){
+
+    &tnmc::pics::album::list_albums(
+        \@albums1,
+        "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
+        "ORDER BY albumDateStart DESC, albumTitle LIMIT 7"
+    );
+
+    &tnmc::pics::album::list_albums(
+        \@albums2,
+        "WHERE (( albumOwnerID = '$USERID') OR albumTypePublic >= 1)",
+        "ORDER BY albumID DESC LIMIT 7"
+    );
+
+    foreach my $albumID (@albums2) {
+        if (!grep { ($_ eq $albumID) } @albums1) {
             push @albums1, $albumID;
         }
     }
     return @albums1;
-    
-}
 
+}
 

@@ -13,18 +13,17 @@ use strict;
 sub log_login {
     my ($success, $oldid, $oldname, $newid, $newname, $pass) = @_;
 
-    open (DATE, "/bin/date |");
+    open(DATE, "/bin/date |");
     my $today = <DATE>;
     chomp $today;
-    close (DATE);
+    close(DATE);
 
-    my (@elements) = ($today, $ENV{REMOTE_ADDR}, $oldid, $oldname, 
-                      $newid, $newname, $pass);
-    push(@elements,'FAILED') unless $success;
+    my (@elements) = ($today, $ENV{REMOTE_ADDR}, $oldid, $oldname, $newid, $newname, $pass);
+    push(@elements, 'FAILED') unless $success;
 
     my $entry = join("\t", @elements);
 
-    open (LOG, '>>log/login.log');
+    open(LOG, '>>log/login.log');
     print LOG $entry, "\n";
     close LOG;
 }

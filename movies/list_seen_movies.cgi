@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson - scottt@interchange.ubc.ca 
+#    Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -25,47 +25,46 @@ use tnmc::movies::show;
 &tnmc::template::footer();
 
 #
-# subs 
+# subs
 #
 
-
 #########################################
-sub show_seen_movie_list{
+sub show_seen_movie_list {
     my (@movies, %movie, $movieID, $key, %USER, $isAdmin);
 
     &tnmc::movies::show::list_movies(\@movies, "WHERE statusSeen = '1'", 'ORDER BY date DESC, title');
 
     # it occurs to me that there's a proper way to do this... oh well, too late now.
     my $i = 0;
-    foreach (@movies){
+    foreach (@movies) {
         $i++;
     }
 
     &tnmc::template::show_heading("Movies that we've been to (well, at least $i of them)");
-    
+
     &tnmc::user::get_user($USERID, \%USER);
-    if ($USER{groupAdmin}){
+    if ($USER{groupAdmin}) {
         $isAdmin = 'e';
     }
-    
+
     print qq{
                 <table cellspacing="0" cellpadding="1" border="0" width="100%">
     };
 
     my $year = '';
-    foreach $movieID (@movies){
+    foreach $movieID (@movies) {
         &tnmc::movies::movie::get_movie($movieID, \%movie);
-        
-        $movie{date} =~ /^(....)/; # grab the year
-        if ($year ne $1){
+
+        $movie{date} =~ /^(....)/;    # grab the year
+        if ($year ne $1) {
             $year = $1;
             print qq{
                 <tr><th colspan="5">$year</th></tr>
                 };
         }
         my $sql = "SELECT DATE_FORMAT('$movie{date}', '%b %d')";
-	my $dbh = &tnmc::db::db_connect();
-        my $sth = $dbh->prepare($sql); 
+        my $dbh = &tnmc::db::db_connect();
+        my $sth = $dbh->prepare($sql);
         $sth->execute();
         my ($dateString) = $sth->fetchrow_array();
         $sth->finish();
@@ -78,7 +77,7 @@ sub show_seen_movie_list{
                     <a href="movies/movie_edit_admin.cgi?movieID=$movieID">$isAdmin</a></td>
             </tr>
         };
-        }
+    }
 
     print qq{
                 </table>

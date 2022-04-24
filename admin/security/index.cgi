@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson 
+#    Scott Thompson
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -22,7 +22,6 @@ use tnmc::util::date;
 &tnmc::template::show_heading('Security');
 &show_security_users_list();
 
-
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
 
@@ -31,7 +30,7 @@ use tnmc::util::date;
 ##########################################################
 
 #########################################
-sub show_security_users_list{
+sub show_security_users_list {
     my (@users, %user, $userID, $key);
 
     &tnmc::user::list_users(\@users, '', "ORDER BY username");
@@ -53,25 +52,25 @@ sub show_security_users_list{
         </tr>
     };
 
-    foreach $userID (@users){
+    foreach $userID (@users) {
         my (@sessions, %user);
         &tnmc::user::get_user($userID, \%user);
         &tnmc::security::session::list_sessions_for_user($userID, \@sessions);
 
         my $num_sessions = scalar @sessions;
-        my ($num_open_sessions, $last_online, $num_hits, $host) = (0,'', 0, '');
-        foreach my $sessionID (@sessions){
+        my ($num_open_sessions, $last_online, $num_hits, $host) = (0, '', 0, '');
+        foreach my $sessionID (@sessions) {
             my %session;
             &tnmc::security::session::get_session($sessionID, \%session);
-            $num_open_sessions ++ if $session{'open'};
+            $num_open_sessions++ if $session{'open'};
             $num_hits += $session{'hits'};
-            if ($last_online < $session{'lastOnline'}){
+            if ($last_online < $session{'lastOnline'}) {
                 $last_online = $session{'lastOnline'};
-                $host = ($session{'host'}) ? $session{'host'} : $session{'ip'};
+                $host        = ($session{'host'}) ? $session{'host'} : $session{'ip'};
             }
         }
         $last_online = &tnmc::util::date::format_date('numeric', $last_online);
-        
+
         print qq{
             <tr>
                 <td nowrap>$user{userID}</td>

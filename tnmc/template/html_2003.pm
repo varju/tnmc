@@ -9,7 +9,7 @@ use strict;
 BEGIN {
     use tnmc::config;
     use tnmc::security::auth;
-    
+
     use vars qw();
 }
 
@@ -17,25 +17,21 @@ BEGIN {
 # module routines
 #
 
+sub header {
 
-sub header{
-    
     # header and title
     print "Content-type: text/html\n\n";
-    
+
     &tnmc::security::auth::authenticate();
-    
-    my $browser = ($ENV{HTTP_USER_AGENT} =~ /MSIE/)?
-	'IE' : 'NS';
-    
-    my $font_size = ($ENV{HTTP_USER_AGENT} =~ /Mozilla.*Gecko/)?
-        '10pt' : '8pt';
-    
-    my $menu_width = ($browser eq 'IE')?
-	'120px' : '100px';
-    
+
+    my $browser = ($ENV{HTTP_USER_AGENT} =~ /MSIE/) ? 'IE' : 'NS';
+
+    my $font_size = ($ENV{HTTP_USER_AGENT} =~ /Mozilla.*Gecko/) ? '10pt' : '8pt';
+
+    my $menu_width = ($browser eq 'IE') ? '120px' : '100px';
+
     my $username = $USERID{'username'} || '';
-    
+
     print <<__HTML;
 <HTML>
 <HEAD>
@@ -209,64 +205,64 @@ __HTML
     <div id="mainDiv" class="tnmcMain">
 	<div>
     };
-    
+
 }
 
-sub show_menu{
+sub show_menu {
     require tnmc::menu;
     my $menu = &tnmc::menu::get_menu();
     &tnmc::menu::print_menu($menu);
 }
 
 my @show_menu_item_indent;
-sub show_menu_item{
+
+sub show_menu_item {
     my ($indent, $url, $name, $text, $submenu) = @_;
-    
+
     my $div;
     my $curr_indent = $#show_menu_item_indent + 1;
-    my $is_active = ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/);
+    my $is_active   = ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/);
     my $line;
-    
+
     ## close submenu
-    if ($indent < $curr_indent){
-	my $div = pop @show_menu_item_indent;
-	print qq{</div>};
+    if ($indent < $curr_indent) {
+        my $div = pop @show_menu_item_indent;
+        print qq{</div>};
     }
-    if ($indent > $curr_indent){
-	$div = "menu" . rand();
-	push @show_menu_item_indent, $div;
-	$line .= qq{<div class="tnmcMenuIndent" style="display:none;" id="$div">};
+    if ($indent > $curr_indent) {
+        $div = "menu" . rand();
+        push @show_menu_item_indent, $div;
+        $line .= qq{<div class="tnmcMenuIndent" style="display:none;" id="$div">};
     }
-    
+
     $line .= "\t\t";
-    if ($is_active){
-	$line .= "<b>";
+    if ($is_active) {
+        $line .= "<b>";
     }
     $line .= qq{<a href="$url" class="menulink">$name</a>$text};
-    if ($is_active){
-	$line .= "</b>";
+    if ($is_active) {
+        $line .= "</b>";
     }
-    if ($submenu){
-	$div = "menu" . rand();
-	push @show_menu_item_indent, $div;
-	$line .= qq{<a href='javascript:toggle_div("$div")' class="menulink">&nbsp;&#149;&nbsp;</a>};
+    if ($submenu) {
+        $div = "menu" . rand();
+        push @show_menu_item_indent, $div;
+        $line .= qq{<a href='javascript:toggle_div("$div")' class="menulink">&nbsp;&#149;&nbsp;</a>};
     }
     $line .= "<br>";
-    if ($submenu){
-	if ($is_active){
-	    $line .= qq{<div class="tnmcMenuIndent" id="$div">};
-	}
-	else{
-	    $line .= qq{<div class="tnmcMenuIndent" style="display:none;" id="$div">};
-	}
+    if ($submenu) {
+        if ($is_active) {
+            $line .= qq{<div class="tnmcMenuIndent" id="$div">};
+        }
+        else {
+            $line .= qq{<div class="tnmcMenuIndent" style="display:none;" id="$div">};
+        }
     }
     print $line;
-    
+
     # open submenu
 }
 
-
-sub footer{
+sub footer {
 
     print qq{
 </div>
@@ -275,9 +271,8 @@ sub footer{
 	    };
 }
 
-
 ###################################################################
-sub show_heading{
+sub show_heading {
     my ($heading_text) = @_;
     my $i = rand();
     print qq{
@@ -294,6 +289,5 @@ sub show_heading{
     <div id="header$i" class="tnmcContent">
     };
 }
-
 
 1;

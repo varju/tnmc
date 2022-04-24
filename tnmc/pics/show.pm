@@ -19,7 +19,7 @@ use tnmc::pics::pic;
 # autoloaded module routines
 #
 
-sub show_pic_listing{
+sub show_pic_listing {
     my ($pics_ref, $albumID, $dateID) = @_;
 
     my @pics = @$pics_ref;
@@ -35,15 +35,14 @@ sub show_pic_listing{
             </tr>
     };
 
-
     my %pic;
     my $i = 0;
-    foreach my $picID (@pics){
+    foreach my $picID (@pics) {
         $i++;
         &tnmc::pics::pic::get_pic($picID, \%pic);
-        
+
         $pic{title} = '(untitled)' if (!$pic{title});
-        if (!$pic{typePublic}){
+        if (!$pic{typePublic}) {
             $pic{flags} .= '*';
         }
         print qq{
@@ -56,31 +55,31 @@ sub show_pic_listing{
             </tr>
         };
     }
-    
+
     print qq{
         </table>
     };
-    
+
 }
 
-sub show_album_listing_info{
+sub show_album_listing_info {
     my ($albums_ref, $params_ref) = @_;
     my @albums = (@$albums_ref);
 
-    foreach my $albumID(@albums){
+    foreach my $albumID (@albums) {
         &show_album_info($albumID);
     }
 }
 
 ########################################
-sub show_album_listing{
+sub show_album_listing {
     my ($albums_ref, $params_ref) = @_;
-    
+
     use tnmc::pics::album;
     use tnmc::pics::link;
     use tnmc::util::date;
     use tnmc::user;
-    
+
     my @albums = (@$albums_ref);
 
     my %album;
@@ -99,18 +98,17 @@ sub show_album_listing{
                 <td><b>Size</td>
             </tr>
     };
-    
-    
+
     my $curr_date = '0';
-    foreach my $albumID (@albums){
+    foreach my $albumID (@albums) {
 
         &tnmc::pics::album::get_album($albumID, \%album);
 
-        if (! $album{albumTitle}){
+        if (!$album{albumTitle}) {
             $album{albumTitle} = '(Untitled)';
         }
 
-        if( $curr_date ne substr($album{albumDateStart}, 0, 4)){
+        if ($curr_date ne substr($album{albumDateStart}, 0, 4)) {
             $curr_date = substr($album{albumDateStart}, 0, 4);
             print qq{
                 <tr>
@@ -118,17 +116,18 @@ sub show_album_listing{
                 </tr>
             };
         }
-        my $date_string =  &tnmc::util::date::format_date('short_month_day', $album{albumDateStart}) . ' - ' . &tnmc::util::date::format_date('short_month_day', $album{albumDateEnd});
-        
+        my $date_string = &tnmc::util::date::format_date('short_month_day', $album{albumDateStart}) . ' - '
+          . &tnmc::util::date::format_date('short_month_day', $album{albumDateEnd});
+
         my $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
-	my $dbh = &tnmc::db::db_connect();
-        my $sth = $dbh->prepare($sql); 
+        my $dbh = &tnmc::db::db_connect();
+        my $sth = $dbh->prepare($sql);
         $sth->execute();
         my ($num_pics) = $sth->fetchrow_array();
-        
+
         my %owner;
         &tnmc::user::get_user($album{albumOwnerID}, \%owner);
-        
+
         print qq{
             <tr>
                 <td><a href="pics/album_thumb.cgi?albumID=$albumID">$album{albumTitle}</a></td>
@@ -142,7 +141,7 @@ sub show_album_listing{
                 <td>$num_pics</td>
             </tr>
         };
-        
+
     }
     print qq{
         </table>
@@ -150,42 +149,42 @@ sub show_album_listing{
 }
 
 ########################################
-sub show_album_info{
+sub show_album_info {
     my ($albumID) = @_;
 
     use tnmc::pics::album;
     use tnmc::pics::link;
     use tnmc::user;
-    
+
     my %album;
     &tnmc::pics::album::get_album($albumID, \%album);
 
-    if (! $album{albumTitle}){
+    if (!$album{albumTitle}) {
         $album{albumTitle} = '(Untitled)';
     }
 
     my $sql = "SELECT DATE_FORMAT('$album{albumDateStart}', '%b %d %Y') ";
     my $dbh = &tnmc::db::db_connect();
-    my $sth = $dbh->prepare($sql); 
+    my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($date_string) = $sth->fetchrow_array();
 
     $sql = "SELECT count(*) FROM PicLinks WHERE albumID = $albumID";
-    $sth = $dbh->prepare($sql); 
+    $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($num_pics) = $sth->fetchrow_array();
 
     my %owner;
     &tnmc::user::get_user($album{albumOwnerID}, \%owner);
 
-    if (!$album{albumCoverPic}){
+    if (!$album{albumCoverPic}) {
         my @pics;
         &tnmc::pics::link::list_links_for_album(\@pics, $albumID);
         $album{albumCoverPic} = @pics[0];
     }
-    
-    my $pic_img = &tnmc::pics::pic::get_pic_url($album{albumCoverPic}, ['mode'=>'thumb']);
-    
+
+    my $pic_img = &tnmc::pics::pic::get_pic_url($album{albumCoverPic}, [ 'mode' => 'thumb' ]);
+
     print qq{
         <table>
             <tr>
@@ -201,7 +200,7 @@ sub show_album_info{
             </tr>
         </table>
     };
-        
+
 }
 
 1;

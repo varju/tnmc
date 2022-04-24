@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson 
+#    Scott Thompson
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -30,7 +30,6 @@ my @sessions;
 @sessions = reverse @sessions;
 &show_session_list(\@sessions);
 
-
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
 
@@ -39,9 +38,9 @@ my @sessions;
 ##########################################################
 
 #########################################
-sub show_session_list{
+sub show_session_list {
     my ($sessions) = @_;
-    
+
     print qq{
         <table cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -61,21 +60,21 @@ sub show_session_list{
             <th>&nbsp;&nbsp;</td>
         </tr>
     };
-    
-    foreach my $sessionID (@$sessions){
+
+    foreach my $sessionID (@$sessions) {
         my (%session, %user);
-        
+
         &tnmc::security::session::get_session($sessionID, \%session);
         &tnmc::user::get_user($session{'userID'}, \%user);
-        
+
         my $first_online = &tnmc::util::date::format_date('numeric', $session{'firstOnline'});
-        my $last_online = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});
-        my $host = ($session{'host'}) ? $session{'host'} : $session{'ip'};
+        my $last_online  = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});
+        my $host         = ($session{'host'}) ? $session{'host'} : $session{'ip'};
         my $font;
-        if (! $session{'open'}){
+        if (!$session{'open'}) {
             $font = '<font color="aaaaaa">';
         }
-        
+
         print qq{
             <tr>
                 <td nowrap>$font$user{username}</td>
@@ -93,12 +92,9 @@ sub show_session_list{
                 <td nowrap><a href="admin/security/session_edit.cgi?sessionID=$sessionID">edit</a></td>
             </tr>
         };
-        
-        
-    }
-    
 
-    
+    }
+
     print qq{
         </table>
     };

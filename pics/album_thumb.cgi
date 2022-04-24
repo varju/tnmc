@@ -16,7 +16,7 @@ use tnmc::pics::new;
 
 &tnmc::template::header();
 
-my $nav = &tnmc::pics::new::get_nav();
+my $nav     = &tnmc::pics::new::get_nav();
 my $albumID = $nav->{'albumID'};
 my $piclist = &tnmc::pics::new::album_get_piclist_from_nav($nav);
 

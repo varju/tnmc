@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#       Scott Thompson - scottt@interchange.ubc.ca         
+#       Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -13,18 +13,18 @@ use tnmc::broadcast;
 use tnmc::template;
 use tnmc::user;
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &tnmc::db::db_connect();
-    &tnmc::template::header();
-    
-    print qq{
+&tnmc::db::db_connect();
+&tnmc::template::header();
+
+print qq{
           <form action="broadcast/broadcast_send.cgi" method="post">
     };
 
-    &tnmc::template::show_heading("cell phone broadcast centre");
-    print qq { 
+&tnmc::template::show_heading("cell phone broadcast centre");
+print qq { 
         <table border="0" cellpadding="0" cellspacing="0" width="350">
 
         <tr><td colspan="5"><b>Message: (max ~ 160 chars)</b><br>
@@ -35,33 +35,32 @@ use tnmc::user;
         <tr>
     };
 
-
-        ### User List of people who have messaging on
+### User List of people who have messaging on
 my @users;
-        &tnmc::user::list_users(\@users, "WHERE phoneTextMail != 'none'", 'ORDER BY username');
+&tnmc::user::list_users(\@users, "WHERE phoneTextMail != 'none'", 'ORDER BY username');
 
-    my $i = 0;
+my $i = 0;
 
-    foreach my $userid (@users){
-        my %user;
-        &tnmc::user::get_user($userid, \%user);
+foreach my $userid (@users) {
+    my %user;
+    &tnmc::user::get_user($userid, \%user);
 
-        next unless $user{username};
+    next unless $user{username};
 
-        print qq{
+    print qq{
             <td>
             <input type="checkbox" name="user-$userid" value="1">$user{username}
             </td>
         };
 
-        $i++;
-        if ($i == 5){
-            $i = 0;
-            print qq{    </tr><tr>\n};
-        }
+    $i++;
+    if ($i == 5) {
+        $i = 0;
+        print qq{    </tr><tr>\n};
     }
+}
 
-    print qq{
+print qq{
 
         </tr>
         <tr><td colspan="5"><br>
@@ -82,9 +81,8 @@ my @users;
         </table>        
         
         </form>
-    }; 
-    
+    };
 
-    &tnmc::template::footer();
+&tnmc::template::footer();
 
-    &tnmc::db::db_disconnect();
+&tnmc::db::db_disconnect();

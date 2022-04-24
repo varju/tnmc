@@ -19,51 +19,50 @@ use tnmc::movies::night;
 {
     #############
     ### Main logic
-    
+
     &tnmc::db::db_connect();
-    
+
     my @nights = &tnmc::movies::night::list_future_nights();
     my %next_night;
     &tnmc::movies::night::get_night($nights[0], \%next_night);
-    
+
     my $next_tuesday = $next_night{'date'};
-    my $vote_blurb = $next_night{'voteBlurb'};
-    
+    my $vote_blurb   = $next_night{'voteBlurb'};
+
     my $sql = "SELECT DATE_FORMAT('$next_tuesday', '%W %M %D, %Y')";
     my $dbh = &tnmc::db::db_connect();
     my $sth = $dbh->prepare($sql);
     $sth->execute();
     my ($next_tuesday_string) = $sth->fetchrow_array();
     $sth->finish();
-    
-    
+
     #
     # put the movielist in a temporary file
     #
-    
+
     my $filename = "$tnmc_basepath/movies/cron/send_movielist.txt";
-    open (FILE, ">$filename");
+    open(FILE, ">$filename");
     close(FILE);
     &print_email_movielist(">>$filename");
-    
+
     #
     # send the mail
     #
-    
+
     my $to_email = $tnmc_email;
-    
+
     my $vote_blurb = &tnmc::general_config::get_general_config("movie_vote_blurb");
-    
-    my %headers =
-	( 'To' => $to_email,
-	  'From' => "TNMC Website <$to_email>",
-	  'Subject' => $next_tuesday_string,
-	  );
+
+    my %headers = (
+        'To'      => $to_email,
+        'From'    => "TNMC Website <$to_email>",
+        'Subject' => $next_tuesday_string,
+    );
 
     my $body = $vote_blurb;
     open(MESSAGE, "<$filename");
     while (defined(my $line = <MESSAGE>)) {
-	$body .= $line;
+        $body .= $line;
     }
     close MESSAGE;
     &tnmc::mail::send::message_send(\%headers, $body);
@@ -72,50 +71,52 @@ use tnmc::movies::night;
 }
 
 ###################################################################
-sub print_email_movielist{
+sub print_email_movielist {
 
-        my ($movieID, %movie, @movies, @votes, $vote, $num_votes, $userID, %user, @junk);
+    my ($movieID, %movie, @movies, @votes, $vote, $num_votes, $userID, %user, @junk);
 
     my ($filename) = @_;
-    if (!$filename) {$filename = ">-";}
+    if (!$filename) { $filename = ">-"; }
 
-    open (RELEASES, $filename);
+    open(RELEASES, $filename);
 
-        print RELEASES "\nnew releases:\n=============\n";
-        &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND statusNew AND NOT (statusSeen OR 0)", 'ORDER BY Title');
+    print RELEASES "\nnew releases:\n=============\n";
+    &tnmc::movies::show::list_movies(
+        \@movies,
+        "WHERE statusShowing AND statusNew AND NOT (statusSeen OR 0)",
+        'ORDER BY Title'
+    );
 
-        foreach $movieID (@movies){
-                &tnmc::movies::movie::get_movie($movieID, \%movie);
-                $movie{description} =~ s/\s+/ /g;    # kill extra spaces and <cr>s
-                $movie{description} =~ s/^ //g;        # kill leading whitespace
-                print RELEASES "        $movie{title} \n$movie{description}\n\n";
-        }
-    close (RELEASES);
+    foreach $movieID (@movies) {
+        &tnmc::movies::movie::get_movie($movieID, \%movie);
+        $movie{description} =~ s/\s+/ /g;    # kill extra spaces and <cr>s
+        $movie{description} =~ s/^ //g;      # kill leading whitespace
+        print RELEASES "        $movie{title} \n$movie{description}\n\n";
+    }
+    close(RELEASES);
 
-    open (CURRENT, $filename);
-        print CURRENT "\nnow showing:\n============\n";
+    open(CURRENT, $filename);
+    print CURRENT "\nnow showing:\n============\n";
 
     # load up the movie info
-        &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", '');
+    &tnmc::movies::show::list_movies(\@movies, "WHERE statusShowing AND NOT (statusSeen OR 0)", '');
 
-        my %movieInfo;
-        foreach $movieID (@movies){
-                my $anon = {};     ### create an anonymous hash.
-                &tnmc::movies::movie::get_movie_extended2($movieID, $anon);
-                $movieInfo{$movieID} = $anon;
-        }
+    my %movieInfo;
+    foreach $movieID (@movies) {
+        my $anon = {};    ### create an anonymous hash.
+        &tnmc::movies::movie::get_movie_extended2($movieID, $anon);
+        $movieInfo{$movieID} = $anon;
+    }
 
     # sort the movies (based on 'order')
-        @movies = sort  {       $movieInfo{$b}->{order}
-                        <=>     $movieInfo{$a}->{order}}
-                        @movies ;
+    @movies = sort { $movieInfo{$b}->{order} <=> $movieInfo{$a}->{order} } @movies;
 
-    # print out a line for each movie 
-        foreach $movieID (@movies){
+    # print out a line for each movie
+    foreach $movieID (@movies) {
 
         # These next few lines format the output.
         #
-format CURRENT =
+        format CURRENT =
 @< @<<<<<<<<<<<<<<<<<<<<<< ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID}->{votesText}
 ~                          ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -123,33 +124,32 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}, $movieInfo{$movieID
 ~                          ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                            $movieInfo{$movieID}->{votesText}
 .
+
         # okay, now print it out
         write CURRENT;
 
-        }
-    close (CURRENT);
+    }
+    close(CURRENT);
 
-
-    open (COMING, $filename);
-        print COMING "\ncoming soon:\n============\n";
+    open(COMING, $filename);
+    print COMING "\ncoming soon:\n============\n";
 
     # load up the movie info
-        &tnmc::movies::show::list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))", '');
-        foreach $movieID (@movies){
-                my $anon = {};     ### create an anonymous hash.
-                &tnmc::movies::movie::get_movie_extended2($movieID, $anon);
-                $movieInfo{$movieID} = $anon;
-        }
+    &tnmc::movies::show::list_movies(\@movies, "WHERE statusNew AND NOT ((statusShowing OR 0) OR (statusSeen OR 0))",
+        '');
+    foreach $movieID (@movies) {
+        my $anon = {};    ### create an anonymous hash.
+        &tnmc::movies::movie::get_movie_extended2($movieID, $anon);
+        $movieInfo{$movieID} = $anon;
+    }
 
     # sort the movies (based on 'order')
-        @movies = sort  {       $movieInfo{$b}->{order}
-                        <=>     $movieInfo{$a}->{order}}
-                        @movies ;
+    @movies = sort { $movieInfo{$b}->{order} <=> $movieInfo{$a}->{order} } @movies;
 
     # print a little ditty out for each movie
-        foreach $movieID (@movies){
+    foreach $movieID (@movies) {
 
-format COMING =
+        format COMING =
 @<<< @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}
         ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -157,12 +157,13 @@ $movieInfo{$movieID}->{rank}, $movieInfo{$movieID}->{title}
 ~       ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         $movieInfo{$movieID}->{votesText}
 .
+
         # okay, now print it out
         write COMING;
 
-        }
+    }
 
-    close (COMING);
+    close(COMING);
 
 }
 

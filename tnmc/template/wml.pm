@@ -18,23 +18,21 @@ use tnmc::db;
 # module routines
 #
 
-
 ######################################################################
 
-sub show_card{
+sub show_card {
     my ($name, $title, $body) = @_;
 
     # be efficient, strip unneccessary whitespace
     $body =~ s/\s+/ /g;
-    
+
     # remove scary chars (HACK)
     $body =~ s/\&/\&amp;/g;
-    
+
     print qq{<card id="$name" title="$title">$body</card>\n};
 }
 
-
-sub wml_header{
+sub wml_header {
     print "Content-type: text/vnd.wap.wml\n";
     print "Connection: Close\n";
     print "Pragma: no-cache\n";
@@ -55,14 +53,11 @@ sub wml_header{
         </template>
     };
 
-    
 }
 
-sub wml_footer{
+sub wml_footer {
     print "</wml>\n";
     print "\n";
 }
-
-
 
 1;

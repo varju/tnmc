@@ -14,39 +14,38 @@ use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
-    #############
-    ### Main logic
+#############
+### Main logic
 
-    &tnmc::template::header();
+&tnmc::template::header();
 
-    %survey;
+%survey;
 
-    $tripID = &tnmc::cgi::param('tripID');
-    $userID = &tnmc::cgi::param('userID');
-    if (!$userID){$userID = $USERID;}    
-    
-           &get_tripSurvey($tripID, $userID, \%survey);
-      
-    print qq {
+$tripID = &tnmc::cgi::param('tripID');
+$userID = &tnmc::cgi::param('userID');
+if (!$userID) { $userID = $USERID; }
+
+&get_tripSurvey($tripID, $userID, \%survey);
+
+print qq {
         <form action="survey_submit.cgi" method="post">
         
         <table>
     };
 
-    foreach $key (keys(%survey)){       
-    
-        print qq{
+foreach $key (keys(%survey)) {
+
+    print qq{
             <tr valign=top><td><b>$key</b></td>
             <td><input type="text" name="$key" value="$survey{$key}"></td>
             </tr>
         };
-           }
+}
 
-    print qq
+print qq
     {    </table>
         <input type="submit" value="Submit">
         </form>
-    }; 
-    
+    };
 
-    &tnmc::template::footer();
+&tnmc::template::footer();

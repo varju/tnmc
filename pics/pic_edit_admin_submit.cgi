@@ -16,19 +16,15 @@ use tnmc::pics::pic;
 
 #############
 ### Main logic
-    
+
 my %pic;
 
 my @cols = &tnmc::db::db_get_cols_list('Pics');
-foreach $key (@cols){
+foreach $key (@cols) {
     $pic{$key} = &tnmc::cgi::param($key);
 }
 
 &tnmc::pics::pic::set_pic(%pic);
 
 print "Location: pic_edit.cgi?picID=$pic{picID}\n\n";
-
-
-
-
 

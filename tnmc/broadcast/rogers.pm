@@ -22,14 +22,12 @@ use tnmc::broadcast::util;
 # module routines
 #
 
-sub sms_send_rogers
-{
+sub sms_send_rogers {
     my ($phone, $msg) = @_;
 
     ### see if we actually want to send anything.
-    if (length($msg) == 0)
-    {
-        return 0;       # nope.
+    if (length($msg) == 0) {
+        return 0;    # nope.
     }
 
     ### get the areacode, if they have one.
@@ -42,8 +40,7 @@ sub sms_send_rogers
     my $prefix;
     my $suffix;
 
-    if ($phone =~ /(\d\d\d)-?(\d\d\d\d)/)
-    {
+    if ($phone =~ /(\d\d\d)-?(\d\d\d\d)/) {
         $prefix = $1;
         $suffix = $2;
     }
@@ -53,17 +50,18 @@ sub sms_send_rogers
 
     ### Get a User agent
     my $agent = LWP::UserAgent->new;
-    my $ua = new LWP::UserAgent;
+    my $ua    = new LWP::UserAgent;
 
     ### Make the Request
     my $req = POST $URL,
-    [ 'area' => $areacode,
-      'num1' => $prefix,
-      'num2' => $suffix,
-      'text' => $SEND,
-      'oldtext' => $SEND,
-      'SIZEBOX' => length($SEND),
-      'msisdn' => $areacode . $prefix . $suffix,
+      [
+        'area'    => $areacode,
+        'num1'    => $prefix,
+        'num2'    => $suffix,
+        'text'    => $SEND,
+        'oldtext' => $SEND,
+        'SIZEBOX' => length($SEND),
+        'msisdn'  => $areacode . $prefix . $suffix,
       ];
 
     return $ua->request($req);

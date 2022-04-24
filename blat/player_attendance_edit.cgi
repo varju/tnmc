@@ -17,11 +17,10 @@ use lib::date;
 &header();
 
 my $playerid = $cgih->param('playerid');
-my $player = &lib::blat::get_player($playerid);
+my $player   = &lib::blat::get_player($playerid);
 
-my @games = &lib::blat::list_games();
+my @games            = &lib::blat::list_games();
 my %attendance_names = &lib::blat::attendance_names();
-
 
 print qq {
     Attendance for $player->{name}
@@ -29,11 +28,11 @@ print qq {
     <table>
 };
 
-foreach my $gameid (@games){
+foreach my $gameid (@games) {
     my $attendance = &lib::blat::get_attendance($playerid, $gameid);
-    my $game = &lib::blat::get_game($gameid);
-    my $date = &lib::date::format_date('short_month_day', $game->{"date"});
-    
+    my $game       = &lib::blat::get_game($gameid);
+    my $date       = &lib::date::format_date('short_month_day', $game->{"date"});
+
     print qq{
         <tr>
             <td><b>$date</td>
@@ -56,6 +55,6 @@ print qq{
     </table>
     <input type="submit" value="Submit">
     </form>
-}; 
+};
 
 &footer();

@@ -19,7 +19,7 @@ my %movie;
 
 my @cols = &tnmc::db::db_get_cols_list('Movies');
 
-foreach my $key (@cols){
+foreach my $key (@cols) {
     $movie{$key} = &tnmc::cgi::param($key);
 }
 &tnmc::movies::movie::set_movie(%movie);

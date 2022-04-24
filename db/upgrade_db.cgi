@@ -24,105 +24,130 @@ require tnmc::template;
 
 &tnmc::template::footer();
 
-
 #
 # subs
 #
 
-sub upgrade_db_20161123
-{
+sub upgrade_db_20161123 {
     my $dbh = &tnmc::db::db_connect();
-    
-    $dbh->do("ALTER TABLE MovieTheatres
+
+    $dbh->do(
+        "ALTER TABLE MovieTheatres
       MODIFY cineplexID varchar(255)
-    ");
-    $dbh->do("ALTER TABLE Movies
+    "
+    );
+    $dbh->do(
+        "ALTER TABLE Movies
       MODIFY cineplexID varchar(255)
-    ");
+    "
+    );
 }
 
-sub upgrade_db_20161115
-{
+sub upgrade_db_20161115 {
     my $dbh = &tnmc::db::db_connect();
-    
-    $dbh->do("ALTER TABLE MovieTheatres
+
+    $dbh->do(
+        "ALTER TABLE MovieTheatres
       ADD COLUMN cineplexID varchar(32)
-    ");
-    $dbh->do("ALTER TABLE Movies
+    "
+    );
+    $dbh->do(
+        "ALTER TABLE Movies
       ADD COLUMN cineplexID varchar(32)
-    ");
+    "
+    );
 }
 
-sub upgrade_db_20100620
-{
+sub upgrade_db_20100620 {
     my $dbh = &tnmc::db::db_connect();
-    
-    $dbh->do("ALTER TABLE MovieTheatres
+
+    $dbh->do(
+        "ALTER TABLE MovieTheatres
       CHANGE COLUMN cinemaclockid cinemaclockID varchar(32)
-    ");
-    $dbh->do("ALTER TABLE MovieTheatres
+    "
+    );
+    $dbh->do(
+        "ALTER TABLE MovieTheatres
       ADD COLUMN googleID varchar(32)
-    ");
-    $dbh->do("ALTER TABLE Movies
+    "
+    );
+    $dbh->do(
+        "ALTER TABLE Movies
       ADD COLUMN googleID varchar(32)
-    ");
+    "
+    );
 }
 
-sub upgrade_db_03{
+sub upgrade_db_03 {
 
     my $dbh = &tnmc::db::db_connect();
-    
-    $dbh->do("ALTER TABLE Personal
+
+    $dbh->do(
+        "ALTER TABLE Personal
       ADD forwardWebMessages int(1) NOT NULL default '0'
-    ");
+    "
+    );
 }
 
-sub upgrade_db_02{
-    
+sub upgrade_db_02 {
+
     # scott - oct 2003
     #
-    # add META field 
-    # change movies for filmcan 
+    # add META field
+    # change movies for filmcan
     #
-    
+
     my $dbh = &tnmc::db::db_connect();
-    
-    $dbh->do("ALTER TABLE Personal
+
+    $dbh->do(
+        "ALTER TABLE Personal
       ADD META text
-    ");
-    
-    $dbh->do("ALTER TABLE Movies
+    "
+    );
+
+    $dbh->do(
+        "ALTER TABLE Movies
       ADD filmcanid char(32)
-    ");
-    
-    $dbh->do("ALTER TABLE MovieTheatres
+    "
+    );
+
+    $dbh->do(
+        "ALTER TABLE MovieTheatres
       ADD otherid char(32)
-    ");
-    
-    $dbh->do("ALTER TABLE MovieTheatres
+    "
+    );
+
+    $dbh->do(
+        "ALTER TABLE MovieTheatres
       ADD filmcanid char(32)
-    ");
-    
-    $dbh->do("CREATE TABLE MovieShowtimes (
+    "
+    );
+
+    $dbh->do(
+        "CREATE TABLE MovieShowtimes (
       movieID int NOT NULL,
       theatreID int NOT NULL,
       showtimes text,
       PRIMARY KEY (movieID, theatreID)
       )
-    ");
-    
-    $dbh->do("DROP TABLE MovieAttendance
-    ");
+    "
+    );
+
+    $dbh->do(
+        "DROP TABLE MovieAttendance
+    "
+    );
 
 }
 
-sub upgrade_db_01{
-    
+sub upgrade_db_01 {
+
     # create teams db (scott - mar 2003)
-    
+
     my $dbh = &tnmc::db::db_connect();
-    
-    $dbh->do("CREATE TABLE Teams (
+
+    $dbh->do(
+        "CREATE TABLE Teams (
       teamID int(11) NOT NULL auto_increment,
       captainID int(11) NOT NULL default '1',
       name char(255) NOT NULL default '',
@@ -137,9 +162,11 @@ sub upgrade_db_01{
       htmlTemplate char(255) NOT NULL default '',
       PRIMARY KEY (teamID) 
       )
-    ");
-    
-    $dbh->do("CREATE TABLE TeamRooster (
+    "
+    );
+
+    $dbh->do(
+        "CREATE TABLE TeamRooster (
       teamID int(11) NOT NULL,
       userID int(11) NOT NULL,
       gender char(1) NOT NULL default '?',
@@ -148,9 +175,11 @@ sub upgrade_db_01{
       answers text NOT NULL default '',
       PRIMARY KEY (teamID, userID)
       )
-    ");
-    
-    $dbh->do("CREATE TABLE TeamMeets (
+    "
+    );
+
+    $dbh->do(
+        "CREATE TABLE TeamMeets (
       meetID int(11) NOT NULL auto_increment,
       teamID int(11) NOT NULL,
       date DATETIME NOT NULL default '0000-00-00 00:00:00',
@@ -161,27 +190,28 @@ sub upgrade_db_01{
       minTotal int(2) NOT NULL default '0',
       PRIMARY KEY (meetID) 
       )
-    ");
-    
-    $dbh->do("CREATE TABLE TeamMeetAttendance (
+    "
+    );
+
+    $dbh->do(
+        "CREATE TABLE TeamMeetAttendance (
       meetID int(11) NOT NULL,
       userID int(11) NOT NULL,
       type char(255) NOT NULL default 'undef',
       timestamp timestamp NOT NULL,
       PRIMARY KEY (meetID, userID) 
       )
-    ");
-    
+    "
+    );
+
 }
 
+sub upgrade_db_00 {
 
-sub upgrade_db_00{
-    
     # create starting database (as of ~feb 2003)
-    
+
     my $dbh = &tnmc::db::db_connect();
 
-    
     $dbh->do("
 CREATE TABLE FieldtripSurvey (
   userID int(11) default NULL,
@@ -458,11 +488,4 @@ CREATE TABLE SessionInfo (
     ");
 
 }
-
-
-
-
-
-
-
 

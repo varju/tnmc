@@ -9,7 +9,7 @@ use strict;
 BEGIN {
     use tnmc::config;
     use tnmc::security::auth;
-    
+
     use vars qw();
 }
 
@@ -17,17 +17,16 @@ BEGIN {
 # module routines
 #
 
+sub header {
 
-sub header{
-    
     # header and title
     print "Content-type: text/html\n\n";
-    
+
     &tnmc::security::auth::authenticate();
-    
+
     my $font_size = get_font_size();
-    my $username = $USERID{'username'} || '';
-    
+    my $username  = $USERID{'username'} || '';
+
     print qq{
 <HTML>
 <HEAD>
@@ -96,11 +95,10 @@ body {
     </div>
     <div id="mainDiv" class="tnmcMain">
 };
-    
+
 }
 
-
-sub footer{
+sub footer {
 
     print qq{
 	</div>
@@ -108,40 +106,38 @@ sub footer{
 	    };
 }
 
-
 ###################################################################
-sub show_menu{
-    
+sub show_menu {
+
     require tnmc::menu;
     if ($LOGGED_IN) {
-	my $menu = &tnmc::menu::get_menu();
-	&tnmc::menu::print_menu($menu);
+        my $menu = &tnmc::menu::get_menu();
+        &tnmc::menu::print_menu($menu);
     }
     else {
-	&tnmc::menu::new_nav_login();
+        &tnmc::menu::new_nav_login();
     }
 }
 
-sub show_menu_item{
+sub show_menu_item {
     my ($indent, $url, $name, $text) = @_;
-    
+
     my $indent_text = '';
-    while($indent--){
+    while ($indent--) {
         $indent_text .= '&nbsp;&nbsp;&nbsp;';
     }
-    if ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/){
+    if ($ENV{REQUEST_URI} =~ /^$tnmc_url_path\Q$url\E/) {
         print qq{\t\t$indent_text<b><a href="$url" class="menulink">$name</a>$text</b><br>\n};
         return 1;
     }
-    else{
+    else {
         print qq{\t\t$indent_text<a href="$url" class="menulink">$name</a>$text<br>\n};
         return 0;
     }
 }
 
-
 ###################################################################
-sub show_heading{
+sub show_heading {
     my ($heading_text) = @_;
     print qq{
     <table border="0" cellpadding="1" cellspacing="0" bgcolor="333333" width="100%">

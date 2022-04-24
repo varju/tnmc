@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#       Scott Thompson - scottt@interchange.ubc.ca         
+#       Scott Thompson - scottt@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -24,9 +24,9 @@ my $cookie = &tnmc::security::auth::logout();
 
 my $location = $tnmc_url;
 print &tnmc::cgi::redirect(
-			   -uri=>$location,
-			   -cookie=>$cookie
-			   );
+    -uri    => $location,
+    -cookie => $cookie
+);
 
 &tnmc::db::db_disconnect();
 

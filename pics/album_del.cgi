@@ -16,36 +16,36 @@ use tnmc::pics::album;
 use tnmc::pics::link;
 
 {
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	&tnmc::template::header();
+    &tnmc::template::header();
 
-	%album;	
-	$albumID = &tnmc::cgi::param('albumID');
-	$CONFIRM = &tnmc::cgi::param('CONFIRM');
-	
-       	&tnmc::pics::album::get_album($albumID, \%album);
+    %album;
+    $albumID = &tnmc::cgi::param('albumID');
+    $CONFIRM = &tnmc::cgi::param('CONFIRM');
 
-        if (!$albumID){
-            ### Bad albumID
-            print qq{
+    &tnmc::pics::album::get_album($albumID, \%album);
+
+    if (!$albumID) {
+        ### Bad albumID
+        print qq{
                 <b>Hey!</b><br>
                 No album ID!!
             };
-        }
-        if ($album{albumOwnerID} != $USERID){
-            ### Bad userID
-            print qq{
+    }
+    if ($album{albumOwnerID} != $USERID) {
+        ### Bad userID
+        print qq{
                 <b>Hey!</b><br>
                 You\'re not allowed to do this!!
             };
-        }
-        else{
+    }
+    else {
 
-            if (!$CONFIRM){
-                ### Ask for confirmation
-                print qq {
+        if (!$CONFIRM) {
+            ### Ask for confirmation
+            print qq {
                     <form action="pics/album_del.cgi" method="post">
                     <input type="hidden" name="albumID" value="$albumID">
                     <b>Are you SURE that you want to permanently delete this album?</b>
@@ -58,29 +58,30 @@ use tnmc::pics::link;
                     </form>
 
                 };
-            }else{
-                ### Delete the album
+        }
+        else {
+            ### Delete the album
 
-		my $dbh = &tnmc::db::db_connect();
+            my $dbh = &tnmc::db::db_connect();
 
-                print qq{
+            print qq{
                     <b>Album Deleted:</b>
                     <p>
                     $album{albumTitle} ($albumID)
                 };
-                
-                $sql = "DELETE FROM PicLinks WHERE albumID = $albumID";
-                $sth = $dbh->prepare($sql);
-                $sth->execute();
 
-                &tnmc::pics::album::del_album($albumID);
+            $sql = "DELETE FROM PicLinks WHERE albumID = $albumID";
+            $sth = $dbh->prepare($sql);
+            $sth->execute();
 
-                print qq{
+            &tnmc::pics::album::del_album($albumID);
+
+            print qq{
                     <p>
                     <a href="pics/index.cgi">Continue</a>
                 };
-            }
         }
-	
-	&tnmc::template::footer();
+    }
+
+    &tnmc::template::footer();
 }

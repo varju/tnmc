@@ -16,16 +16,15 @@ use lib::cgi;
 &header();
 
 my $playerid = $cgih->param('playerid');
-my $hash = &lib::blat::get_player($playerid);
-
+my $hash     = &lib::blat::get_player($playerid);
 
 print qq {
     <form action="player_edit_admin_submit.cgi" method="post">
     <table>
 };
 
-foreach $key (&lib::db::db_get_cols_list('Players')){
-    if ($key eq 'playerid'){
+foreach $key (&lib::db::db_get_cols_list('Players')) {
+    if ($key eq 'playerid') {
         print qq{<input type="hidden" name="$key" value="$hash->{$key}">};
         next;
     }
@@ -40,6 +39,6 @@ print qq{
     </table>
     <input type="submit" value="Submit">
     </form>
-}; 
+};
 
 &footer();

@@ -12,43 +12,41 @@ use CGI;
 
 ########################################################
 ### Get all the little variables that we'll want to use.
-    
-        # header and title
+
+# header and title
 #    $cgih = new CGI;
 #    print $cgih -> header();
 
-    print "Content-Type: text/html\n\n";
-    
-        # grab the PubID from the query string
-    $query_string = $ENV{QUERY_STRING};
-    ($crap, $morecrap) = split (/=/,$query_string);
-    
-    %description = (
-        'fasBookings' => "FAS Room Booking System",
-        'fasEvents' => "FAS Events System",
-        'csstest' => "CSS Faculty Database",
-        'csstestBAK' =>    "Paranoid Scott backing up the CSS faculty database",
-          'mysql' => "Internal mySQL information (mysqladmin -u dbmgr -p -h adhara reload)",
-        'todo' => "cssweb To do list",
-        'mp3' => "Scott and Andrew's mp3 list"
-    );
+print "Content-Type: text/html\n\n";
+
+# grab the PubID from the query string
+$query_string = $ENV{QUERY_STRING};
+($crap, $morecrap) = split(/=/, $query_string);
+
+%description = (
+    'fasBookings' => "FAS Room Booking System",
+    'fasEvents'   => "FAS Events System",
+    'csstest'     => "CSS Faculty Database",
+    'csstestBAK'  => "Paranoid Scott backing up the CSS faculty database",
+    'mysql'       => "Internal mySQL information (mysqladmin -u dbmgr -p -h adhara reload)",
+    'todo'        => "cssweb To do list",
+    'mp3'         => "Scott and Andrew's mp3 list"
+);
 ########################################################
 ### Do the database thing
 
-    #############
-    ### connect to the database
-        $database = "tnmc";
-        $host = "localhost";
-        $user = "tnmc";
-        $password = "password";
-        
-        # say hello.
-        $dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password) or die "Can't connect: $dbh->errstr\n";
+#############
+### connect to the database
+$database = "tnmc";
+$host     = "localhost";
+$user     = "tnmc";
+$password = "password";
 
+# say hello.
+$dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password) or die "Can't connect: $dbh->errstr\n";
 
 ##########################################################
 #### The Beginning of the HTML.
-
 
 $title = "scott's database explorer: $host";
 print <<_HTML;
@@ -81,20 +79,19 @@ print <<_HTML;
         </tr>
 _HTML
 
+$sql = "SHOW databases";
+$sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+$sth->execute or die "Can't execute: $dbh->errstr\n";
 
-        $sql="SHOW databases";
-        $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-        $sth ->execute or die "Can't execute: $dbh->errstr\n";
+while (@databases = $sth->fetchrow_array) {
+    foreach $database (@databases) {
+        print "    <tr><td bgcolor=\"#ffffff\" align=left>";
+        print "        <a href=\"database.cgi?$database\"><b>$database</b></a></td>";
+        print "        <td>$description{$database}</td></tr>";
+    }
+}
 
-        while (@databases = $sth->fetchrow_array){
-            foreach $database (@databases){
-                print "    <tr><td bgcolor=\"#ffffff\" align=left>";
-                print "        <a href=\"database.cgi?$database\"><b>$database</b></a></td>";
-                print "        <td>$description{$database}</td></tr>";
-            }
-        }    
-        
-        $sth ->finish;
+$sth->finish;
 print <<_HTML;
 
 </table>
@@ -119,21 +116,13 @@ db tools</b></font><br>
 <!----------------------------------- D A T A ---------------------------------------->
 _HTML
 
+print "<!----------------------------------- F O O T E R ---------------------------------------->";
 
+print "</font><hr noshade>";
 
+#############
+### Adios
+$dbh->disconnect;
 
-
-
-    print "<!----------------------------------- F O O T E R ---------------------------------------->";
-
-
-    print "</font><hr noshade>";
-
-
-    #############
-    ### Adios
-        $dbh ->disconnect;
-
-    print "<div align=\"right\"><i>- database complete</i></div>";
-
+print "<div align=\"right\"><i>- database complete</i></div>";
 

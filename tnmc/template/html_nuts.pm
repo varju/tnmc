@@ -9,7 +9,7 @@ use strict;
 BEGIN {
     use tnmc::config;
     use tnmc::security::auth;
-    
+
     use vars qw();
 }
 
@@ -17,13 +17,11 @@ BEGIN {
 # module routines
 #
 
-
-
-sub header{
+sub header {
     my $title = "Nutsite!";
 
     &tnmc::security::auth::authenticate();
-    
+
     print "Content-type: text/html\n\n";
     print qq{
             
@@ -60,24 +58,24 @@ th {
 
     };
     my $userline;
-    if ($USERID){
-	$userline = qq{
+    if ($USERID) {
+        $userline = qq{
 	    $USERID{username}
 	    <font size="-3">
 		[<a href="user/my_prefs.cgi"><font color="000000">preferences</font><a>]
 	    </font>
 	};
     }
-    else{
-	require tnmc::teams::roster;
-	require tnmc::teams::team;
-	require tnmc::user;
-	my $teamID = 5;
-	my $team = tnmc::teams::team::get_team_extended($teamID);
-	my @users = &tnmc::teams::roster::list_users($teamID);
-	@users = sort tnmc::user::by_username @users;
-	
-	$userline = qq{
+    else {
+        require tnmc::teams::roster;
+        require tnmc::teams::team;
+        require tnmc::user;
+        my $teamID = 5;
+        my $team   = tnmc::teams::team::get_team_extended($teamID);
+        my @users  = &tnmc::teams::roster::list_users($teamID);
+        @users = sort tnmc::user::by_username @users;
+
+        $userline = qq{
 	    <table cellpadding=0 cellspacing=0 border=0>
 	    <form action="$tnmc_url/user/login.cgi" method="post">
 	    <input type="hidden" name="location" value="$team->{action}->{view}">
@@ -86,13 +84,13 @@ th {
 		    <option value="0">Login...
                     <option value="0">--------
 		    };
-	foreach my $userID (@users){
-	    my $user = &tnmc::user::get_user($userID);
-	    $userline .= qq{
+        foreach my $userID (@users) {
+            my $user = &tnmc::user::get_user($userID);
+            $userline .= qq{
 		<option value="$userID">$user->{username}</option>
 		};
-	}
-	$userline .= qq{
+        }
+        $userline .= qq{
 		</select>
                 <input type="password" name="password" size="6">
 		<input type="submit" value="go">
@@ -104,16 +102,11 @@ th {
         </form>
 	};
     }
-    
-    &show_top_block($userline,
-		     "",
-		     "",
-		     $tnmc_url);
+
+    &show_top_block($userline, "", "", $tnmc_url);
 }
-    
 
-
-sub footer{
+sub footer {
     print qq{
 	<p>
 	};
@@ -125,11 +118,9 @@ sub footer{
 
 }
 
-
-
 ###################################################################
 
-sub show_heading{
+sub show_heading {
     my ($title) = @_;
     $title ||= '&nbsp;';
     print qq{
@@ -144,8 +135,7 @@ sub show_heading{
 
 }
 
-
-sub show_top_block{
+sub show_top_block {
     my ($left, $right, $lurl, $rurl) = @_;
     $lurl = qq{<a href="$lurl">} if $lurl;
     $rurl = qq{<a href="$lurl">} if $rurl;
@@ -167,7 +157,5 @@ sub show_top_block{
     };
 
 }
-
-
 
 1;

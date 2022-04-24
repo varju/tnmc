@@ -21,8 +21,7 @@ use tnmc::cgi;
 my $dbh = &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
-if (&tnmc::cgi::param('username') =~ /\s/)
-{
+if (&tnmc::cgi::param('username') =~ /\s/) {
     &tnmc::template::header();
     print "Bad username\n";
     &tnmc::template::footer();
@@ -32,22 +31,23 @@ if (&tnmc::cgi::param('username') =~ /\s/)
 
 my $user = &tnmc::user::new_user();
 
-foreach my $key (keys %$user){
-    if (&tnmc::cgi::param($key)){
+foreach my $key (keys %$user) {
+    if (&tnmc::cgi::param($key)) {
         $user->{$key} = &tnmc::cgi::param($key);
-    }else{
+    }
+    else {
         $user->{$key} = '';
     }
 }
 
 # some defaults
 $user->{groupMovies} = '1';
-$user->{groupPics} = '1';
+$user->{groupPics}   = '1';
 
 # for safetey's sake
-$user->{groupDev} = '0';
+$user->{groupDev}   = '0';
 $user->{groupAdmin} = '0';
-$user->{userID} = 0;
+$user->{userID}     = 0;
 
 # add the user
 my $userID = &tnmc::user::add_user($user);
@@ -68,7 +68,7 @@ print qq{
         </form>
         
         };
-    
+
 &tnmc::template::footer();
 
 &tnmc::db::db_disconnect();

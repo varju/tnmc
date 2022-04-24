@@ -24,7 +24,7 @@ print qq{
         <input type="hidden" name="userID" value="0">
         };
 
-&tnmc::template::show_heading ("Create New Account: Step 1");
+&tnmc::template::show_heading("Create New Account: Step 1");
 
 print qq{
         <table>
@@ -49,6 +49,6 @@ print qq{
 
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
-            }; 
+            };
 
 &tnmc::template::footer();

@@ -17,7 +17,7 @@ use tnmc::cgi;
 {
     #############
     ### Main logic
-    
+
     my $dbh = &tnmc::db::db_connect();
     &tnmc::security::auth::authenticate();
 
@@ -26,15 +26,15 @@ use tnmc::cgi;
     $sth->execute();
     my ($time) = $sth->fetchrow_array();
     $sth->finish();
-    
+
     my $newSuggestion  = &tnmc::cgi::param('suggestion');
     my $oldSuggestions = &tnmc::general_config::get_general_config("suggestions");
 
-    my $SUGG = 
+    my $SUGG =
         "$USERID{username} $USERID - $time \n"
-        . "====================================\n"
-        . $newSuggestion . "\n\n"
-        . $oldSuggestions;
+      . "====================================\n"
+      . $newSuggestion . "\n\n"
+      . $oldSuggestions;
 
     &tnmc::general_config::set_general_config('suggestions', $SUGG);
 

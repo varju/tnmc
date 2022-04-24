@@ -14,7 +14,7 @@ use tnmc::config;
 #############
 ### Main logic
 
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
 my $thisyear = $year + 1900;
 
 &tnmc::template::header();
@@ -113,7 +113,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 
         </TABLE>
         <P>
-};    
+};
 
 &tnmc::template::footer();
 

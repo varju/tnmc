@@ -19,7 +19,7 @@ use tnmc::cgi;
 &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
-my $userID = &tnmc::cgi::param('userID');    
+my $userID = &tnmc::cgi::param('userID');
 if ($userID) {
     &tnmc::user::del_user($userID);
 }

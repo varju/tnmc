@@ -24,9 +24,9 @@ use tnmc::cgi;
 my $movieID = &tnmc::cgi::param('movieID');
 my @movies;
 
-foreach my $key (&tnmc::cgi::param()){
-    if ($key =~ /movie/i){
-        push (@movies, &tnmc::cgi::param($key));
+foreach my $key (&tnmc::cgi::param()) {
+    if ($key =~ /movie/i) {
+        push(@movies, &tnmc::cgi::param($key));
     }
 }
 
@@ -34,17 +34,15 @@ foreach my $key (&tnmc::cgi::param()){
 
 &tnmc::template::footer();
 
-
-
 ##################################################################
-sub show_movie_vote_comparison{
-    my (@movies) = @_;    
+sub show_movie_vote_comparison {
+    my (@movies) = @_;
 
     print qq{<table cellpadding="0" cellspacing="0">};
 
-    foreach my $field ('title', 'theatres'){
+    foreach my $field ('title', 'theatres') {
         print qq{<tr><td></td>};
-        foreach $movieID (@movies){
+        foreach $movieID (@movies) {
             my %movie;
             &tnmc::movies::movie::get_movie($movieID, \%movie);
             print "<th> $movie{$field} </td>";
@@ -57,28 +55,28 @@ sub show_movie_vote_comparison{
 
     my %movie_vote_count = ();
 
-    foreach my $userID (@users){
+    foreach my $userID (@users) {
         my %user;
         &tnmc::user::get_user($userID, \%user);
 
         my $vote_count = 0;
-        foreach $movieID (@movies){
+        foreach $movieID (@movies) {
             my $vote = &tnmc::movies::vote::get_vote($movieID, $userID);
-            $vote_count ++ if ($vote != 0);
+            $vote_count++ if ($vote != 0);
         }
         next if (!$vote_count);
-        
+
         print qq{
             <tr><td>$user{username}</td>
         };
 
-        foreach $movieID (@movies){
+        foreach $movieID (@movies) {
             my $vote = &tnmc::movies::vote::get_vote($movieID, $userID);
-            if (($vote_count < scalar(@movies)) && ($vote > 0)){
+            if (($vote_count < scalar(@movies)) && ($vote > 0)) {
                 print qq{<td align="center"><b>$vote</b></td>};
-                $movie_vote_count{$movieID} ++;
+                $movie_vote_count{$movieID}++;
             }
-            else{
+            else {
                 print qq{<td align="center">$vote</td>};
             }
         }
@@ -86,7 +84,7 @@ sub show_movie_vote_comparison{
     }
 
     print qq{<tr><td></td>};
-    foreach $movieID (@movies){
+    foreach $movieID (@movies) {
         my %movie;
         &tnmc::movies::movie::get_movie($movieID, \%movie);
         print qq{<td align="center"><hr> $movie_vote_count{$movieID} </td>};

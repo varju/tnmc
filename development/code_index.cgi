@@ -16,8 +16,7 @@ use tnmc::template;
 my @files1 = `find /tnmc/ -maxdepth 2 -type f | grep cgi\\\$`;
 my @files2 = `find /tnmc/tnmc -maxdepth 3 -type f | grep pm\\\$`;
 
-
-foreach my $file (@files1, @files2){
+foreach my $file (@files1, @files2) {
     chomp $file;
     print "<a href=\"code_view.cgi?file=$file\">$file</a><br>";
 }

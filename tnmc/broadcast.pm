@@ -22,50 +22,51 @@ __END__
 #       Alex Varju     - rogers
 ##################################################################
 
-sub smsBroadcast{
+sub smsBroadcast {
     my ($userListRef, $msg, $maxPackets, $junk) = @_;
-    
+
     my ($user);
-    foreach $user (@$userListRef){
+    foreach $user (@$userListRef) {
         smsShout($user, $msg, $maxPackets, $junk);
     }
 }
 
-sub smsShout{
+sub smsShout {
     use tnmc::config;
     use tnmc::security::auth;
     use tnmc::user;
-    
+
     use tnmc::broadcast::fido;
     use tnmc::broadcast::telus;
     use tnmc::broadcast::rogers;
     use tnmc::broadcast::vstream;
     use tnmc::broadcast::tapzing;
-    
+
     my ($userID, $msg, $maxPackets, $junk) = @_;
     my (%user, $sender);
-    
+
     ### Do we have a user?
-    if (!$userID){ return 0;}
-    
+    if (!$userID) { return 0; }
+
     ### Do we have a message?
-    if ($msg eq ''){ return 0;}
-    
+    if ($msg eq '') { return 0; }
+
     ### Get the user info from the db
     &tnmc::user::get_user($userID, \%user);
-    
+
     ### Get the sender info
-    if ($USERID){
+    if ($USERID) {
         $sender = uc($USERID{username});
-    }else{
+    }
+    else {
         $sender = 'TNMC';
     }
     $msg = "$sender: $msg";
-    
+
     #
     # Now we run through each provider.
     #
-    
+
     ### Fido
     if (($user{phoneTextMail} eq 'Fido' || $user{phoneTextMail} eq 'all')
         && $user{phoneFido})
@@ -74,12 +75,12 @@ sub smsShout{
     }
 
     ### Telus
-# 2010-10-26: tapzing.com is gone
-#    if (($user{phoneTextMail} eq 'Telus' || $user{phoneTextMail} eq 'all')
-#        && $user{phoneTelus})
-#    {
-#        &tnmc::broadcast::tapzing::sms_send_tapzing($user{phoneTelus}, $msg);
-#    }
+    # 2010-10-26: tapzing.com is gone
+    #    if (($user{phoneTextMail} eq 'Telus' || $user{phoneTextMail} eq 'all')
+    #        && $user{phoneTelus})
+    #    {
+    #        &tnmc::broadcast::tapzing::sms_send_tapzing($user{phoneTelus}, $msg);
+    #    }
 
     ### Rogers
     if (($user{phoneTextMail} eq 'Rogers' || $user{phoneTextMail} eq 'all')

@@ -33,7 +33,7 @@ print qq{
         </tr>
 };
 
-foreach my $nightID (@nights){
+foreach my $nightID (@nights) {
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
     print qq{

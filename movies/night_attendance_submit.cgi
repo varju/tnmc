@@ -17,20 +17,20 @@ use tnmc::cgi;
 
 &tnmc::security::auth::authenticate();
 
-# get the userid 
+# get the userid
 my $userID = &tnmc::cgi::param('userID');
 
 # get each field
-my @params =  &tnmc::cgi::param();
+my @params = &tnmc::cgi::param();
 
-foreach my $key (@params){
+foreach my $key (@params) {
     next unless $key =~ /^night_(.*)$/;
-    my $nightID = $1;
-    my %attendance = 
-        ( 'userID' => $userID,
-          'nightID' => $nightID,
-          'type' => &tnmc::cgi::param($key)
-          );
+    my $nightID    = $1;
+    my %attendance = (
+        'userID'  => $userID,
+        'nightID' => $nightID,
+        'type'    => &tnmc::cgi::param($key)
+    );
     &tnmc::movies::attendance::set_attendance(\%attendance);
 }
 

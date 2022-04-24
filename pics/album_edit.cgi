@@ -19,7 +19,6 @@ use tnmc::pics::new;
 
 use strict;
 
-
 #############
 ### Main logic
 
@@ -27,10 +26,10 @@ use strict;
 
 my $albumID = &tnmc::cgi::param('albumID');
 
-if (&tnmc::pics::new::auth_access_album_edit($albumID, undef)){
+if (&tnmc::pics::new::auth_access_album_edit($albumID, undef)) {
     &show_album_edit_form($albumID);
 }
-else{
+else {
     print qq{
         You don\'t have permission to edit this album.
     };
@@ -41,11 +40,11 @@ else{
 # subs
 #
 
-sub show_album_edit_form{
+sub show_album_edit_form {
     my ($albumID) = @_;
-    my %album;	
+    my %album;
     &tnmc::pics::album::get_album($albumID, \%album);
-    
+
     &tnmc::template::show_heading("album edit");
     print qq {
         <form action="pics/album_edit_submit.cgi" method="post">
@@ -58,16 +57,16 @@ sub show_album_edit_form{
             <textarea name="albumDescription" wrap="virtual" cols="38" rows="4">$album{albumDescription}</textarea><br>
             <table> 
     };
-    
+
     ## date
-    foreach my $key ('albumDateStart', 'albumDateEnd'){
+    foreach my $key ('albumDateStart', 'albumDateEnd') {
         print qq{
             <tr><td><b>$key</td>
                 <td><input type="text" name="$key" value="$album{$key}"></td>
                 </tr>
 	};
     }
-    
+
     ## Public/Private
     my %sel = ($album{albumTypePublic} => 'selected');
     print qq{
@@ -79,7 +78,7 @@ sub show_album_edit_form{
                 </select>
             </td></tr>
     };
-    
+
     ## Cover Pic
     %sel = ($album{albumCoverPic} => 'selected');
     print qq{
@@ -88,7 +87,7 @@ sub show_album_edit_form{
     };
     my @pics;
     &tnmc::pics::link::list_links_for_album(\@pics, $albumID);
-    foreach my $picID (@pics){
+    foreach my $picID (@pics) {
         my %pic;
         &tnmc::pics::pic::get_pic($picID, \%pic, $picID);
         print qq{<option $sel{$picID} value="$picID">$picID - $pic{title}</option>\n};
@@ -97,7 +96,7 @@ sub show_album_edit_form{
                 </select>
             </td></tr>
     };
-    
+
     ## Owner
     %sel = ($album{albumOwnerID} => 'selected');
     print qq{
@@ -105,7 +104,7 @@ sub show_album_edit_form{
             <td><select name="albumOwnerID">
     };
     my $users = &tnmc::user::get_user_list("WHERE groupPics >= 1");
-    foreach my $username (sort keys %$users){
+    foreach my $username (sort keys %$users) {
         my $userID = $users->{$username};
         print qq{<option $sel{$userID} value="$userID">$username</option>\n};
     }
@@ -113,14 +112,13 @@ sub show_album_edit_form{
                 </select>
             </td></tr>
     };
-    
-    
+
     ## submit
-    
+
     print qq{
         </table>
         <input type="submit" value="Submit">
         </form>
-    }; 
-    
+    };
+
 }

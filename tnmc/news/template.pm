@@ -36,12 +36,12 @@ sub news_print {
 
     my $i = 0;
     foreach my $news_row (@$news_ref) {
-        my $newsId = $$news_row{newsId};
-        my $userId = $$news_row{userId};
-        my $value = $$news_row{value};
-        my $date = $$news_row{date};
+        my $newsId  = $$news_row{newsId};
+        my $userId  = $$news_row{userId};
+        my $value   = $$news_row{value};
+        my $date    = $$news_row{date};
         my $expires = $$news_row{expires};
-        
+
         print "<p>$date\n";
         if ($print_expiry && $expires) {
             print " (until $expires)\n";
@@ -57,7 +57,7 @@ sub news_print {
         if (++$i < $count) {
             print "<hr noshade>\n";
         }
-        
+
         if ($i == $max) {
             return;
         }
@@ -69,10 +69,10 @@ sub news_print {
 sub news_edit {
     my ($news_ref) = @_;
 
-    my $newsId = $$news_ref{newsId};
-    my $userId = $$news_ref{userId};
-    my $date = $$news_ref{date};
-    my $value = $$news_ref{value};
+    my $newsId  = $$news_ref{newsId};
+    my $userId  = $$news_ref{userId};
+    my $date    = $$news_ref{date};
+    my $value   = $$news_ref{value};
     my $expires = $$news_ref{expires};
 
     my $userlist = &tnmc::user::get_user_list("WHERE groupAdmin='1'");
@@ -92,7 +92,7 @@ sub news_edit {
     <td><b>User</b></td>
     <td><select name="userId">
 };
-    
+
     foreach my $key (sort keys %$userlist) {
         print "<option value='$$userlist{$key}'";
         print " selected" if $$userlist{$key} == $userId;

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson 
+#    Scott Thompson
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
@@ -33,12 +33,12 @@ print "<p>";
 #
 
 #########################################
-sub show_recent_users_list{
+sub show_recent_users_list {
     my ($time, $online) = @_;
-    
+
     my (@sessions);
     &tnmc::security::session::list_recent_sessions($time, $online, \@sessions);
-    
+
     print qq{
         <table cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -49,19 +49,19 @@ sub show_recent_users_list{
             <th>from</td>
         </tr>
     };
-    
-    foreach my $sessionID (@sessions){
+
+    foreach my $sessionID (@sessions) {
 
         my (%session, %user);
-        
+
         &tnmc::security::session::get_session($sessionID, \%session);
         my $userID = $session{'userID'};
         &tnmc::user::get_user($userID, \%user);
-        
+
         my $first_online = &tnmc::util::date::format_date('numeric', $session{'firstOnline'});
-        my $last_online = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});
-        my $host = ($session{'host'}) ? $session{'host'} : $session{'ip'};
-        
+        my $last_online  = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});
+        my $host         = ($session{'host'}) ? $session{'host'} : $session{'ip'};
+
         print qq{
             <tr>
                 <td nowrap><a href="people/user_view.cgi?userID=$userID" target="viewuser">$user{username}</a></td>

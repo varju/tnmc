@@ -11,37 +11,36 @@ use tnmc::security::auth;
 use tnmc::user;
 use tnmc::cgi;
 
+#############
+### Main logic
 
+&tnmc::db::db_connect();
 
-    #############
-    ### Main logic
-    
-    &tnmc::db::db_connect();
-    # &tnmc::template::header();
+# &tnmc::template::header();
 
-    my $group = &tnmc::cgi::param('group');
+my $group = &tnmc::cgi::param('group');
 
-    #
-    # fore every user that's been submited,
-    # see if the rank for this group has changed,
-    # if so, then save the new rank in the db.
-    #
-    foreach $key (&tnmc::cgi::param()){
-        
-        next if ($key !~ s/^USER//);
-        $newRank = &tnmc::cgi::param("USER$key");
+#
+# fore every user that's been submited,
+# see if the rank for this group has changed,
+# if so, then save the new rank in the db.
+#
+foreach $key (&tnmc::cgi::param()) {
 
-        &tnmc::user::get_user($key, \%user);
-        if ($newRank ne $user{"group$group"}){
-            $user{"group$group"} = $newRank;
-            &tnmc::user::set_user(%user);
-            ## debugging
-            # print "$key : " . &tnmc::cgi::param("USER$key") ." $user{username} <br>";
-        }
+    next if ($key !~ s/^USER//);
+    $newRank = &tnmc::cgi::param("USER$key");
+
+    &tnmc::user::get_user($key, \%user);
+    if ($newRank ne $user{"group$group"}) {
+        $user{"group$group"} = $newRank;
+        &tnmc::user::set_user(%user);
+        ## debugging
+        # print "$key : " . &tnmc::cgi::param("USER$key") ." $user{username} <br>";
     }
+}
 
-    # &tnmc::template::footer();
-    &tnmc::db::db_disconnect();
+# &tnmc::template::footer();
+&tnmc::db::db_disconnect();
 
-    print "Location: groups.cgi?groupID=$group\n\n";
+print "Location: groups.cgi?groupID=$group\n\n";
 

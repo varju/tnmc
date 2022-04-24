@@ -17,43 +17,40 @@ use tnmc::cgi;
 {
     #############
     ### Main logic
-    
+
     &tnmc::template::header();
-    
-    my %night;	
+
+    my %night;
     my $nightID = &tnmc::cgi::param('nightID');
-	
+
     &tnmc::movies::night::get_night($nightID, \%night);
-    
+
     print qq{
 		<form action="movies/night_edit_admin_submit.cgi" method="post">
 		<table>
                 };
-    
-    foreach my $key (keys(%night)){
+
+    foreach my $key (keys(%night)) {
         print qq {
             <tr valign=top><td>$key</td>
             };
-		
-        if ($key =~ /blurb/i){
+
+        if ($key =~ /blurb/i) {
             print qq {<td><textarea cols="20" rows="4" wrap="virtual" name="$key">$night{$key}</textarea></td>};
         }
-        else{
+        else {
             print qq {<td><input type="text" name="$key" value="$night{$key}"></td>};
         }
-        
+
         print "</tr>";
     }
-    
+
     print qq{
 		</table>
 		<input type="submit" value="Submit">
 		</form>
-                }; 
-    
-    
+                };
+
     &tnmc::template::footer();
 }
-
-
 

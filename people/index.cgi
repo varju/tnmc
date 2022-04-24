@@ -16,23 +16,25 @@ use tnmc::user;
 
 &tnmc::template::header();
 
-&tnmc::template::show_heading ("TNMC People");
+&tnmc::template::show_heading("TNMC People");
 
 &show_users();
 
 &tnmc::template::footer();
 
 #
-# subs 
+# subs
 #
 
 ##########################################################
-sub show_users(){
+sub show_users() {
 
     my (@users, $userID, %user);
 
-    &tnmc::user::list_users(\@users, "WHERE groupDead != '1'", 'ORDER BY
-username');
+    &tnmc::user::list_users(
+        \@users, "WHERE groupDead != '1'", 'ORDER BY
+username'
+    );
 
     print qq
     {    <table border="0" cellpadding="0" cellspacing="5">
@@ -46,12 +48,11 @@ username');
         <td><b>E-Mail Address</td>
         </tr>
     };
-    
-    foreach $userID (@users)
-    {    
+
+    foreach $userID (@users) {
         &tnmc::user::get_user_extended($userID, \%user);
         $user{"phone$user{phonePrimary}"} = '' unless $user{"phone$user{phonePrimary}"};
-        
+
         print qq
         {    <tr>
             <td nowrap><a href="people/user_view.cgi?userID=$userID" target="viewuser">$user{'username'}</a></td>

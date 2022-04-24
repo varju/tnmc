@@ -21,18 +21,18 @@ my $picID = &tnmc::cgi::param(picID);
 my %pic;
 &tnmc::pics::pic::get_pic($picID, \%pic);
 
-if ($picID && &tnmc::pics::new::auth_access_pic_edit($picID, \%pic)){
-    
-    $pic{typePublic} = &tnmc::cgi::param(typePublic);
-    $pic{title} = &tnmc::cgi::param(title);
+if ($picID && &tnmc::pics::new::auth_access_pic_edit($picID, \%pic)) {
+
+    $pic{typePublic}  = &tnmc::cgi::param(typePublic);
+    $pic{title}       = &tnmc::cgi::param(title);
     $pic{description} = &tnmc::cgi::param(description);
-    $pic{comments} = &tnmc::cgi::param(comments);
-    $pic{rateImage} = &tnmc::cgi::param(rateImage);
+    $pic{comments}    = &tnmc::cgi::param(comments);
+    $pic{rateImage}   = &tnmc::cgi::param(rateImage);
     $pic{rateContent} = &tnmc::cgi::param(rateContent);
-    $pic{normalize} = &tnmc::cgi::param(normalize);
-    $pic{timestamp} = &tnmc::cgi::param(timestamp);
-    $pic{ownerID} = &tnmc::cgi::param(ownerID);
-    
+    $pic{normalize}   = &tnmc::cgi::param(normalize);
+    $pic{timestamp}   = &tnmc::cgi::param(timestamp);
+    $pic{ownerID}     = &tnmc::cgi::param(ownerID);
+
     &tnmc::pics::pic::save_pic(%pic);
 }
 $destination = &tnmc::cgi::param(destination) || $ENV{HTTP_REFERER};

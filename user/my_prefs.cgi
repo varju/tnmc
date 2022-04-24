@@ -20,36 +20,35 @@ use tnmc::config;
 &tnmc::db::db_connect();
 &tnmc::template::header();
 
-if ($USERID){ 
+if ($USERID) {
     my @cols = &tnmc::db::db_get_cols_list('Personal');
 
     my $user = &tnmc::user::get_user($USERID);
     my %user = %$user;
-    
+
     print qq{
             <form action="user/my_prefs_submit.cgi" method="post">
             <input type="hidden" name="userID" value="$USERID">
             };
-    
+
     ### Let's not let the demo user change their prefs.
-    if ($user{username} eq 'demo'){
+    if ($user{username} eq 'demo') {
         print qq{
                 </form>
                 <form method="post">
                 };
     }
-    
-    foreach my $key (@cols){
-        if ($key =~ /^group/){
+
+    foreach my $key (@cols) {
+        if ($key =~ /^group/) {
             print qq{
                     <input type="hidden" name="$key" value="$user{$key}">
                     };
         }
     }
-    
-    
-    &tnmc::template::show_heading ("basic info");
-    
+
+    &tnmc::template::show_heading("basic info");
+
     $user{birthdate} = substr($user{birthdate}, 0, 10);
     my %sel_gender = ($user{gender} => 'checked');
     print qq{
@@ -78,14 +77,15 @@ if ($USERID){
                                     <td><textarea name="address" wrap="virtual" rows="3">$user{address}</textarea></td>
                                 </tr>
                                 };
-    if (!$user{birthdate}) {    $user{birthdate} = '0000-00-00';}
-    if ($user{birthdate} eq '0000-00-00'){
+    if (!$user{birthdate}) { $user{birthdate} = '0000-00-00'; }
+    if ($user{birthdate} eq '0000-00-00') {
         print qq{
                                 <tr><td><b>birthdate</td>
                                     <td><input type="text" name="birthdate" value="$user{birthdate}"></td>
                                 </tr>
                                 };
-    }else{
+    }
+    else {
         print qq{
                                 <tr><td><b>birthdate</td>
                                     <td><input type="hidden" name="birthdate" value="$user{birthdate}">
@@ -103,12 +103,12 @@ if ($USERID){
             <p>
             };
 
-    &tnmc::template::show_heading ("phones and text mail");
-    
+    &tnmc::template::show_heading("phones and text mail");
+
     my (%sel_primary_phone, %sel_text_mail, %sel_movie_notify);
-    $sel_primary_phone{$user{phonePrimary}} = 'selected';
-    $sel_text_mail{$user{phoneTextMail}} = 'selected';
-    
+    $sel_primary_phone{ $user{phonePrimary} } = 'selected';
+    $sel_text_mail{ $user{phoneTextMail} }    = 'selected';
+
     print qq{
             <table>
 
@@ -163,10 +163,10 @@ if ($USERID){
             <p>
 
             };
-    
+
     &tnmc::template::show_heading("template");
     my $sel_template_colour_bg = $user{template_colour_bg} || '#99ff00';
-    my %sel_template_html = ($user{template_html} => 'selected');
+    my %sel_template_html      = ($user{template_html} => 'selected');
     print qq{
             <table cellpadding="0" border="0" cellspacing="0">
             <tr>
@@ -175,8 +175,8 @@ if ($USERID){
                 <select name="template_html">
 	     };
     my @templates = &tnmc::template::list_templates();
-    foreach my $template (@templates){
-	print qq{
+    foreach my $template (@templates) {
+        print qq{
 	          <option $sel_template_html{$template} value="$template">$template</option>
 		};
     }
@@ -193,9 +193,9 @@ if ($USERID){
 
     &tnmc::template::show_heading("messages");
     my %sel_witty_banter;
-    $sel_witty_banter{$user{i_like_silence}} = 'checked';
+    $sel_witty_banter{ $user{i_like_silence} } = 'checked';
     my %forward_banter;
-    $forward_banter{$user{forwardWebMessages}} = 'checked';
+    $forward_banter{ $user{forwardWebMessages} } = 'checked';
 
     print qq{
             <table cellpadding="0" border="0" cellspacing="0">
@@ -213,7 +213,7 @@ if ($USERID){
             <p>
             <input type="image" border=0 src="$tnmc_url/template/submit.gif" alt="Submit Changes">
             </form>
-            }; 
+            };
 }
 
 &tnmc::template::footer();

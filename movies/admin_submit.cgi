@@ -13,7 +13,6 @@ use tnmc::security::auth;
 use tnmc::general_config;
 use tnmc::cgi;
 
-
 #############
 ### Main logic
 
@@ -27,5 +26,4 @@ foreach my $key (@params) {
 }
 
 print "Location: index.cgi\n\n";
-
 

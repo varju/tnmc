@@ -26,26 +26,25 @@ use tnmc::pics::link;
 # module routines
 #
 
-sub album_get_piclist_from_nav{
+sub album_get_piclist_from_nav {
     my ($nav) = @_;
-    
+
     my @pics;
-    
+
     # TODO: proper selection based on pic rating
     my $min_rating = 0;
-    
+
     ### HACK: this really should be in a sub-function. (or in a lib file)
     {
         # used to be:
         #
         #&list_links_for_album(\@pics, $nav->{albumID});
         #
-        my $dbh = &tnmc::db::db_connect();
+        my $dbh     = &tnmc::db::db_connect();
         my $albumID = $nav->{'albumID'};
-        
+
         my (@row, $sql, $sth);
-        
-        
+
         $sql = "SELECT l.picID
                   FROM PicLinks as l LEFT JOIN Pics as p USING (picID)
                  WHERE l.albumID = '$albumID'
@@ -55,162 +54,161 @@ sub album_get_piclist_from_nav{
         $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr
 \n";
         $sth->execute;
-        while (@row = $sth->fetchrow_array()){
-            push (@pics, $row[0]);
+        while (@row = $sth->fetchrow_array()) {
+            push(@pics, $row[0]);
         }
         $sth->finish;
-        
+
     }
     return \@pics;
 }
 
-sub get_nav{
-    
+sub get_nav {
+
     my %nav;
-    foreach my $key (&tnmc::cgi::param()){
+    foreach my $key (&tnmc::cgi::param()) {
         $nav{$key} = &tnmc::cgi::param($key);
     }
-    
+
     ## KLUDGE: figure out what we're looking at
     my $script = $ENV{'REQUEST_URI'};
     $script =~ /\/([a-z]+)_([a-z]+)\.cgi/;
     $nav{'_nav_select'} = $1;
-    $nav{'_nav_view'} = $2;
-    
+    $nav{'_nav_view'}   = $2;
+
     return \%nav;
 }
 
-sub show_thumbs{
+sub show_thumbs {
     my ($piclist, $nav) = @_;
-    
+
     &tnmc::template::show_heading("Pictures");
-    
+
     # no pictures... bail
-    if (! scalar @$piclist){
+    if (!scalar @$piclist) {
         print "<p>\n";
         print "No Pictures available.<br>\n";
         print "<p>\n";
         return 0;
     }
-    
+
     ## help the user get around a bit
     &show_album_nav_menu_basic($nav, $piclist);
-    
+
     ## list all the pictures
     &show_piclist($nav, $piclist);
-    
+
     ## help the user get around a bit
     &show_album_nav_menu_full($nav, $piclist);
-    
+
 }
 
-sub auth_access_album_edit{
+sub auth_access_album_edit {
     my ($albumID, $album) = @_;
     use tnmc::security::auth;
     return &_has_access_album('edit', $albumID, $album, $USERID, undef);
 }
 
-sub auth_access_album_view{
+sub auth_access_album_view {
     my ($albumID, $album) = @_;
     use tnmc::security::auth;
     return &_has_access_album('view', $albumID, $album, $USERID, undef);
 }
 
-sub _has_access_album{
+sub _has_access_album {
     my ($access, $albumID, $album, $userID, $user) = @_;
-    
+
     # get the info if we have to.
-    if (! defined $album){
+    if (!defined $album) {
         %$album = ();
         &tnmc::pics::album::get_album($albumID, $album);
     }
-    if (! defined $userID){
+    if (!defined $userID) {
         $userID = $user->{userID};
     }
-    
+
     # decide if user has access
-    if ($album->{albumOwnerID} == $userID){
+    if ($album->{albumOwnerID} == $userID) {
         return 1;
     }
-    elsif ($album->{albumTypePublic} eq 2){
+    elsif ($album->{albumTypePublic} eq 2) {
         return 1 if $access eq 'view';
         return 1 if $access eq 'edit';
     }
-    elsif ($album->{albumTypePublic} eq 1){
+    elsif ($album->{albumTypePublic} eq 1) {
         return 1 if $access eq 'view';
         return 0 if $access eq 'edit';
     }
-    elsif ($album->{albumTypePublic} eq 0){
+    elsif ($album->{albumTypePublic} eq 0) {
         return 0;
     }
-    else{
+    else {
         return 0;
     }
 }
 
-sub auth_access_pic_edit{
+sub auth_access_pic_edit {
     my ($picID, $pic) = @_;
     use tnmc::security::auth;
     return &_has_access_pic('edit', $picID, $pic, $USERID, undef);
 }
 
-sub auth_access_pic_view{
+sub auth_access_pic_view {
     my ($picID, $pic) = @_;
     use tnmc::security::auth;
     return &_has_access_pic('view', $picID, $pic, $USERID, undef);
 }
 
-sub _has_access_pic{
+sub _has_access_pic {
     my ($access, $picID, $pic, $userID, $user) = @_;
-    
+
     # get the info if we have to.
-    if (! defined $pic){
+    if (!defined $pic) {
         %$pic = ();
         &tnmc::pics::pic::get_pic($picID, $pic);
     }
-    if (! defined $userID){
+    if (!defined $userID) {
         $userID = $user->{userID};
     }
-    
+
     # decide if user has access
-    if ($pic->{ownerID} == $userID){
+    if ($pic->{ownerID} == $userID) {
         return 1;
     }
-    elsif ($pic->{typePublic} eq 2){
+    elsif ($pic->{typePublic} eq 2) {
         return 1 if $access eq 'view';
         return 1 if $access eq 'edit';
     }
-    elsif ($pic->{typePublic} eq 1){
+    elsif ($pic->{typePublic} eq 1) {
         return 1 if $access eq 'view';
         return 0 if $access eq 'edit';
     }
-    elsif ($pic->{typePublic} eq 0){
+    elsif ($pic->{typePublic} eq 0) {
         return 0;
     }
-    else{
+    else {
         return 0;
     }
 }
 
-
-sub show_album_thumb_header{
+sub show_album_thumb_header {
     my ($albumID, $nav, $piclist) = @_;
-    
+
     # load info
     my %album;
     &tnmc::pics::album::get_album($albumID, \%album);
     my %owner;
     &tnmc::user::get_user($album{albumOwnerID}, \%owner);
-    
+
     # set defaults
-    my  $displayLevel = 'admin';
+    my $displayLevel = 'admin';
     $album{albumTitle} ||= '(Untitled)';
-    
+
     ## heading
     &tnmc::template::show_heading("Album");
-    
+
     my $edit_links;
-    if (&auth_access_album_edit($albumID, \%album)){
+    if (&auth_access_album_edit($albumID, \%album)) {
         $edit_links = qq{
             [ <a href="pics/album_edit.cgi?albumID=$albumID">Edit</a>
             - <a href="pics/album_edit_admin.cgi?albumID=$albumID">Admin</a> 
@@ -218,10 +216,10 @@ sub show_album_thumb_header{
             - <a href="pics/album_view.cgi?albumID=$albumID">View</a> ]
         };
     }
-    
+
     my $show_start_date = &tnmc::util::date::format_date('short_date', $album{albumDateStart});
-    my $show_end_date = &tnmc::util::date::format_date('short_date', $album{albumDateEnd});
-    
+    my $show_end_date   = &tnmc::util::date::format_date('short_date', $album{albumDateEnd});
+
     print qq{
         <p>
         <b>$album{albumTitle}</b> ($owner{username}) $edit_links<br>
@@ -229,21 +227,20 @@ sub show_album_thumb_header{
         $album{albumDescription}
         <p>
     };
-    
+
     ### TODO: proper selection based on rating, etc
-    
+
 }
 
-
 ########################################
-sub show_album_nav_menu_basic{
+sub show_album_nav_menu_basic {
     my ($nav, $piclist) = @_;
-    
+
     # load info
-    my %nav = %$nav;
-    my $listType = delete($nav{'listType'});
+    my %nav       = %$nav;
+    my $listType  = delete($nav{'listType'});
     my $listStart = delete($nav{'listStart'});
-    
+
     print qq{
         
         <table cellpadding="0" cellspacing="0" border="0">
@@ -251,7 +248,7 @@ sub show_album_nav_menu_basic{
                 <td>
         <form name="album_basic_nav_menu" id="album_basic_nav_menu" method="get" action="pics/$nav{_nav_select}_thumb.cgi">
     };
-    foreach my $key (keys %nav){
+    foreach my $key (keys %nav) {
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
     }
     print qq{
@@ -272,26 +269,26 @@ sub show_album_nav_menu_basic{
                 <td>
                     <select name="listStart">
     };
-    
+
     # note: make sure listLimit is real or we'll loop forever
     my $listLimit = int($nav{'listLimit'});
-    $listLimit = ($listLimit > 0)? $nav->{'listLimit'} : 20; 
-    my $max = scalar(@$piclist);
-    my $options_curr = 0;
+    $listLimit = ($listLimit > 0) ? $nav->{'listLimit'} : 20;
+    my $max           = scalar(@$piclist);
+    my $options_curr  = 0;
     my $options_count = 0;
-    
-    for (my $i = 0; $i < $max; $i += $listLimit){
-        last if ($i > 1000); # don't go crazy, give up after 1000 pics
+
+    for (my $i = 0 ; $i < $max ; $i += $listLimit) {
+        last if ($i > 1000);    # don't go crazy, give up after 1000 pics
 
         my $top = $i + $listLimit;
         $top = $max if ($max < $top);
         $options_count++;
 
-        if ($nav->{listStart} == $i){
+        if ($nav->{listStart} == $i) {
             $options_curr = $options_count - 1;
             print "<option selected value=\"$i\">" . ($i + 1) . " - " . $top . "\n";
         }
-        else{
+        else {
             print "<option value=\"$i\">" . ($i + 1) . " - " . $top . "\n";
         }
     }
@@ -300,7 +297,7 @@ sub show_album_nav_menu_basic{
     my $options_next = $options_curr + 1;
     my $options_prev = $options_curr - 1;
     $options_next = $options_count if ($options_next > $options_count);
-    $options_prev = 0 if ($options_prev < 0);
+    $options_prev = 0              if ($options_prev < 0);
 
     print qq{
                     </select>
@@ -319,29 +316,29 @@ sub show_album_nav_menu_basic{
         </table>
         </form>
     };
-    
+
 }
 
 ########################################
-sub show_album_nav_menu_full{
+sub show_album_nav_menu_full {
     my ($nav, $piclist) = @_;
-    
+
     # load info
-    my %nav = %$nav;
-    my $listType = delete($nav{'listType'});
-    my $listSize = delete($nav{'listSize'});
-    my $listStart = delete($nav{'listStart'});
-    my $listLimit = delete($nav{'listLimit'});
+    my %nav         = %$nav;
+    my $listType    = delete($nav{'listType'});
+    my $listSize    = delete($nav{'listSize'});
+    my $listStart   = delete($nav{'listStart'});
+    my $listLimit   = delete($nav{'listLimit'});
     my $listColumns = delete($nav{'listColumns'});
-    
+
     # set defaults
     my $show_listColumns = $listColumns || 'auto';
-    
-    # 
+
+    #
     print qq{
         <form method="get" action="pics/$nav{_nav_select}_thumb.cgi">
     };
-    foreach my $key (keys %nav){
+    foreach my $key (keys %nav) {
         print qq{        <input type="hidden" name="$key" value="$nav{$key}">\n};
     }
     print qq{
@@ -394,42 +391,43 @@ sub show_album_nav_menu_full{
         </table>
         </form>
     };
-            
 
 }
 
 ########################################
-sub show_piclist{
+sub show_piclist {
     my ($nav, $piclist) = @_;
-    
+
     ## get info
-    my %nav = %$nav;
-    my $albumID = $nav{albumID};
-    my $listType = delete($nav{listType});
-    my $listColumns = delete($nav{listColumns});
-    my $start = delete($nav{listStart});
-    my $limit = delete($nav{listLimit});
-    my $listSize = delete($nav{listSize});
+    my %nav          = %$nav;
+    my $albumID      = $nav{albumID};
+    my $listType     = delete($nav{listType});
+    my $listColumns  = delete($nav{listColumns});
+    my $start        = delete($nav{listStart});
+    my $limit        = delete($nav{listLimit});
+    my $listSize     = delete($nav{listSize});
     my $limitContent = delete($nav{limitContent});
-    
+
     ## security: make sure the person should be given admin mode
-    if ($listType eq 'admin' && ! $USERID){
+    if ($listType eq 'admin' && !$USERID) {
         $listType = 'grid';
     }
-    
+
     ## get defaults
-    if ( ($listSize ne 'mini') &&
-         ($listSize ne 'big') &&
-         ($listSize ne 'small') ){
+    if (   ($listSize ne 'mini')
+        && ($listSize ne 'big')
+        && ($listSize ne 'small'))
+    {
         $listSize = 'thumb';
     }
-    if ( ($listType ne 'list') &&
-         ($listType ne 'admin') &&
-         ($listType ne 'thumbnail') ){
+    if (   ($listType ne 'list')
+        && ($listType ne 'admin')
+        && ($listType ne 'thumbnail'))
+    {
         $listType = 'grid';
     }
     $limit ||= 20;
-    if ($listColumns < 1){     ## automatic columns
+    if ($listColumns < 1) {    ## automatic columns
         $listColumns = 1;
         $listColumns = 5 if ($listType eq 'grid');
         $listColumns = 2 if ($listType eq 'thumbnail');
@@ -438,66 +436,70 @@ sub show_piclist{
     my $nav_query = &make_nav_url($nav);
 
     ## grab the pics that we'll be using
-    my @pics = splice (@$piclist, $start, $limit);
-    
-    
+    my @pics = splice(@$piclist, $start, $limit);
+
     my %pic;
     my $i = $start;
-    
-    
+
     ## display the list
-    
+
     print qq{
         <table cellpadding="0" cellspacing="0" border="0">
     };
-    
-    if($listType eq 'admin'){
+
+    if ($listType eq 'admin') {
         print qq{
             <form method="post" action="pics/bulk_edit_submit.cgi">
             <input type="hidden" name="destination" value="$ENV{REQUEST_URI}">
             <tr><th>&nbsp;</th><th>Rating: Worse < - > Better</th></tr>
         };
     }
-    
+
     my %static;
-    
+
     ### HACK!!! (maybe part of get_pic_url?)
     my $list_picHeight;
     my $list_picWidth;
-    if ($listSize eq 'mini'){
-        $list_picHeight = 64; $list_picWidth = 80;
-    }elsif ($listSize eq 'thumb'){
-        $list_picHeight = 128; $list_picWidth = 160;
-    }elsif ($listSize eq 'small'){
-        $list_picHeight = 256; $list_picWidth = 320;
-    }elsif ($listSize eq 'big'){
-        $list_picHeight = 480; $list_picWidth = 640;
+    if ($listSize eq 'mini') {
+        $list_picHeight = 64;
+        $list_picWidth  = 80;
     }
-    
-    for my $picID (@pics){
-        
+    elsif ($listSize eq 'thumb') {
+        $list_picHeight = 128;
+        $list_picWidth  = 160;
+    }
+    elsif ($listSize eq 'small') {
+        $list_picHeight = 256;
+        $list_picWidth  = 320;
+    }
+    elsif ($listSize eq 'big') {
+        $list_picHeight = 480;
+        $list_picWidth  = 640;
+    }
+
+    for my $picID (@pics) {
+
         ## loop-related stuff
         $i++;
-        print '<tr>' unless ($static{count} % $listColumns );
-        $static{count} ++;
-        
-        
+        print '<tr>' unless ($static{count} % $listColumns);
+        $static{count}++;
+
         ## get pic info
         &tnmc::pics::pic::get_pic($picID, \%pic);
-        
+
         my $slide_url = "pics/$nav{_nav_select}_slide.cgi?picID=$picID&$nav_query";
-        my $img_url = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>$listSize]);
-        my $img_src = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
-        my $pic_src = $img_src;
-        my $can_edit = ( ($pic{'typePublic'}) ||
-                         ($pic{'ownerID'} eq $tnmc::security::auth::USERID) );
-        
+        my $img_url   = &tnmc::pics::pic::get_pic_url($picID, [ 'mode' => $listSize ]);
+        my $img_src   = qq{src="$img_url" height="$list_picHeight" width="$list_picWidth"};
+        my $pic_src   = $img_src;
+        my $can_edit =
+          (($pic{'typePublic'}) || ($pic{'ownerID'} eq $tnmc::security::auth::USERID));
+
         ### showpic: list
-        if ($listType eq 'list'){
-            
+        if ($listType eq 'list') {
+
             my %owner;
             &tnmc::user::get_user($pic{ownerID}, \%owner);
-            
+
             my $DISPLAYtitle = $pic{title} || '(untitled)';
             print qq{
                 <tr>
@@ -511,7 +513,7 @@ sub show_piclist{
             };
         }
         ### showpic: grid
-        elsif ($listType eq 'grid'){
+        elsif ($listType eq 'grid') {
             print qq{
                 <td valign="top"><a href="$slide_url">
                 <img $pic_src alt="$i. $pic{title}" border="0" hspace="1" vspace="1" >
@@ -519,15 +521,15 @@ sub show_piclist{
             };
         }
         ### showpic: thumb
-        elsif ($listType eq 'thumbnail'){
-            
+        elsif ($listType eq 'thumbnail') {
+
             my $DISPLAYtitle = $pic{title} || '(untitled)';
             my $pic_desc;
             $pic_desc .= $pic{description} . '<br>' if ($pic{description});
-            $pic_desc .= $pic{comments} . '<br>' if ($pic{comments});
-            
+            $pic_desc .= $pic{comments} . '<br>'    if ($pic{comments});
+
             my $show_listContent = pack "a" . ($pic{rateContent} + 3), "*****";
-            
+
             print qq{
                 <td valign="top"><a href="$slide_url">
                     <img $pic_src border="0" ></a>
@@ -542,18 +544,18 @@ sub show_piclist{
             };
         }
         ### showpic: admin - can edit
-        elsif( ($listType eq 'admin') && $can_edit){
-            
+        elsif (($listType eq 'admin') && $can_edit) {
+
             my %owner;
             &tnmc::user::get_user($pic{ownerID}, \%owner);
-            
+
             my %sel_content;
             my %sel_image;
             my %sel_public;
-            $sel_content{int($pic{rateContent})} = 'checked';
-            $sel_image{int($pic{rateImage})} = 'checked';
-            $sel_public{int($pic{typePublic})} = 'selected';
-            
+            $sel_content{ int($pic{rateContent}) } = 'checked';
+            $sel_image{ int($pic{rateImage}) }     = 'checked';
+            $sel_public{ int($pic{typePublic}) }   = 'selected';
+
             ### pic, title, description
             print qq{
                 <td valign="top"><a href="$slide_url">
@@ -563,32 +565,32 @@ sub show_piclist{
                     
                     <textarea rows=2 columns=18 wrap="virtual"  name="PIC${picID}_description">$pic{description}</textarea><br>
             };
-            
+
             ### other usefull info
             print qq{
                     $i. $pic{timestamp} - $owner{username}
             };
-            
+
             ### edit/admin links
-            if ($USERID eq $pic{ownerID}){
+            if ($USERID eq $pic{ownerID}) {
                 print qq{     
                     &\#149;   <a href="pics/pic_edit.cgi?picID=$picID">edit</a>
                     <br>
                 };
             }
-            
+
             ### width/height
             print qq{
                     ($pic{width} x $pic{height})<br>
             };
-            
+
             ### rating
             print qq{
                     <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"><input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"><input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2"> 
             };
-            
+
             ### access control
-            if ($USERID == $pic{ownerID}){
+            if ($USERID == $pic{ownerID}) {
                 print qq{
                         <select name="PIC${picID}_typePublic">
                         <option $sel_public{2} value="2">view/edit
@@ -597,67 +599,67 @@ sub show_piclist{
                         </select>
                 };
             }
-            
+
             ### image rating
-            #print qq{
-            #        <br>
-            #        <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"><input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0">
-            #        Image<br>
-            #};
-            
+#print qq{
+#        <br>
+#        <input type="radio" name="PIC${picID}_rateImage" $sel_image{-1} value="-1"><input type="radio" name="PIC${picID}_rateImage" $sel_image{0} value="0">
+#        Image<br>
+#};
+
             ### album info
             my @valid_albums;
-            &tnmc::pics::album::list_valid_albums(\@valid_albums, $pic{'timestamp'}, );
+            &tnmc::pics::album::list_valid_albums(\@valid_albums, $pic{'timestamp'},);
             my @pic_albums;
             &tnmc::pics::link::list_links_for_pic(\@pic_albums, $picID);
-            if ( scalar(@valid_albums) ){
-                push @pic_albums, 0; #allow creation of a new link
+            if (scalar(@valid_albums)) {
+                push @pic_albums, 0;    #allow creation of a new link
             }
-            foreach my $albumID (@pic_albums){
+            foreach my $albumID (@pic_albums) {
                 my %album;
-                if ($albumID){
+                if ($albumID) {
                     &tnmc::pics::album::get_album_cache($albumID, \%album);
                     my $link = &tnmc::pics::link::get_link($picID, $albumID,);
-                    
+
                     # print current album separately in case it's not in valid list
                     print "<select name=\"LINK$link->{'linkID'}_albumID\">\n";
                     print "<option  value=\"$albumID\">$albumID. $album{'albumTitle'}</option>\n";
-                    
-                    if (! &auth_access_album_edit($albumID, \%album)){
+
+                    if (!&auth_access_album_edit($albumID, \%album)) {
                         print "</select>\n";
                         next;
                     }
-                    
+
                 }
-                else{
+                else {
                     print "<select name=\"NEWLINK${picID}_albumID\">\n";
                 }
                 print "<option value=\"0\">(none)</option>\n";
                 print "<option value=\"$albumID\">-----</option>\n";
-                foreach my $valid_albumID (@valid_albums){ 
+                foreach my $valid_albumID (@valid_albums) {
                     my %valid_album;
                     &tnmc::pics::album::get_album_cache($valid_albumID, \%valid_album);
                     print "<option value=\"$valid_albumID\">$valid_albumID. $valid_album{'albumTitle'}</option>\n";
                 }
                 print "</select><br>\n";
-                
+
             }
-            
+
             ### the end
             print qq{
                 </td>
             };
         }
         ### showpic: admin - can NOT edit
-        elsif ($listType eq 'admin'){
-            
+        elsif ($listType eq 'admin') {
+
             my $DISPLAYtitle = $pic{title} || '(untitled)';
             my $pic_desc;
             $pic_desc .= $pic{description} . '<br>' if ($pic{description});
-            $pic_desc .= $pic{comments} . '<br>' if ($pic{comments});
-            
+            $pic_desc .= $pic{comments} . '<br>'    if ($pic{comments});
+
             my $show_listContent = pack "a" . ($pic{rateContent} + 3), "*****";
-            
+
             print qq{
                 <td valign="top"><a href="$slide_url">
                     <img $pic_src border="0" ></a>
@@ -672,11 +674,11 @@ sub show_piclist{
             };
         }
     }
-    
+
     print qq{
         </table>
     };
-    if ($listType eq 'admin'){
+    if ($listType eq 'admin') {
         print qq{
             <input type="submit" value="Save Changes">
             </form>
@@ -687,21 +689,20 @@ sub show_piclist{
 
 #### slide code
 
-
-
-sub show_album_slide_header{
+sub show_album_slide_header {
     my ($nav, $piclist) = @_;
-    
-    my $albumID = $nav->{'albumID'};
+
+    my $albumID   = $nav->{'albumID'};
     my $listLimit = 20;
-    my $index = &array_get_index($piclist, $nav->{'picID'});
+    my $index     = &array_get_index($piclist, $nav->{'picID'});
     my $listStart = int($index / $listLimit) * $listLimit;
-    
+
     my %album;
     &tnmc::pics::album::get_album($albumID, \%album);
-    
-    my $album_url = "pics/$nav->{_nav_select}_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
-    
+
+    my $album_url =
+      "pics/$nav->{_nav_select}_thumb.cgi?albumID=$nav->{albumID}&listStart=$listStart&listLimit=$listLimit";
+
     ## album navigation stuff
     print qq{
         <b>
@@ -714,46 +715,46 @@ sub show_album_slide_header{
     };
 }
 
-sub show_slide{
+sub show_slide {
     my ($nav, $piclist) = @_;
-    
+
     # show slideshow nav
     &show_slide_nav_menu_basic($nav, $piclist);
-    
+
     # show slideshow thumbs
     &show_slide_thumbnails($nav, $piclist);
-    
+
     # show slideshow pic
     &show_slide_pic($nav, $piclist);
 }
 
-sub array_get_index{
+sub array_get_index {
     my ($array, $element) = @_;
-    
+
     my $index = 0;
-    foreach my $item (@$array){
-        if ($item eq $element){
+    foreach my $item (@$array) {
+        if ($item eq $element) {
             return $index;
         }
-        else{
-            $index ++;
+        else {
+            $index++;
         }
     }
     return undef();
 }
 
-sub show_slide_nav_menu_basic{
+sub show_slide_nav_menu_basic {
     my ($nav, $piclist) = @_;
-    
+
     ## get info
-    my %nav = %$nav;
-    my $picID = delete($nav{'picID'});
-    my $scale = delete($nav{'scale'});
-    my $span = delete($nav{'span'});
+    my %nav        = %$nav;
+    my $picID      = delete($nav{'picID'});
+    my $scale      = delete($nav{'scale'});
+    my $span       = delete($nav{'span'});
     my $play_delay = int(delete($nav{'play_delay'}));
-    my $index = &array_get_index($piclist, $picID);
-    my $list_max = scalar(@$piclist);
-    
+    my $index      = &array_get_index($piclist, $picID);
+    my $list_max   = scalar(@$piclist);
+
     ## javascript
     my $js_next = $index + 1;
     my $js_prev = $index - 1;
@@ -778,24 +779,24 @@ sub show_slide_nav_menu_basic{
         }
         </script>
     ";
-    
+
     ## show the menu
     print qq{
         <table cellpadding="0" cellspacing="0" border="0">
         <tr><td nowrap><b>
         <form name="slide_nav_menu">
     };
-    
+
     ## form elements that we're not allowing configuration of:
-    foreach my $key (keys %nav){
+    foreach my $key (keys %nav) {
         printf("<input type=\"hidden\" name=\"%s\" value=\"%s\">\n", $key, $nav->{$key});
     }
-    
+
     ## piclist
     my %sel = ($index => 'selected');
-    my $i = 0;
+    my $i   = 0;
     print qq{    <select name="picID" onchange="form.submit()"> \n};
-    foreach my $otherPicID (@$piclist){
+    foreach my $otherPicID (@$piclist) {
         my %otherPic;
         &tnmc::pics::pic::get_pic($otherPicID, \%otherPic);
         print qq{<option $sel{$i} value="$otherPicID">};
@@ -803,9 +804,9 @@ sub show_slide_nav_menu_basic{
         $i++;
     }
     print qq{    </select> \n};
-    
+
     print "<br>\n";
-    
+
     ## scale
     $scale ||= 'auto';
     %sel = ($scale => 'selected');
@@ -820,7 +821,7 @@ sub show_slide_nav_menu_basic{
     print qq{    <option value="0.25" $sel{0.25}>25% \n};
     print qq{    <option value="0.1" $sel{0.10}>10% \n};
     print qq{    </select> \n};
-    
+
     ## thumbnails (span)
     $span ||= 0;
     %sel = ($span => 'selected');
@@ -836,95 +837,96 @@ sub show_slide_nav_menu_basic{
     print qq{    <option value="5" $sel{10}>10  \n};
     print qq{    <option value="5" $sel{20}>20  \n};
     print qq{    </select> \n};
-    
+
     ## playback
     $play_delay ||= 0;
     %sel = ($play_delay => 'selected');
     print qq{    <b>Play</b>};
     print qq{    <select name="play_delay"> \n};
-    print qq{    <option value="-1" $sel{-1}>None \n}; 
-    print qq{    <option value="5" $sel{5}>5 sec \n}; 
-    print qq{    <option value="10" $sel{10}>10 sec \n}; 
-    print qq{    <option value="15" $sel{15}>15 sec \n}; 
-    print qq{    <option value="30" $sel{30}>30 sec \n}; 
-    print qq{    <option value="60" $sel{60}>1 min \n}; 
+    print qq{    <option value="-1" $sel{-1}>None \n};
+    print qq{    <option value="5" $sel{5}>5 sec \n};
+    print qq{    <option value="10" $sel{10}>10 sec \n};
+    print qq{    <option value="15" $sel{15}>15 sec \n};
+    print qq{    <option value="30" $sel{30}>30 sec \n};
+    print qq{    <option value="60" $sel{60}>1 min \n};
     print qq{    </select>};
-    if ($play_delay > 0){
+
+    if ($play_delay > 0) {
         print qq{
            <script language="javascript">
            top.onload = play_start;
            </script>
         };
     }
-    
+
     ## submit
     print qq{
         <input type="submit" value="go">
         </form>
     };
-    
+
     ## the end
     print qq{
         </td></tr>
         </table>
     };
-    
+
 }
 
-sub show_slide_thumbnails{
+sub show_slide_thumbnails {
     my ($nav, $piclist) = @_;
-    
+
     ## get info
-    my %nav = %$nav;
-    my $max = scalar(@$piclist);
+    my %nav  = %$nav;
+    my $max  = scalar(@$piclist);
     my $span = $nav->{'span'} || 0;
-    $span = ($span > $max)? $max: $span;
-    
-    return if (!$span); # no thumbnails
-    
+    $span = ($span > $max) ? $max : $span;
+
+    return if (!$span);    # no thumbnails
+
     my $picID = delete($nav{'picID'});
     my $index = &array_get_index($piclist, $picID);
-    my $start = int($index/$span) * $span;
-    
-    my $end = $start + $span - 1;
-    my $end = ($max <= $end)? $max - 1 : $end;
+    my $start = int($index / $span) * $span;
+
+    my $end     = $start + $span - 1;
+    my $end     = ($max <= $end) ? $max - 1 : $end;
     my $nav_url = &make_nav_url(\%nav);
-    
+
     print "<table><tr>\n";
-    for (my $i = $start; $i <= $end; $i++){
-        
+    for (my $i = $start ; $i <= $end ; $i++) {
+
         my $target_picID = @{$piclist}[$i];
         my %target_pic;
         &tnmc::pics::pic::get_pic($target_picID, \%target_pic);
-        my $url = "pics/$nav->{_nav_select}_slide.cgi?picID=$target_picID&$nav_url";
-        my $image = &tnmc::pics::pic::get_pic_url($target_picID, ['mode'=>'thumb']);
-        
+        my $url   = "pics/$nav->{_nav_select}_slide.cgi?picID=$target_picID&$nav_url";
+        my $image = &tnmc::pics::pic::get_pic_url($target_picID, [ 'mode' => 'thumb' ]);
+
         print "<td>";
         printf("%i - %18.18s<br>", $i + 1, $target_pic{'title'});
         print qq{<a href="$url"><img border="0" height="128" width="160" src="$image"></a>};
         print "</td>\n";
-        
+
     }
     print "</tr></table><br>\n";
 
 }
 
-sub show_slide_pic{
+sub show_slide_pic {
     my ($nav, $piclist) = @_;
-    
+
     ## get info
     my $picID = $nav->{'picID'};
     my $scale = $nav->{'scale'};
-    
+
     my %pic;
     &tnmc::pics::pic::get_pic($picID, \%pic);
-    
+
     my %owner;
     &tnmc::user::get_user($pic{ownerID}, \%owner);
-    
+
     ## setup the edit links
     my $edit_link;
-    if ( $USERID && ( ($pic{ownerID} eq $USERID) || $USERID{groupPics} >= 100) ){
+    if ($USERID && (($pic{ownerID} eq $USERID) || $USERID{groupPics} >= 100)) {
         $edit_link = qq{
             [ <a href="pics/pic_edit.cgi?picID=$picID">Edit</a>
             - <a href="pics/pic_edit_admin.cgi?picID=$picID">Admin</a> ]
@@ -938,30 +940,30 @@ sub show_slide_pic{
     $sth->execute();
     my ($fancy_timestamp) = $sth->fetchrow_array();
     $sth->finish();
-    
-    
+
     ## setup the big picture
-    $scale =  $nav->{'scale'} || 'auto';
-    if ($scale eq 'auto'){
-        
+    $scale = $nav->{'scale'} || 'auto';
+    if ($scale eq 'auto') {
+
         my $min_pic_width = 500;
         my $max_pic_width = 999;
-        if($pic{width} < $min_pic_width){
-            $scale = 1 + int ($min_pic_width / $pic{width});
+        if ($pic{width} < $min_pic_width) {
+            $scale = 1 + int($min_pic_width / $pic{width});
         }
-        elsif($pic{width} > $max_pic_width){
-            $scale = (1 / int ($pic{width} / $min_pic_width) );
+        elsif ($pic{width} > $max_pic_width) {
+            $scale = (1 / int($pic{width} / $min_pic_width));
         }
-        else{
+        else {
             $scale = 1;
         }
     }
-    
-    my $WIDTH = $pic{width} * $scale;
+
+    my $WIDTH  = $pic{width} * $scale;
     my $HEIGHT = $pic{height} * $scale;
-#    my $img_src = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'full']);
+
+    #    my $img_src = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'full']);
     my $img_src = "pics/serve_pic.cgi?picID=$picID";
-    
+
     ## print it all out
     print qq{
         <table align="center" border="0">
@@ -985,25 +987,16 @@ sub show_slide_pic{
                 <tr><td colspan="2">$pic{comments}</td></tr>
         </table>
     };
-    
+
 }
 
-sub make_nav_url{
+sub make_nav_url {
     require tnmc::util::url;
 
     my ($nav) = @_;
-    return join ('&',
-                 (map 
-                  { &tnmc::util::url::url_encode($_) .
-                    '=' .
-                    &tnmc::util::url::url_encode($nav->{$_})}
-                  (keys(%$nav))
-                  )
-                 );
+    return join('&',
+        (map { &tnmc::util::url::url_encode($_) . '=' . &tnmc::util::url::url_encode($nav->{$_}) } (keys(%$nav))));
 }
 
 return 1;
-
-
-
 

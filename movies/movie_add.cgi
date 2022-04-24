@@ -25,16 +25,15 @@ use tnmc::movies::show;
 #
 
 ##########################################################
-sub show_add_movie_form
-{
+sub show_add_movie_form {
 
     print qq{
                 <form action="movies/movie_edit_submit.cgi" method="post">
                 <input type="hidden" name="movieID" value="0">
     };
-    &tnmc::template::show_heading ("add a new movie");
-    
-        print qq{
+    &tnmc::template::show_heading("add a new movie");
+
+    print qq{
                 <table border="0">
                 <tr valign=top>
                         <td colspan="4"><b>Title</b><br>
@@ -72,7 +71,6 @@ sub show_add_movie_form
                 </table>
         <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
                 </form> 
-        };                      
-                                
+        };
 
 }

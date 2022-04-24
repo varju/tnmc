@@ -15,7 +15,7 @@ use tnmc::cgi;
 #############
 ### Main logic
 
-my $movieID = &tnmc::cgi::param('movieID');    
+my $movieID = &tnmc::cgi::param('movieID');
 
 if ($movieID) {
     &tnmc::movies::movie::del_movie($movieID);

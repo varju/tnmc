@@ -21,7 +21,7 @@ use tnmc::cgi;
 my @cols = &tnmc::db::db_get_cols_list('MovieTheatres');
 
 my %hash;
-foreach my $key (@cols){
+foreach my $key (@cols) {
     $hash{$key} = &tnmc::cgi::param($key);
 }
 

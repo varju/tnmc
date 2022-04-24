@@ -13,12 +13,12 @@ print qq{
 
 ### date stuff.
 my $today;
-open (DATE, "/bin/date +%Y%m%d%H |");
+open(DATE, "/bin/date +%Y%m%d%H |");
 while (<DATE>) {
     chomp;
     $today = $_;
 }
-close (DATE);
+close(DATE);
 
 print qq{
     <b>Date/Time</b> $today<p>
@@ -29,7 +29,6 @@ print "<p><b><font color=\"0000ff\">\@INC:</font></b><br>\n";
 foreach my $key (@INC) {
     print "$key<br>";
 }
-
 
 ### ENV variables
 print "<p><b><font color=\"0000ff\">ENV list:</font></b><br> ";

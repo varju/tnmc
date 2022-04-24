@@ -5,7 +5,6 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -22,26 +21,26 @@ use tnmc::pics::new;
 my %album;
 my $albumID = &tnmc::cgi::param('albumID');
 
-if (!$albumID){
+if (!$albumID) {
     &tnmc::template::header();
     print "Error: Invalid form data\n";
     &tnmc::template::footer();
 }
-elsif(!&tnmc::pics::new::auth_access_album_edit($albumID, undef)){
+elsif (!&tnmc::pics::new::auth_access_album_edit($albumID, undef)) {
     &tnmc::template::header();
     print "Error: Invalid user permissions\n";
     &tnmc::template::footer();
 }
-else{
+else {
     &tnmc::pics::album::get_album($albumID, \%album);
-    foreach my $key (keys %album){
-     	my $val = &tnmc::cgi::param($key);
-        if (defined $val){
+    foreach my $key (keys %album) {
+        my $val = &tnmc::cgi::param($key);
+        if (defined $val) {
             $album{$key} = $val;
         }
     }
     &tnmc::pics::album::set_album(%album);
-    
+
     print "Location: /pics/album_view.cgi?albumID=$albumID\n\n";
-    
+
 }

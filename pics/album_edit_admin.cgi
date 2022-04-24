@@ -14,7 +14,6 @@ use tnmc::cgi;
 
 use strict;
 
-
 #############
 ### Main logic
 
@@ -29,29 +28,29 @@ my $albumID = &tnmc::cgi::param('albumID');
 # subs
 #
 
-sub show_album_edit_admin_form{
+sub show_album_edit_admin_form {
     my ($albumID) = @_;
-    my %album;	
+    my %album;
     &tnmc::pics::album::get_album($albumID, \%album);
-    
+
     print qq {
         
         <form action="pics/album_edit_admin_submit.cgi" method="post">
             <table>
     };
-    
-    foreach my $key (keys %album){
+
+    foreach my $key (keys %album) {
         print qq{	
             <tr><td><b>$key</td>
                 <td><input type="text" name="$key" value="$album{$key}"></td>
                 </tr>
 	};
     }
-    
+
     print qq{
         </table>
         <input type="submit" value="Submit">
         </form>
-    }; 
-    
+    };
+
 }

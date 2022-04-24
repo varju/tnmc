@@ -26,7 +26,7 @@ my ($timestamp) = $sth->fetchrow_array();
 $sth->finish;
 
 #
-# This script should get run every tuesday evening at about 10 pm 
+# This script should get run every tuesday evening at about 10 pm
 # (or just after we watch the movie).
 #
 
@@ -36,18 +36,18 @@ $sth->finish;
 
 my @nights = &tnmc::movies::night::list_active_nights();
 
-foreach my $nightID (@nights){
-    
+foreach my $nightID (@nights) {
+
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
-    
+
     my $movieID = $night{'movieID'};
     my %movie;
     &tnmc::movies::movie::get_movie($movieID, \%movie);
     $movie{'statusSeen'} = "1";
-    $movie{'date'} = $timestamp;
+    $movie{'date'}       = $timestamp;
     &tnmc::movies::movie::set_movie(%movie);
-    
+
 }
 
 #
@@ -59,7 +59,6 @@ $sql = "UPDATE Movies SET statusNew = '0' WHERE statusShowing = '1'";
 $sth = $dbh->prepare($sql);
 $sth->execute();
 $sth->finish;
-
 
 $sql = "UPDATE Movies SET statusBanned = '0'";
 $sth = $dbh->prepare($sql);
@@ -76,34 +75,35 @@ my $numberOfWeeksToShow = 3;
 
 ### Factions
 my @factions = &tnmc::movies::faction::list_factions();
-foreach my $factionID (@factions){
-    
+foreach my $factionID (@factions) {
+
     my $faction = &tnmc::movies::faction::get_faction($factionID);
-    
+
     # night creation
-    if ($faction->{'night_creation'}){
-        foreach (my $i = 1; $i <= $numberOfWeeksToShow; $i++){
-            
+    if ($faction->{'night_creation'}) {
+        foreach (my $i = 1 ; $i <= $numberOfWeeksToShow ; $i++) {
+
             # get the date for the $i-th night from now.
-            
+
             $sql = "SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL ? DAY), '%Y-%m-%d' )";
             $sth = $dbh->prepare($sql);
             $sth->execute($i * 7);
             my ($i_date) = $sth->fetchrow_array();
             $sth->finish();
-            
+
             print "$i_date\n";
-            
+
             # next if the night already exists
             next if &tnmc::movies::night::list_nights([], "WHERE factionID = $factionID AND date LIKE '$i_date%'", "");
-            
+
             # add the night
             my %night = (
-                         nightID => 0,
-                         factionID => $factionID,
-                         godID => $faction->{'godID'},
-                         valid_theatres => $faction->{'theatres'},
-                         date => "$i_date 23:00:00");
+                nightID        => 0,
+                factionID      => $factionID,
+                godID          => $faction->{'godID'},
+                valid_theatres => $faction->{'theatres'},
+                date           => "$i_date 23:00:00"
+            );
             &tnmc::movies::night::set_night(%night);
             print "add $i_date\n";
         }

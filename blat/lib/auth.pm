@@ -6,22 +6,22 @@ use strict;
 # module configuration
 #
 
-BEGIN{
+BEGIN {
     use task::db;
     use Exporter ();
     use vars qw(@ISA @EXPORT $USERID $USERNAME);
-    
+
     @ISA = qw(Exporter);
-    
+
     @EXPORT = qw($USERID $USERNAME);
-    
+
 }
 
 #
 # module routines
 #
 
-sub get_userid{
+sub get_userid {
     my $loginid = $ENV{REMOTE_USER};
 
     # fetch from the db
@@ -30,12 +30,12 @@ sub get_userid{
     $sth->execute($loginid);
     my ($userid) = $sth->fetchrow_array();
     $sth->finish;
-    
+
     return ($userid, $loginid);
 }
 
-BEGIN{
-    
+BEGIN {
+
     ($USERID, $USERNAME) = &get_userid();
 }
 

@@ -15,37 +15,37 @@ use tnmc::cgi;
 require 'fieldtrip/FIELDTRIP.pl';
 
 {
-	#############
-	### Main logic
+    #############
+    ### Main logic
 
-	my $dbh = &tnmc::db::db_connect();
-	&tnmc::template::header();
+    my $dbh = &tnmc::db::db_connect();
+    &tnmc::template::header();
 
-	%trip;	
-	$tripID = &tnmc::cgi::param('tripID');
-	$CONFIRM = &tnmc::cgi::param('CONFIRM');
-	
-       	&get_trip($tripID, \%trip);
+    %trip;
+    $tripID  = &tnmc::cgi::param('tripID');
+    $CONFIRM = &tnmc::cgi::param('CONFIRM');
 
-        if (!$tripID){
-            ### Bad tripID
-            print qq{
+    &get_trip($tripID, \%trip);
+
+    if (!$tripID) {
+        ### Bad tripID
+        print qq{
                 <b>Hey!</b><br>
                 No trip ID!!
             };
-        }
-        if ($trip{AdminUserID} != $USERID){
-            ### Bad userID
-            print qq{
+    }
+    if ($trip{AdminUserID} != $USERID) {
+        ### Bad userID
+        print qq{
                 <b>Hey!</b><br>
                 You're not allowed to do this!! <!-- ' -->
             };
-        }
-        else{
+    }
+    else {
 
-            if (!$CONFIRM){
-                ### Ask for confirmation
-                print qq {
+        if (!$CONFIRM) {
+            ### Ask for confirmation
+            print qq {
                     <form action="fieldtrip/trip_del.cgi" method="post">
                     <input type="hidden" name="tripID" value="$tripID">
                     <b>Are you SURE that you want to permanently delete this trip?</b>
@@ -58,29 +58,30 @@ require 'fieldtrip/FIELDTRIP.pl';
                     </form>
 
                 };
-            }else{
-                ### Delete the trip
+        }
+        else {
+            ### Delete the trip
 
-                print qq{
+            print qq{
                     <b>Trip Deleted:</b>
                     <p>
                     $trip{title} ($tripID)
                 };
-                
-                $sql = "DELETE FROM FieldtripSurvey WHERE tripID = $tripID";
-                $sth = $dbh->prepare($sql);
-                $sth->execute();
 
-                &del_trip($tripID);
+            $sql = "DELETE FROM FieldtripSurvey WHERE tripID = $tripID";
+            $sth = $dbh->prepare($sql);
+            $sth->execute();
 
-                print qq{
+            &del_trip($tripID);
+
+            print qq{
                     <p>
                     <a href="fieldtrip/index.cgi">Continue</a>
                 };
-            }
         }
-	
-	&tnmc::template::footer();
+    }
 
-	&tnmc::db::db_disconnect();
+    &tnmc::template::footer();
+
+    &tnmc::db::db_disconnect();
 }

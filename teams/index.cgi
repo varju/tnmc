@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-
 use lib '/tnmc';
 use tnmc;
 
@@ -10,17 +9,16 @@ use tnmc;
 
 my $script_name = "teams/index.cgi";
 
-
 #
 # Actions
 #
 
-my $ACTION = lc( &tnmc::cgi::param("ACTION"));
+my $ACTION = lc(&tnmc::cgi::param("ACTION"));
 
-if ($ACTION eq 'list'){
+if ($ACTION eq 'list') {
     &action_list_teams();
 }
-else{
+else {
     &action_list_teams();
 }
 
@@ -28,20 +26,17 @@ else{
 # Action Subs
 #
 
-sub action_list_teams{
-    
+sub action_list_teams {
+
     # setup
     my @teams = &tnmc::teams::team::list_teams("ORDER BY seasonStart");
-    
+
     # show page
     &tnmc::template::header();
-    
+
     &tnmc::template::show_heading("Teams");
-    map {&tnmc::teams::template::show_team($_, 'big');} @teams;
-    
+    map { &tnmc::teams::template::show_team($_, 'big'); } @teams;
+
     &tnmc::template::footer();
 }
-
-
-
 

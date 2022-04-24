@@ -16,11 +16,11 @@ use tnmc::news::util;
 
 if ($USERID) {
     &tnmc::template::show_heading("edit news entry");
-    
+
     my $newsId = &tnmc::cgi::param('newsId');
 
     my $news_ref = &tnmc::news::util::get_news_item($newsId);
     &tnmc::news::template::news_edit($news_ref);
 }
-    
+
 &tnmc::template::footer();

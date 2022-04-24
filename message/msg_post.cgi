@@ -21,12 +21,12 @@ my %msg;
 
 my @cols = &tnmc::db::db_get_cols_list('MessageMsg');
 
-foreach my $key (@cols){
+foreach my $key (@cols) {
     $msg{$key} = &tnmc::cgi::param($key);
 }
 
 $msg{sender} = $tnmc::security::auth::USERID;
-$msg{msgID} = 0;
+$msg{msgID}  = 0;
 
 &tnmc::message::set_msg(\%msg);
 &tnmc::message::forward_external(\%msg);

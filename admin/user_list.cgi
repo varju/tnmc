@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 ##################################################################
-#    Scott Thompson - scottt@css.sfu.ca 
+#    Scott Thompson - scottt@css.sfu.ca
 #    Jeff Steinbok  - steinbok@interchange.ubc.ca
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
@@ -30,7 +30,7 @@ use tnmc::user;
 ##########################################################
 
 #########################################
-sub show_edit_users_list{
+sub show_edit_users_list {
     my (@users, %user, $userID, $key);
 
     &tnmc::user::list_users(\@users, '', 'ORDER BY username');
@@ -41,14 +41,13 @@ sub show_edit_users_list{
         <tr>    <td></td>
     };
 
-    foreach $key (keys %user){
+    foreach $key (keys %user) {
         print "<td><b>$key</b></td>";
     }
     print qq{</tr>\n};
 
-
-        foreach $userID (@users){
-                &tnmc::user::get_user($userID, \%user);
+    foreach $userID (@users) {
+        &tnmc::user::get_user($userID, \%user);
         print qq{
             <tr>
                 <td nowrap>
@@ -56,13 +55,13 @@ sub show_edit_users_list{
                 <a href="admin/user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
         };
-        foreach $key (keys %user){
+        foreach $key (keys %user) {
             next unless defined $user{$key};
 
             print "<td>$user{$key}</td>";
         }
         print qq{</tr>\n};
-        }
+    }
 
     print qq{
         <tr>
@@ -70,7 +69,7 @@ sub show_edit_users_list{
         <td><input type="submit" value="Add:"></td>
     };
 
-    foreach $key (keys %user){
+    foreach $key (keys %user) {
         next unless defined $user{$key};
 
         my $len = length($user{$key}) + 1;
@@ -78,12 +77,12 @@ sub show_edit_users_list{
             <td><input type="text" name="$key" size="$len"></td>
         };
     }
- 
+
     print qq{
         </form>
         </tr>
     };
-        print qq{
+    print qq{
                 </table>
         };
 }

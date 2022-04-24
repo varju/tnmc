@@ -23,45 +23,48 @@ my $movieID = &tnmc::cgi::param('movieID');
 
 &tnmc::template::footer();
 
-
 #
 # subs
 #
 
-sub show_movie_edit_form{    
+sub show_movie_edit_form {
     my ($movieID) = @_;
 
-    my %movie;    
+    my %movie;
     &tnmc::movies::movie::get_movie($movieID, \%movie);
-    
+
     my ($checkboxSeen, $checkboxNotSeen);
-    if ($movie{statusSeen}){
+    if ($movie{statusSeen}) {
         $checkboxSeen = 'CHECKED';
-    }else{
+    }
+    else {
         $checkboxNotSeen = 'CHECKED';
     }
-    
+
     my ($checkboxShowing, $checkboxNotShowing);
-    if ($movie{statusShowing}){
+    if ($movie{statusShowing}) {
         $checkboxShowing = 'CHECKED';
-    }else{
+    }
+    else {
         $checkboxNotShowing = 'CHECKED';
     }
 
     my ($checkboxNew, $checkboxNotNew);
-    if ($movie{statusNew}){
+    if ($movie{statusNew}) {
         $checkboxNew = 'CHECKED';
-    }else{
+    }
+    else {
         $checkboxNotNew = 'CHECKED';
     }
-    
+
     my ($checkboxBanned, $checkboxNotBanned);
-    if ($movie{statusBanned}){
+    if ($movie{statusBanned}) {
         $checkboxBanned = 'CHECKED';
-    }else{
+    }
+    else {
         $checkboxNotBanned = 'CHECKED';
     }
-    
+
     print qq{
         <form action="movies/movie_edit_submit.cgi" method="post">
         <input type="hidden" name="movieID" value="$movieID">
@@ -116,5 +119,5 @@ sub show_movie_edit_form{
         </table>
         <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
         </form>
-    }; 
+    };
 }

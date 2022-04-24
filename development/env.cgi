@@ -19,12 +19,12 @@ print qq{
 
 ### date stuff.
 my $today;
-open (DATE, "/bin/date +%Y%m%d%H |");
+open(DATE, "/bin/date +%Y%m%d%H |");
 while (<DATE>) {
     chomp;
     $today = $_;
 }
-close (DATE);
+close(DATE);
 
 print qq{
     <b>Date/Time</b> $today<p>
@@ -43,7 +43,7 @@ my @names = &tnmc::cgi::param();
 print @names;
 
 print "<p> ";
-foreach my $name (@names){
+foreach my $name (@names) {
     my $value = &tnmc::cgi::param($name);
     print "<b>$name</b> : $value<br>";
 }
@@ -54,7 +54,7 @@ my @names = &tnmc::cgi::url_param();
 print @names;
 
 print "<p> ";
-foreach my $name (@names){
+foreach my $name (@names) {
     my $value = &tnmc::cgi::url_param($name);
     print "<b>$name</b> : $value<br>";
 }
@@ -63,17 +63,16 @@ foreach my $name (@names){
 print "\n<p><b><font color=\"0000ff\">Cookies:</font></b><br>\n";
 
 my @cookies = &tnmc::cgi::cookie();
-foreach my $cookie (@cookies){
+foreach my $cookie (@cookies) {
     print "<b><u>$cookie</u></b><br>";
     my %cookie = &tnmc::cgi::cookie($cookie);
     print %cookie;
     print "<br>\n";
-    foreach my $var (sort keys %cookie){
+    foreach my $var (sort keys %cookie) {
         print "<b>$var</b> $cookie{$var}<br>";
     }
     print "<p>";
 }
- 
 
 ### ENV variables
 print "<p><b><font color=\"0000ff\">ENV list:</font></b><br> ";

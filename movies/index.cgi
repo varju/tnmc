@@ -24,7 +24,6 @@ use tnmc::movies::night;
 #############
 ### Main logic
 
-
 &tnmc::template::header();
 
 ## Variables
@@ -32,38 +31,36 @@ my $sortOrder = &tnmc::cgi::param('sortOrder') || 'order';
 
 my $e_userID = $USERID;
 
-if (($USERID{groupMovies} >= 100) && (&tnmc::cgi::param('effectiveUserID')) ){
+if (($USERID{groupMovies} >= 100) && (&tnmc::cgi::param('effectiveUserID'))) {
     $e_userID = &tnmc::cgi::param('effectiveUserID');
 }
 
-my @nights = &tnmc::movies::night::list_future_nights();
+my @nights  = &tnmc::movies::night::list_future_nights();
 my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
 
-&tnmc::template::show_heading ("");
+&tnmc::template::show_heading("");
 &show_local_nav($sortOrder, $e_userID, $USERID, $nightID);
 
-&tnmc::template::show_heading ("Movie Attendance");
+&tnmc::template::show_heading("Movie Attendance");
 &tnmc::movies::attendance::show_my_attendance_chooser($e_userID, $nightID);
 
-my $night = &tnmc::movies::night::get_night($nightID);
+my $night     = &tnmc::movies::night::get_night($nightID);
 my $show_date = &tnmc::util::date::format("short_wday", $night->{date});
-&tnmc::template::show_heading ("Detailed Votes - $show_date");
+&tnmc::template::show_heading("Detailed Votes - $show_date");
 &show_movies_enhanced($sortOrder, $e_userID, $USERID, $nightID);
 
 &tnmc::template::footer();
 
-
-
 ##########################################################
-sub show_local_nav{
+sub show_local_nav {
     my ($sortOrder, $effectiveUserID, $real_userID, $nightID) = @_;
-    
+
     my %REAL_USER;
     &tnmc::user::get_user($real_userID, \%REAL_USER);
-    
+
     my %sortSel;
     $sortSel{$sortOrder} = 'selected';
-    
+
     print qq{
         <table border="0" cellpading="0" cellspacing="0" ><tr valign="top">
           <form action="movies/index.cgi" method="get">
@@ -86,58 +83,56 @@ sub show_local_nav{
               </select>
           </td>
     };
-    
+
     ## let admin users modify other people's votes
-    if ($REAL_USER{groupMovies} >= 100){
+    if ($REAL_USER{groupMovies} >= 100) {
         print qq{
                 <td>
                     <font face="verdana" size="-1" color="888888"><b>modify votes for</b><br>
                     <select name="effectiveUserID" onChange="form.submit();">
         };
-        
+
         my $sql = "SELECT userID, username FROM Personal WHERE groupMovies >= 1  ORDER BY username";
-	my $dbh = &tnmc::db::db_connect();
+        my $dbh = &tnmc::db::db_connect();
         my $sth = $dbh->prepare($sql);
         $sth->execute();
-        
-        while (my ($userID, $username) = $sth->fetchrow_array()){
-            my $sel = ($userID == $effectiveUserID)? 'selected' : '';
+
+        while (my ($userID, $username) = $sth->fetchrow_array()) {
+            my $sel = ($userID == $effectiveUserID) ? 'selected' : '';
             print qq{           <option value="$userID" $sel>$username \n };
         }
         $sth->finish();
         print qq{    </select>     </td>      };
     }
-    
+
     print qq{    </tr></table></form>   };
-    
-    
+
 }
 
 ##########################################################
-sub show_movies_enhanced{
+sub show_movies_enhanced {
     my ($sortOrder, $effectiveUserID, $real_userID, $nightID) = @_;
-    
+
     my %REAL_USER;
     &tnmc::user::get_user($real_userID, \%REAL_USER);
-    
+
     my %USER;
     &tnmc::user::get_user($effectiveUserID, \%USER);
-    
-    
+
     # mini-hack
     my $displaySortOrder = $sortOrder;
-    if ( ($displaySortOrder eq 'title')
-       ||($displaySortOrder eq 'rank')
-       ||($displaySortOrder eq 'votesForTotal')
-       ||($displaySortOrder eq 'votesAgainst')
-       ||($displaySortOrder eq 'votesAway')
-       ){
-        $displaySortOrder = ''
+    if (($displaySortOrder eq 'title') ||
+        ($displaySortOrder eq 'rank')          ||
+        ($displaySortOrder eq 'votesForTotal') ||
+        ($displaySortOrder eq 'votesAgainst')  ||
+        ($displaySortOrder eq 'votesAway'))
+    {
+        $displaySortOrder = '';
     }
-    
+
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
-    
+
     ##################################################################
     ### Start of list
     print qq{
@@ -161,56 +156,52 @@ sub show_movies_enhanced{
             <td colspan="11" bgcolor="cccccc" align="right">
                 <font color="888888"><b>now showing </td></tr>
     };
-    
+
     ########################
     # Now Showing
-    
+
     my @movies = &tnmc::movies::night::list_cache_movieIDs($nightID);
-    &show_movie_list_enhanced( \@movies,
-			       $displaySortOrder, $effectiveUserID,
-			       $sortOrder, $nightID);
-    
+    &show_movie_list_enhanced(\@movies, $displaySortOrder, $effectiveUserID, $sortOrder, $nightID);
+
     print qq{    <tr>
             <td colspan="11" bgcolor="cccccc" align="right">
             <font color="888888"><b>coming soon </td></tr>
     };
-    
+
     ########################
     # Coming Soon
-    
+
     @movies = &tnmc::movies::night::list_comingsoon_movies_for_night($nightID);
-    &show_movie_list_enhanced( \@movies,
-			       $displaySortOrder, $effectiveUserID,
-			       $sortOrder, $nightID);
-    
+    &show_movie_list_enhanced(\@movies, $displaySortOrder, $effectiveUserID, $sortOrder, $nightID);
+
     print qq{\n    </table><p>\n};
-    
+
     ### End of list
     ##################################################################
-    
-    
+
     ########################
     ### Do the Special Vote Stuff
-    
 
-    my %vote_types = ('-1' => 'Anti',
-                      '0' => 'Neutral',
-                      '1' => 'Normal',
-                      '2' => 'Favourite',
-                      '3' => 'Super-Favourite',
-                      '4' => 'Birthday');
+    my %vote_types = (
+        '-1' => 'Anti',
+        '0'  => 'Neutral',
+        '1'  => 'Normal',
+        '2'  => 'Favourite',
+        '3'  => 'Super-Favourite',
+        '4'  => 'Birthday'
+    );
     my @vote_types;
-    
-    if ($REAL_USER{groupMovies} >= 100){
+
+    if ($REAL_USER{groupMovies} >= 100) {
         @vote_types = (2, 3, 4);
     }
-    else{
+    else {
         @vote_types = (2);
     }
-    
+
     print '<table cellpadding="0" cellspacing="0" border="0">';
-    
-    foreach my $vote_type (@vote_types){
+
+    foreach my $vote_type (@vote_types) {
         print qq{
             <tr>
                 <td><b>$vote_types{$vote_type} Movie:</b></td>
@@ -222,22 +213,21 @@ sub show_movies_enhanced{
         };
     }
     print "</table>\n";
-    
-    
+
     ########################
     ### Warn if modifying another user's votes.
-    
+
     my $useridNotice = '';
-    if ($effectiveUserID != $USERID){
+    if ($effectiveUserID != $USERID) {
         $useridNotice = qq{
             <font face="arial" size="+1" color="086DA5"><i><b>
                 for $USER{username}</b></i></font>
         };
     }
-    
+
     ########################
     ### Show the Update Votes buton.
-    
+
     print qq{
         <input type="image" border="0" src="/template/update_votes_submit.gif"
                  alt="Update Votes">$useridNotice
@@ -248,39 +238,34 @@ sub show_movies_enhanced{
 ##########################################################
 sub show_movie_list_enhanced {
     my ($movielist_ref, $extraField, $effectiveUserID, $sortOrder, $nightID) = @_;
-    
+
     my @list = @$movielist_ref;
-    
+
     my (@movies, $anon, $movieID, %movieInfo);
     my ($boldNew, %vote_status_word);
-    
-    foreach my $movieID (@list){
-        my $anon = {};     ### create an anonymous hash.
+
+    foreach my $movieID (@list) {
+        my $anon = {};    ### create an anonymous hash.
         &tnmc::movies::movie::get_movie_extended2($movieID, $anon, $nightID);
         $movieInfo{$movieID} = $anon;
     }
-    if ($sortOrder){
+    if ($sortOrder) {
         ## Note: if we say 'rank', we really mean 'order' (more granularity)
         $sortOrder = 'order' if ($sortOrder eq 'rank');
 
-        @list = sort  {
-            (   ($movieInfo{$b}->{$sortOrder}
-                 <=>     $movieInfo{$a}->{$sortOrder})
-                ||
-                ($movieInfo{$a}->{$sortOrder}
-                 cmp     $movieInfo{$b}->{$sortOrder})
-                )
-            }
-            @list ;
+        @list = sort {
+            (($movieInfo{$b}->{$sortOrder} <=> $movieInfo{$a}->{$sortOrder}) ||
+                  ($movieInfo{$a}->{$sortOrder} cmp $movieInfo{$b}->{$sortOrder}))
+        } @list;
     }
-    
-    foreach my $movieID (@list){
-        
+
+    foreach my $movieID (@list) {
+
         my $vote = &tnmc::movies::vote::get_vote($movieID, $effectiveUserID);
-        
+
         my %vote_status_word;
         $vote_status_word{$vote} = "CHECKED";
-        
+
         print qq{
             <tr valign="top">
                 <td><a href="movies/movie_edit.cgi?movieID=$movieID"><font color="cccccc">$movieID</a></td>
@@ -291,7 +276,7 @@ sub show_movie_list_enhanced {
                 <td></td>
                 <td valign="top">
         };
-        if ( ($movieInfo{$movieID}->{statusShowing}) &&($movieInfo{$movieID}->{statusNew}) ){ print qq{<b>}; }
+        if (($movieInfo{$movieID}->{statusShowing}) && ($movieInfo{$movieID}->{statusNew})) { print qq{<b>}; }
         print qq{
                     <a href="movies/movie_view.cgi?movieID=$movieID" target="viewmovie">
                         $movieInfo{$movieID}->{title}</a></td>
@@ -305,7 +290,6 @@ sub show_movie_list_enhanced {
 
     }
 }
-
 
 ##########################################################
 #### The end.

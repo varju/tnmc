@@ -15,9 +15,8 @@ use tnmc;
 # module routines
 #
 
-sub show{
-    
-}
+sub show {
 
+}
 
 1;

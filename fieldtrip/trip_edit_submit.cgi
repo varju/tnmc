@@ -15,19 +15,18 @@ use tnmc::cgi;
 
 require 'fieldtrip/FIELDTRIP.pl';
 
-    #############
-    ### Main logic
-    
-    &tnmc::db::db_connect();
+#############
+### Main logic
 
-    @cols = &tnmc::db::db_get_cols_list('Fieldtrips');
-     foreach $key (@cols)
-    {
-         $trip{$key} = &tnmc::cgi::param($key);
-    }
-    &set_trip(%trip);
-    
-    &tnmc::db::db_disconnect();
+&tnmc::db::db_connect();
 
-    print "Location: index.cgi\n\n";
+@cols = &tnmc::db::db_get_cols_list('Fieldtrips');
+foreach $key (@cols) {
+    $trip{$key} = &tnmc::cgi::param($key);
+}
+&set_trip(%trip);
+
+&tnmc::db::db_disconnect();
+
+print "Location: index.cgi\n\n";
 

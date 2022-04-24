@@ -10,27 +10,26 @@ use CGI;
 
 $cgih = new CGI;
 
-print $cgih -> header();
+print $cgih->header();
 print '<font face="arial, helvetica" size="-1">';
 
 ########################################################
 ### Get all the little variables that we'll want to use.
-    
-$sql = $cgih -> param('sql');
-$host = $cgih -> param('host');
-$user = $cgih -> param('user');
-$password = $cgih -> param('password');
-$database = $cgih -> param('database');
+
+$sql      = $cgih->param('sql');
+$host     = $cgih->param('host');
+$user     = $cgih->param('user');
+$password = $cgih->param('password');
+$database = $cgih->param('database');
 
 ############################
 ### Do the date stuff.
-open (DATE, "/bin/date +%Y%m%d%H%M%S |");
+open(DATE, "/bin/date +%Y%m%d%H%M%S |");
 while (<DATE>) {
     chop;
     $today = $_;
 }
-close (DATE);
-
+close(DATE);
 
 ########################################################
 ### Make a log
@@ -38,14 +37,14 @@ close (DATE);
 $log_sql = $sql;
 $log_sql =~ s/\n/ /g;
 
-open (LOG, ">>run.log");
+open(LOG, ">>run.log");
 print LOG "$today\t$database\t$user\t\"$log_sql\"\n";
-close (LOG);
+close(LOG);
 
 ########################################################
 ### Do the database thing
 
-        print <<_HTML;
+print <<_HTML;
         <!----------------------------------- H E A D E R ---------------------------------------->
 
         <title>scott's database tools: sql command results</title>
@@ -62,52 +61,51 @@ close (LOG);
     
 _HTML
 
+#############
+### connect to the database
 
-    #############
-    ### connect to the database
+print "\n\n\n<p><hr noshade>";
 
-        print "\n\n\n<p><hr noshade>";
-        
-        # say hello.
-        $dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password);
-        print "<font size=\"+1\">dbh->connect(\"DBI:mysql:$database:$host\", $user, $password)</font><br>";
-        print '<b>errstr: </b>"' . $dbh->errstr . '"';
+# say hello.
+$dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password);
+print "<font size=\"+1\">dbh->connect(\"DBI:mysql:$database:$host\", $user, $password)</font><br>";
+print '<b>errstr: </b>"' . $dbh->errstr . '"';
 
-    #############
-    ### Do some sql...
+#############
+### Do some sql...
 
-        print "\n\n\n<p><hr noshade>";
+print "\n\n\n<p><hr noshade>";
 
-        $sth = $dbh->prepare($sql); 
-            print '<font size="+1">dbh->prepare(sql)</font><br>';
-            print '<b>errstr: </b>"' . $dbh->errstr . '"';
-    
-            print "\n\n\n<p><hr noshade>";
-        
-        $sth ->execute;
-            print '<font size="+1">sth->execute()</font><br>';
-            print '<b>errstr: </b>"' . $dbh->errstr . '"<br>';
+$sth = $dbh->prepare($sql);
+print '<font size="+1">dbh->prepare(sql)</font><br>';
+print '<b>errstr: </b>"' . $dbh->errstr . '"';
 
-            print '<b>fetchrow_array: </b><br>';
+print "\n\n\n<p><hr noshade>";
 
-            print "<table border=1 cellpadding=2>\n";
-            while (@row = $sth->fetchrow_array){
-                print "<tr>";
-                foreach (@row)
-                {    print "<td bgcolor=\"white\"><font size=\"-1\">$_</font></td>";
-                }
-                print "</tr>\n";
-            }
-            print "</table>\n";
+$sth->execute;
+print '<font size="+1">sth->execute()</font><br>';
+print '<b>errstr: </b>"' . $dbh->errstr . '"<br>';
 
-        $sth ->finish;
+print '<b>fetchrow_array: </b><br>';
+
+print "<table border=1 cellpadding=2>\n";
+while (@row = $sth->fetchrow_array) {
+    print "<tr>";
+    foreach (@row) {
+        print "<td bgcolor=\"white\"><font size=\"-1\">$_</font></td>";
+    }
+    print "</tr>\n";
+}
+print "</table>\n";
+
+$sth->finish;
 
 #############
 ### Adios
 
-    $dbh ->disconnect;
+$dbh->disconnect;
 
-        print <<_HTML;
+print <<_HTML;
 
     
 <p>
@@ -118,5 +116,5 @@ _HTML
 <div align="right"><i>- database complete</i></div>
 
 _HTML
-                    
+
 ### keepin' perl happy...

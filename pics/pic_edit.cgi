@@ -26,29 +26,30 @@ my $picID = &tnmc::cgi::param('picID');
 &tnmc::pics::pic::get_pic($picID, \%pic);
 
 # show the user a scaled down pic
-my $pic_img = &tnmc::pics::pic::get_pic_url($picID, ['mode'=>'big']);
+my $pic_img = &tnmc::pics::pic::get_pic_url($picID, [ 'mode' => 'big' ]);
 print qq{  <img width="320" src="$pic_img">\n};
 
 # give admin users a link
 print qq{  <br><a href="pics/pic_edit_admin.cgi?picID=$picID">Admin</a>\n} if ($USERID{groupPics} >= 100);
 
 # Give the owner an edit section:
-if (&tnmc::pics::new::auth_access_pic_edit($picID, \%pic)){
+if (&tnmc::pics::new::auth_access_pic_edit($picID, \%pic)) {
     &show_pic_edit_form();
 }
-else{
+else {
     print "You don't have permission to edit thie pic";
 }
-if (&tnmc::pics::new::auth_access_pic_view($picID, \%pic)){
+if (&tnmc::pics::new::auth_access_pic_view($picID, \%pic)) {
+
     # show the exif info
     &tnmc::template::show_heading("Exif info");
     my $exif = &tnmc::pics::pic::get_exif($picID);
     print "<table>";
-    foreach my $key (keys %$exif){
+    foreach my $key (keys %$exif) {
         print "<tr><td>$key</td> <td>$exif->{$key}</td></tr>\n";
     }
     print "</table>";
-    
+
 }
 
 &tnmc::template::footer();
@@ -58,22 +59,22 @@ if (&tnmc::pics::new::auth_access_pic_view($picID, \%pic)){
 #
 
 ######################################################################
-sub show_pic_edit_form{
+sub show_pic_edit_form {
     my ($pic) = @_;
 
     my %pic;
     &tnmc::pics::pic::get_pic($picID, \%pic);
-    
+
     my %typePublic;
-    $typePublic{$pic{typePublic}} = 'selected';
+    $typePublic{ $pic{typePublic} } = 'selected';
 
     my %sel_content;
     my %sel_image;
     my %sel_normalize;
-    $sel_content{int($pic{rateContent})} = 'checked';
-    $sel_image{int($pic{rateImage})} = 'checked';
-    $sel_normalize{int($pic{normalize})} = 'checked';
-    
+    $sel_content{ int($pic{rateContent}) } = 'checked';
+    $sel_image{ int($pic{rateImage}) }     = 'checked';
+    $sel_normalize{ int($pic{normalize}) } = 'checked';
+
     print qq{
 
         <form action="pics/pic_edit_submit.cgi" method="post">
@@ -111,18 +112,18 @@ sub show_pic_edit_form{
     };
 
     my $user_list_ref = &tnmc::user::get_user_list();
-    foreach $username (sort keys %$user_list_ref){
+    foreach $username (sort keys %$user_list_ref) {
         my $selected = 'selected' if ($pic{ownerID} == $user_list_ref->{$username});
         print qq{<option $selected value="$user_list_ref->{$username}">$username\n};
     }
-    
+
     print qq{
                      </select>
                      </td>
                 </tr>
             };
-            if ($USERID == $pic{ownerID}){
-                print qq{
+    if ($USERID == $pic{ownerID}) {
+        print qq{
                     <tr><td><b>Access</td>
                         <td>
                         <select name="typePublic">
@@ -133,9 +134,8 @@ sub show_pic_edit_form{
                         </td>
                     </tr>
                 };
-            }
-    
-    
+    }
+
     print qq{
 
 	    <tr><td><b>Timestamp</td>
@@ -146,9 +146,6 @@ sub show_pic_edit_form{
 		<input type="submit" value="Submit">
                 </form>
     };
-    
+
 }
-
-
-
 

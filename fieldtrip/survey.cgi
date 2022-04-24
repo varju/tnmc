@@ -21,15 +21,14 @@ require 'fieldtrip/FIELDTRIP.pl';
 
 $tripID = &tnmc::cgi::param('tripID');
 $userID = &tnmc::cgi::param('userID');
-if (!$userID){$userID = $USERID;}    
+if (!$userID) { $userID = $USERID; }
 
 &show_survey_form($tripID, $userID);
-    
+
 &tnmc::template::footer();
 
-
 ########################################
-sub show_survey_form{
+sub show_survey_form {
     my ($tripID, $surveyID) = @_;
 
     ## grab the data
@@ -37,11 +36,11 @@ sub show_survey_form{
     &get_tripSurvey($tripID, $userID, \%survey);
     &get_trip($tripID, \%trip);
     &tnmc::user::get_user($trip{AdminUserID}, \%TripAdminUser);
-    
-    $selInterest{int($survey{interest})} = 'selected';
-    $selDriving{$survey{driving}} = 'selected';
-    $selDrivingWith{$survey{drivingWith}} = 'selected';
-      
+
+    $selInterest{ int($survey{interest}) }  = 'selected';
+    $selDriving{ $survey{driving} }         = 'selected';
+    $selDrivingWith{ $survey{drivingWith} } = 'selected';
+
     print qq {
         <form action="fieldtrip/survey_submit.cgi" method="post">
         <input type="hidden" name="userID" value="$userID">
@@ -94,7 +93,7 @@ sub show_survey_form{
     my $dbh = &tnmc::db::db_connect();
     $sth = $dbh->prepare($sql);
     $sth->execute();
-    while (@row = $sth->fetchrow_array()){
+    while (@row = $sth->fetchrow_array()) {
         print qq{
             <option value="$row[0]" $selDrivingWith{$row[0]}>$row[1]
         };
@@ -107,7 +106,7 @@ sub show_survey_form{
 
                 };
 
-    if ($trip{useWhen}){
+    if ($trip{useWhen}) {
         print qq{
             <tr><th colspan="10">Dates</th></tr>
             <tr valign="top">
@@ -122,9 +121,8 @@ sub show_survey_form{
                 </tr>
                 };
     }
-    
-    
-    if ($trip{useCost}){
+
+    if ($trip{useCost}) {
         print qq{
             <tr><th colspan="10">Cost</th></tr>
             <tr valign="top">
@@ -167,6 +165,6 @@ sub show_survey_form{
         </table>
         <input type="submit" value="Submit">
         </form>
-    }; 
-    
+    };
+
 }
