@@ -6,6 +6,6 @@ BASE_DIR=$(cd $(dirname $0)/../..; pwd)
 LOG_FILE=$BASE_DIR/logs/$(basename $0 | sed -e 's|\..*||').log
 
 date >> $LOG_FILE
-docker exec -i tnmc-web-1 /tnmc/movies/cron/get_movies_cineplex.cgi >> $LOG_FILE 2>&1
+docker exec -i tnmc_web_1 /tnmc/movies/cron/get_movies_cineplex.cgi >> $LOG_FILE 2>&1
 echo >> $LOG_FILE
 echo >> $LOG_FILE

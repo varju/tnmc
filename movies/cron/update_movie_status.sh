@@ -8,7 +8,7 @@ LOG_FILE=$BASE_DIR/logs/$(basename $0 | sed -e 's|\..*||').log
 date >> $LOG_FILE
 
 if [[ $(date +%u) -eq 2 ]]; then
-  docker exec -i tnmc-web-1 /tnmc/movies/cron/update_movie_status.cgi >> $LOG_FILE 2>&1
+  docker exec -i tnmc_web_1 /tnmc/movies/cron/update_movie_status.cgi >> $LOG_FILE 2>&1
 else
   echo "Error: Script should only be run on Tuesdays" >> $LOG_FILE 2>&1
 fi
