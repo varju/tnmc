@@ -21,7 +21,8 @@ RUN apt-get update \
 
 RUN cpanm CGI \
     && cpanm CGI::Lite \
-    && a2enmod cgid
+    && a2enmod cgid \
+    && a2enmod unique_id
 
 ENV \
   APACHE_LOG_DIR=/var/log/apache2 \
