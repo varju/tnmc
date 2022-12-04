@@ -17,58 +17,44 @@ sub show {
 }
 
 sub show_movies {
-    if (1) {
-        &tnmc::template::show_heading("Movies Offline");
 
-        print qq{
-          <table border=0 cellspacing=0 cellpadding=0>
-            <tr><td>
-              Movie scraping is currently broken. Ping me when people are ready to start watching movies again.
-            </td></tr>
-            <tr><td>
-              - Alex
-            </td></tr>
-          </table>
-        };
-    }
-    else {
-        if ($USERID && $USERID{groupMovies}) {
+    ## heading
+    if ($USERID && $USERID{groupMovies}) {
 
-            my @nights  = &tnmc::movies::night::list_future_nights();
-            my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
+        my @nights  = &tnmc::movies::night::list_future_nights();
+        my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
 
-            &tnmc::template::show_heading("Movie Attendance");
-            &tnmc::movies::attendance::show_my_attendance_chooser($USERID, $nightID);
+        &tnmc::template::show_heading("Movie Attendance");
+        &tnmc::movies::attendance::show_my_attendance_chooser($USERID, $nightID);
 
-            my $night     = &tnmc::movies::night::get_night($nightID);
-            my $show_date = &tnmc::util::date::format("short_wday", $night->{date});
-            &tnmc::template::show_heading("Movie - $show_date");
+        my $night     = &tnmc::movies::night::get_night($nightID);
+        my $show_date = &tnmc::util::date::format("short_wday", $night->{date});
+        &tnmc::template::show_heading("Movie - $show_date");
 
-            if ($night->{movieID}) {
-                &tnmc::movies::show::show_night($nightID);
-            }
-            else {
-                ## show movies form
-                &show_movies_home($USERID, $nightID);
-            }
-
+        if ($night->{movieID}) {
+            &tnmc::movies::show::show_night($nightID);
         }
         else {
-
-            ## show active (picked) nights
-            my @active_nights = tnmc::movies::night::list_active_nights();
-            foreach my $nightID (@active_nights) {
-                &tnmc::template::show_heading("Movies - Upcoming Nights");
-                &tnmc::movies::show::show_night($nightID);
-            }
-
-            ## show basic movie votes
-            my @nights  = &tnmc::movies::night::list_future_nights();
-            my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
-            &tnmc::template::show_heading("Movies - General Voting");
-            &show_movies_anon($nightID);
-
+            ## show movies form
+            &show_movies_home($USERID, $nightID);
         }
+
+    }
+    else {
+
+        ## show active (picked) nights
+        my @active_nights = tnmc::movies::night::list_active_nights();
+        foreach my $nightID (@active_nights) {
+            &tnmc::template::show_heading("Movies - Upcoming Nights");
+            &tnmc::movies::show::show_night($nightID);
+        }
+
+        ## show basic movie votes
+        my @nights  = &tnmc::movies::night::list_future_nights();
+        my $nightID = &tnmc::cgi::param('nightID') || $nights[0];
+        &tnmc::template::show_heading("Movies - General Voting");
+        &show_movies_anon($nightID);
+
     }
 
     ## show movie conversation
