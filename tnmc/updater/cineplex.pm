@@ -47,7 +47,7 @@ sub get_theatre_showtimes {
     my $header = ['Ocp-Apim-Subscription-Key' => 'dcdac5601d864addbc2675a2e96cb1f8'];
     my $req  = HTTP::Request->new('GET',$URL, $header);
     my $res  = $ua->request($req);
-    my $text = $res->content;
+    my $text = $res->decoded_content;
 
     return $self->parse_theatre_showtimes($text);
 }
