@@ -14,6 +14,7 @@ RUN apt-get update \
        libdbd-mysql-perl \
        libhtml-treebuilder-xpath-perl \
        libmail-sendmail-perl \
+       libjson-perl \
        make \
        postfix \
        tzdata \

@@ -6,7 +6,8 @@ use warnings;
 use Carp qw(confess);
 use LWP::UserAgent;
 use HTTP::Request::Common qw(POST);
-use HTML::TreeBuilder::XPath;
+use JSON;
+use utf8;
 
 use tnmc::general_config;
 use tnmc::movies::movie;
@@ -40,11 +41,11 @@ sub get_theatre_showtimes {
     my $ua = $self->get_valid_ua();
 
     my $tues = &tnmc::util::date::get_next_tuesday();
-    my $URL =
-"http://www.cineplex.com/Showtimes/GetShowtimes?Location=$cineplexID&LocationUrl=$cineplexID&Latitude=49.2493221&Longitude=-123.1465862&RequestType=TheatreLookup&OutputType=showtimesonly&Date=$tues&PreviousDate=$tues&TimeFormat=12";
+    my $URL = "https://apis.cineplex.com/prod/cpx/theatrical/api/v1/showtimes?language=en&locationId=$cineplexID&date=$tues";
 
     print "DEBUG: Requesting $URL\n";
-    my $req  = new HTTP::Request GET => $URL;
+    my $header = ['Ocp-Apim-Subscription-Key' => 'dcdac5601d864addbc2675a2e96cb1f8'];
+    my $req  = HTTP::Request->new('GET',$URL, $header);
     my $res  = $ua->request($req);
     my $text = $res->content;
 
@@ -54,59 +55,19 @@ sub get_theatre_showtimes {
 sub parse_theatre_showtimes {
     my ($self, $text) = @_;
 
-    my $tree       = HTML::TreeBuilder::XPath->new_from_content($text);
-    my $movie_divs = $tree->findnodes(qq{//a[\@class="movie-details-link-click"]});
+    my $tree = decode_json $text;
+    my $movie_list = @$tree[0]->{dates}[0]->{movies};
 
     my @movies;
-    foreach my $name_anchor ($movie_divs->get_nodelist()) {
+    foreach my $movie_entry (@$movie_list) {
 
-        my $movieid = parse_movie_href($name_anchor->attr('href'));
-
-        my $title = $name_anchor->as_text();
-        $title =~ s/^\s+|\s+$//g;
+        my $movieid = $movie_entry->{"filmUrl"};
+        my $title = $movie_entry->{"name"};
 
         my %movie = ("cineplexID" => $movieid, "title" => $title, 'page' => '');
         push @movies, \%movie;
     }
-
-    $tree->delete();
-
     return \@movies;
-}
-
-sub get_child {
-    my ($element, $child_index, $expected_tag, $assert_attrs) = @_;
-
-    my @children = $element->content_list();
-    my $child    = $children[$child_index];
-    confess "couldn't find child" if !defined($child);
-
-    if (!defined($assert_attrs)) {
-        $assert_attrs = {};
-    }
-
-    $assert_attrs->{'_tag'} = $expected_tag;
-    foreach my $key (keys %$assert_attrs) {
-        my $expected_val = $assert_attrs->{$key};
-        my $actual_val   = $child->attr($key);
-        if (!defined($child->attr($key))) {
-            confess "Can't find attribute $key";
-        }
-        if ($child->attr($key) ne $expected_val) {
-            confess "Wrong value for $key (was $actual_val, expected $expected_val)";
-        }
-    }
-
-    return $child;
-}
-
-sub parse_movie_href {
-    my ($href) = @_;
-
-    if ($href =~ /\/Movie\/(.*)/) {
-        return $1;
-    }
-    confess "Can't parse href $href\n";
 }
 
 sub parse_title {

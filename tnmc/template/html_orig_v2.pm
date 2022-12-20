@@ -39,7 +39,7 @@ sub header {
     print qq{
 <HTML>
 <HEAD>
-
+<meta charset="UTF-8">
 <style>
 p, ul, td, th, h1,h2,h3,h4,h5,h6, font, b, i, a {
     font-family: verdana, helvetica, arial, sans-serif;
