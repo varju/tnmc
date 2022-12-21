@@ -13,10 +13,11 @@ RUN apt-get update \
        libapache2-reload-perl \
        libdbd-mysql-perl \
        libhtml-treebuilder-xpath-perl \
-       libmail-sendmail-perl \
        libjson-perl \
+       libmail-sendmail-perl \
        make \
        postfix \
+       sudo \
        tzdata \
     && rm -rf /var/lib/apt/lists/*
 
@@ -43,8 +44,12 @@ RUN useradd -ms /bin/bash tnmc \
 COPY docker/sites-available.tnmc.ca.conf /etc/apache2/sites-available/tnmc.ca.conf
 RUN a2dissite 000-default && a2ensite tnmc.ca
 
+# Fix smtp.gmail.com DNS resolution issue, and allow non-root user to start Postgres
+RUN echo 'nameserver 8.8.8.8' > /var/spool/postfix/etc/resolv.conf \
+    && echo 'tnmc ALL=(ALL) NOPASSWD: /usr/sbin/postfix' > /etc/sudoers.d/tnmc
+
 USER tnmc
 COPY --chown=tnmc . /tnmc
 RUN cd /tnmc && mkdir auto && make
 
-CMD ["/usr/sbin/apache2", "-DFOREGROUND"]
+CMD ["/tnmc/docker-entrypoint.sh"]
