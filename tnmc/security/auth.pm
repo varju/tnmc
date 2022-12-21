@@ -44,7 +44,7 @@ sub authenticate {
     &tnmc::security::session::hit_session($sessionID);
 
     if (!&tnmc::security::auth::approve()) {
-        print "Content-type: text/html\n\n";
+        print "Content-Type: text/html; charset=utf-8\n\n";
         print "<h1>Access Denied</h1>\n";
         exit("Access Denied $USERID - $USERID{'username'}");
     }

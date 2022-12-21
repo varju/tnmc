@@ -17,7 +17,7 @@ use task::cgi;
 #############
 ### Main logic
 
-print "Content-type: text/html\n\n";
+print "Content-Type: text/html; charset=utf-8\n\n";
 
 #&header();
 

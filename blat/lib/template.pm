@@ -53,7 +53,7 @@ sub erin_roommate_log {
 sub header {
     my $title = "blatsite!";
 
-    print "Content-type: text/html\n\n";
+    print "Content-Type: text/html; charset=utf-8\n\n";
     print qq{
             
                 <html>

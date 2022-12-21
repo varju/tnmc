@@ -20,13 +20,22 @@ require tnmc::template;
 
 &tnmc::template::header();
 
-&upgrade_db_20161123();
+&upgrade_db_20221219();
 
 &tnmc::template::footer();
 
 #
 # subs
 #
+
+sub upgrade_db_20221219 {
+    my $dbh = &tnmc::db::db_connect();
+
+    $dbh->do("UPDATE MovieTheatres SET cineplexID=NULL WHERE theatreID = 1;");  #cn imax
+    $dbh->do("UPDATE MovieTheatres SET cineplexID=1149 WHERE theatreID = 4;");  # 5th ave
+    $dbh->do("UPDATE MovieTheatres SET cineplexID=1147 WHERE theatreID = 6;");  # tinseltown
+    $dbh->do("UPDATE MovieTheatres SET cineplexID=1422 WHERE theatreID = 17;");  # scotiabank
+}
 
 sub upgrade_db_20161123 {
     my $dbh = &tnmc::db::db_connect();

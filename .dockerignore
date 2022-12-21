@@ -1,6 +1,7 @@
 .git
 Dockerfile
 rebuild.sh
+migrate.txt
 
 auto
 logs

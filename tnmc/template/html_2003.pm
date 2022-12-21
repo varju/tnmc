@@ -20,7 +20,7 @@ BEGIN {
 sub header {
 
     # header and title
-    print "Content-type: text/html\n\n";
+    print "Content-Type: text/html; charset=utf-8\n\n";
 
     &tnmc::security::auth::authenticate();
 

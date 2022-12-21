@@ -5,8 +5,8 @@ use warnings;
 
 use lib '/tnmc';
 use tnmc::updater::cineplex;
-
-use Test::Simple tests => 13;
+use utf8;
+use Test::Simple tests => 25;
 
 my $body = read_file('theatre.html');
 
@@ -18,12 +18,18 @@ print "$tue\n";
 # my $showtimes = $updater->get_theatre_showtimes('scotiabank-theatre-vancouver');
 my $showtimes = $updater->parse_theatre_showtimes($body);
 
-ok_movie(shift(@$showtimes), 'Doctor Strange',              'doctor-strange',             '');
-ok_movie(shift(@$showtimes), 'Arrival',                     'arrival-2016',               '');
-ok_movie(shift(@$showtimes), 'Hacksaw Ridge',               'hacksaw-ridge',              '');
-ok_movie(shift(@$showtimes), 'Inferno',                     'inferno-2016',               '');
-ok_movie(shift(@$showtimes), 'Jack Reacher: Never Go Back', 'jack-reacher-never-go-back', '');
-ok_movie(shift(@$showtimes), 'The Accountant',              'the-accountant-2016',        '');
+ok_movie(shift(@$showtimes), "Empire of Light",'empire-of-light','');
+ok_movie(shift(@$showtimes), "Strange World",'strange-world','');
+ok_movie(shift(@$showtimes), "Spoiler Alert",'spoiler-alert','');
+ok_movie(shift(@$showtimes), "Top Gun: Maverick",'top-gun-maverick','');
+ok_movie(shift(@$showtimes), "Devotion",'devotion','');
+ok_movie(shift(@$showtimes), "Bones and All",'bones-and-all','');
+ok_movie(shift(@$showtimes), "The Menu",'the-menu','');
+ok_movie(shift(@$showtimes), "The Banshees of Inisherin",'the-banshees-of-inisherin','');
+ok_movie(shift(@$showtimes), "TÁR",'tar','');
+ok_movie(shift(@$showtimes), "PLAN A",'plan-a','');
+ok_movie(shift(@$showtimes), "Roald Dahl’s Matilda The Musical",'roald-dahls-matilda-the-musical','');
+ok_movie(shift(@$showtimes), "Guillermo Del Toro's Pinocchio",'guillermo-del-toros-pinocchio','');
 
 ok(0 == scalar(@$showtimes));
 
