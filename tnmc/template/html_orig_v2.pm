@@ -23,7 +23,7 @@ sub header {
     # header and title
     print "Pragma: no-cache\n";
     print "Expires:Thu Jan  1 00:00:00 1970\n";
-    print "Content-type: text/html\n\n";
+    print "Content-Type: text/html; charset=utf-8\n\n";
 
     &tnmc::security::auth::authenticate();
 
@@ -39,7 +39,6 @@ sub header {
     print qq{
 <HTML>
 <HEAD>
-<meta charset="UTF-8">
 <style>
 p, ul, td, th, h1,h2,h3,h4,h5,h6, font, b, i, a {
     font-family: verdana, helvetica, arial, sans-serif;

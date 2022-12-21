@@ -17,7 +17,7 @@ use CGI;
 #    $cgih = new CGI;
 #    print $cgih -> header();
 
-print "Content-Type: text/html\n\n";
+print "Content-Type: text/html; charset=utf-8\n\n";
 
 # grab the PubID from the query string
 $query_string = $ENV{QUERY_STRING};

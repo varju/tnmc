@@ -29,7 +29,7 @@ sub get_type {
 sub update {
     my ($self) = @_;
 
-    print "Content-type: text/html\n\n<pre>\n";
+    print "Content-Type: text/html; charset=utf-8\n\n<pre>\n";
 
     my $theatres  = $self->get_theatres();
     my $showtimes = $self->get_showtimes($theatres);

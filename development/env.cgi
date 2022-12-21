@@ -10,7 +10,7 @@ use tnmc::cgi;
 &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
-print "Content-type: text/html\n\n";
+print "Content-Type: text/html; charset=utf-8\n\n";
 print qq{
     <head>
     <title>TNMC Environment Variables and Form Tester.</title>

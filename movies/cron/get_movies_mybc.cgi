@@ -22,7 +22,7 @@ use tnmc::updater::mybc;
 
     my $dbh = &tnmc::db::db_connect();
 
-    print "Content-type: text/html\n\n<pre>\n";
+    print "Content-Type: text/html; charset=utf-8\n\n<pre>\n";
 
     print "***********************************************************\n";
     print "****           MYBC: Get The Movie List                ****\n";

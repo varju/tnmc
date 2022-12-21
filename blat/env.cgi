@@ -4,7 +4,7 @@ use strict;
 
 use lib::cgi;
 
-print "Content-type: text/html\n\n";
+print "Content-Type: text/html; charset=utf-8\n\n";
 print qq{
     <head>
     <title>TNMC Environment Variables and Form Tester.</title>
