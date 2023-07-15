@@ -4,6 +4,8 @@
 #       Scott Thompson - (june/2000)
 ##################################################################
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -29,7 +31,7 @@ if (!$userID) { $userID = $USERID; }
 
 print qq {
         <form action="survey_submit.cgi" method="post">
-        
+
         <table>
     };
 

@@ -1,6 +1,7 @@
 package tnmc::updater::mybc;
 
 use strict;
+use warnings;
 
 #
 # module configuration

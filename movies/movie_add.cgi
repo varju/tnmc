@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::template;
@@ -37,10 +39,10 @@ sub show_add_movie_form {
                 <table border="0">
                 <tr valign=top>
                         <td colspan="4"><b>Title</b><br>
-                
+
                         <input type="text" size="41" name="title" value=""></td>
                 </tr>
-        
+
                 <tr valign=top>
                         <td><b>Type</b><br>
                         <input type="text" size="12" name="type" value=""></td>
@@ -58,19 +60,19 @@ sub show_add_movie_form {
                 <input type="radio" name="statusShowing" value="0" checked>N &nbsp; <b>Showing</b><br>
                                 <input type="hidden" name="statusSeen" value="0">
                                 <input type="hidden" name="statusBanned" value="0">
-                        </td>  
+                        </td>
 
-                </tr> 
-        
+                </tr>
+
                 <tr valign=top>
                         <td colspan="4"><b>Description</b><br>
                         <textarea cols="40" rows="4" wrap="virtual" name="description"></textarea></td>
                 </tr>
-        
-                       
+
+
                 </table>
         <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
-                </form> 
+                </form>
         };
 
 }

@@ -1,6 +1,7 @@
 package tnmc::broadcast::telus;
 
 use strict;
+use warnings;
 
 use LWP::UserAgent;
 use HTTP::Request::Common qw(POST);

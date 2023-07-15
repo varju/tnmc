@@ -4,6 +4,8 @@
 
 package tnmc::teams::attendance;
 
+use warnings;
+
 use tnmc;
 
 #

@@ -7,6 +7,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::db;
@@ -35,14 +37,14 @@ sub print_movie_edit_admin_form {
     my @cols = &tnmc::db::db_get_cols_list('Movies');
     &tnmc::movies::movie::get_movie($movieID, \%movie);
 
-    print qq 
+    print qq
     {    <form action="movies/movie_edit_submit.cgi" method="post">
         <table>
     };
 
     foreach my $key (@cols) {
-        print qq 
-        {    
+        print qq
+        {
             <tr valign=top><td>$key</td>
             };
 

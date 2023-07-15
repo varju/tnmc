@@ -1,6 +1,8 @@
 package tnmc::homepage::teams;
 
 use strict;
+use warnings;
+
 use tnmc;
 
 #

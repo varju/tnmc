@@ -1,6 +1,7 @@
 package tnmc::cgi;
 
 use strict;
+use warnings;
 
 #
 # module configuration

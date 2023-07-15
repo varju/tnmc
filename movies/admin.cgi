@@ -7,6 +7,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -63,10 +65,10 @@ sub show_admin_page {
             <td><b>Other Theatres</td>
             <td><textarea cols="19" rows="6" wrap="virtual" name="movie_other_theatres">$other_theatres</textarea></td>
             </tr>
-            
+
             </table>
 
-            <p>    
+            <p>
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
         };

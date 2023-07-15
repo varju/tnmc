@@ -1,6 +1,7 @@
 package tnmc;
 
 use strict qw(vars subs);    # strict refs breaks the lazy autoloader
+use warnings;
 
 require tnmc::config;
 require tnmc::template;

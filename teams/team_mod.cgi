@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use warnings;
+
 use lib '/tnmc';
 use tnmc;
 
@@ -201,14 +203,14 @@ sub action_del {
     &tnmc::template::header();
 
     print qq{
-	
+
 	<form action="$script_name" method="post">
 	<input type="hidden" name="teamID" value="$ID">
 	<input type="hidden" name="ACTION" value="DelSubmit">
 	<input type="submit" value="Delete Team">
 	</form>
 	<p>
-	
+
     };
 
     &tnmc::teams::template::show_team($ID);

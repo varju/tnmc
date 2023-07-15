@@ -4,6 +4,8 @@
 
 package tnmc::movies::showtimes;
 
+use warnings;
+
 use tnmc;
 
 #

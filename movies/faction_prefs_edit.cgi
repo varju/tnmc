@@ -6,7 +6,9 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-use lib '/tnmc/';
+use warnings;
+
+use lib '/tnmc';
 
 use tnmc::template;
 use tnmc::movies::faction;
@@ -37,14 +39,14 @@ use tnmc::cgi;
             <input type="hidden" name="factionID" value="$prefs->{factionID}">
             <input type="hidden" name="userID" value="$prefs->{userID}">
 	    <table>
-            
+
             <tr valign=top><td>Member</td>
             <td>
                 <input type="radio" name="membership" value="1"  $sel_membership{'1'}>Yes
                 <input type="radio" name="membership" value="-1" $sel_membership{'-1'} $sel_membership{'0'} $sel_membership{''}>No
                 </td>
             </tr>
-            
+
             <tr valign=top><td>Default Attendance</td>
             <td>
                 <select name="attendance">
@@ -54,14 +56,14 @@ use tnmc::cgi;
                 <option value="-2" $sel_attendance{'-2'}>Hide
                 </select>
             </tr>
-            
+
             <tr valign=top><td>Cell-phone Notification</td>
             <td>
                 <input type="radio" name="notify_phone" value="1"  $sel_notify_phone{'1'}>Yes
                 <input type="radio" name="notify_phone" value="0" $sel_notify_phone{'0'} $sel_notify_phone{''}>No
                 </td>
             </tr>
-            
+
             </table>
 	    <input type="submit" value="Submit">
 	    </form>

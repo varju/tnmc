@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 
-use lib '/tnmc';
 use strict;
+use warnings;
+
+use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::template;

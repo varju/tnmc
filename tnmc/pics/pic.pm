@@ -1,6 +1,8 @@
 package tnmc::pics::pic;
 
 use strict;
+use warnings;
+
 use AutoLoader 'AUTOLOAD';
 
 use tnmc::config;

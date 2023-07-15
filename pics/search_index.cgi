@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::template;
@@ -54,7 +56,7 @@ sub show_search_form_text {
           </form>
         </td></tr>
         </table>
-        
+
     };
 
 }
@@ -83,7 +85,7 @@ sub show_search_form_date_span {
           </form>
         </td></tr>
         </table>
-        
+
     };
 
 }
@@ -104,7 +106,7 @@ sub show_search_form_my_unreleased {
           </form>
         </td></tr>
         </table>
-        
+
     };
 
 }
@@ -125,7 +127,7 @@ sub show_search_form_untitled {
           </form>
         </td></tr>
         </table>
-        
+
     };
 
 }

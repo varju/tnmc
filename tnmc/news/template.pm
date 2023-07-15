@@ -1,6 +1,7 @@
 package tnmc::news::template;
 
 use strict;
+use warnings;
 
 use tnmc::security::auth;
 use tnmc::user;

@@ -2,6 +2,7 @@
 
 use AutoSplit;
 use strict;
+use warnings;
 
 my @modules = `find . -type f | grep -v CVS | grep -v \\~ | grep \\.pm\\\$`;
 

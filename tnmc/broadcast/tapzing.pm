@@ -1,6 +1,7 @@
 package tnmc::broadcast::tapzing;
 
 use strict;
+use warnings;
 
 use tnmc::mail::send;
 use tnmc::security::auth;

@@ -4,6 +4,8 @@
 
 package tnmc::teams::htmlTemplate;
 
+use warnings;
+
 use tnmc;
 
 #

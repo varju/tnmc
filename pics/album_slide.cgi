@@ -5,14 +5,15 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::template::html_black;
 
 use tnmc::pics::new;
-
-use strict;
 
 #############
 ### Main logic

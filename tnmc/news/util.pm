@@ -1,6 +1,7 @@
 package tnmc::news::util;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 use tnmc::general_config;
@@ -121,7 +122,7 @@ sub set_news_item {
         $expires = &news_default_expiry();
     }
 
-    $sql = "INSERT INTO News (newsID, userID, value, date, expires) 
+    $sql = "INSERT INTO News (newsID, userID, value, date, expires)
                  VALUES (?, ?, ?, ?, ?)";
     $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($newsId, $userId, $value, $date, $expires);

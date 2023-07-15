@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use DBI;
 use CGI;
 
@@ -37,7 +39,7 @@ print qq{
 
         <title>$title</title>
         <body bgcolor="#ffffff">
-    
+
         <font face="arial,helvetica" size="+2"><b>
         $title</b></font>
         <hr noshade>

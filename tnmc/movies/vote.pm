@@ -1,6 +1,7 @@
 package tnmc::movies::vote;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 use tnmc::movies::night;

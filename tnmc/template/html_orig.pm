@@ -1,6 +1,7 @@
 package tnmc::template::html_orig;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -63,7 +64,7 @@ th {
     text-decoration: none;
 }
 </style>
-    
+
 <TITLE>TNMC Online</TITLE>
 <base href="$tnmc_url">
 </HEAD>

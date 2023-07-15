@@ -7,6 +7,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -60,7 +62,7 @@ sub show_night_edit_form {
         <input type="hidden" name="nightID" value="$nightID">
         <input type="hidden" name="LOCATION" value="$ENV{HTTP_REFERER}">
         <table>
-        
+
             <tr>
             <td><b>Movie</td>
             <td><select name="movieID">
@@ -78,7 +80,7 @@ sub show_night_edit_form {
     print qq{
                 </select>
             </tr>
-            
+
             <tr>
             <td><b>Faction</td>
             <td><select name="factionID">
@@ -103,22 +105,22 @@ sub show_night_edit_form {
             <td><b>Cinema</td>
             <td><input type="text" name="theatre" value="$night{'theatre'}")></td>
             </tr>
-            
+
             <tr>
             <td><b>Showtime</td>
             <td><input type="text" name="showtime" value="$night{'showtime'}"></td>
             </tr>
-            
+
             <tr>
             <td><b>Meeting Place</td>
             <td><input type="text" name="meetingPlace" value="$night{'meetingPlace'}"></td>
             </tr>
-            
+
             <tr>
             <td><b>Meeting Time</td>
             <td><input type="text" name="meetingTime" value="$night{'meetingTime'}"></td>
             </tr>
-            
+
             <tr>
             <td><b>Vote Blurb</b><br>(sunday email)</td>
             <td><textarea cols="19" rows="5" wrap="virtual" name="voteBlurb">$night{'voteBlurb'}</textarea></td>
@@ -132,7 +134,7 @@ sub show_night_edit_form {
             <td><b>Movie God</td>
             <td><select name="godID">
                 <option value="0">NO CURRENT MOVIE
-            
+
     };
 
     foreach my $username (sort keys %$users) {
@@ -148,7 +150,7 @@ sub show_night_edit_form {
             </tr>
 
             </table>
-            <p>    
+            <p>
             <input type="image" border=0 src="/template/submit.gif" alt="Submit Changes">
             </form>
     };

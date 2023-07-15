@@ -1,6 +1,7 @@
 package tnmc::forms::forms;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -40,7 +41,7 @@ sub edit_item_show_form {
 
     print qq{
 	<b>$conf->{'.form'}->{heading}</b><br>
-	
+
 	<table>
 	<form method="post" action="$conf->{'.form'}->{action}">
 	    <input type="hidden" name="ACTION" value="$conf->{'.form'}->{ACTION}">

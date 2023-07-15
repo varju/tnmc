@@ -7,6 +7,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use DBI;
 use CGI;
 
@@ -44,7 +46,7 @@ print <<_HTML;
 
 <title>$title</title>
 <body bgcolor="#ffffff">
-    
+
 <font face="arial,helvetica" size="+0">
 
     <table align="right" border="0"><tr><td><a href="tools/run.cgi?database=$database">run</a></td></tr></table>

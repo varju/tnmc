@@ -17,6 +17,7 @@
 #
 
 use strict;
+use warnings;
 
 #
 # default settings
@@ -24,7 +25,7 @@ use strict;
 
 my $tnmc_dir = './tnmc/';         # where the new pics to upload are found
 my %details = ('ownerID' => 0);   # your tnmc userID. scott is 1, grant is 2, jeff is 3, etc
-my %conf = ('verbose' => 1);      
+my %conf = ('verbose' => 1);
 
 
 #
@@ -40,42 +41,42 @@ tnmc_upload_que();
 #
 
 sub tnmc_upload_que{
-    
+
     # find all the pics
     my @pic_list = &list_directory_recursive($tnmc_dir);
-    
+
     # upload all the pics
     foreach my $pic_file (@pic_list){
-	
+
 	my $filename = $tnmc_dir . $pic_file;
-	
+
 	tnmc_upload_pic($pic_file, \%details, \%conf);
-	
+
     }
-    
+
     # empty the que
 }
 
 sub tnmc_upload_pic{
     my ($pic_file, $details, $conf) = @_;
-    
+
     use LWP::UserAgent;
     use HTTP::Request::Common;
-    
+
     my %pic = %$details;
-    
+
     # error checking
     die "no owner specified" if !$pic{ownerID};
-    
+
     # upload values
-    
+
     ### Get a User agent
     my $ua = new LWP::UserAgent;
     my $URL = "http://tnmc.webct.com/pics/upload_do_api.cgi";
     my @lwp_file_array = ($tnmc_dir . $pic_file, $pic_file);
-    
+
     ### Make the Request
-    
+
     my $req = POST $URL,
      Content_Type =>'multipart/form-data',
      Content => [ 'filename' => $pic{filename},
@@ -85,19 +86,19 @@ sub tnmc_upload_pic{
                 ];
 
     my $result = $ua->request($req);
-    
+
     print $result->as_string;
-    
+
 }
 
 
 sub list_directory {
     my ($dir) = @_;
-    
+
     opendir(DIR, $dir);
     my @files = readdir DIR;
     closedir(DIR);
-    
+
     @files = grep { ! /^\.+$/} @files;
     @files = grep { $_ ne 'CVS'} @files;
 
@@ -125,7 +126,7 @@ sub list_directory_recursive {
 
 sub split_filepath {
     my ($filepath) = @_;
-    
+
     my $index = rindex($filepath, '/') + 1;
 
     return (substr($filepath, 0, $index), substr($filepath, $index));

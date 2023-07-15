@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -82,7 +84,7 @@ sub show_trip {
 
     ####################
     ### userlist
-    $sql = qq{SELECT p.userID, interest, driving, 
+    $sql = qq{SELECT p.userID, interest, driving,
              DATE_FORMAT(departDate, '%a %l:%i %p'),
              DATE_FORMAT(returnDate, '%a %l:%i %p')
             FROM FieldtripSurvey AS f LEFT JOIN Personal AS p USING (userID)
@@ -93,7 +95,7 @@ sub show_trip {
 
     print qq{
         <table border="0" cellpadding="1" cellspacing="0" width="100%">
-        <tr>    
+        <tr>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
             <th colspan="2">ride</th>

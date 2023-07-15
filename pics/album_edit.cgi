@@ -5,6 +5,9 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -16,8 +19,6 @@ use tnmc::pics::album;
 use tnmc::pics::link;
 use tnmc::pics::pic;
 use tnmc::pics::new;
-
-use strict;
 
 #############
 ### Main logic
@@ -55,7 +56,7 @@ sub show_album_edit_form {
             <br>
             <b>Description</b><br>
             <textarea name="albumDescription" wrap="virtual" cols="38" rows="4">$album{albumDescription}</textarea><br>
-            <table> 
+            <table>
     };
 
     ## date

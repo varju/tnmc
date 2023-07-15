@@ -1,6 +1,7 @@
 package tnmc::template;
 
 use strict;
+use warnings;
 
 #
 # module configuration

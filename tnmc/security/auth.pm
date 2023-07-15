@@ -1,6 +1,8 @@
 package tnmc::security::auth;
 
 use strict;
+use warnings;
+
 use tnmc::security::cookie;
 use tnmc::security::session;
 use tnmc::user;

@@ -4,6 +4,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use CGI;
 
 use lib "..";

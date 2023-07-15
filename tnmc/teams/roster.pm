@@ -4,6 +4,8 @@
 
 package tnmc::teams::roster;
 
+use warnings;
+
 use tnmc;
 
 #

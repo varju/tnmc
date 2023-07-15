@@ -1,7 +1,9 @@
 #!/usr/bin/perl
 
 use AutoSplit;
+
 use strict;
+use warnings;
 
 my @modules = `find /tnmc/tnmc -type f | grep -v CVS | grep -v \\~ | grep \\.pm\\\$`;
 

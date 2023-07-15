@@ -9,6 +9,7 @@ package lib::db;
 #
 
 use strict;
+use warnings;
 
 #
 # module configuration

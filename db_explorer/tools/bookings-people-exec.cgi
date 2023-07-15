@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use DBI;
 use CGI;
 
@@ -66,7 +68,7 @@ print <<_HTML;
         <b>database: </b>$database<br>
         <b>host: </b>$host<br>
         <b>user: </b>$user<br>
-    
+
 _HTML
 
 #############
@@ -115,7 +117,7 @@ $dbh->disconnect;
 
 print <<_HTML;
 
-    
+
 <p>
 <!----------------------------------- F O O T E R ---------------------------------------->
 </font><hr noshade>

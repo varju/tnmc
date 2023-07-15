@@ -1,6 +1,7 @@
 package tnmc::template::html_orig_v2;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -82,7 +83,7 @@ th {
         }
     }
 -->
-</script>    
+</script>
 <TITLE>TNMC Online</TITLE>
 <base href="$tnmc_url">
 </HEAD>

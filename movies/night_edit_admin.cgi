@@ -7,7 +7,9 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-use lib '/tnmc/';
+use warnings;
+
+use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::template;

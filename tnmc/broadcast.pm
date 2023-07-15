@@ -1,6 +1,7 @@
 package tnmc::broadcast;
 
 use strict;
+use warnings;
 
 use AutoLoader 'AUTOLOAD';
 

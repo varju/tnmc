@@ -1,6 +1,7 @@
 package tnmc::pics::new;
 
 use strict;
+use warnings;
 
 use tnmc::security::auth;
 use tnmc::db;
@@ -211,8 +212,8 @@ sub show_album_thumb_header {
     if (&auth_access_album_edit($albumID, \%album)) {
         $edit_links = qq{
             [ <a href="pics/album_edit.cgi?albumID=$albumID">Edit</a>
-            - <a href="pics/album_edit_admin.cgi?albumID=$albumID">Admin</a> 
-            - <a href="pics/album_del.cgi?albumID=$albumID">Del</a> 
+            - <a href="pics/album_edit_admin.cgi?albumID=$albumID">Admin</a>
+            - <a href="pics/album_del.cgi?albumID=$albumID">Del</a>
             - <a href="pics/album_view.cgi?albumID=$albumID">View</a> ]
         };
     }
@@ -242,7 +243,7 @@ sub show_album_nav_menu_basic {
     my $listStart = delete($nav{'listStart'});
 
     print qq{
-        
+
         <table cellpadding="0" cellspacing="0" border="0">
             <tr>
                 <td>
@@ -562,7 +563,7 @@ sub show_piclist {
                     <img $pic_src border="0" ></a></td>
                 <td valign="top">
                     <input type="text" name="PIC${picID}_title" value="$pic{title}" size="20"><br>
-                    
+
                     <textarea rows=2 columns=18 wrap="virtual"  name="PIC${picID}_description">$pic{description}</textarea><br>
             };
 
@@ -573,7 +574,7 @@ sub show_piclist {
 
             ### edit/admin links
             if ($USERID eq $pic{ownerID}) {
-                print qq{     
+                print qq{
                     &\#149;   <a href="pics/pic_edit.cgi?picID=$picID">edit</a>
                     <br>
                 };
@@ -586,7 +587,7 @@ sub show_piclist {
 
             ### rating
             print qq{
-                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"><input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"><input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2"> 
+                    <input type="radio" name="PIC${picID}_rateContent" $sel_content{-2} value="-2"><input type="radio" name="PIC${picID}_rateContent" $sel_content{-1} value="-1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{0} value="0"><input type="radio" name="PIC${picID}_rateContent" $sel_content{1} value="1"><input type="radio" name="PIC${picID}_rateContent" $sel_content{2} value="2">
             };
 
             ### access control

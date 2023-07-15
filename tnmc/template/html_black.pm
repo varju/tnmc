@@ -1,6 +1,7 @@
 package tnmc::template::html_black;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -57,7 +58,7 @@ th {
 
 .tnmcMenu {
     width: 120px;
-    position:absolute; 
+    position:absolute;
     font-size: 9pt;
     padding: 10px;
     text-align:left;
@@ -82,7 +83,7 @@ body {
 <body bgcolor="000000" text="aaaacc" link="9999ff" vlink="6666cc"
 
 >
-    
+
     };
 
     print qq{

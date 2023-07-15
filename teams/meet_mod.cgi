@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use warnings;
+
 use lib '/tnmc';
 use tnmc
 
@@ -155,14 +157,14 @@ sub action_edit {
 
     if (&tnmc::teams::team::USERID_is_admin($hash->{teamID})) {
         print qq{
-	
+
 	    <form action="$script_name" method="post">
 	    <input type="hidden" name="meetID" value="$ID">
 	    <input type="hidden" name="ACTION" value="DelSubmit">
 	    <input type="submit" value="Delete Meet">
 	    </form>
 	    <p>
-	
+
 	};
     }
 
@@ -193,14 +195,14 @@ sub action_del {
     &tnmc::template::header();
 
     print qq{
-	
+
 	<form action="$script_name" method="post">
 	<input type="hidden" name="meetID" value="$ID">
 	<input type="hidden" name="ACTION" value="DelSubmit">
 	<input type="submit" value="Delete Meet">
 	</form>
 	<p>
-	
+
     };
 
     &tnmc::teams::template::show_meet($ID);

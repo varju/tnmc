@@ -1,6 +1,7 @@
 package lib::cgi;
 
 use strict;
+use warnings;
 
 #
 # module configuration

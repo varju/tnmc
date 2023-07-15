@@ -1,6 +1,7 @@
 package tnmc::util::zip;
 
 use strict;
+use warnings;
 
 use tnmc::util::file;
 

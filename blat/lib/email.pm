@@ -1,5 +1,7 @@
 package lib::email;
 
+use warnings;
+
 sub send_email {
     my ($message) = @_;
     my %message = %$message;

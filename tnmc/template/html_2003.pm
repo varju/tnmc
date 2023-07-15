@@ -1,6 +1,7 @@
 package tnmc::template::html_2003;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -84,7 +85,7 @@ th {
 .tnmcControl {
     margin-top: 20px;
     width: $menu_width;
-    position:absolute; 
+    position:absolute;
     font-size: 9pt;
     padding: 10px;
     padding-top: 5px;
@@ -95,7 +96,7 @@ th {
     right: 10px;
     filter:alpha(opacity=100);
     -moz-opacity:100%;
-     
+
 }
 
 .tnmcMenuIndent {
@@ -104,7 +105,7 @@ th {
 .tnmcMenu {
     margin-top: 55px;
     width: $menu_width;
-    position:absolute; 
+    position:absolute;
     font-size: 9pt;
     padding: 10px;
     text-align:left;
@@ -113,7 +114,7 @@ th {
     right: 10px;
     filter:alpha(opacity=100);
     -moz-opacity:100%;
-     
+
 }
 
 .tnmcMain {
@@ -153,7 +154,7 @@ margin-right: 0px;
     function fade_layer(layer, opacity){
         document.getElementById(layer).style.filter="alpha(opacity=" + opacity + ")";
     }
-    
+
     var menu_opacity_bri = 100;
     var menu_opacity_dim = 100;
     function hide_menu(){
@@ -178,11 +179,11 @@ margin-right: 0px;
 
 <body text="#000000" link="#9999ff" vlink="#6666cc"
 >
-    
+
 __HTML
 
     print qq{
-    
+
 	    <div name="tnmcControl" id="tnmcControl" class="tnmcControl">
     <a href="javascript:hide_menu()"
        onMouseOver='javascript:fade_layer("tnmcMenu", menu_opacity_bri)'

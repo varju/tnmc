@@ -1,6 +1,8 @@
 package tnmc::homepage::greeting;
 
 use strict;
+use warnings;
+
 use tnmc;
 
 #

@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use DBI;
 use CGI;
 
@@ -32,14 +34,14 @@ print <<_HTML;
 
         <title>scott's database tools: sql command results</title>
         <body bgcolor="#ffffff">
-    
+
         <font face="arial,helvetica" size="+2"><b>
         scott's database tools: sql command </b></font>
         <hr noshade>
         <font face="arial, sans-serif">
-    
+
         <form method="POST" action="run-exec.cgi">
-    
+
 
 _HTML
 
@@ -52,7 +54,7 @@ $dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password);
 #############
 ### Print the form
 
-print qq{    
+print qq{
     <table cellpadding="0" width="100%" cellspacing="0" border="0">
     <tr>
         <td><font face="arial, helvetica" size="-1">
@@ -77,12 +79,12 @@ while (@row = $sth->fetchrow_array) {
 $sth->finish;
 
 print qq{
-    
+
             </select></font></td>
         <td><font face="arial, helvetica" size="-0">
             <input type="submit" value="Execute"></font></td>
         </tr>
-        
+
     <tr>
         <td><font face="arial, helvetica" size="-1">
             <b>host</b><br>
@@ -95,15 +97,15 @@ print qq{
             <input type="password" name="password" value="password" size=20></font></td>
         </tr>
     </table>
-    
+
     <p>
     <b>command:</b><br>
     <font face="courier, mono-spaced" >
     <textarea name="sql" cols="80" wrap="virtual" rows="12"></textarea>
     </font><p>
-    
-     
-    
+
+
+
     </form>
 
 };

@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use warnings;
+
 use tnmc;
 use tnmc::db;
 

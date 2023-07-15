@@ -1,6 +1,7 @@
 package tnmc::security::cookie;
 
 use strict;
+use warnings;
 
 #
 # module configuration

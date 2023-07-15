@@ -1,6 +1,7 @@
 package tnmc::security::session;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 

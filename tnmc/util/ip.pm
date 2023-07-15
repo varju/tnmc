@@ -1,6 +1,7 @@
 package tnmc::util::ip;
 
 use strict;
+use warnings;
 
 #
 # module routines

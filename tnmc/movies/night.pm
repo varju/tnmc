@@ -1,6 +1,7 @@
 package tnmc::movies::night;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 

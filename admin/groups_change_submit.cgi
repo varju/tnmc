@@ -5,7 +5,10 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
+
 use tnmc::db;
 use tnmc::security::auth;
 use tnmc::user;

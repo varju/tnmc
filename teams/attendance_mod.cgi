@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use warnings;
+
 use lib '/tnmc';
 use tnmc;
 
@@ -101,7 +103,7 @@ sub action_player {
 	    };
         }
         else {
-            print qq{  
+            print qq{
 		<td $bgcolor><select name="$key">
 	    };
             foreach my $option (@options) {
@@ -173,15 +175,15 @@ sub action_meet {
 	    };
         }
         else {
-            print qq{  
-		<td><select name="$key"> 
+            print qq{
+		<td><select name="$key">
 	    };
             foreach my $option (@options) {
                 my $selected = ($option->{key} eq $type) ? "selected" : "";
                 print qq{<option $selected value="$option->{key}">$option->{val}</option>};
             }
             print qq{
-		</select>   
+		</select>
 		    </td>
 	    };
         }

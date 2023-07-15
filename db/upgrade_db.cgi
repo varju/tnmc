@@ -7,6 +7,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 # modules
@@ -169,7 +171,7 @@ sub upgrade_db_01 {
       leagueScheduleURL char(255) NOT NULL default '',
       questions text NOT NULL default '',
       htmlTemplate char(255) NOT NULL default '',
-      PRIMARY KEY (teamID) 
+      PRIMARY KEY (teamID)
       )
     "
     );
@@ -197,7 +199,7 @@ sub upgrade_db_01 {
       minFemale int(2) NOT NULL default '0',
       minMale int(2) NOT NULL default '0',
       minTotal int(2) NOT NULL default '0',
-      PRIMARY KEY (meetID) 
+      PRIMARY KEY (meetID)
       )
     "
     );
@@ -208,7 +210,7 @@ sub upgrade_db_01 {
       userID int(11) NOT NULL,
       type char(255) NOT NULL default 'undef',
       timestamp timestamp NOT NULL,
-      PRIMARY KEY (meetID, userID) 
+      PRIMARY KEY (meetID, userID)
       )
     "
     );

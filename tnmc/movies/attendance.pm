@@ -1,6 +1,7 @@
 package tnmc::movies::attendance;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 

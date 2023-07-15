@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::db;
@@ -31,15 +33,15 @@ print qq{
                                 <tr><td><b>username</td>
                                     <td><input type="text" name="username" value=""></td>
                                 </tr>
-                               
+
                                 <tr><td><b>full name</td>
                                     <td><input type="text" name="fullname" value=""></td>
                                 </tr>
-                                
+
                                 <tr><td><b>email</td>
                                     <td><input type="text" name="email" value=""></td>
                                 </tr>
-                                
+
                                 <tr><td><b>password</td>
                                     <td><input type="text" name="password" value=""></td>
                                 </tr>

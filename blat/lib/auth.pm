@@ -1,6 +1,7 @@
 package task::auth;
 
 use strict;
+use warnings;
 
 #
 # module configuration

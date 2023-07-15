@@ -7,6 +7,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use DBI;
 use CGI;
 
@@ -54,15 +56,15 @@ print <<_HTML;
 
 <title>$title</title>
 <body bgcolor="#ffffff">
-    
+
 <font face="arial,helvetica" size="+0">
 
     <font face="arial,helvetica" size="+2"><b>
     $title</b></font>
     <hr noshade>
     <p>
-    
-    
+
+
 <table border=0 bgcolor="#003366"><tr><td>
 <table border=0 cellpadding=5 cellspacing=1 bgcolor="#ffffff">
 
@@ -112,7 +114,7 @@ db tools</b></font><br>
 
 
 <p>
-    
+
 <!----------------------------------- D A T A ---------------------------------------->
 _HTML
 

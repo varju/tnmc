@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -36,7 +38,7 @@ sub show_full_login {
     my (@row, $userID, %user, $hits, $sth, $sql);
 
     ### Visitors
-    print qq 
+    print qq
     {
         <p>
         <u><b>Visitors:</b></u><br>
@@ -131,7 +133,7 @@ sub show_full_login {
     }
     $sth->finish();
 
-    print qq 
+    print qq
     {       </select><br>
             <input type="submit" value="Email me my password"><br>
                         </form>

@@ -1,6 +1,7 @@
 package lib::pics;
 
 use strict;
+use warnings;
 
 #
 # module configuration

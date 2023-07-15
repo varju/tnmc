@@ -1,6 +1,7 @@
 package tnmc::homepage::user;
 
 use strict;
+use warnings;
 
 use tnmc;
 

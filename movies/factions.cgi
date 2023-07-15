@@ -6,7 +6,9 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
-use lib '/tnmc/';
+use warnings;
+
+use lib '/tnmc';
 
 use tnmc::template;
 use tnmc::security::auth;
@@ -88,7 +90,7 @@ sub show_faction {
     }
     print qq{
         </td></tr>
-            <tr valign="top"><td><b>Upcoming Nights:</b></td><td> 
+            <tr valign="top"><td><b>Upcoming Nights:</b></td><td>
     };
     my @nights = &tnmc::movies::night::list_future_nights($factionID);
     foreach my $nightID (@nights) {

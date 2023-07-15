@@ -1,6 +1,8 @@
 package tnmc::homepage::news;
 
 use strict;
+use warnings;
+
 use tnmc;
 
 #

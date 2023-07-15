@@ -1,6 +1,8 @@
 package lib::date;
 
 use strict;
+use warnings;
+
 use lib::db;
 
 #use Time::Local;

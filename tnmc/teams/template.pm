@@ -4,6 +4,8 @@
 
 package tnmc::teams::template;
 
+use warnings;
+
 use tnmc;
 
 #
@@ -110,7 +112,7 @@ sub show_team {
             print qq{
 		<tr valign="top"><td nowrap><b>$day</b><br>
 		    $Meet->{totals}->{X}->{yes}
-			($Meet->{totals}->{M}->{yes}/$Meet->{totals}->{F}->{yes}) 
+			($Meet->{totals}->{M}->{yes}/$Meet->{totals}->{F}->{yes})
 
 		</td>
 		<td>$Meet->{type} at $Meet->{location} ($time)<br>

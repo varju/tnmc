@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -46,8 +48,8 @@ sub show_page {
 
     ## quick links
     print qq{
-        <a href="/pics/search_thumb.cgi?search=my_unreleased">my hidden pics</a> - 
-        <a href="/pics/search_thumb.cgi?search=untitled">untitled pics</a> - 
+        <a href="/pics/search_thumb.cgi?search=my_unreleased">my hidden pics</a> -
+        <a href="/pics/search_thumb.cgi?search=untitled">untitled pics</a> -
         <a href="/pics/album_add.cgi">add album</a> -
         <a href="/pics/upload_index.cgi">upload pics</a>
         <br>

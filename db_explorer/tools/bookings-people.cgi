@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use DBI;
 use CGI;
 
@@ -31,14 +33,14 @@ print <<_HTML;
 
         <title>scott's database tools: the fas bookings purple people adder</title>
         <body bgcolor="#eeccff">
-    
+
         <font face="arial,helvetica" size="+2"><b>
         scott's database tools:<br> the fas bookings purple people making machine </b></font>
         <hr noshade>
         <font face="arial, sans-serif">
-    
+
         <form method="POST" action="bookings-people-exec.cgi">
-    
+
 
 _HTML
 
@@ -51,7 +53,7 @@ $dbh = DBI->connect("DBI:mysql:$database:$host", $user, $password);
 #############
 ### Print the form
 
-print qq{    
+print qq{
     <table cellpadding="0"  cellspacing="5" border="0">
     <tr>
         <td><font face="arial, helvetica" size="-1">
@@ -78,12 +80,12 @@ while (@row = $sth->fetchrow_array) {
 $sth->finish;
 
 print qq{
-    
+
             </select></font></td>
         <td><font face="arial, helvetica" size="-0">
             <input type="submit" value="Insert User Info"></font></td>
         </tr>
-        
+
     <tr>
         <td><font face="arial, helvetica" size="-1">
             <b>Name</b><br>
@@ -116,11 +118,11 @@ print qq{
             </font></td>
         </tr>
     </table>
-    
+
     <p>
-    
-     
-    
+
+
+
     </form>
 
 };

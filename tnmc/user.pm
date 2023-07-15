@@ -5,6 +5,8 @@
 package tnmc::user;
 
 use strict;
+use warnings;
+
 use tnmc;
 use tnmc::db;
 

@@ -1,6 +1,7 @@
 package tnmc::pics::album;
 
 use strict;
+use warnings;
 
 use tnmc::security::auth;
 use tnmc::db;
@@ -100,7 +101,7 @@ sub list_valid_albums {
 
     @$album_list_ref = ();
 
-    $sql = "SELECT albumID 
+    $sql = "SELECT albumID
               FROM PicAlbums
              WHERE (albumDateStart <= ? && albumDateEnd >= ?)
                AND (albumTypePublic >= 2 OR albumOwnerID = $USERID)";

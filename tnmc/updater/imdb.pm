@@ -1,6 +1,7 @@
 package tnmc::updater::imdb;
 
 use strict;
+use warnings;
 
 #
 # module configuration

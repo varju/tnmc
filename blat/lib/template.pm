@@ -1,5 +1,6 @@
 package lib::template;
 use strict;
+use warnings;
 
 BEGIN {
     use Exporter ();
@@ -55,10 +56,10 @@ sub header {
 
     print "Content-Type: text/html; charset=utf-8\n\n";
     print qq{
-            
+
                 <html>
                 <head>
-                
+
 <style>
 
 p, ul, td, th, h1,h2,h3,h4,h5,h6, font, b, i, a {
@@ -73,13 +74,13 @@ th {
 }
 
 </style>
-    
+
                 <title>$title</title>
                 </head>
-                
+
                 <body
                 LEFTMARGIN="40" TOPMARGIN="40" MARGINWIDTH="40" MARGINHEIGHT="40"
-                
+
                         bgcolor="#ee7700"
                          text="#553311"
                          link="#000000"
@@ -87,7 +88,7 @@ th {
                         vlink="#442200"
                             >
 
-                                
+
     };
     &show_heading("<img border=0 height=30 src=\"/blat/pics/misc/blatlogoR_small.jpg\">",
         "http://jello.webct.com/blat/");

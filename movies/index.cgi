@@ -8,6 +8,8 @@
 ### minor modifications by Grant 00-11-24 to add in quick buttons for sorting table
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;

@@ -1,6 +1,7 @@
 package tnmc::broadcast::util;
 
 use strict;
+use warnings;
 
 #
 # module configuration

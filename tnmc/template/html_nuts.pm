@@ -1,6 +1,7 @@
 package tnmc::template::html_nuts;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -24,10 +25,10 @@ sub header {
 
     print "Content-Type: text/html; charset=utf-8\n\n";
     print qq{
-            
+
                 <html>
                 <head>
-                
+
 <style>
 
 p, ul, td, th, h1,h2,h3,h4,h5,h6, font, b, i, a {
@@ -42,11 +43,11 @@ th {
 }
 
 </style>
-    
+
 <title>$title</title>
 <base href="$tnmc_url">
 </head>
-                
+
 <body
     LEFTMARGIN="40" TOPMARGIN="40" MARGINWIDTH="40" MARGINHEIGHT="40"
     bgcolor="#99ff00"
@@ -97,8 +98,8 @@ th {
 	    </td></tr>
 	    </form>
 	    </table>
-		
-	    
+
+
         </form>
 	};
     }

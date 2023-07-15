@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -42,14 +44,14 @@ sub show_session_admin_edit_form {
 
     &tnmc::template::show_heading("Edit Session: $sessionID");
 
-    print qq 
+    print qq
     {    <form action="admin/security/session_edit_submit.cgi" method="post">
             <table>
             };
 
     foreach my $key (@cols) {
-        print qq 
-            {    
+        print qq
+            {
                 <tr><td><b>$key</td>
                     <td><input type="text" name="$key" value="$session{$key}"></td>
                 </tr>

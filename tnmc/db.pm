@@ -1,6 +1,8 @@
 package tnmc::db;
 
 use strict;
+use warnings;
+
 use vars qw($dbh_tnmc);
 
 use DBI;

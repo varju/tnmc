@@ -1,6 +1,7 @@
 package tnmc::menu;
 
 use strict;
+use warnings;
 
 use AutoLoader 'AUTOLOAD';
 

@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -29,7 +31,7 @@ sub show_album_add_form {
     my $now = &tnmc::util::date::now();
     print qq {
 	<form action="pics/album_add_submit.cgi" method="post">
-        
+
         <input type="hidden" name="albumID" value="0">
         <input type="hidden" name="albumOwnerID" value="$USERID">
 
@@ -52,7 +54,7 @@ sub show_album_add_form {
                 </select>
                 </td>
             </tr>
-        
+
         <tr><td nowrap><b>Start Date</td>
             <td><input type="text" name="albumDateStart" value="$now"></td>
             </tr>

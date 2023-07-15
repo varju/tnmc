@@ -5,6 +5,9 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -13,8 +16,6 @@ use tnmc::user;
 
 use tnmc::pics::new;
 use tnmc::pics::search;
-
-use strict;
 
 #############
 ### Main logic

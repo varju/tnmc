@@ -4,6 +4,8 @@
 #       Scott Thompson - (june/2000)
 ##################################################################
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -25,14 +27,14 @@ $tripID = &tnmc::cgi::param('tripID');
 @cols = &tnmc::db::db_get_cols_list('Fieldtrips');
 &get_trip($tripID, \%trip);
 
-print qq 
+print qq
     {    <form action="fieldtrip/trip_edit_submit.cgi" method="post">
         <table>
     };
 
 foreach $key (@cols) {
-    print qq 
-        {    
+    print qq
+        {
             <tr valign=top><td><b>$key</b></td>
         };
 

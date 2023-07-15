@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -53,7 +55,7 @@ sub show_user {
 
     &tnmc::user::get_user_extended($userID, \%user);
 
-    print qq 
+    print qq
     {
             <table>
             };
@@ -63,8 +65,8 @@ sub show_user {
         if ($key eq 'userID')   { next; }
         if ($key eq 'password') { next; }
 
-        print qq 
-        {    
+        print qq
+        {
                 <tr valign=top><td><B>$key</B></td>
                     <td>$user{$key}</td>
                 </tr>

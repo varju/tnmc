@@ -1,6 +1,7 @@
 package tnmc::pics::search;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 

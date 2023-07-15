@@ -1,6 +1,7 @@
 package tnmc::util::error;
 
 use strict;
+use warnings;
 
 #
 # module vars

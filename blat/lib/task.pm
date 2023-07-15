@@ -1,6 +1,7 @@
 package task::task;
 
 use strict;
+use warnings;
 
 #
 # module configuration

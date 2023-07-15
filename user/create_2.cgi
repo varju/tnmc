@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::broadcast;
@@ -66,7 +68,7 @@ print qq{
         <p>
         <input type="submit" value="Continue">
         </form>
-        
+
         };
 
 &tnmc::template::footer();

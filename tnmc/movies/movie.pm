@@ -1,6 +1,7 @@
 package tnmc::movies::movie;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 use tnmc::security::auth;

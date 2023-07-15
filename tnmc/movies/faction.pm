@@ -1,6 +1,7 @@
 package tnmc::movies::faction;
 
 use strict;
+use warnings;
 
 #
 # module configuration

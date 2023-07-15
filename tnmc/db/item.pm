@@ -15,7 +15,10 @@
 ##################################################################
 
 package tnmc::db::item;
+
 use strict;
+use warnings;
+
 require 5.004;
 
 BEGIN {

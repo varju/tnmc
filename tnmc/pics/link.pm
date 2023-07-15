@@ -1,6 +1,7 @@
 package tnmc::pics::link;
 
 use strict;
+use warnings;
 
 use tnmc::security::auth;
 use tnmc::db;

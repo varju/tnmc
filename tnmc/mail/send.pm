@@ -1,6 +1,8 @@
 package tnmc::mail::send;
 
 use strict;
+use warnings;
+
 use Mail::Sendmail;
 
 #

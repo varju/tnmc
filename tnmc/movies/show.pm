@@ -1,6 +1,7 @@
 package tnmc::movies::show;
 
 use strict;
+use warnings;
 
 use AutoLoader 'AUTOLOAD';
 
@@ -105,32 +106,32 @@ sub show_night {
             <TR>
             <TD colspan="2">$night{'winnerBlurb'}<p><br></TD>
             </TR>
-            
+
             <TR>
             <TD nowrap><B>Movie: </TD>
             <TD nowrap><a href="movies/movie_view.cgi?movieID=$night{'movieID'}" target="viewmovie">$movie{'title'}</a></TD>
             </TR>
-            
+
             <TR>
             <TD nowrap><B>Cinema: </TD>
             <TD nowrap>$night{'theatre'}</TD>
             </TR>
-            
+
             <TR>
             <TD nowrap><B>Showtime: </TD>
             <TD nowrap>$night{'showtime'}</TD>
             </TR>
-            
+
             <TR>
             <TD nowrap><B>Meeting time: </TD>
             <TD nowrap>$night{'meetingTime'}</TD>
             </TR>
-            
+
             <TR>
             <TD nowrap><B>Meeting place: </TD>
             <TD nowrap>$night{'meetingPlace'}</TD>
             </TR>
-            
+
         </TABLE>
         <P>
     };

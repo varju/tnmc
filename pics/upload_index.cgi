@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -27,13 +29,13 @@ sub show_upload_api_page {
     my @cols = &tnmc::db::db_get_cols_list("Pics");
     &tnmc::template::show_heading("upload api");
     print qq {
-        
+
         <form action="pics/api_upload_submit.cgi" method="post" enctype="multipart/form-data">
 
         <table>
-            
+
             <tr><th colspan="2">upload image</th></tr>
-                    
+
             <tr><td><b>File</b></td>
                 <td><input type="file" name="API_FILENAME"></td>
             </tr>
@@ -73,7 +75,7 @@ sub show_upload_api_page {
         next if ($key eq 'width');
         next if ($key eq 'height');
 
-        print qq{	
+        print qq{
                 <tr><td><b>$key</td>
                     <td><input type="text" name="$key" value=""></td>
                 </tr>
@@ -96,10 +98,10 @@ sub show_upload_pic_page {
     &tnmc::template::show_heading("upload pic");
 
     print qq {
-        
+
         <form action="pics/upload_do_pic.cgi" method="post" enctype="multipart/form-data">
         <table>
-            
+
             <tr><td><b>File</b></td>
                 <td><input type="file" name="UPLOAD_FILENAME"></td>
             </tr>

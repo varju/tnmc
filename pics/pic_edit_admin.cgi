@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -32,7 +34,7 @@ print qq {
 };
 
 foreach $key (keys %pic) {
-    print qq{	
+    print qq{
         <tr><td><b>$key</td>
         <td><input type="text" name="$key" value="$pic{$key}"></td>
         </tr>

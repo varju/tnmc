@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -65,7 +67,7 @@ sub do_add_album {
         my @PICS;
         &tnmc::pics::pic::list_pics(
             \@PICS,
-            "WHERE timestamp >= '$album{albumDateStart}' 
+            "WHERE timestamp >= '$album{albumDateStart}'
                       AND timestamp <= '$album{albumDateEnd}'
                       AND ((ownerID = '$USERID') OR typePublic >= 1)"
             , ""

@@ -13,7 +13,10 @@
 ##################################################################
 
 package tnmc::db::link;
+
 use strict;
+use warnings;
+
 require 5.004;
 
 BEGIN {

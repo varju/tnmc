@@ -1,6 +1,7 @@
 package tnmc::log;
 
 use strict;
+use warnings;
 
 #
 # module configuration

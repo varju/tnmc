@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::db;
@@ -24,7 +26,7 @@ print qq{
     };
 
 &tnmc::template::show_heading("cell phone broadcast centre");
-print qq { 
+print qq {
         <table border="0" cellpadding="0" cellspacing="0" width="350">
 
         <tr><td colspan="5"><b>Message: (max ~ 160 chars)</b><br>
@@ -70,16 +72,16 @@ print qq{
 
             <b>Warning:</b><br>
             Phone messaging is unreliable and messages may take
-            several hours to arrive, if at all. However 
+            several hours to arrive, if at all. However
             delivery time tends to be under 15 minutes most of the time.
             <p>
             If you are broadcasting to a large number of people, it
             may take up to a minute to send to everybody. Please be patient and
-            don\'t do repeat-sends as some people may get several copies of the 
+            don\'t do repeat-sends as some people may get several copies of the
             message.
         </td></tr>
-        </table>        
-        
+        </table>
+
         </form>
     };
 

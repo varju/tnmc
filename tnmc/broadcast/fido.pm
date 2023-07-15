@@ -1,6 +1,7 @@
 package tnmc::broadcast::fido;
 
 use strict;
+use warnings;
 
 use LWP::UserAgent;
 use HTTP::Request::Common qw(POST);

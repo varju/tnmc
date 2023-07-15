@@ -6,6 +6,7 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
 
 use lib "/scottt/htdocs/tasks/";
 

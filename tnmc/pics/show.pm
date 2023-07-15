@@ -1,6 +1,7 @@
 package tnmc::pics::show;
 
 use strict;
+use warnings;
 
 use AutoLoader 'AUTOLOAD';
 
@@ -193,8 +194,8 @@ sub show_album_info {
                 <td valign="top"><a href="pics/album_thumb.cgi?albumID=$albumID">
                     <b>$album{albumTitle}</b></a><br>
                     $album{albumDescription}<br>
-                    $date_string - 
-                     $owner{username} - 
+                    $date_string -
+                     $owner{username} -
                     $num_pics pics<br>
                     </td>
             </tr>

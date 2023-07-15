@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::template;
@@ -53,7 +55,7 @@ sub show_admin_movie_list {
         print qq{
             <tr>
                 <td nowrap>
-                <a href="movies/movie_edit_admin.cgi?movieID=$movieID">[Edit]</a> 
+                <a href="movies/movie_edit_admin.cgi?movieID=$movieID">[Edit]</a>
                 <a href="movies/movie_delete_submit.cgi?movieID=$movieID">[Del]</a>
                 </td>
         };

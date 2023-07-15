@@ -5,6 +5,8 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -43,8 +45,8 @@ sub show_album_view {
     ## heading
     &tnmc::template::show_heading(
         qq|
-        <a href="pics/"><font color="ffffff">Pics</font></a> -> 
-        <a href="pics/album_index.cgi"><font color="ffffff">Albums</font></a> -> 
+        <a href="pics/"><font color="ffffff">Pics</font></a> ->
+        <a href="pics/album_index.cgi"><font color="ffffff">Albums</font></a> ->
         $album{'albumTitle'}
         |
     );
@@ -66,7 +68,7 @@ sub show_album_view {
         <b>Owner:</b> $owner{username}
         <b>Album ID:</b> $album{albumID}
         <p>
-        [ <a href="pics/album_thumb.cgi?albumID=$albumID">Thumbnails</a> 
+        [ <a href="pics/album_thumb.cgi?albumID=$albumID">Thumbnails</a>
         - <a href="pics/album_slide.cgi?albumID=$albumID">Slideshow</a> ]
         <p>
     };

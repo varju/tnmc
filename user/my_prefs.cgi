@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -60,11 +62,11 @@ if ($USERID) {
                                 <tr><td><b>fullname</td>
                                     <td><input type="text" name="fullname" value="$user{fullname}"></td>
                                 </tr>
-                                
+
                                 <tr><td><b>email</td>
                                     <td><input type="text" name="email" value="$user{email}"></td>
                                 </tr>
-                                
+
                                 <tr><td><b>password</td>
                                     <td><input type="text" name="password" value="$user{password}"></td>
                                 </tr>
@@ -96,7 +98,7 @@ if ($USERID) {
     print qq{
 	      <tr><td><b>gender</td>
 		  <td>
-		  <input type="radio" name="gender" value="F" $sel_gender{F}> Girl 
+		  <input type="radio" name="gender" value="F" $sel_gender{F}> Girl
 		  <input type="radio" name="gender" value="M" $sel_gender{M}> Boy
                                 </td></tr>
             </table>

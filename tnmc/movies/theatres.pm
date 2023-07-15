@@ -1,6 +1,7 @@
 package tnmc::movies::theatres;
 
 use strict;
+use warnings;
 
 use tnmc::db;
 

@@ -7,6 +7,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::db;
@@ -62,7 +64,7 @@ sub show_basic_users_list {
                 <td nowrap>$user{fullname}</td>
                 <td></td>
                 <td nowrap>
-                <a href="admin/user_edit.cgi?userID=$userID">[Edit]</a> 
+                <a href="admin/user_edit.cgi?userID=$userID">[Edit]</a>
                 <a href="admin/user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
             </tr>

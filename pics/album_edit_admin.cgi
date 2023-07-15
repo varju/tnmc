@@ -5,14 +5,15 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
+use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
 use tnmc::template;
 use tnmc::pics::album;
 use tnmc::cgi;
-
-use strict;
 
 #############
 ### Main logic
@@ -34,13 +35,13 @@ sub show_album_edit_admin_form {
     &tnmc::pics::album::get_album($albumID, \%album);
 
     print qq {
-        
+
         <form action="pics/album_edit_admin_submit.cgi" method="post">
             <table>
     };
 
     foreach my $key (keys %album) {
-        print qq{	
+        print qq{
             <tr><td><b>$key</td>
                 <td><input type="text" name="$key" value="$album{$key}"></td>
                 </tr>

@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -24,10 +26,10 @@ if ($USERID) {
 
     my $devBlurb = &tnmc::general_config::get_general_config("devBlurb");
 
-    print qq 
+    print qq
     {       <form action="fieldtrip/development_set_submit.cgi" method="post">
                         <table>
-        
+
                         <tr>
                         <td><textarea cols=40 rows=30 wrap=virtual name="devBlurb">$devBlurb</textarea></td>
                         </tr>

@@ -4,6 +4,8 @@
 #       Scott Thompson - (june/2000)
 ##################################################################
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -45,7 +47,7 @@ sub show_survey_form {
         <form action="fieldtrip/survey_submit.cgi" method="post">
         <input type="hidden" name="userID" value="$userID">
         <input type="hidden" name="tripID" value="$tripID">
-        
+
         <table cellpadding="1" border="0" cellspacing="0">
 
             <tr valign=top>

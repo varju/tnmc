@@ -1,6 +1,7 @@
 package tnmc::message;
 
 use strict;
+use warnings;
 
 #
 # module configuration
@@ -100,7 +101,7 @@ sub conv_get_msg_list {
 
     my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT msgID from MessageMsg
-                WHERE convID = ? 
+                WHERE convID = ?
                   AND (date_posted > date_sub(NOW(), INTERVAL 4320 MINUTE))
              ORDER BY date_posted";
     my $sth = $dbh->prepare($sql);
@@ -171,7 +172,7 @@ function doSubmit() {
 	    <input type="submit" value="post msg" onclick="doSubmit();">
 	    </form>
 		</td></tr>
-		
+
 	</table>
 	};
     }

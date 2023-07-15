@@ -1,6 +1,7 @@
 package task::pics;
 
 use strict;
+use warnings;
 
 #
 # module configuration

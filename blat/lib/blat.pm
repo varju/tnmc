@@ -1,6 +1,7 @@
 package lib::blat;
 
 use strict;
+use warnings;
 
 #
 # module configuration

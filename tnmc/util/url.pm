@@ -1,6 +1,7 @@
 package tnmc::util::url;
 
 use strict;
+use warnings;
 
 sub url_encode {
     my ($unencoded) = @_;

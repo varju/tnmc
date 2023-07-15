@@ -1,6 +1,8 @@
 package lib::file;
 
 use strict;
+use warnings;
+
 use File::Copy ();
 
 sub split_filepath {

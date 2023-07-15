@@ -1,6 +1,7 @@
 package tnmc::template::wml;
 
 use strict;
+use warnings;
 
 use tnmc::config;
 use tnmc::security::auth;

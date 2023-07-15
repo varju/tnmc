@@ -1,6 +1,7 @@
 package tnmc::pics::random;
 
 use strict;
+use warnings;
 
 #
 # module configuration

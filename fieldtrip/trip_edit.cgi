@@ -4,6 +4,8 @@
 #       Scott Thompson - (apr/2001)
 ##################################################################
 
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -38,7 +40,7 @@ sub show_edit_form {
         <form action="fieldtrip/trip_edit_submit.cgi" method="post">
         <input type="hidden" name="tripID" value="$tripID">
         <table>
-         
+
         <tr><th colspan="2">basic info</th></tr>
 
         <tr><td><b>title</b></td>

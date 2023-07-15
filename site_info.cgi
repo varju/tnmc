@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 use tnmc;
 
@@ -21,7 +23,7 @@ my $thisyear = $year + 1900;
 
 &tnmc::template::show_heading("site info");
 
-print qq 
+print qq
 {    <TABLE>
 
         <TR>
@@ -52,7 +54,7 @@ print qq
 
         <TR>
         <TD VALIGN=TOP><B>Browsers Supported:</B></TD>
-        <TD>    
+        <TD>
             Netscape 4+ on a pc<br>
             Netscape 4+ on unix<br>
             Macs are unreliable at best<br>
@@ -66,7 +68,7 @@ print qq
         <TD>    The site is written in perl, is served by an
             Apache web server, and interfaces with a mySQL
             database. The whole she-bang is running on a FreeBSD box.
-            
+
         </TR>
 
         <TR>
@@ -83,7 +85,7 @@ print qq{
             </TD>
         </TR>
 
-     
+
         <TR>
         <TD valign="top" nowrap><B><a href="source/tnmc.tar.gz">Download Source Code</a></b><br>
             (as of $flastmod)<br>

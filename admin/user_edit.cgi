@@ -6,6 +6,8 @@
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
 use strict;
+use warnings;
+
 use lib '/tnmc';
 
 use tnmc::security::auth;
@@ -31,14 +33,14 @@ else {
     $user{userID} = 0;
 }
 
-print qq 
+print qq
 {    <form action="admin/user_edit_submit.cgi" method="post">
 	 <table>
      };
 
 foreach my $key (@cols) {
-    print qq 
-    {    
+    print qq
+    {
 	<tr><td><b>$key</td>
 	    <td><input type="text" name="$key" value="$user{$key}"></td>
 	    </tr>

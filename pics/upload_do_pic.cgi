@@ -5,8 +5,10 @@
 ##################################################################
 ### Opening Stuff. Modules and all that. nothin' much interesting.
 
-use lib '/tnmc';
 use strict;
+use warnings;
+
+use lib '/tnmc';
 use tnmc::template;
 use tnmc::db;
 use tnmc::cgi;

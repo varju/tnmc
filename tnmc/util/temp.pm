@@ -1,6 +1,8 @@
 package tnmc::util::temp;
 
 use strict;
+use warnings;
+
 use tnmc::util::file;
 
 BEGIN {
