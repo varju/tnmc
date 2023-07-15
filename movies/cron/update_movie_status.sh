@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-export DOCKER_HOST=tcp://pluto.varju.ca:2376 DOCKER_TLS_VERIFY=1
-
 BASE_DIR=$(cd $(dirname $0)/../..; pwd)
 LOG_FILE=$BASE_DIR/logs/$(basename $0 | sed -e 's|\..*||').log
+
+. $BASE_DIR/.envrc
 
 date >> $LOG_FILE
 
