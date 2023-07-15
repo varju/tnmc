@@ -41,7 +41,31 @@ sub show_edit_users_list {
         <tr>    <td></td>
     };
 
-    foreach $key (keys %user) {
+    my @user_fields = sort {
+        if ($a eq 'userID') {
+            return -4;
+        }
+        elsif ($b eq 'userID') {
+            return 4;
+        }
+        elsif ($a eq 'username') {
+            return -3;
+        }
+        elsif ($b eq 'username') {
+            return 3;
+        }
+        elsif ($a eq 'fullname') {
+            return -2;
+        }
+        elsif ($b eq 'fullname') {
+            return 2;
+        }
+        else {
+            return lc($a) cmp lc($b);
+        }
+    } keys %user;
+
+    foreach $key (@user_fields) {
         print "<td><b>$key</b></td>";
     }
     print qq{</tr>\n};
@@ -55,7 +79,7 @@ sub show_edit_users_list {
                 <a href="admin/user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
         };
-        foreach $key (keys %user) {
+        foreach $key (@user_fields) {
             next unless defined $user{$key};
 
             print "<td>$user{$key}</td>";
@@ -69,7 +93,7 @@ sub show_edit_users_list {
         <td><input type="submit" value="Add:"></td>
     };
 
-    foreach $key (keys %user) {
+    foreach $key (@user_fields) {
         next unless defined $user{$key};
 
         my $len = length($user{$key}) + 1;
