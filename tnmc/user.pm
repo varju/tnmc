@@ -62,66 +62,6 @@ sub list_teams {
     return &tnmc::db::item::listItems($table, $key, $_[0]);
 }
 
-#
-# old
-#
-
-sub old_set_user {
-    my (%user, $junk) = @_;
-    my ($sql, $sth, $return);
-
-    my $dbh = &tnmc::db::db_connect();
-    &tnmc::db::db_set_row(\%user, $dbh, 'Personal', 'userID');
-
-    ###############
-    ### Return the User ID
-
-    $sql = "SELECT userID FROM Personal WHERE username = '$user{username}'";
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute;
-    ($return) = $sth->fetchrow_array();
-    $sth->finish;
-
-    return $return;
-}
-
-sub old_del_user {
-    my ($userID) = @_;
-    my ($sql, $sth);
-
-    ###############
-    ### Delete the user
-
-    my $dbh = &tnmc::db::db_connect();
-    $sql = "DELETE FROM Personal WHERE userID = '$userID'";
-    $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute;
-    $sth->finish;
-}
-
-sub old_get_user {
-
-    if (scalar(@_) == 1) {
-        ## NEW-STYLE
-        require tnmc::db::item;
-        return &tnmc::db::item::getItem('Personal', 'userID', $_[0]);
-    }
-    else {
-        ## OLD-STYLE
-        my ($userID, $user_ref) = @_;
-
-        my $dbh = &tnmc::db::db_connect();
-        my $sql = "SELECT * FROM Personal WHERE userID = ?";
-        my $sth = $dbh->prepare($sql)
-          or die "Can't prepare $sql:$dbh->errstr\n";
-        $sth->execute($userID);
-        my $ref = $sth->fetchrow_hashref() || return;
-        $sth->finish;
-
-        %$user_ref = %$ref;
-    }
-}
-
 # sub get_user_cache;
 {
     my %get_user_cache;

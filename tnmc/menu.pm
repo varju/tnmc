@@ -95,9 +95,7 @@ sub get_menu {
             push @MENU, [ "link",  1, "development/todo_list.cgi",                 "To&nbsp;do&nbsp;List", "" ];
             push @MENU, [ "link",  1, "development/suggestions.cgi",               "Suggestions",          "" ];
             push @MENU, [ "link",  1, "development/env.cgi",                       "Enviroment",           "" ];
-            push @MENU, [ "link",  1, "admin/errorlog.cgi",                        "Error Log",            "" ];
             push @MENU, [ "link",  1, "https://github.com/varju/tnmc",             "View Code",            "" ];
-            push @MENU, [ "link",  1, "development/db_explorer/database.cgi?tnmc", "db&nbsp;Explorer",     "" ];
             push @MENU, [ "space", 0, "",                                          "",                     "" ];
         }
         push @MENU, [ "space", 0, "", "", "<hr noshade size='1'>" ];
@@ -168,7 +166,7 @@ sub new_nav_login {
     }
     $sth->finish();
 
-    print qq 
+    print qq
                 {       </select><br>
             <b>Password:</b><br>
             <input type="password" name="password" size="10"><br>
