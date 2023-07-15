@@ -15,21 +15,13 @@ use tnmc::cgi;
 print "Content-Type: text/html; charset=utf-8\n\n";
 print qq{
     <head>
-    <title>TNMC Environment Variables and Form Tester.</title>
+    <title>TNMC Environment Variables</title>
+    <style>
+    th {
+      text-align: left;
+    }
+    </style>
     </head>
-    };
-
-### date stuff.
-my $today;
-open(DATE, "/bin/date +%Y%m%d%H |");
-while (<DATE>) {
-    chomp;
-    $today = $_;
-}
-close(DATE);
-
-print qq{
-    <b>Date/Time</b> $today<p>
     };
 
 ### INClude list
@@ -38,52 +30,25 @@ foreach my $key (@INC) {
     print "$key<br>";
 }
 
-### form data
-print "\n<p><b><font color=\"0000ff\">Form Data:</font></b><br>\n";
-
-my @names = &tnmc::cgi::param();
-print @names;
-
-print "<p> ";
-foreach my $name (@names) {
-    my $value = &tnmc::cgi::param($name);
-    print "<b>$name</b> : $value<br>";
-}
-
-print "\n<p><b><font color=\"0000ff\">Query Data:</font></b><br>\n";
-
-my @names = &tnmc::cgi::url_param();
-print @names;
-
-print "<p> ";
-foreach my $name (@names) {
-    my $value = &tnmc::cgi::url_param($name);
-    print "<b>$name</b> : $value<br>";
-}
-
 ### Cookies
 print "\n<p><b><font color=\"0000ff\">Cookies:</font></b><br>\n";
-
 my @cookies = &tnmc::cgi::cookie();
 foreach my $cookie (@cookies) {
     print "<b><u>$cookie</u></b><br>";
+    print "<table>";
     my %cookie = &tnmc::cgi::cookie($cookie);
-    print %cookie;
-    print "<br>\n";
     foreach my $var (sort keys %cookie) {
-        print "<b>$var</b> $cookie{$var}<br>";
+        print "<tr><th>$var</th><td>$cookie{$var}</td></tr>\n";
     }
-    print "<p>";
+    print "</table>";
 }
 
 ### ENV variables
 print "<p><b><font color=\"0000ff\">ENV list:</font></b><br> ";
+print "<table>";
 foreach my $var (sort keys %ENV) {
-    print "<b>$var</b> $ENV{$var}<br>";
+    print "<tr><th>$var</th><td>$ENV{$var}</td></tr>\n";
 }
-
-### ENV dump
-print "<p><b><font color=\"0000ff\">ENV dump:</font></b><br> ";
-print %ENV;
+print "</table>";
 
 &tnmc::db::db_disconnect();
