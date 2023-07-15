@@ -104,6 +104,13 @@ sub list_users {
 
     @$user_list_ref = ();
 
+    if (!defined($where_clause)) {
+        $where_clause = '';
+    }
+    if (!defined($by_clause)) {
+        $by_clause = '';
+    }
+
     $sql = "SELECT userID from Personal $where_clause $by_clause";
     my $dbh = &tnmc::db::db_connect();
     $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";

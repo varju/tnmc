@@ -6,7 +6,6 @@ use warnings;
 use tnmc::security::cookie;
 use tnmc::security::session;
 use tnmc::user;
-use tnmc::util::ip;
 use tnmc::cgi;
 
 #
@@ -40,7 +39,7 @@ sub authenticate {
     $USERID_LAST_KNOWN = &get_my_userID();
     $LOGGED_IN         = &is_open();
 
-    if ($USERID) {
+    if (defined $USERID) {
         &tnmc::user::get_user($USERID, \%USERID);
     }
     &tnmc::security::session::hit_session($sessionID);
@@ -82,6 +81,9 @@ sub get_my_sessionID {
 }
 
 sub generate_sessionID {
+    if (!exists($ENV{'UNIQUE_ID'})) {
+        return 'backend';
+    }
 
     ## assume web connections
     return 'web_' . $ENV{'UNIQUE_ID'};
@@ -122,17 +124,13 @@ sub login {
     # get a fresh sessionid
     my $sessionID = &generate_sessionID();
 
-    # get the hostname
-    my $hostname = &tnmc::util::ip::get_hostname($ENV{'REMOTE_ADDR'});
-
     # save the session to the db
     my %session = (
         'sessionID'   => $sessionID,
         'userID'      => $userID,
         'firstOnline' => undef(),
         'lastOnline'  => undef(),
-        'IP'          => $ENV{'REMOTE_ADDR'},
-        'host'        => $hostname,
+        'IP'          => exists($ENV{'HTTP_X_FORWARDED_FOR'}) ? $ENV{'REMOTE_ADDR'} : $ENV{'REMOTE_ADDR'},
         'hits'        => 0,
         'open'        => 1,
     );
@@ -146,17 +144,14 @@ sub login {
 }
 
 sub logout {
-
     # get the sessionid
     my $sessionID = &get_my_sessionID();
-    my $userID    = &get_my_userID();
 
     &tnmc::security::session::revoke_session($sessionID);
 
     # send the cookie
     my $cookie_string = &tnmc::security::cookie::create_cookie($sessionID);
     return $cookie_string;
-
 }
 
 BEGIN {

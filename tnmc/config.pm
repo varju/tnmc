@@ -20,12 +20,25 @@ BEGIN {
     #
 
     $tnmc_url_path = "/";
-    my $method = $ENV{HTTPS} == "on" ? "https" : "http";
 
-    # TODO: Figure out why X-Forwarded-Host isn't being sent through
-    # my $http_host = $ENV{HTTP_X_FORWARDED_HOST};
-    # my $http_host = $ENV{HTTP_HOST};
-    my $http_host = "www.tnmc.ca";
+    my $method;
+    if (exists($ENV{HTTP_X_FORWARDED_PROTO})) {
+        $method = $ENV{HTTP_X_FORWARDED_PROTO};
+    }
+    else {
+        $method = 'http';
+    }
+
+    my $http_host;
+    if (exists($ENV{HTTP_X_FORWARDED_HOST})) {
+        $http_host = $ENV{HTTP_X_FORWARDED_HOST};
+    }
+    elsif (exists($ENV{HTTP_HOST})) {
+        $http_host = $ENV{HTTP_HOST};
+    }
+    else {
+        $http_host = 'www.tnmc.ca';
+    }
 
     $tnmc_url             = "$method://$http_host$tnmc_url_path";
     $tnmc_email           = 'tnmc-list@interchange.ubc.ca';

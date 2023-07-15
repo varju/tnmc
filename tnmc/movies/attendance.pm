@@ -169,7 +169,7 @@ sub show_my_attendance_chooser {
     };
 
     ### Yes/No/Hide
-    if ($userID) {
+    if (defined $userID) {
 
         print qq{
             <td>
@@ -189,7 +189,16 @@ sub show_my_attendance_chooser {
             my $attendance = $attendances{$nightID};
             my $prefs      = $prefss{ $night->{'factionID'} };
 
-            my %sel = ($attendance->{'type'} => 'selected');
+            my %sel = (0 => '');
+            foreach my $key (keys %attendance_names) {
+                $sel{$key} = '';
+            }
+
+            my $attendance_type = $attendance->{'type'};
+            if (!defined($attendance_type)) {
+                $attendance_type = 0;
+            }
+            $sel{$attendance_type} = 'selected';
 
             print qq{
                 <td valign="top" align="center"><font size="-1">
@@ -200,14 +209,14 @@ sub show_my_attendance_chooser {
             if ($prefs->{'attendance'}) {
                 print qq{
                     <option value="-2" $sel{'-2'}>hide
-                    <option value="$attendance->{'type'}">---
+                    <option value="$attendance_type">---
                     <option value="0">default:
-                    <option value="0" $sel{undef()} $sel{'0'}> ($attendance_names{$prefs->{'attendance'}})
+                    <option value="0" $sel{'0'}> ($attendance_names{$prefs->{'attendance'}})
                 };
             }
             else {
                 print qq{
-                    <option value="0" $sel{'-2'} $sel{'0'} $sel{undef()}>hide
+                    <option value="0" $sel{'-2'} $sel{'0'}>hide
                     };
 
             }

@@ -136,7 +136,7 @@ sub show_movie_list_home {
     my ($movielist_ref, $effectiveUserID, $nightID) = @_;
 
     my (@movies, $anon, $movieID, %movieInfo);
-    my (%vote_status_word, $vote, @list);
+    my (%vote_status_word, $vote);
 
     ## get movie info
     my @list = @$movielist_ref;
@@ -150,24 +150,24 @@ sub show_movie_list_home {
     @list = (sort { $movieInfo{$b}->{order} <=> $movieInfo{$a}->{order} } (@list));
 
     ## prune movielist
-    my $cutoff           = 0.5 * $movieInfo{ $list[0] }->{rank};
-    my $min_listing_size = 7;
-    my $max_listing_size = 15;
-    my $listing_index    = 0;
+    if (@list) {
+        my $cutoff = 0.5 * $movieInfo{ $list[0] }->{rank};
+        my $min_listing_size = 7;
+        my $max_listing_size = 15;
+        my $listing_index = 0;
 
-    foreach $movieID (@list) {
+        foreach $movieID (@list) {
+            $listing_index++;
 
-        $listing_index++;
-
-        if (
-            (!$movieInfo{$movieID}->{statusNew})
-            && (((($movieInfo{$movieID}->{rank} < $cutoff) && ($listing_index > $min_listing_size))) ||
-                ($listing_index > $max_listing_size))
-          )
-        {
-            next;
+            if (
+                (!$movieInfo{$movieID}->{statusNew})
+                    && (((($movieInfo{$movieID}->{rank} < $cutoff) && ($listing_index > $min_listing_size))) ||
+                    ($listing_index > $max_listing_size))
+            ) {
+                next;
+            }
+            push(@movies, $movieID);
         }
-        push(@movies, $movieID);
     }
 
     ## display movielist

@@ -40,6 +40,9 @@ sub create_cookie {
 
 # grabs the cookie from the browser,
 sub parse_cookie {
+    if (!exists($ENV{'HTTP_COOKIE'})) {
+        return undef;
+    }
 
     ## cache it if we can
     if (%cookie) {

@@ -200,7 +200,7 @@ sub forward_external {
     my $body       = sprintf("%s says:\n\n%s\n", $sendername, $hash->{'body'});
 
     my @nights   = &tnmc::movies::night::list_future_nights();
-    my $threadid = 'tnmc-night-' . @nights[0];
+    my $threadid = 'tnmc-night-' . $nights[0];
 
     my %headers = (
         'Bcc'         => $to_email,

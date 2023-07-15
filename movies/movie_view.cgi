@@ -58,9 +58,14 @@ sub show_movie_extended {
             next if ($key eq 'theatres');
             next if ($key eq 'theatres_string');
 
+            my $value = $movie{$key};
+            if (!defined($value)) {
+                $value = '';
+            }
+
             print qq{
                 <tr valign=top><td><B>$key</B></td>
-                    <td>$movie{$key}</td>
+                    <td>$value</td>
                 </tr>
             };
         }

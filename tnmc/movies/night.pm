@@ -258,9 +258,10 @@ sub is_movie_seen_by_faction {
 sub list_cache_movieIDs {
     my ($nightID) = @_;
 
-    my $night  = &get_night($nightID);
-    my @movies = split(" ", $night->{'cache_movieIDs'});
+    my $night = get_night($nightID);
+    return () unless defined $night->{cache_movieIDs};
 
+    my @movies = split(" ", $night->{cache_movieIDs});
     return @movies;
 }
 

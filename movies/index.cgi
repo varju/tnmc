@@ -243,8 +243,7 @@ sub show_movie_list_enhanced {
 
     my @list = @$movielist_ref;
 
-    my (@movies, $anon, $movieID, %movieInfo);
-    my ($boldNew, %vote_status_word);
+    my %movieInfo;
 
     foreach my $movieID (@list) {
         my $anon = {};    ### create an anonymous hash.

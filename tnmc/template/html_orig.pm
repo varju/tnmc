@@ -33,7 +33,7 @@ sub header {
     my $colour_bg = $USERID{'colour_bg'} || '#99ff00';
     if ($colour_bg eq 'random') {
         $colour_bg = rand(999999);                   # get a random colour
-        $colour_bg =~ tr/0123456789/0014589adef/;    # make the colour glow
+        $colour_bg =~ tr/0123456789/0014589ade/;     # make the colour glow
     }
     my $font_size = get_font_size();
 

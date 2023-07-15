@@ -54,7 +54,6 @@ sub set_movie {
         ###############
         ### Return the Movie ID
 
-        my $dbh = &tnmc::db::db_connect();
         $sql = "SELECT movieID FROM Movies WHERE title = " . $dbh->quote($movie{title});
         $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
         $sth->execute;
@@ -284,7 +283,7 @@ sub get_movieid_by_title {
         $movie->{order} -= 0.8 * $movie->{votesFaveAway};
 
         $movie->{votesForTotal} =
-          $movie->{votesFor} + $movie->{votesFave} + $movie->{votesSuperFave} + $movie->{votesBday};
+          $movie->{votesFor} + $movie->{votesFave} + $movie->{votesSuperfave} + $movie->{votesBday};
         $movie->{votesAway} = $movie->{votesFaveAway} + $movie->{votesForAway} + $movie->{votesForLost};
 
         ### stoopid f---ed up rounding math.

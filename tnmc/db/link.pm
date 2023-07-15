@@ -53,7 +53,7 @@ sub getLink {
     my $sth = $dbh->prepare($sql);
     $sth->execute(@var_list);
 
-    my $hash = $sth->fetchrow_hashref();
+    $hash = $sth->fetchrow_hashref();
     $sth->finish;
 
     return $hash;

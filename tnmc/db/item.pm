@@ -92,7 +92,7 @@ sub addItem {
     ### KLUDGE: may have race-condition errors
 
     $sql = "SELECT max($key) FROM $table";
-    my $sth = $dbh->prepare($sql);
+    $sth = $dbh->prepare($sql);
     $sth->execute();
 
     my ($last_key) = $sth->fetchrow_array();
