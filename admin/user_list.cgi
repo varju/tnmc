@@ -75,14 +75,13 @@ sub show_edit_users_list {
         print qq{
             <tr>
                 <td nowrap>
-                <a href="admin/user_edit.cgi?userID=$userID">[Edit]</a> 
+                <a href="admin/user_edit.cgi?userID=$userID">[Edit]</a>
                 <a href="admin/user_delete_submit.cgi?userID=$userID">[Del]</a>
                 </td>
         };
         foreach $key (@user_fields) {
-            next unless defined $user{$key};
-
-            print "<td>$user{$key}</td>";
+            my $value = exists($user{$key}) ? $user{$key} : '';
+            print "<td>$value</td>";
         }
         print qq{</tr>\n};
     }
@@ -94,9 +93,8 @@ sub show_edit_users_list {
     };
 
     foreach $key (@user_fields) {
-        next unless defined $user{$key};
-
-        my $len = length($user{$key}) + 1;
+        my $value = exists($user{$key}) ? $user{$key} : '';
+        my $len = length($value) + 1;
         print qq{
             <td><input type="text" name="$key" size="$len"></td>
         };
