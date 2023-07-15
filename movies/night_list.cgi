@@ -28,23 +28,29 @@ my @nights;
 print qq{
     <table>
         <tr>
-            <th>nightID
-            <th>date
-            <th>factionID
-            <th>movieID
+            <th>nightID</th>
+            <th>date</th>
+            <th>factionID</th>
+            <th>movieID</th>
         </tr>
 };
 
 foreach my $nightID (@nights) {
     my %night;
     &tnmc::movies::night::get_night($nightID, \%night);
+    my $movieID = $night{'movieID'};
+    if (!defined($movieID) || !$movieID) {
+        $movieID = '';
+    } else {
+        $movieID = "<a href='/movies/movie_view.cgi?movieID=$movieID'>$movieID</a>";
+    }
     print qq{
         <tr>
-        <td> $nightID
-        <td><a href="movies/night_edit_admin.cgi?nightID=$nightID">$night{date}</a>
-        <td> $night{'factionID'}
-        <td> $night{'movieID'}
-            <br>
+            <td>$nightID</td>
+            <td><a href="movies/night_edit_admin.cgi?nightID=$nightID">$night{date}</a></td>
+            <td>$night{'factionID'}</td>
+            <td>$movieID</td>
+        </tr>
     };
 }
 
