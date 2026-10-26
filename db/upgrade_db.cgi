@@ -13,6 +13,7 @@ use lib '/tnmc';
 
 # modules
 require tnmc::db;
+require tnmc::user;
 use tnmc::security::auth;
 require tnmc::template;
 
@@ -24,12 +25,31 @@ require tnmc::template;
 &tnmc::template::header();
 
 # call the next upgrade_db_* sub here, and remove the call once it has run
+&upgrade_db_20261025();
 
 &tnmc::template::footer();
 
 #
 # subs
 #
+
+sub upgrade_db_20261025 {
+    my $dbh = &tnmc::db::db_connect();
+
+    # room for yescrypt hashes
+    $dbh->do("ALTER TABLE Personal MODIFY password varchar(255) default NULL");
+
+    # hash the plain-text passwords
+    my $sth = $dbh->prepare(q{SELECT userID, password FROM Personal WHERE password <> '' AND password NOT LIKE '$y$%'});
+    my $update = $dbh->prepare("UPDATE Personal SET password = ? WHERE userID = ?");
+    $sth->execute();
+    my $count = 0;
+    while (my ($userID, $password) = $sth->fetchrow_array()) {
+        $update->execute(&tnmc::user::hash_password($password), $userID);
+        $count++;
+    }
+    print "<p>Hashed $count passwords\n";
+}
 
 sub upgrade_db_20221219 {
     my $dbh = &tnmc::db::db_connect();

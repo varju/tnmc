@@ -30,6 +30,7 @@ sub new_user {
 sub add_user {
 
     # usage: &add_user($user_hash);
+    &hash_plain_password($_[0]);
     return &tnmc::db::item::addItem($table, $key, $_[0]);
 }
 
@@ -50,7 +51,44 @@ sub get_user {
 sub set_user {
 
     # usage: &set_user($user_hash);
+    &hash_plain_password($_[0]);
     return &tnmc::db::item::replaceItem($table, $key, $_[0]);
+}
+
+sub hash_password {
+
+    # usage: my $hash = &hash_password($plain);
+    my ($plain) = @_;
+
+    open(my $fh, '<', '/dev/urandom') or die "Can't read /dev/urandom: $!";
+    read($fh, my $bytes, 16) == 16    or die "Short read from /dev/urandom";
+    close($fh);
+
+    my @chars = ('.', '/', '0' .. '9', 'A' .. 'Z', 'a' .. 'z');
+    my $salt  = join('', map { $chars[ $_ % 64 ] } unpack('C*', $bytes));
+
+    my $hash = crypt($plain, '$y$j9T$' . $salt);
+    die "yescrypt failed" if !defined $hash || $hash !~ /^\$y\$/;
+    return $hash;
+}
+
+sub check_password {
+
+    # usage: if (&check_password($user_hash, $plain)) { ... }
+    my ($user, $plain) = @_;
+    my $hash = $user->{password};
+
+    return 0 if !defined $hash || $hash !~ /^\$y\$/ || !defined $plain || $plain eq '';
+    my $try = crypt($plain, $hash);
+    return defined $try && $try eq $hash;
+}
+
+# never store a plain-text password
+sub hash_plain_password {
+    my ($user) = @_;
+    if ($user->{password} && $user->{password} !~ /^\$y\$/) {
+        $user->{password} = &hash_password($user->{password});
+    }
 }
 
 sub del_user {
