@@ -21,18 +21,23 @@ use tnmc::config;
 &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
-my @params = &tnmc::cgi::param();
-my $userID = &tnmc::cgi::param('userID');
-my $user   = &tnmc::user::get_user($userID);
+# only the logged-in user, and never the userID from the form
+if ($USERID) {
+    my @params = &tnmc::cgi::param();
+    my $user   = &tnmc::user::get_user($USERID);
 
-foreach my $key (@params) {
-    next if ($key eq "submit");
-    next if ($key eq "x");
-    next if ($key eq "y");
-    next if ($key eq "");
-    $user->{$key} = &tnmc::cgi::param($key);
+    foreach my $key (@params) {
+        next if ($key eq "submit");
+        next if ($key eq "x");
+        next if ($key eq "y");
+        next if ($key eq "");
+        next if ($key eq "userID");
+        next if ($key =~ /^group/);
+        next if ($key eq "password" && !&tnmc::cgi::param($key));
+        $user->{$key} = &tnmc::cgi::param($key);
+    }
+    &tnmc::user::set_user($user) unless $user->{username} eq 'demo';
 }
-&tnmc::user::set_user($user);
 
 &tnmc::db::db_disconnect();
 
