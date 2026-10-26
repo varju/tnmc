@@ -5,7 +5,6 @@ VOLUME /backups
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# cpanminus and make are only needed to install CGI::Lite, which isn't packaged
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        apache2 \
@@ -20,12 +19,6 @@ RUN apt-get update \
        postfix \
        sudo \
        tzdata \
-       cpanminus \
-       make \
-    && cpanm --notest CGI::Lite \
-    && rm -rf /root/.cpanm \
-    && apt-get purge -y cpanminus make \
-    && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
     && a2enmod cgid
 

@@ -7,33 +7,28 @@ use warnings;
 # module configuration
 #
 
-my $cgih;
-my $pairs;
-
 #
 # module routines
 #
 
-sub init {
-    if (!defined $cgih) {
-        require CGI::Lite;
-        $cgih = new CGI::Lite;
-        $cgih->set_platform('Unix');
-        $pairs = $cgih->parse_form_data();
-    }
-}
-
 sub param {
     my ($key) = @_;
 
-    &init();
+    require CGI;
 
     if (!defined $key) {
-        return keys %$pairs;
+        return &CGI::param();
     }
-    else {
-        return $$pairs{$key};
+
+    # an upload gives the path of its temp file
+    my $upload = &CGI::upload($key);
+    if ($upload) {
+        return &CGI::tmpFileName($upload);
     }
+
+    # always one value: a repeated field gives an array ref, a missing one undef
+    my @values = &CGI::multi_param($key);
+    return (@values > 1) ? \@values : $values[0];
 }
 
 sub cookie {
