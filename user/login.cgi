@@ -51,7 +51,7 @@ if (!$userID || !$user{'password'} || !defined $password || $password ne $user{'
         <p>
         You entered the wrong password.
         <p>
-        If you\'ve forgotten it, you can have your <a href="user/entry_page.cgi">password emailed to you</a>.
+        If you\'ve forgotten it, <a href="user/forgot_password.cgi">ask an admin</a> to set a new one.
     };
     &tnmc::template::footer();
 

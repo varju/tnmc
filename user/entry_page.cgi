@@ -101,42 +101,10 @@ sub show_full_login {
     };
 
     ### lost password
-    print qq{
-        <p><br>
-            <form action="user/forgot_password.cgi" method="post">
-	    <input type="hidden" name="location" value="$tnmc_url">
-                <br><b>Lost Passwords:</b><br>
-                        <!-- <select onChange="form.submit();" name="userID"> -->
-            <select name="userID" size="1">
-                        <option value="0">Pick a user...
-                        <option value="0">---------------
-                        };
-
-    $sql = "SELECT userID, username, fullname FROM Personal WHERE groupDead != '1' ORDER BY fullname ASC";
-    $sth = $dbh->prepare($sql);
-    $sth->execute();
-
-    while (@row = $sth->fetchrow_array()) {
-        if ($row[1] ne '') {
-            $row[1] = "(" . $row[1] . ")";
-        }
-        if ($row[0] eq $USERID_LAST_KNOWN) {
-            print qq{
-                                   <option value="$row[0]" selected>$row[2] $row[1]
-                                   };
-        }
-        else {
-            print qq{
-                                   <option value="$row[0]">$row[2] $row[1]
-                                   };
-        }
-    }
-    $sth->finish();
-
     print qq
-    {       </select><br>
-            <input type="submit" value="Email me my password"><br>
-                        </form>
+    {       <p><br>
+            <b>Lost Passwords:</b><br>
+            <a href="user/forgot_password.cgi">I forgot my password</a>
             <p>
             };
 

@@ -13,13 +13,6 @@ use lib '/tnmc';
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
-use tnmc::config;
-use tnmc::cgi;
-use tnmc::user;
-use tnmc::mail::send;
-
-# set up the random number generator
-srand;
 
 #############
 ### Main logic
@@ -27,8 +20,7 @@ srand;
 &tnmc::db::db_connect();
 &tnmc::template::header();
 
-my $userID = &tnmc::cgi::param('userID');
-&show_forgot_password($userID);
+&show_forgot_password();
 
 &tnmc::template::footer();
 &tnmc::db::db_disconnect();
@@ -38,50 +30,16 @@ my $userID = &tnmc::cgi::param('userID');
 ##########################################################
 
 sub show_forgot_password {
-    my ($userID) = @_;
 
-    my %user;
-    &tnmc::user::get_user($userID, \%user);
-
-    if ($user{'email'}) {
-        &send_password_to_user($userID);
-
-        &tnmc::template::show_heading('I forgot my password');
-        print qq{
-            <p>
-            Forget your password?
-            <p>
-            Tsk tsk $user{'username'}... you really should remember these things. You must be
-            getting old and absent minded or something. :\)
-            <p>
-            Anyhow, your password has been emailed to you at $user{'email'}.
-            <p>
-        };
-    }
-    else {
-        print qq{
-            <p>
-            Forget your password?
-            <p>
-            Sorry, but apparently we can't do anything about it right now. You probably don't have an email address set up.
-            <p>
-        };
-    }
-}
-
-sub send_password_to_user {
-    my ($userID) = @_;
-
-    my %user;
-    &tnmc::user::get_user($userID, \%user);
-
-    my %headers = (
-        'To'      => $user{'email'},
-        'From'    => $tnmc::config::tnmc_webserver_email,
-        'Subject' => "[TNMC] Forgot your password?",
-    );
-    my $body = sprintf("\nHi %s,\n\nYour password for TNMC is \"%s\".\n\n", $user{'username'}, $user{'password'});
-    &tnmc::mail::send::message_send(\%headers, $body);
+    # passwords are hashed, so there is nothing to email
+    &tnmc::template::show_heading('I forgot my password');
+    print qq{
+        <p>
+        Forget your password?
+        <p>
+        Ask an admin to set a new one for you.
+        <p>
+    };
 }
 
 ##########################################################
