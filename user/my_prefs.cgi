@@ -107,9 +107,8 @@ if ($USERID) {
 
     &tnmc::template::show_heading("phones and text mail");
 
-    my (%sel_primary_phone, %sel_text_mail, %sel_movie_notify);
+    my (%sel_primary_phone, %sel_movie_notify);
     $sel_primary_phone{ $user{phonePrimary} } = 'selected';
-    $sel_text_mail{ $user{phoneTextMail} }    = 'selected';
 
     print qq{
             <table>
@@ -147,17 +146,6 @@ if ($USERID) {
                 <option $sel_primary_phone{Clearnet}>Clearnet</option>
                 <option $sel_primary_phone{Vstream}>Vstream</option>
                 <option $sel_primary_phone{Other}>Other</option>
-                </select>
-                </td>
-            <td valign="top" nowrap><b>Text mail</b><br>
-                <select name="phoneTextMail">
-                <option $sel_text_mail{none}>none</option>
-                <option $sel_text_mail{all}>all</option>
-                <option $sel_text_mail{Fido}>Fido</option>
-                <option $sel_text_mail{Telus}>Telus</option>
-                <option $sel_text_mail{Rogers}>Rogers</option>
-                <option $sel_text_mail{Clearnet}>Clearnet</option>
-                <option $sel_text_mail{Vstream}>Vstream</option>
                 </select>
                 </td>
             </tr>

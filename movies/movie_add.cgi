@@ -50,9 +50,6 @@ sub show_add_movie_form {
                         <td><b>Rating</b><br>
                         <input type="text" size="3" name="rating" value=""></td>
 
-                        <td><b>MyBC ID</b><br>
-                        <input type="text" size="6" name="mybcID" value=""></td>
-
                         <td><b>Status</b><br><b>
                 <input type="radio" name="statusNew" value="1" checked>Y
                 <input type="radio" name="statusNew" value="0" >N &nbsp; <b>New</b><br>

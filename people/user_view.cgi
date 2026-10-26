@@ -48,7 +48,6 @@ sub show_user {
       phoneRogers
       phoneClearnet
       phonePrimary
-      phoneTextMail
       address
       blurb
     );

@@ -32,7 +32,6 @@ use tnmc::cgi;
 
     my %sel_membership   = ($prefs->{membership}   => 'checked');
     my %sel_attendance   = ($prefs->{attendance}   => 'selected');
-    my %sel_notify_phone = ($prefs->{notify_phone} => 'checked');
 
     print qq{
             <form action="movies/faction_prefs_edit_admin_submit.cgi" method="post">
@@ -55,13 +54,6 @@ use tnmc::cgi;
                 <option value="-1" $sel_attendance{'-1'}>No
                 <option value="-2" $sel_attendance{'-2'}>Hide
                 </select>
-            </tr>
-
-            <tr valign=top><td>Cell-phone Notification</td>
-            <td>
-                <input type="radio" name="notify_phone" value="1"  $sel_notify_phone{'1'}>Yes
-                <input type="radio" name="notify_phone" value="0" $sel_notify_phone{'0'} $sel_notify_phone{''}>No
-                </td>
             </tr>
 
             </table>

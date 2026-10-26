@@ -35,7 +35,7 @@ my $movieID = &tnmc::cgi::param('movieID');
 ##################################################################
 sub show_movie_extended {
     my ($movieID, $junk) = @_;
-    my (@cols, $movie, %movie, $key, $mybcID, $imdbID);
+    my (@cols, $movie, %movie, $key, $imdbID);
 
     if ($movieID) {
         &tnmc::movies::movie::get_movie_extended2($movieID, \%movie);
@@ -70,12 +70,6 @@ sub show_movie_extended {
             };
         }
 
-        if ($movie{'mybcID'}) {
-            $mybcID = $movie{'mybcID'};
-            print qq
-            {    <tr><td><b><a href="http://www.mytelus.com/movies/mdetails.do?movieID=$mybcID" target="mybc">myBC Info</a>
-            };
-        }
         if ($movie{'imdbID'}) {
             $imdbID = $movie{'imdbID'};
             print qq
@@ -88,12 +82,6 @@ sub show_movie_extended {
             my $cinemaclockPage = $movie{'cinemaclockPage'};
             print qq
             {    <tr><td><b><a href="http://www.cinemaclock.com/aw/crva.aw/bri/Vancouver/e/$cinemaclockID/$cinemaclockPage" target="cinemaclock">Cinemaclock Info</a>
-            };
-        }
-        if ($movie{'googleID'}) {
-            my $googleID = $movie{'googleID'};
-            print qq
-            {    <tr><td><b><a href="http://www.google.com/movies?mid=$googleID" target="google">Google info</a>
             };
         }
         if ($movie{'cineplexID'}) {
