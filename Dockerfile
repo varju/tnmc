@@ -1,7 +1,6 @@
 FROM ubuntu:26.04
 
 EXPOSE 80
-VOLUME /backups
 
 ENV DEBIAN_FRONTEND noninteractive
 
