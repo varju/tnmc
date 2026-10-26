@@ -42,12 +42,8 @@ else {
     $location = $tnmc_url . $location;
 }
 
-if (
-    !$userID ||
-    (      ($password ne $user{'password'})
-        && ($user{'password'} ne ''))
-  )
-{
+# an empty stored password never matches
+if (!$userID || !$user{'password'} || !defined $password || $password ne $user{'password'}) {
     &tnmc::template::header();
     print qq{
         <p>
