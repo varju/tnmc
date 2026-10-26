@@ -9,3 +9,16 @@ logs
 /user/log
 /movies/cron/send_movielist.txt
 /movies/cron/*.log
+
+# local files that must not reach the image
+.envrc
+.idea
+.svn
+.claude
+varju
+test
+CLAUDE.md
+.gitignore
+.gitattributes
+.dockerignore
+**/.DS_Store
