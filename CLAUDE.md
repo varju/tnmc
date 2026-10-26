@@ -15,6 +15,7 @@ Legacy Perl CGI app (no framework) on Apache mod_cgid and MySQL. Pages are `*.cg
 
 - Subs after `__END__` in `tnmc/**/*.pm` are autoloaded from `/tnmc/auto`. `make` (AutoSplit) regenerates it, and the Docker build runs it.
 - `tnmc.pm` uses `strict qw(vars subs)`, not full `strict`, because strict refs breaks the autoloader. Don't change it.
+- Calls like `&tnmc::foo::bar()` work without loading `tnmc::foo` first: `tnmc.pm` gives each unloaded tnmc package its own lazy-loading `AUTOLOAD`. Perl 5.28+ rejects the old `UNIVERSAL::AUTOLOAD` fallback for plain function calls.
 
 ## Style
 

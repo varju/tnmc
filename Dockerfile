@@ -1,28 +1,32 @@
-FROM ubuntu:18.04
+FROM ubuntu:26.04
 
 EXPOSE 80
 VOLUME /backups
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# cpanminus and make are only needed to install CGI::Lite, which isn't packaged
 RUN apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
        apache2 \
-       cpanminus \
-       libapache2-mod-perl2 \
-       libapache2-reload-perl \
+       ca-certificates \
+       libcgi-pm-perl \
        libdbd-mysql-perl \
-       libhtml-treebuilder-xpath-perl \
        libjson-perl \
+       liblwp-protocol-https-perl \
        libmail-sendmail-perl \
-       make \
+       libsasl2-modules \
+       libwww-perl \
        postfix \
        sudo \
        tzdata \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN cpanm CGI \
-    && cpanm CGI::Lite \
+       cpanminus \
+       make \
+    && cpanm --notest CGI::Lite \
+    && rm -rf /root/.cpanm \
+    && apt-get purge -y cpanminus make \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
     && a2enmod cgid \
     && a2enmod unique_id
 
@@ -33,9 +37,11 @@ ENV \
   APACHE_RUN_GROUP=tnmc \
   APACHE_RUN_USER=tnmc
 
-RUN useradd -ms /bin/bash tnmc \
-    && mkdir -p $APACHE_RUN_DIR \
-    && chown tnmc $APACHE_RUN_DIR \
+# remove the image's default ubuntu user so tnmc keeps UID 1000
+RUN userdel -r ubuntu \
+    && useradd -ms /bin/bash tnmc \
+    && mkdir -p $APACHE_RUN_DIR/socks \
+    && chown -R tnmc $APACHE_RUN_DIR \
     && mkdir -p $APACHE_LOG_DIR \
     && chown -R tnmc $APACHE_LOG_DIR \
     && sed -i -e 's|^ErrorLog.*|ErrorLog /dev/stderr|' /etc/apache2/apache2.conf \
@@ -44,12 +50,15 @@ RUN useradd -ms /bin/bash tnmc \
 COPY docker/sites-available.tnmc.ca.conf /etc/apache2/sites-available/tnmc.ca.conf
 RUN a2dissite 000-default && a2ensite tnmc.ca
 
-# Fix smtp.gmail.com DNS resolution issue, and allow non-root user to start Postgres
-RUN echo 'nameserver 8.8.8.8' > /var/spool/postfix/etc/resolv.conf \
+# Set up postfix's chroot (systemd normally does this), fix smtp.gmail.com DNS
+# resolution, and allow the non-root user to start postfix
+RUN mkdir -p /var/spool/postfix/etc \
+    && cp /etc/host.conf /etc/hosts /etc/localtime /etc/nsswitch.conf /etc/services /var/spool/postfix/etc/ \
+    && echo 'nameserver 8.8.8.8' > /var/spool/postfix/etc/resolv.conf \
     && echo 'tnmc ALL=(ALL) NOPASSWD: /usr/sbin/postfix' > /etc/sudoers.d/tnmc
 
 USER tnmc
 COPY --chown=tnmc . /tnmc
-RUN cd /tnmc && mkdir auto && make
+RUN cd /tnmc && mkdir auto && ./autosplit.pl
 
 CMD ["/tnmc/docker-entrypoint.sh"]
