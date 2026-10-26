@@ -28,11 +28,13 @@ sub create_cookie {
     my %cookie = ('sessionID' => $sessionID,);
 
     my $cookie_string = &tnmc::cgi::cookie(
-        -name    => 'TNMC',
-        -value   => \%cookie,
-        -expires => '+1y',
-        -path    => '/',
-        -secure  => '0'
+        -name     => 'TNMC',
+        -value    => \%cookie,
+        -expires  => '+90d',
+        -path     => '/',
+        -secure   => 1,
+        -httponly => 1,
+        -samesite => 'Lax'
     );
 
     return $cookie_string;
