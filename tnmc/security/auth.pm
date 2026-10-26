@@ -81,12 +81,15 @@ sub get_my_sessionID {
 }
 
 sub generate_sessionID {
-    if (!exists($ENV{'UNIQUE_ID'})) {
+    if (!exists($ENV{'GATEWAY_INTERFACE'})) {
         return 'backend';
     }
 
-    ## assume web connections
-    return 'web_' . $ENV{'UNIQUE_ID'};
+    ## assume web connections: 128 random bits
+    open(my $fh, '<', '/dev/urandom') or die "Can't read /dev/urandom: $!";
+    read($fh, my $bytes, 16) == 16    or die "Short read from /dev/urandom";
+    close($fh);
+    return 'web_' . unpack('H*', $bytes);
 }
 
 sub get_my_userID {
@@ -144,6 +147,7 @@ sub login {
 }
 
 sub logout {
+
     # get the sessionid
     my $sessionID = &get_my_sessionID();
 
