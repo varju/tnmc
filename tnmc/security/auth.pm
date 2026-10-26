@@ -45,15 +45,16 @@ sub authenticate {
     &tnmc::security::session::hit_session($sessionID);
 
     if (!&tnmc::security::auth::approve()) {
-        print "Content-Type: text/html; charset=utf-8\n\n";
-        print "<h1>Access Denied</h1>\n";
-        exit("Access Denied $USERID - $USERID{'username'}");
+        &deny();
     }
 }
 
 sub approve {
 
     my $path = $ENV{'SCRIPT_NAME'};
+
+    # not a web request
+    return 1 if !defined $path;
 
     if ($path =~ /^\/(admin|db\/)/ && !$USERID{'groupAdmin'}) {
         return 0;
@@ -63,10 +64,31 @@ sub approve {
         return 0;
     }
 
-    if ($path =~ /submit/ && !$USERID && $USERID) {
-        return 0;
+    # everything else needs a login, except these pages
+    my %public = map { $_ => 1 } qw(
+      /user/entry_page.cgi
+      /user/login.cgi
+      /user/logout.cgi
+      /user/forgot_password.cgi
+    );
+    return 1 if $public{$path};
+
+    return $USERID ? 1 : 0;
+}
+
+sub deny {
+    if (!$USERID) {
+
+        # send visitors to the login page
+        require tnmc::config;
+        print "Status: 302 Found\n";
+        print "Location: ${tnmc::config::tnmc_url}user/entry_page.cgi\n\n";
+        exit;
     }
-    return 1;
+
+    print "Content-Type: text/html; charset=utf-8\n\n";
+    print "<h1>Access Denied</h1>\n";
+    exit;
 }
 
 sub get_my_sessionID {
@@ -161,6 +183,18 @@ sub logout {
 BEGIN {
     $USERID    = &get_my_userID();
     $LOGGED_IN = &is_open();
+
+    # check every web page as it loads, even ones that never call authenticate().
+    # tnmc::user may still be loading here, so read the groups straight from the db.
+    if (exists $ENV{'GATEWAY_INTERFACE'}) {
+        if ($USERID) {
+            my $dbh = &tnmc::db::db_connect();
+            my $row =
+              $dbh->selectrow_hashref("SELECT groupAdmin, groupDev FROM Personal WHERE userID = ?", undef, $USERID);
+            %USERID = %$row if $row;
+        }
+        &deny() if !&approve();
+    }
 }
 
 1;
