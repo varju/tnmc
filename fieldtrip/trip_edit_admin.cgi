@@ -21,7 +21,6 @@ require 'fieldtrip/FIELDTRIP.pl';
 
 &tnmc::template::header();
 
-%trip;
 $tripID = &tnmc::cgi::param('tripID');
 
 @cols = &tnmc::db::db_get_cols_list('Fieldtrips');

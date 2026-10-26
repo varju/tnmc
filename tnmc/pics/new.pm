@@ -889,8 +889,8 @@ sub show_slide_thumbnails {
     my $index = &array_get_index($piclist, $picID);
     my $start = int($index / $span) * $span;
 
-    my $end     = $start + $span - 1;
-    my $end     = ($max <= $end) ? $max - 1 : $end;
+    my $end = $start + $span - 1;
+    $end = ($max <= $end) ? $max - 1 : $end;
     my $nav_url = &make_nav_url(\%nav);
 
     print "<table><tr>\n";

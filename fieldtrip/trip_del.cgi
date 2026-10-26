@@ -23,7 +23,6 @@ require 'fieldtrip/FIELDTRIP.pl';
     my $dbh = &tnmc::db::db_connect();
     &tnmc::template::header();
 
-    %trip;
     $tripID  = &tnmc::cgi::param('tripID');
     $CONFIRM = &tnmc::cgi::param('CONFIRM');
 

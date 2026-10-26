@@ -103,7 +103,7 @@ sub footer {
 
     print qq{
 	</div>
-	</body><\html>
+	</body></html>
 	    };
 }
 

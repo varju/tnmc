@@ -25,7 +25,6 @@ use tnmc::pics::show;
 &tnmc::template::header();
 
 $picID = &tnmc::cgi::param('picID');
-%pic;
 &tnmc::pics::pic::get_pic($picID, \%pic);
 
 print qq {

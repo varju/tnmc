@@ -3,9 +3,9 @@
 use warnings;
 
 use lib '/tnmc';
-use tnmc
+use tnmc;
 
-  require tnmc::teams::meet;
+use tnmc::teams::meet;
 
 #
 # common variables
@@ -21,7 +21,7 @@ my @type_options =
 my %form_conf =    ## config for edit/create
   (
     ".form" => {
-        "action" => $script_name,
+        "action" => $ENV{'SCRIPT_NAME'},
     },
     ".default" => { "type" => "text" },
     "teamID"   => { "type" => "hidden" },

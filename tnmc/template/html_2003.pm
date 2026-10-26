@@ -268,7 +268,7 @@ sub footer {
     print qq{
 </div>
 	</div>
-	</body><\html>
+	</body></html>
 	    };
 }
 

@@ -31,8 +31,6 @@ show_edit_form($tripID);
 sub show_edit_form {
     my ($tripID) = @_;
 
-    %trip;
-
     &get_trip($tripID, \%trip);
 
     &tnmc::template::show_heading("trip edit");

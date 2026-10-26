@@ -21,8 +21,6 @@ require 'fieldtrip/FIELDTRIP.pl';
 
 &tnmc::template::header();
 
-%survey;
-
 $tripID = &tnmc::cgi::param('tripID');
 $userID = &tnmc::cgi::param('userID');
 if (!$userID) { $userID = $USERID; }

@@ -79,7 +79,7 @@ sub show_trip {
                         FROM FieldtripSurvey WHERE (tripID = '$tripID') AND (interest >= '1')};
         $sth = $dbh->prepare($sql);
         $sth->execute();
-        ($EXPpro, $EXPshare, $EXPsum, $EXPpaid) = $sth->fetchrow_array();
+        $EXPpaid = ($sth->fetchrow_array())[3];
     }
 
     ####################

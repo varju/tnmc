@@ -35,7 +35,7 @@ use tnmc::movies::vote;
 sub show_showing_movie_list {
     my (@movies, %movie, $movieID, $key);
 
-    my @movies = &tnmc::movies::showtimes::list_all_movies();
+    @movies = &tnmc::movies::showtimes::list_all_movies();
 
     &tnmc::template::show_heading("All Movies that are Currently Showing");
     print qq{

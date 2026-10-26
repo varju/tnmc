@@ -140,7 +140,7 @@ sub show_heading {
 sub show_blue_block {
     my ($left, $right, $lurl, $rurl) = @_;
     $lurl = qq{<a href="$lurl">} if $lurl;
-    $rurl = qq{<a href="$lurl">} if $rurl;
+    $rurl = qq{<a href="$rurl">} if $rurl;
     print qq{
         <table width="100%" cellspacing="0" border="0"><tr>
 	    <td bgcolor="113366" align="left" nowrap>

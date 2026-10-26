@@ -5,7 +5,7 @@ use warnings;
 use lib '/tnmc';
 use tnmc;
 
-require tnmc::teams::roster;
+use tnmc::teams::roster;
 
 #
 # common variables
@@ -21,7 +21,7 @@ my @status_options =
 my %form_conf =    ## config for edit/create
   (
     ".form" => {
-        "action" => $script_name,
+        "action" => $ENV{'SCRIPT_NAME'},
     },
     ".default" => { "type" => "text" },
     "teamID"   => { "type" => "hidden" },

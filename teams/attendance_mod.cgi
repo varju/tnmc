@@ -104,7 +104,7 @@ sub action_player {
         }
         else {
             print qq{
-		<td $bgcolor><select name="$key">
+		<td><select name="$key">
 	    };
             foreach my $option (@options) {
                 my $selected = ($option->{key} eq $type) ? "selected" : "";

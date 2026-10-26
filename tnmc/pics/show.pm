@@ -181,7 +181,7 @@ sub show_album_info {
     if (!$album{albumCoverPic}) {
         my @pics;
         &tnmc::pics::link::list_links_for_album(\@pics, $albumID);
-        $album{albumCoverPic} = @pics[0];
+        $album{albumCoverPic} = $pics[0];
     }
 
     my $pic_img = &tnmc::pics::pic::get_pic_url($album{albumCoverPic}, [ 'mode' => 'thumb' ]);

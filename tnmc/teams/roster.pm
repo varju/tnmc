@@ -12,7 +12,7 @@ use tnmc;
 # vars
 #
 
-use vars qw(%status);
+use vars qw(@status);
 
 @status = ("Player", "Sub", "Cheerleader", "(none)",);
 

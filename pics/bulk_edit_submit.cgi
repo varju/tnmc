@@ -31,7 +31,7 @@ sub do_bulk_edit {
     &tnmc::template::header();
 
     &tnmc::template::show_heading("Bulk edit - save changes");
-    my $destination = &tnmc::cgi::param(destination);
+    my $destination = &tnmc::cgi::param('destination');
     print "<p><a href=\"$destination\">continue</a><br><br>\n\n";
 
     # grab the cgi info into a big 2-d hash
@@ -96,7 +96,6 @@ sub do_bulk_edit {
     if ($debug) {
 
         # user output
-        print $moo;
         &tnmc::template::show_heading("pics");
         foreach $picID (keys(%PICS)) {
             print %{ $PICS{$picID} };

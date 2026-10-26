@@ -23,7 +23,6 @@ use tnmc::pics::link;
 
     &tnmc::template::header();
 
-    %album;
     $albumID = &tnmc::cgi::param('albumID');
     $CONFIRM = &tnmc::cgi::param('CONFIRM');
 

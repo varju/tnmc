@@ -57,7 +57,7 @@ sub show_faction {
             <tr valign="top"><td><b>Members:</b></td><td>
                 };
 
-    my @users = sort {
+    @users = sort {
         my $aa = tnmc::user::get_user_cache($a);
         my $bb = tnmc::user::get_user_cache($b);
         $aa->{username} cmp $bb->{username};

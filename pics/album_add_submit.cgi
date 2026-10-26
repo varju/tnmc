@@ -47,7 +47,7 @@ sub do_add_album {
 "SELECT albumID from PicAlbums WHERE albumTitle = ? AND albumOwnerID = ? AND albumDateStart = ? AND albumDateEnd = ? ORDER BY albumID DESC";
     $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($album{albumTitle}, $album{albumOwnerID}, $album{albumDateStart}, $album{albumDateEnd});
-    ($albumID, $junk) = $sth->fetchrow_array();
+    ($albumID) = $sth->fetchrow_array();
     $sth->finish;
 
     ## complain bitterly if we couldn't find the albumID

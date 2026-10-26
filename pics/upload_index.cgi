@@ -24,7 +24,6 @@ use tnmc::pics::pic;
 &tnmc::template::footer();
 
 sub show_upload_api_page {
-    %pic;
 
     my @cols = &tnmc::db::db_get_cols_list("Pics");
     &tnmc::template::show_heading("upload api");
@@ -91,7 +90,6 @@ sub show_upload_api_page {
 }
 
 sub show_upload_pic_page {
-    %pic;
 
     my @cols = &tnmc::db::db_get_cols_list("Pics");
 
