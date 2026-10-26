@@ -9,6 +9,7 @@ use warnings;
 
 use tnmc;
 use tnmc::db;
+use tnmc::util::random;
 
 #
 # module configuration
@@ -60,12 +61,8 @@ sub hash_password {
     # usage: my $hash = &hash_password($plain);
     my ($plain) = @_;
 
-    open(my $fh, '<', '/dev/urandom') or die "Can't read /dev/urandom: $!";
-    read($fh, my $bytes, 16) == 16    or die "Short read from /dev/urandom";
-    close($fh);
-
     my @chars = ('.', '/', '0' .. '9', 'A' .. 'Z', 'a' .. 'z');
-    my $salt  = join('', map { $chars[ $_ % 64 ] } unpack('C*', $bytes));
+    my $salt  = join('', map { $chars[ $_ % 64 ] } unpack('C*', &tnmc::util::random::bytes(16)));
 
     my $hash = crypt($plain, '$y$j9T$' . $salt);
     die "yescrypt failed" if !defined $hash || $hash !~ /^\$y\$/;
