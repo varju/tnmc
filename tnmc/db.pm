@@ -35,6 +35,9 @@ sub db_connect {
     $dbh_tnmc = DBI->connect("DBI:mysql:database=$database:host=$host", $user, $password)
       or die "Can't connect: $dbh_tnmc->errstr\n";
 
+    # the tables are latin1 holding UTF-8 bytes; a utf8mb4 connection would convert them
+    $dbh_tnmc->do("SET NAMES latin1");
+
     return $dbh_tnmc;
 }
 
