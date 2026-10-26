@@ -48,8 +48,17 @@ sub get_night {
         my ($nightID, $night_ref, $junk) = @_;
         my ($condition);
 
-        $condition = "(nightID = '$nightID' OR date = '$nightID')";
+        # MySQL 8 rejects comparing a date with a non-date such as an ID
         my $dbh = &tnmc::db::db_connect();
+        if (defined $nightID && $nightID =~ /^\d+$/) {
+            $condition = "nightID = $nightID";
+        }
+        elsif (defined $nightID && $nightID =~ /^\d{4}-\d\d-\d\d/) {
+            $condition = "date = " . $dbh->quote($nightID);
+        }
+        else {
+            $condition = "nightID = 0";
+        }
         &tnmc::db::db_get_row($night_ref, $dbh, 'MovieNights', $condition);
     }
 }
