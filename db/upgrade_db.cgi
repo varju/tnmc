@@ -25,7 +25,6 @@ require tnmc::template;
 &tnmc::template::header();
 
 # call the next upgrade_db_* sub here, and remove the call once it has run
-&upgrade_db_20261025c();
 
 &tnmc::template::footer();
 
