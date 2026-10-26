@@ -11,11 +11,14 @@ use warnings;
 
 use lib '/tnmc';
 
+use tnmc::security::auth;
 use tnmc::movies::movie;
 use tnmc::cgi;
 
 #############
 ### Main logic
+
+&tnmc::security::auth::authenticate();
 
 my $movieID = &tnmc::cgi::param('movieID');
 

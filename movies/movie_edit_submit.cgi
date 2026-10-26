@@ -10,12 +10,15 @@ use warnings;
 
 use lib '/tnmc';
 
+use tnmc::security::auth;
 use tnmc::db;
 use tnmc::movies::movie;
 use tnmc::cgi;
 
 #############
 ### Main logic
+
+&tnmc::security::auth::authenticate();
 
 my %movie;
 
