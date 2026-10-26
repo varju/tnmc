@@ -95,7 +95,6 @@ sub get_menu {
             push @MENU, [ "link",  0, "development/",                              "Development",          "", 1 ];
             push @MENU, [ "link",  1, "development/todo_list.cgi",                 "To&nbsp;do&nbsp;List", "" ];
             push @MENU, [ "link",  1, "development/suggestions.cgi",               "Suggestions",          "" ];
-            push @MENU, [ "link",  1, "development/env.cgi",                       "Enviroment",           "" ];
             push @MENU, [ "link",  1, "https://github.com/varju/tnmc",             "View Code",            "" ];
             push @MENU, [ "space", 0, "",                                          "",                     "" ];
         }
