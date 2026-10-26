@@ -28,8 +28,8 @@ $basePicDir = "data/";
 
 &tnmc::security::auth::authenticate();
 
-my $picID = &tnmc::cgi::param(picID);
-my $mode  = &tnmc::cgi::param(mode);
+my $picID = &tnmc::cgi::param('picID');
+my $mode  = &tnmc::cgi::param('mode');
 
 &serve_picture($mode, $picID);
 
@@ -72,7 +72,7 @@ sub serve_picture {
     ## CUSTOM
     elsif ($mode eq "custom") {
 
-        use Image::Magick;
+        require Image::Magick;    # not installed; only these modes need it
 
         # use POSIX qw(strftime);
         # my @file_status = stat("$path");
@@ -135,7 +135,7 @@ sub serve_picture {
     elsif ($mode eq "bright") {
 
         {
-            use Image::Magick;
+            require Image::Magick;
 
             print "Content-type: image/jpeg\n\n";
 
@@ -205,8 +205,10 @@ sub serve_file {
 sub errorExit {
     ($message) = @_;
 
+    print "Status: 404 Not Found\n";
     &tnmc::template::header();
     print "$message";
     &tnmc::template::footer();
+    exit;
 }
 
