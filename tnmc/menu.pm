@@ -85,18 +85,12 @@ sub get_menu {
             push @MENU, [ "link",  1, "admin/security/",              "Security",  "" ];
             push @MENU, [ "space", 0, "",                             "",          "" ];
         }
-        if ($USERID == 1 || $USERID == 5) {
-            push @MENU, [ "link",  0, "user/log/",           "Log",    "", 1 ];
-            push @MENU, [ "link",  1, "user/log/login.log",  "Login",  "" ];
-            push @MENU, [ "link",  1, "user/log/splash.log", "Splash", "" ];
-            push @MENU, [ "space", 0, "",                    "",       "" ];
-        }
         if ($USERID{groupDev}) {
-            push @MENU, [ "link",  0, "development/",                              "Development",          "", 1 ];
-            push @MENU, [ "link",  1, "development/todo_list.cgi",                 "To&nbsp;do&nbsp;List", "" ];
-            push @MENU, [ "link",  1, "development/suggestions.cgi",               "Suggestions",          "" ];
-            push @MENU, [ "link",  1, "https://github.com/varju/tnmc",             "View Code",            "" ];
-            push @MENU, [ "space", 0, "",                                          "",                     "" ];
+            push @MENU, [ "link",  0, "development/",                  "Development",          "", 1 ];
+            push @MENU, [ "link",  1, "development/todo_list.cgi",     "To&nbsp;do&nbsp;List", "" ];
+            push @MENU, [ "link",  1, "development/suggestions.cgi",   "Suggestions",          "" ];
+            push @MENU, [ "link",  1, "https://github.com/varju/tnmc", "View Code",            "" ];
+            push @MENU, [ "space", 0, "",                              "",                     "" ];
         }
         push @MENU, [ "space", 0, "", "", "<hr noshade size='1'>" ];
     }
