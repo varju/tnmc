@@ -126,7 +126,7 @@ sub hit_session {
 
     # only active sessions: lastOnline updates itself on any UPDATE, which would revive a stale one
     my $sql =
-"UPDATE SessionInfo SET hits = (hits + 1), lastOnline = NULL WHERE sessionID = ? AND open = 1 AND lastOnline > DATE_SUB(NOW(), INTERVAL 90 DAY)";
+"UPDATE SessionInfo SET hits = (hits + 1), lastOnline = NOW() WHERE sessionID = ? AND open = 1 AND lastOnline > DATE_SUB(NOW(), INTERVAL 90 DAY)";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
     $sth->execute($sessionID)     or return 0;
 
@@ -159,7 +159,7 @@ sub list_recent_sessions {
     my ($sql, $sth);
     if (defined($open)) {
         $sql =
-"SELECT sessionID FROM SessionInfo WHERE open = ? && lastOnline > DATE_SUB(NOW(), INTERVAL ? MINUTE) ORDER BY lastOnline DESC";
+"SELECT sessionID FROM SessionInfo WHERE open = ? AND lastOnline > DATE_SUB(NOW(), INTERVAL ? MINUTE) ORDER BY lastOnline DESC";
         $sth = $dbh->prepare($sql)     or die "Can't prepare $sql:$dbh->errstr\n";
         $sth->execute($open, $minutes) or return 0;
     }
