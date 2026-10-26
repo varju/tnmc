@@ -10,9 +10,8 @@ use warnings;
 use lib '/tnmc';
 
 use tnmc::security::auth;
-use tnmc::cgih
-
-  use tnnc::pics::pic;
+use tnmc::cgi;
+use tnmc::pics::pic;
 
 #############
 ### Main logic
