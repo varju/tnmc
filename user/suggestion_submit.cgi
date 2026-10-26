@@ -10,7 +10,6 @@ use warnings;
 
 use lib '/tnmc';
 
-use tnmc::broadcast;
 use tnmc::security::auth;
 use tnmc::general_config;
 use tnmc::db;
@@ -39,8 +38,6 @@ use tnmc::cgi;
       . $oldSuggestions;
 
     &tnmc::general_config::set_general_config('suggestions', $SUGG);
-
-    &tnmc::broadcast::sms_admin_notify("IDEA: $newSuggestion");
 
     &tnmc::db::db_disconnect();
 

@@ -10,7 +10,6 @@ use warnings;
 
 use lib '/tnmc';
 
-use tnmc::broadcast;
 use tnmc::security::auth;
 use tnmc::db;
 use tnmc::template;
