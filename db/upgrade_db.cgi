@@ -20,9 +20,10 @@ require tnmc::template;
 # Main logic
 #
 
+# header() authenticates; approve() limits /db/ to admins
 &tnmc::template::header();
 
-&upgrade_db_20221219();
+# call the next upgrade_db_* sub here, and remove the call once it has run
 
 &tnmc::template::footer();
 

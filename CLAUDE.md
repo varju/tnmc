@@ -9,7 +9,7 @@ Legacy Perl CGI app (no framework) on Apache mod_cgid and MySQL. Pages are `*.cg
 - There is no local dev environment. `rebuild.sh` builds the Docker image and redeploys production through an external compose repo (`~/dev/mars.varju.ca/pluto`). Never run it without asking.
 - Paths are hard-coded to `/tnmc` (the container's DocumentRoot), so most scripts only work inside the container.
 - DB settings are hard-coded in `tnmc/db.pm` (host `db`). The module connects as soon as it loads.
-- There are no schema or migration files. Schema changes are dated `upgrade_db_*` subs in `db/upgrade_db.cgi`, run through the web.
+- There are no schema or migration files. Schema changes are dated `upgrade_db_*` subs in `db/upgrade_db.cgi`, run through the web by an admin.
 
 ## AutoLoader
 

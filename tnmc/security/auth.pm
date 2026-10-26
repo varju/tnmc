@@ -55,7 +55,7 @@ sub approve {
 
     my $path = $ENV{'SCRIPT_NAME'};
 
-    if ($path =~ /^\/admin/ && !$USERID{'groupAdmin'}) {
+    if ($path =~ /^\/(admin|db\/)/ && !$USERID{'groupAdmin'}) {
         return 0;
     }
 
