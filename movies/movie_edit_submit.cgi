@@ -21,8 +21,10 @@ my %movie;
 
 my @cols = &tnmc::db::db_get_cols_list('Movies');
 
+# only set submitted fields, so db_set_row keeps the rest
 foreach my $key (@cols) {
-    $movie{$key} = &tnmc::cgi::param($key);
+    my $value = &tnmc::cgi::param($key);
+    $movie{$key} = $value if defined $value;
 }
 &tnmc::movies::movie::set_movie(%movie);
 
