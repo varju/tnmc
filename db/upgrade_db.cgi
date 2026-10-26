@@ -25,12 +25,31 @@ require tnmc::template;
 &tnmc::template::header();
 
 # call the next upgrade_db_* sub here, and remove the call once it has run
+&upgrade_db_20261025c();
 
 &tnmc::template::footer();
 
 #
 # subs
 #
+
+sub upgrade_db_20261025c {
+    my $dbh = &tnmc::db::db_connect();
+
+    # one-time password reset links; see tnmc::security::reset
+    $dbh->do(
+        "CREATE TABLE IF NOT EXISTS PasswordResets (
+      tokenHash char(64) NOT NULL,
+      userID int(11) NOT NULL,
+      created datetime NOT NULL,
+      expires datetime NOT NULL,
+      used int(1) NOT NULL DEFAULT 0,
+      PRIMARY KEY (tokenHash),
+      KEY userID (userID)
+    )"
+    );
+    print "<p>Created PasswordResets\n";
+}
 
 sub upgrade_db_20261025b {
     my $dbh = &tnmc::db::db_connect();

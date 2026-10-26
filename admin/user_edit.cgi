@@ -53,6 +53,15 @@ print qq
             </form>
 	};
 
+if ($userID) {
+    print qq{
+            <form action="admin/password_reset_submit.cgi" method="post">
+            <input type="hidden" name="userID" value="$userID">
+            <input type="submit" value="Make a password reset link">
+            </form>
+    };
+}
+
 &tnmc::template::footer();
 
 &tnmc::db::db_disconnect();

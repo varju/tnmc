@@ -104,6 +104,20 @@ sub revoke_session {
     $sth->finish;
 }
 
+sub close_sessions_for_user {
+    my ($userID) = @_;
+
+    # make sure we have a handle
+    my $dbh = &tnmc::db::db_connect();
+
+    # keep lastOnline, which otherwise updates itself
+    my $sql = "UPDATE SessionInfo SET open = 0, lastOnline = lastOnline WHERE userID = ? AND open = 1";
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    $sth->execute($userID) or return 0;
+
+    $sth->finish;
+}
+
 sub hit_session {
     my ($sessionID) = @_;
 

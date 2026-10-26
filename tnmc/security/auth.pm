@@ -71,6 +71,8 @@ sub approve {
       /user/login.cgi
       /user/logout.cgi
       /user/forgot_password.cgi
+      /user/reset_password.cgi
+      /user/reset_password_submit.cgi
     );
     return 1 if $public{$path};
 
