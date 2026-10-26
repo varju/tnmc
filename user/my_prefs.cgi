@@ -67,8 +67,8 @@ if ($USERID) {
                                     <td><input type="text" name="email" value="$user{email}"></td>
                                 </tr>
 
-                                <tr><td><b>password</td>
-                                    <td><input type="text" name="password" value="$user{password}"></td>
+                                <tr><td><b>new password</td>
+                                    <td><input type="password" name="password" value="" autocomplete="new-password"> (blank keeps it)</td>
                                 </tr>
 
                                 <tr><td><b>homepage</td>
