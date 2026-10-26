@@ -49,6 +49,9 @@ sub upgrade_db_20261025 {
         $count++;
     }
     print "<p>Hashed $count passwords\n";
+
+    # unused old copy of Personal, with a plain-text password
+    $dbh->do("DROP TABLE IF EXISTS Personal3");
 }
 
 sub upgrade_db_20221219 {
