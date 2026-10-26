@@ -59,7 +59,7 @@ if (
     };
     &tnmc::template::footer();
 
-    &tnmc::log::log_login(0, $old_user, $old_user{username}, $userID, $user{username}, $password);
+    &tnmc::log::log_login(0, $old_user, $old_user{username}, $userID, $user{username});
 }
 elsif ($userID) {
 
@@ -69,12 +69,12 @@ elsif ($userID) {
         -cookie => $cookie
     );
 
-    &tnmc::log::log_login(1, $old_user, $old_user{username}, $userID, $user{username}, $password);
+    &tnmc::log::log_login(1, $old_user, $old_user{username}, $userID, $user{username});
 }
 ### BUG?: what does this do?
 else {
     print &tnmc::cgi::redirect(-uri => $location);
-    &tnmc::log::log_login(0, $old_user, $old_user{username}, $userID, $user{username}, $password);
+    &tnmc::log::log_login(0, $old_user, $old_user{username}, $userID, $user{username});
 }
 
 #### The end.
