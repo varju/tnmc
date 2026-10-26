@@ -168,7 +168,7 @@ sub new_nav_login {
                         </form>
             <p>
 	    <b><a href="user/entry_page.cgi">Entry Page:<br>
-                <li>Visitors<li>New Users<li>Enhanced Login<li>Lost Passwords</a></b>
+                <li>New Users<li>Enhanced Login<li>Lost Passwords</a></b>
 	    <p>
             Hello there!<br>
             <br>
