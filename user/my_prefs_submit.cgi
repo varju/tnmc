@@ -36,7 +36,7 @@ if ($USERID) {
         next if ($key eq "password" && !&tnmc::cgi::param($key));
         $user->{$key} = &tnmc::cgi::param($key);
     }
-    &tnmc::user::set_user($user) unless $user->{username} eq 'demo';
+    &tnmc::user::set_user($user);
 }
 
 &tnmc::db::db_disconnect();

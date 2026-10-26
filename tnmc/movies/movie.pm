@@ -209,9 +209,6 @@ sub get_movieid_by_title {
             # skip empty votes
             next if !$type;
 
-            # skip demo user
-            next if (($userID == 38) && ($USERID != 38));
-
             # get user info
             my $user = &tnmc::user::get_user_cache($userID);
 

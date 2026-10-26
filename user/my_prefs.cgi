@@ -33,14 +33,6 @@ if ($USERID) {
             <input type="hidden" name="userID" value="$USERID">
             };
 
-    ### Let's not let the demo user change their prefs.
-    if ($user{username} eq 'demo') {
-        print qq{
-                </form>
-                <form method="post">
-                };
-    }
-
     foreach my $key (@cols) {
         if ($key =~ /^group/) {
             print qq{

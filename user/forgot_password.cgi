@@ -70,7 +70,7 @@ sub send_reset_links {
 
     my $dbh = &tnmc::db::db_connect();
     my $sql = "SELECT userID, username, email FROM Personal
-               WHERE (username = ? OR email = ?) AND email <> '' AND groupDead != '1' AND username <> 'demo'";
+               WHERE (username = ? OR email = ?) AND email <> '' AND groupDead != '1'";
     my $users = $dbh->selectall_arrayref($sql, { Slice => {} }, $who, $who);
 
     foreach my $user (@$users) {

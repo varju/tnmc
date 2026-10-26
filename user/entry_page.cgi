@@ -37,16 +37,6 @@ sub show_full_login {
 
     my (@row, $userID, %user, $hits, $sth, $sql);
 
-    ### Visitors
-    print qq
-    {
-        <p>
-        <u><b>Visitors:</b></u><br>
-        If you are not a regular user and would like to browse the site,
-        please login as <b>Demonstration User (demo)</b>.<br>
-        <br>
-    };
-
     ### new account
     print qq{
         <p><br><br>
