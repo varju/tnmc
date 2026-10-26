@@ -78,6 +78,12 @@ sub approve {
 }
 
 sub deny {
+
+    # read the request body first, or mod_cgid drops the response
+    if ($ENV{'CONTENT_LENGTH'}) {
+        read(STDIN, my $body, $ENV{'CONTENT_LENGTH'});
+    }
+
     if (!$USERID) {
 
         # send visitors to the login page
