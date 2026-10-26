@@ -25,12 +25,22 @@ require tnmc::template;
 &tnmc::template::header();
 
 # call the next upgrade_db_* sub here, and remove the call once it has run
+&upgrade_db_20261025b();
 
 &tnmc::template::footer();
 
 #
 # subs
 #
+
+sub upgrade_db_20261025b {
+    my $dbh = &tnmc::db::db_connect();
+
+    # close the sessions with guessable UNIQUE_ID-based IDs
+    # keep lastOnline, which otherwise updates itself
+    my $count = $dbh->do("UPDATE SessionInfo SET open = 0, lastOnline = lastOnline WHERE open = 1");
+    print "<p>Closed $count sessions\n";
+}
 
 sub upgrade_db_20261025 {
     my $dbh = &tnmc::db::db_connect();
