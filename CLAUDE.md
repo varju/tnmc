@@ -23,4 +23,4 @@ Legacy Perl CGI app (no framework) on Apache mod_cgid and MySQL. Pages are `*.cg
 
 ## Tests
 
-Three Test::Simple scripts in `test/tnmc/updater/*/`. They read `theatre.html` by relative path, so run each one from its own directory, for example `cd test/tnmc/updater/google && perl test_google.pl`. They need `/tnmc` on the include path.
+One Test::Simple script: `test/tnmc/updater/cineplex/test_cineplex.pl`. It reads `theatre.html` by relative path, so run it from its own directory: `cd test/tnmc/updater/cineplex && perl test_cineplex.pl`. They need `/tnmc` on the include path.
