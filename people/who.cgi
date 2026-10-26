@@ -60,8 +60,8 @@ sub show_recent_users_list {
         my $userID = $session{'userID'};
         &tnmc::user::get_user($userID, \%user);
 
-        my $last_online  = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});
-        my $host         = ($session{'host'}) ? $session{'host'} : $session{'ip'};
+        my $last_online = &tnmc::util::date::format_date('numeric', $session{'lastOnline'});
+        my $host        = ($session{'host'}) ? $session{'host'} : $session{'IP'};
 
         print qq{
             <tr>
