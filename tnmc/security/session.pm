@@ -38,6 +38,26 @@ sub get_session {
     }
 }
 
+# like get_session, but only an open session used in the last 90 days
+sub get_active_session {
+    my ($sessionID, $session) = @_;
+
+    # make sure we have a handle
+    my $dbh = &tnmc::db::db_connect();
+
+    # fetch from the db
+    my $sql =
+      "SELECT * from SessionInfo WHERE sessionID = ? AND open = 1 AND lastOnline > DATE_SUB(NOW(), INTERVAL 90 DAY)";
+    my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
+    $sth->execute($sessionID);
+    my $session_ref = $sth->fetchrow_hashref();
+    $sth->finish;
+
+    if ($session_ref) {
+        %$session = %$session_ref;
+    }
+}
+
 sub set_session {
     my ($session) = @_;
 
@@ -90,10 +110,11 @@ sub hit_session {
     # make sure we have a handle
     my $dbh = &tnmc::db::db_connect();
 
-    # save to the db
-    my $sql = "UPDATE SessionInfo SET hits = (hits + 1), lastOnline = NULL WHERE sessionID = ?";
+    # only active sessions: lastOnline updates itself on any UPDATE, which would revive a stale one
+    my $sql =
+"UPDATE SessionInfo SET hits = (hits + 1), lastOnline = NULL WHERE sessionID = ? AND open = 1 AND lastOnline > DATE_SUB(NOW(), INTERVAL 90 DAY)";
     my $sth = $dbh->prepare($sql) or die "Can't prepare $sql:$dbh->errstr\n";
-    $sth->execute($sessionID) or return 0;
+    $sth->execute($sessionID)     or return 0;
 
     $sth->finish;
 }

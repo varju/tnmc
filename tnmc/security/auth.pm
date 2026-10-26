@@ -96,7 +96,7 @@ sub get_my_userID {
 
     my $sessionID = get_my_sessionID();
     my %session;
-    &tnmc::security::session::get_session($sessionID, \%session);
+    &tnmc::security::session::get_active_session($sessionID, \%session);
 
     if ($session{'open'}) {
         return $session{'userID'};
@@ -116,7 +116,7 @@ sub is_open {
 
     my $sessionID = get_my_sessionID();
     my %session;
-    &tnmc::security::session::get_session($sessionID, \%session);
+    &tnmc::security::session::get_active_session($sessionID, \%session);
 
     return $session{'open'};
 }
