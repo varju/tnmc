@@ -30,6 +30,7 @@ $SIG{__WARN__} = \&handle_warnings;
 # AUTOLOAD that requires the module.  A module that uses AutoLoader replaces it.
 foreach my $file (glob('/tnmc/tnmc/*.pm'), glob('/tnmc/tnmc/*/*.pm')) {
     my $pkg = substr($file, length('/tnmc/'));
+    next if $INC{$pkg};    # already loaded, or still compiling
     $pkg =~ s/\.pm$//;
     $pkg =~ s/\//::/g;
     next if $pkg =~ /^tnmc::updater::/;
