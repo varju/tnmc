@@ -27,8 +27,7 @@ RUN apt-get update \
     && apt-get purge -y cpanminus make \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
-    && a2enmod cgid \
-    && a2enmod unique_id
+    && a2enmod cgid
 
 ENV \
   APACHE_LOG_DIR=/var/log/apache2 \
