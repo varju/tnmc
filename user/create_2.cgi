@@ -22,6 +22,15 @@ use tnmc::cgi;
 my $dbh = &tnmc::db::db_connect();
 &tnmc::security::auth::authenticate();
 
+# account creation is disabled in create_1.cgi; refuse direct posts too
+if (1) {
+    &tnmc::template::header();
+    &tnmc::template::show_heading("Account creation temporarily disabled");
+    &tnmc::template::footer();
+    &tnmc::db::db_disconnect();
+    exit;
+}
+
 if (&tnmc::cgi::param('username') =~ /\s/) {
     &tnmc::template::header();
     print "Bad username\n";
