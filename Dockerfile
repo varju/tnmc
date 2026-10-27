@@ -8,15 +8,12 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        apache2 \
        ca-certificates \
+       libauthen-sasl-perl \
        libcgi-pm-perl \
        libdbd-mysql-perl \
        libjson-perl \
        liblwp-protocol-https-perl \
-       libmail-sendmail-perl \
-       libsasl2-modules \
        libwww-perl \
-       postfix \
-       sudo \
        tzdata \
     && rm -rf /var/lib/apt/lists/* \
     && a2enmod cgid
@@ -40,13 +37,6 @@ RUN userdel -r ubuntu \
 
 COPY docker/sites-available.tnmc.ca.conf /etc/apache2/sites-available/tnmc.ca.conf
 RUN a2dissite 000-default && a2ensite tnmc.ca
-
-# Set up postfix's chroot (systemd normally does this), fix smtp.gmail.com DNS
-# resolution, and allow the non-root user to start postfix
-RUN mkdir -p /var/spool/postfix/etc \
-    && cp /etc/host.conf /etc/hosts /etc/localtime /etc/nsswitch.conf /etc/services /var/spool/postfix/etc/ \
-    && echo 'nameserver 8.8.8.8' > /var/spool/postfix/etc/resolv.conf \
-    && echo 'tnmc ALL=(ALL) NOPASSWD: /usr/sbin/postfix' > /etc/sudoers.d/tnmc
 
 USER tnmc
 COPY --chown=tnmc . /tnmc
